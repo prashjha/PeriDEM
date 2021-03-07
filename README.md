@@ -19,6 +19,9 @@ For more details about the model and results, we refer to the paper:
 
 Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-periDEM.pdf).
 
+## Documentation
+Doxygen generated documentation of the code can be found [here](https://prashjha.github.io/PeriDEM/). Documentation will be improved in due time.
+
 ## Examples
 Some example cases. For more details, look at the `problem_setup.py` file or `input_0.yaml` file in [examples](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM).
 
