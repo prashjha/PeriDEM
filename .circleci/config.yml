@@ -1,0 +1,60 @@
+# ----------------------------------
+# Copyright (c) 2021 Prashant K. Jha
+# ----------------------------------
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+version: 2
+jobs:
+    build:
+        docker:
+          - image: prashjha/u1804-pd:latest
+        steps:
+            - checkout
+            - run:
+                name: Configure 
+                command: | 
+                  mkdir -p build 
+                  cd build 
+                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON ..
+            - run:
+                name: Build
+                command: |  
+                  cd build 
+                  make -j 2
+            - run:
+                name: Test
+                command: |
+                  cd build 
+                  ctest --verbose
+    documentation:
+      docker:
+        - image: prashjha/u1804-pd:latest
+      steps:
+        - checkout
+        - run:
+            name: Configure 
+            command: |
+              mkdir -p build 
+              cd build 
+              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON ..
+        - run:
+            name: Documentaiton
+            command: |
+              cd build
+              make doc
+workflows:
+  version: 2
+  build_and_doc:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - documentation:
+            filters:
+              branches:
+                ignore: gh-pages
+            requires:
+              - build
