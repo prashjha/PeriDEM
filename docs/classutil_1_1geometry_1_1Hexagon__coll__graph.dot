@@ -1,0 +1,10 @@
+digraph "util::geometry::Hexagon"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node2 [label="{util::geometry::Hexagon\n|+ d_vertices\l+ d_r\l|+ Hexagon()\l+ Hexagon()\l+ volume()\l+ center()\l+ box()\l+ box()\l+ inscribedRadius()\l+ boundingRadius()\l+ isInside()\l+ isOutside()\land 10 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node3 [label="{util::geometry::GeomObject\n|+ d_name\l|+ GeomObject()\l+ volume()\l+ center()\l+ box()\l+ box()\l+ inscribedRadius()\l+ boundingRadius()\l+ isInside()\l+ isOutside()\l+ isNear()\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1GeomObject.html",tooltip="Defines abstract geometrical domain. "];
+  Node4 -> Node2 [color="grey25",fontsize="10",style="solid",label=" +d_a\n+d_x" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node4 [label="{util::Point\n|+ d_x\l+ d_y\l+ d_z\l|+ Point()\l+ Point()\l+ Point()\l+ Point()\l+ Point()\l+ printStr()\l+ print()\l+ length()\l+ lengthSq()\l+ dot()\l+ dist()\l+ cross()\l+ project()\l+ projectNormal()\l* operator+=()\l* operator-=()\l* operator*=()\l* operator+=()\l* operator-=()\l* operator*=()\l* operator/=()\l* operator[]()\l* operator[]()\l* operator+\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structutil_1_1Point.html",tooltip="A structure to represent 3d vectors. "];
+}

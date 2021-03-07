@@ -1,0 +1,4 @@
+<map id="util::triangleArea" name="util::triangleArea">
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Triangle.html#a1d830012b376f6535d13d2940c89d90b" title="Checks if point is inside this object. " alt="" coords="169,5,324,47"/>
+<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Triangle.html#acb456b295759ed55756a75b3530b21ee" title="Checks if point is within given distance of this object. " alt="" coords="169,71,324,112"/>
+</map>

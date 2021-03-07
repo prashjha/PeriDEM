@@ -1,0 +1,31 @@
+<map id="util::geometry::Line::box" name="util::geometry::Line::box">
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#ae0791fd0e1f536699e3b3d643936d051" title="Computes the radius of smallest circle/sphere such that object can be fit into it. " alt="" coords="219,5,410,47"/>
+<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#aa6105f56ca9a706937fedfb60b6c894e" title="Computes the radius of smallest circle/sphere such that object can be fit into it. " alt="" coords="217,71,413,112"/>
+<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Triangle.html#a5b1253f1f78cddf72b3072ab4731680d" title="Computes the bounding box of object. " alt="" coords="223,137,407,163"/>
+<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Rectangle.html#a06d76ab472a0c76f6f0d03f08f0b7394" title="Computes the bounding box of object. " alt="" coords="216,187,413,214"/>
+<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Hexagon.html#acf65b62cd3e1c056dba135a1c3d3939e" title="Computes the bounding box of object. " alt="" coords="219,238,410,265"/>
+<area shape="rect" id="node7" href="$classutil_1_1geometry_1_1Drum2D.html#a196f4746bfed20ff53bbbef9a7bd78da" title="Computes the bounding box of object. " alt="" coords="221,289,408,315"/>
+<area shape="rect" id="node8" href="$classutil_1_1geometry_1_1Cuboid.html#afd2edc3a301139aeafd23ece089bf099" title="Computes the bounding box of object. " alt="" coords="225,339,404,366"/>
+<area shape="rect" id="node9" href="$classutil_1_1geometry_1_1Circle.html#af18183aa6be8614a90fecb4dedc6817d" title="Computes the bounding box of object. " alt="" coords="229,390,401,417"/>
+<area shape="rect" id="node10" href="$classutil_1_1geometry_1_1Cylinder.html#a70397e99d88bcf1c3a51f273a90cbaab" title="Computes the bounding box of object. " alt="" coords="221,441,408,467"/>
+<area shape="rect" id="node11" href="$classutil_1_1geometry_1_1Sphere.html#a8beb6e35c3789b5defb247ef8c59d901" title="Computes the bounding box of object. " alt="" coords="225,491,404,518"/>
+<area shape="rect" id="node12" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#ab5adb6c241e33d9952bded9ee4ce5cf8" title="Computes the bounding box of object. " alt="" coords="217,543,413,584"/>
+<area shape="rect" id="node14" href="$classutil_1_1geometry_1_1Cylinder.html#acee4f9f3601438fa2b5c4d49b65f2faf" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="236,608,393,649"/>
+<area shape="rect" id="node15" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#ab30f873594b5b7289aa84a9ccf0ea3a2" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="219,673,410,715"/>
+<area shape="rect" id="node16" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#a40c7f12c9a79851cf800e966dc69c6c8" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="217,739,413,780"/>
+<area shape="rect" id="node17" href="$classutil_1_1geometry_1_1Triangle.html#aabf62b4005848ff687ed90e55835b1cc" title="Checks if point is within given distance of this object. " alt="" coords="237,804,392,845"/>
+<area shape="rect" id="node18" href="$classutil_1_1geometry_1_1Rectangle.html#a02f0fadb10ff4ec0d68fa29d4644370f" title="Checks if point is within given distance of this object. " alt="" coords="231,869,399,911"/>
+<area shape="rect" id="node19" href="$classutil_1_1geometry_1_1Hexagon.html#a2f7a97f1d019fe56f11e268206a242a5" title="Checks if point is within given distance of this object. " alt="" coords="234,935,395,976"/>
+<area shape="rect" id="node20" href="$classutil_1_1geometry_1_1Drum2D.html#afc1ecad6f440986b987c3c6ce99196d8" title="Checks if point is within given distance of this object. " alt="" coords="235,1000,394,1041"/>
+<area shape="rect" id="node21" href="$classutil_1_1geometry_1_1Cuboid.html#a464c548fd7b0683cfd5a114022ce9f68" title="Checks if point is within given distance of this object. " alt="" coords="239,1065,390,1107"/>
+<area shape="rect" id="node22" href="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc" title="Checks if box is within given distance of this object. " alt="" coords="236,1131,393,1172"/>
+<area shape="rect" id="node23" href="$classutil_1_1geometry_1_1Line.html#aa8cc6e17dada24cf3baca2438546acb4" title="Prints the information. " alt="" coords="248,1196,381,1237"/>
+<area shape="rect" id="node24" href="$classutil_1_1geometry_1_1Rectangle.html#a3d9c356274515df2e080b7ff84e99a26" title="Prints the information. " alt="" coords="231,1261,399,1303"/>
+<area shape="rect" id="node25" href="$classutil_1_1geometry_1_1Cuboid.html#a7e1b246a67c55a0d5f50b68340391467" title="Prints the information. " alt="" coords="239,1327,390,1368"/>
+<area shape="rect" id="node26" href="$classutil_1_1geometry_1_1Circle.html#a2bc202c0b794f0628c4a09d0d189ec81" title="Prints the information. " alt="" coords="243,1392,386,1433"/>
+<area shape="rect" id="node27" href="$classutil_1_1geometry_1_1Cylinder.html#abc55f824e8219f7db494379af8a45708" title="Prints the information. " alt="" coords="236,1457,393,1499"/>
+<area shape="rect" id="node28" href="$classutil_1_1geometry_1_1Sphere.html#a2fdd42a419832bab000c7ddc746b5d93" title="Prints the information. " alt="" coords="239,1523,390,1564"/>
+<area shape="rect" id="node29" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#a5026f0d0a1410cf92f09a68093fd7255" title="Prints the information. " alt="" coords="219,1588,410,1629"/>
+<area shape="rect" id="node30" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#aaf440f9d171c9fd8faf185b6bd352eb4" title="Prints the information. " alt="" coords="217,1653,413,1695"/>
+<area shape="rect" id="node13" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#a03ead36fb4bdb0fb1a411c0ec038f168" title="Computes the center of object. " alt="" coords="461,543,657,584"/>
+</map>

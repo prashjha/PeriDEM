@@ -1,0 +1,4 @@
+<map id="util::gaussian2d" name="util::gaussian2d">
+<area shape="rect" id="node2" href="$namespaceutil.html#a7d9f908b6b6183c833c54a85578d54a9" title="Compute gaussian function in 1&#45;d. " alt="" coords="171,5,269,32"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html#a131469f79fbf47c5c0e8ef0e3701f036" title="Computes the distance between a given point from this point. " alt="" coords="167,56,273,83"/>
+</map>

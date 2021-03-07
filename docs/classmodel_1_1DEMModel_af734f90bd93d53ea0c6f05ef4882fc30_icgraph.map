@@ -1,0 +1,14 @@
+<map id="model::DEMModel::log" name="model::DEMModel::log">
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#aa6280fa8bb694b07e3d7867f618660ca" title="Computes peridynamic forces and contact forces. " alt="" coords="227,172,415,214"/>
+<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#a209921f6ad32b4f193c25d7923c7e25c" title="Perform time integration. " alt="" coords="1017,153,1205,180"/>
+<area shape="rect" id="node7" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement. " alt="" coords="208,290,433,331"/>
+<area shape="rect" id="node9" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members. " alt="" coords="785,305,939,332"/>
+<area shape="rect" id="node10" href="$classmodel_1_1DEMModel.html#a3652826a385051497907774640ed2044" title="Output the snapshot of data at current time step. " alt="" coords="775,102,949,129"/>
+<area shape="rect" id="node11" href="$classmodel_1_1DEMModel.html#ab194487ad25d52e075e3eb06ae075029" title="Restarts the simulation from previous state. " alt="" coords="1024,381,1199,408"/>
+<area shape="rect" id="node12" href="$classmodel_1_1DEMModel.html#a214e43cda5ec99caef8804bf83530037" title="Creates particles in a given container. " alt="" coords="486,254,702,281"/>
+<area shape="rect" id="node13" href="$classmodel_1_1DEMModel.html#a564305aad8d3372c9d84d97f31226398" title="Creates neighborlist of particles. " alt="" coords="209,458,432,499"/>
+<area shape="rect" id="node5" href="$classmodel_1_1DEMModel.html#abd7dd108a6c28579f46f4782e95d2ff6" title="Perform time integration using central&#45;difference scheme. " alt="" coords="490,204,698,230"/>
+<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#ae8eba7a12449983fa10d07e3b7374512" title="Main driver to simulate. " alt="" coords="1253,305,1409,332"/>
+<area shape="rect" id="node6" href="$classmodel_1_1DEMModel.html#a482cc830bfc95a67f6c3c9e22999a115" title="Performs one time step. " alt="" coords="755,204,969,230"/>
+<area shape="rect" id="node8" href="$classmodel_1_1DEMModel.html#ae822c44f4719cc125181b9e3b9d60fba" title="Creates particles in a given container. " alt="" coords="481,305,707,332"/>
+</map>

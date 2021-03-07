@@ -1,0 +1,8 @@
+<map id="fe::TetElem::getQuadDatas" name="fe::TetElem::getQuadDatas">
+<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#aaccca8f8bfaa22c6c69906bf4499ce58" title="Computes the Jacobian of map . " alt="" coords="236,5,404,32"/>
+<area shape="rect" id="node6" href="$namespaceutil.html#ad4f18aba6f461c113b723df12cdaf685" title="Computes the determinant of matrix. " alt="" coords="288,56,352,83"/>
+<area shape="rect" id="node7" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector. " alt="" coords="452,107,517,133"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#aa3d6d22d633e7042dfbdf97782f2cf4e" title="Computes the determinant of matrix. " alt="" coords="452,5,517,32"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4" title="Checks matrix. " alt="" coords="565,56,684,83"/>
+<area shape="rect" id="node5" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="732,56,839,83"/>
+</map>

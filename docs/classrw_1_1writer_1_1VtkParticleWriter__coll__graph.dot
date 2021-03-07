@@ -1,0 +1,6 @@
+digraph "rw::writer::VtkParticleWriter"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{rw::writer::VtkParticleWriter\n|- d_writer_p\l- d_grid_p\l- d_compressType\l|+ VtkParticleWriter()\l+ addTimeStep()\l+ close()\l+ appendNodes()\l+ appendMesh()\l+ appendContactData()\l+ appendStrainStress()\l* appendNodes()\l* appendMesh()\l* appendContactData()\l* appendStrainStress()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+}

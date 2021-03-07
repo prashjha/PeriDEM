@@ -1,0 +1,8 @@
+digraph "inp::MaterialDeck"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{inp::MaterialDeck\n|+ d_isPlaneStrain\l+ d_materialType\l+ d_bondPotentialType\l+ d_statePotentialType\l+ d_influenceFnType\l+ d_bondPotentialParams\l+ d_statePotentialParams\l+ d_influenceFnParams\l+ d_irreversibleBondBreak\l+ d_stateContributionFromBrokenBond\l+ d_checkScFactor\l+ d_computeParamsFromElastic\l+ d_density\l+ d_horizon\l+ d_horizonMeshRatio\l|+ MaterialDeck()\l+ MaterialDeck()\l+ printStr()\l+ print()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 -> Node1 [color="grey25",fontsize="10",style="solid",label=" +d_matData" ,arrowhead="odiamond",fontname="Helvetica"];
+  Node2 [label="{inp::MatData\n|+ d_E\l+ d_G\l+ d_K\l+ d_nu\l+ d_lambda\l+ d_mu\l+ d_KIc\l+ d_Gc\l|+ MatData()\l+ MatData()\l+ printStr()\l+ print()\l+ toNu()\l+ toNuEG()\l+ toE()\l+ toK()\l+ toLambdaE()\l+ toLambdaK()\l+ toGE()\l+ toGK()\l+ toELambda()\l+ toGc()\l+ toKIc()\l* d_E\l* d_G\l* d_K\l* d_nu\l* d_lambda\l* d_mu\l* d_KIc\l* d_Gc\l* toNu()\l* toNuEG()\l* toE()\l* toK()\l* toLambdaE()\l* toLambdaK()\l* toGE()\l* toGK()\l* toELambda()\l* toGc()\l* toKIc()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structinp_1_1MatData.html",tooltip="Structure for elastic properties and fracture properties. "];
+}

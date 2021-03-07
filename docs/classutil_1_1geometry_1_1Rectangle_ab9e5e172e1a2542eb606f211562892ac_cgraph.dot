@@ -1,0 +1,30 @@
+digraph "util::geometry::Rectangle::isNear"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node56 [label="util::geometry::Rectangle\l::isNear",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node56 -> Node57 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node57 [label="util::areBoxesNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd",tooltip="Checks if given two boxes are within given distance from each other. "];
+  Node57 -> Node58 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node58 [label="util::getCornerPoints",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6",tooltip="Returns all corner points in the box. "];
+  Node57 -> Node59 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node59 [label="util::isPointInsideBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740",tooltip="Returns true if point is inside box. "];
+  Node59 -> Node60 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node60 [label="util::isLess",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a868a26599b6b844d08d30063ac898319",tooltip="Returns true if a < b. "];
+  Node59 -> Node61 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node61 [label="util::isGreater",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631",tooltip="Returns true if a > b. "];
+  Node57 -> Node60 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node57 -> Node62 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node62 [label="util::getCenter",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc",tooltip="Returns center point. "];
+  Node57 -> Node63 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node63 [label="util::inscribedRadiusInBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd",tooltip="Computes the radius of biggest circle/sphere completely within the object. "];
+  Node63 -> Node61 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node57 -> Node64 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node64 [label="util::circumscribedRadius\lInBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7",tooltip="Computes the radius of smallest circle/sphere which can have the box inside. "];
+  Node64 -> Node62 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node64 -> Node58 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node64 -> Node61 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node56 -> Node65 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node65 [label="util::geometry::Line::box",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Line.html#a0f370769b20dcbd3c46eb738c1bad85f",tooltip="Computes the bounding box of object. "];
+}

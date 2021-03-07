@@ -1,0 +1,15 @@
+digraph "fe::TetElem::getQuadPoints"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node41 [label="fe::TetElem::getQuadPoints",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node41 -> Node42 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node42 [label="fe::TetElem::getJacobian",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#aaccca8f8bfaa22c6c69906bf4499ce58",tooltip="Computes the Jacobian of map . "];
+  Node42 -> Node43 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node43 [label="util::det",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#aa3d6d22d633e7042dfbdf97782f2cf4e",tooltip="Computes the determinant of matrix. "];
+  Node43 -> Node44 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node44 [label="util::checkMatrix",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4",tooltip="Checks matrix. "];
+  Node44 -> Node45 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node45 [label="util::io::printStr",height=0.2,width=0.4,color="red", fillcolor="white", style="filled",URL="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33",tooltip="Returns formatted string for output. "];
+}

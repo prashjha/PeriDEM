@@ -1,0 +1,6 @@
+<map id="test::getNChooseR" name="test::getNChooseR">
+<area shape="rect" id="node2" href="$namespacetest.html#af43e065c49520ee624134a11bdfe3643" title="Computes integration of polynomial exactly over reference tetrahedral. " alt="" coords="188,5,353,47"/>
+<area shape="rect" id="node4" href="$namespacetest.html#a437c18b50b59ae2f9cd10e1cb51fba64" title="Computes integration of polynomial exactly over reference triangle. " alt="" coords="188,71,353,112"/>
+<area shape="rect" id="node3" href="$namespacetest.html#aa7c71a77ba3a1a442ebad77cbb0bc242" title="Perform test on quadrature points on tetrahedral elements. " alt="" coords="401,13,524,39"/>
+<area shape="rect" id="node5" href="$namespacetest.html#af81978a4250caac290f7d52c1e571f04" title="Perform test on quadrature points on triangle elements. " alt="" coords="403,78,522,105"/>
+</map>

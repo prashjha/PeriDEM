@@ -29,10 +29,10 @@
 *.app
 
 # Documentation
-*.html
-*.js
+#*.html
+#*.js
 #*.png
-*.css
+#*.css
 
 # Debugger
 #core.*

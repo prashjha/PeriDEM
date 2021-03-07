@@ -1,0 +1,8 @@
+digraph "fe::QuadElem"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node2 [label="{fe::QuadElem\n||+ QuadElem()\l+ elemSize()\l+ getQuadDatas()\l+ getQuadPoints()\l- getShapes()\l- getDerShapes()\l- getJacobian()\l- init()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node3 [label="{fe::BaseElem\n|- d_quadOrder\l- d_numQuadPts\l- d_elemType\l- d_quads\l|+ BaseElem()\l+ getElemType()\l+ getQuadOrder()\l+ getNumQuadPoints()\l+ elemSize()\l+ getShapes()\l+ getDerShapes()\l+ getQuadDatas()\l+ getQuadPoints()\l- getShapes()\l- getDerShapes()\l- mapPointToRefElem()\l- getJacobian()\l- init()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1BaseElem.html",tooltip="A base class which provides methods to map points to/from reference element and to compute quadrature..."];
+}

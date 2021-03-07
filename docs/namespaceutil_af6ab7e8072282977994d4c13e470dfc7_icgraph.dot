@@ -1,0 +1,25 @@
+digraph "util::circumscribedRadiusInBox"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node98 [label="util::circumscribedRadius\lInBox",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node98 -> Node99 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node99 [label="util::areBoxesNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd",tooltip="Checks if given two boxes are within given distance from each other. "];
+  Node99 -> Node100 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node100 [label="util::geometry::Triangle\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d",tooltip="Checks if box is within given distance of this object. "];
+  Node99 -> Node101 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node101 [label="util::geometry::Rectangle\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac",tooltip="Checks if box is within given distance of this object. "];
+  Node99 -> Node102 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node102 [label="util::geometry::Hexagon\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f",tooltip="Checks if box is within given distance of this object. "];
+  Node99 -> Node103 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node103 [label="util::geometry::Drum2D\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9",tooltip="Checks if box is within given distance of this object. "];
+  Node99 -> Node104 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node104 [label="util::geometry::Cuboid\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Cuboid.html#ac88433cc43e94f4f1a399ba8776e4986",tooltip="Checks if box is within given distance of this object. "];
+  Node99 -> Node105 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node105 [label="util::geometry::Cylinder\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc",tooltip="Checks if box is within given distance of this object. "];
+  Node98 -> Node106 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node106 [label="util::geometry::Circle\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Circle.html#a26974c271cfd557a362709cfadca18a4",tooltip="Checks if box is within given distance of this object. "];
+  Node98 -> Node107 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node107 [label="util::geometry::Sphere\l::isNear",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Sphere.html#af568776ec54d2ef7c99af31851ce0107",tooltip="Checks if box is within given distance of this object. "];
+}

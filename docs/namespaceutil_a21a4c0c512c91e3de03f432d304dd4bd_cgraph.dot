@@ -1,0 +1,26 @@
+digraph "util::areBoxesNear"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node11 [label="util::areBoxesNear",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node11 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="util::getCornerPoints",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6",tooltip="Returns all corner points in the box. "];
+  Node11 -> Node13 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="util::isPointInsideBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740",tooltip="Returns true if point is inside box. "];
+  Node13 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="util::isLess",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a868a26599b6b844d08d30063ac898319",tooltip="Returns true if a < b. "];
+  Node13 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="util::isGreater",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631",tooltip="Returns true if a > b. "];
+  Node11 -> Node14 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node16 [label="util::getCenter",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc",tooltip="Returns center point. "];
+  Node11 -> Node17 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node17 [label="util::inscribedRadiusInBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd",tooltip="Computes the radius of biggest circle/sphere completely within the object. "];
+  Node17 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 -> Node18 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 [label="util::circumscribedRadius\lInBox",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7",tooltip="Computes the radius of smallest circle/sphere which can have the box inside. "];
+  Node18 -> Node16 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 -> Node12 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node18 -> Node15 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

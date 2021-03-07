@@ -1,0 +1,15 @@
+digraph "fe::TetElem::getJacobian"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node20 [label="fe::TetElem::getJacobian",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node20 -> Node21 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node21 [label="util::det",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#aa3d6d22d633e7042dfbdf97782f2cf4e",tooltip="Computes the determinant of matrix. "];
+  Node21 -> Node22 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node22 [label="util::checkMatrix",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4",tooltip="Checks matrix. "];
+  Node22 -> Node23 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node23 [label="util::io::printStr",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33",tooltip="Returns formatted string for output. "];
+  Node23 -> Node24 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node24 [label="util::io::getTabS",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb",tooltip="Returns tab spaces of given size. "];
+}

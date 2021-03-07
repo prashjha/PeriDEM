@@ -1,0 +1,4 @@
+<map id="fe::QuadElem::getQuadDatas" name="fe::QuadElem::getQuadDatas">
+<area shape="rect" id="node2" href="$classfe_1_1QuadElem.html#aa4d3e4533429959f2270ed710ec5d5f9" title="Computes the Jacobian of map . " alt="" coords="248,5,428,32"/>
+<area shape="rect" id="node3" href="$classfe_1_1QuadElem.html#ab3619204c8865494c49ccba3108f1f85" title="Returns the values of derivative of shape function at point p on reference element. " alt="" coords="476,5,669,32"/>
+</map>

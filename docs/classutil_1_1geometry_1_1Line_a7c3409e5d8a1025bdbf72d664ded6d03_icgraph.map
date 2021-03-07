@@ -1,0 +1,19 @@
+<map id="util::geometry::Line::isNear" name="util::geometry::Line::isNear">
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Line.html#a3eca2640ef36978ada44a3bb2926a56d" title="Checks if point is within given distance of this object. " alt="" coords="204,332,337,373"/>
+<area shape="rect" id="node14" href="$classutil_1_1geometry_1_1Triangle.html#acb456b295759ed55756a75b3530b21ee" title="Checks if point is within given distance of this object. " alt="" coords="193,397,348,439"/>
+<area shape="rect" id="node15" href="$classutil_1_1geometry_1_1Rectangle.html#a0215c1b51031c4255eb3bd13d22a5a84" title="Checks if point is within given distance of this object. " alt="" coords="187,463,355,504"/>
+<area shape="rect" id="node16" href="$classutil_1_1geometry_1_1Cuboid.html#af789d5a0778714f519224e3910c6a51f" title="Checks if point is within given distance of this object. " alt="" coords="195,528,346,569"/>
+<area shape="rect" id="node17" href="$classutil_1_1geometry_1_1Circle.html#ae0ab3701d36bc96a23f858427445c773" title="Checks if point is within given distance of this object. " alt="" coords="199,593,342,635"/>
+<area shape="rect" id="node18" href="$classutil_1_1geometry_1_1Sphere.html#ab883e9db7deee5ace12daf734893de7c" title="Checks if point is within given distance of this object. " alt="" coords="195,659,346,700"/>
+<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Line.html#af3f54529ec0d95832f2c42702d36e592" title="Checks if point lies exactly on the boundary. " alt="" coords="434,5,567,47"/>
+<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Triangle.html#afe163c48422ea328a60a5f24800106d7" title="Checks if point lies exactly on the boundary. " alt="" coords="423,71,578,112"/>
+<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Rectangle.html#ae3efcb7a2461c14acadee84e1a808f0d" title="Checks if point lies exactly on the boundary. " alt="" coords="417,136,585,177"/>
+<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Hexagon.html#a50a2b3aef62673ab053ecc36c3f6e8d1" title="Checks if point lies exactly on the boundary. " alt="" coords="420,201,581,243"/>
+<area shape="rect" id="node7" href="$classutil_1_1geometry_1_1Drum2D.html#aff0579b48cf389dad292a9ed733e7b0a" title="Checks if point lies exactly on the boundary. " alt="" coords="421,267,580,308"/>
+<area shape="rect" id="node8" href="$classutil_1_1geometry_1_1Cuboid.html#af26ce4f1204f54ef91ddd1202469779f" title="Checks if point lies exactly on the boundary. " alt="" coords="425,332,576,373"/>
+<area shape="rect" id="node9" href="$classutil_1_1geometry_1_1Circle.html#ada8bcdeaf3166a78343ecc7b7ef54d70" title="Checks if point lies exactly on the boundary. " alt="" coords="429,397,572,439"/>
+<area shape="rect" id="node10" href="$classutil_1_1geometry_1_1Cylinder.html#ade04bce29129a128781a55e5748465bc" title="Checks if point lies exactly on the boundary. " alt="" coords="422,463,579,504"/>
+<area shape="rect" id="node11" href="$classutil_1_1geometry_1_1Sphere.html#aad8e3276b3bcd273ce21cc654a7de424" title="Checks if point lies exactly on the boundary. " alt="" coords="425,528,576,569"/>
+<area shape="rect" id="node12" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#a8c562d33dc90515da8a2d4da16d1c2d2" title="Checks if point lies exactly on the boundary. " alt="" coords="405,593,596,635"/>
+<area shape="rect" id="node13" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#add67bfebc2ecb9ff14e81c2e5b34aede" title="Checks if point lies exactly on the boundary. " alt="" coords="403,659,599,700"/>
+</map>

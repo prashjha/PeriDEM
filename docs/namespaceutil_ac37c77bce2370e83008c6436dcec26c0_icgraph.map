@@ -1,0 +1,4 @@
+<map id="util::rotateCW2D" name="util::rotateCW2D">
+<area shape="rect" id="node2" href="$namespaceutil.html#aa8815570c0c72e1618f998abef7eef4e" title="Checks if point is inside an angled rectangle. " alt="" coords="173,5,336,47"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#ab949e9f056cf2566e19c8214a6282c64" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction. " alt="" coords="190,71,319,98"/>
+</map>

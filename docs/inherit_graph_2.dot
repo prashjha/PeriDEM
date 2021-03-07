@@ -1,0 +1,7 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="fe::QuadData",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structfe_1_1QuadData.html",tooltip="A struct to store the quadrature data. List of data are. "];
+}

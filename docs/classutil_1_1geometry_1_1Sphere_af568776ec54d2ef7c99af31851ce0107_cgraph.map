@@ -1,0 +1,13 @@
+<map id="util::geometry::Sphere::isNear" name="util::geometry::Sphere::isNear">
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Line.html#af3222bd1791a4d8fa102f4096dc2ca3c" title="Checks if point is inside this object. " alt="" coords="225,61,358,103"/>
+<area shape="rect" id="node7" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="455,123,540,150"/>
+<area shape="rect" id="node9" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box. " alt="" coords="427,251,568,278"/>
+<area shape="rect" id="node10" href="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc" title="Returns center point. " alt="" coords="445,331,549,358"/>
+<area shape="rect" id="node11" href="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="204,178,379,205"/>
+<area shape="rect" id="node12" href="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7" title="Computes the radius of smallest circle/sphere which can have the box inside. " alt="" coords="207,229,376,271"/>
+<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Line.html#aacb71bc8ad7cc3481c4db221ca8a13bc" title="Computes the area of the rectangle. " alt="" coords="431,5,564,47"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector. " alt="" coords="465,71,530,98"/>
+<area shape="rect" id="node8" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="447,178,547,205"/>
+<area shape="rect" id="node5" href="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4" title="Checks matrix. " alt="" coords="616,71,735,98"/>
+<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="783,71,889,98"/>
+</map>

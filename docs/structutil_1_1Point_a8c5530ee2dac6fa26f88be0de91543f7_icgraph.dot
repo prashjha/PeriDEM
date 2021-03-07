@@ -1,0 +1,23 @@
+digraph "util::Point::cross"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node7 [label="util::Point::cross",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node7 -> Node8 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node8 [label="util::angle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a61e14a30b244c6b3764234fd024a35c8",tooltip="Computes angle between two vectors. "];
+  Node7 -> Node9 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node9 [label="util::rotate",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#afc570d133c5159571a48456e2440753a",tooltip="Returns the vector after rotating by desired angle. "];
+  Node9 -> Node10 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node10 [label="particle::ParticleTransform\l::apply",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structparticle_1_1ParticleTransform.html#ac84e7ec4803c9231dfb15bc181a2dc4f",tooltip="Returns the transformed vector. We assume that the passed vector passes through origin. "];
+  Node10 -> Node11 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node11 [label="particle::Particle\l::Particle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1",tooltip="Constructor. "];
+  Node9 -> Node12 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node12 [label="util::geometry::Drum2D\l::Drum2D",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Drum2D.html#ad9b0c988bf94ffb127b48e78d87d8cc6",tooltip="Constructor. "];
+  Node9 -> Node13 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node13 [label="util::geometry::Hexagon\l::Hexagon",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Hexagon.html#a863ab95e2b0aa910ef6133e821341abe",tooltip="Constructor. "];
+  Node9 -> Node14 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node14 [label="util::geometry::Drum2D\l::isInside",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Drum2D.html#a3e79daf6f2dd929bf236004a72ad5b70",tooltip="Checks if point is inside this object. "];
+  Node9 -> Node15 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node15 [label="util::geometry::Triangle\l::Triangle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1Triangle.html#ad1e951f93e9d6422a967363c9199fa6b",tooltip="Constructor. "];
+}

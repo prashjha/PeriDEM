@@ -1,0 +1,13 @@
+digraph "Graphical Class Hierarchy"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node0 [label="material::BaseInfluenceFn",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmaterial_1_1BaseInfluenceFn.html",tooltip="A base class for computing influence function. "];
+  Node0 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node1 [label="material::ConstInfluenceFn",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmaterial_1_1ConstInfluenceFn.html",tooltip="A class to implement constant influence function. "];
+  Node0 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="material::GaussianInfluenceFn",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmaterial_1_1GaussianInfluenceFn.html",tooltip="A class to implement Gaussian influence function. "];
+  Node0 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="material::LinearInfluenceFn",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmaterial_1_1LinearInfluenceFn.html",tooltip="A class to implement linear influence function. "];
+}

@@ -1,0 +1,8 @@
+digraph "util::geometry::Rectangle"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="{util::geometry::Rectangle\n|+ d_x1\l+ d_x2\l|+ Rectangle()\l+ Rectangle()\l+ volume()\l+ center()\l+ box()\l+ box()\l+ inscribedRadius()\l+ boundingRadius()\l+ isInside()\l+ isOutside()\land 10 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node1 [label="{util::geometry::GeomObject\n|+ d_name\l|+ GeomObject()\l+ volume()\l+ center()\l+ box()\l+ box()\l+ inscribedRadius()\l+ boundingRadius()\l+ isInside()\l+ isOutside()\l+ isNear()\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classutil_1_1geometry_1_1GeomObject.html",tooltip="Defines abstract geometrical domain. "];
+}

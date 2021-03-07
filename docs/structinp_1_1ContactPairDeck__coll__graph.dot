@@ -1,0 +1,6 @@
+digraph "inp::ContactPairDeck"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{inp::ContactPairDeck\n|+ d_contactR\l+ d_computeContactR\l+ d_vMax\l+ d_deltaMax\l+ d_Kn\l+ d_eps\l+ d_betan\l+ d_mu\l+ d_dampingOn\l+ d_frictionOn\l+ d_KnFactor\l+ d_betanFactor\l+ d_kappa\l|+ ContactPairDeck()\l+ ContactPairDeck()\l+ printStr()\l+ print()\l+ getKn()\l+ getKn()\l+ getWKn()\l+ getWKn()\l+ getBetan()\l+ getBetan()\l+ getWBetan()\l+ getWBetan()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+}

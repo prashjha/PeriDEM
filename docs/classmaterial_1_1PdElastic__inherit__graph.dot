@@ -1,0 +1,8 @@
+digraph "material::PdElastic"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node0 [label="{material::PdElastic\n|- d_horizon\l- d_density\l- d_c\l|+ PdElastic()\l+ isStateActive()\l+ getBondEF()\l+ getBondEF()\l+ getBondForceDirection()\l+ getS()\l+ getSc()\l+ getDensity()\l+ getInfFn()\l+ getMoment()\l+ getHorizon()\l+ computeMaterialProperties()\l+ printStr()\l+ print()\l+ print()\l- computeParameters()\l* d_c\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node1 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
+  Node1 [label="{material::Material\n|- d_name\l|+ Material()\l+ ~Material()\l+ name()\l+ getDimension()\l+ isPlaneStrain()\l+ isStateActive()\l+ getBondEF()\l+ getBondEF()\l+ getBondForceDirection()\l+ getS()\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classmaterial_1_1Material.html",tooltip="Collection of methods and database related to peridynamic material. "];
+}

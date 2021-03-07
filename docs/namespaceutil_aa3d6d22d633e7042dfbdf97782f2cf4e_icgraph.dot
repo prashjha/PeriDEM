@@ -1,0 +1,28 @@
+digraph "util::det"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node129 [label="util::det",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node129 -> Node130 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node130 [label="fe::TetElem::getJacobian",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#aaccca8f8bfaa22c6c69906bf4499ce58",tooltip="Computes the Jacobian of map . "];
+  Node130 -> Node131 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node131 [label="fe::TetElem::getDerShapes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#a093bba69d7db17b0e5dcc7a8f00fb268",tooltip="Returns the values of derivative of shape function at point p. "];
+  Node131 -> Node132 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node132 [label="fe::TetElem::init",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#a03cc619867e61ea3be3348f3d98c48cb",tooltip="Compute the quadrature points for triangle element. "];
+  Node130 -> Node133 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node133 [label="fe::TetElem::getQuadDatas",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#a1e53cb40204c661265b6780d4c9c688a",tooltip="Get vector of quadrature data. "];
+  Node130 -> Node134 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node134 [label="fe::TetElem::getQuadPoints",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#a1e6e08825b0293d9a48e89c189b7c882",tooltip="Get vector of quadrature data. "];
+  Node130 -> Node135 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node135 [label="fe::TetElem::mapPointToRefElem",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45",tooltip="Maps point p in a given element to the reference element. "];
+  Node135 -> Node131 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node135 -> Node136 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node136 [label="fe::TetElem::getShapes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classfe_1_1TetElem.html#abb74d10a4d98759a4c60a2755ed6b4b7",tooltip="Returns the values of shape function at point p. "];
+  Node136 -> Node132 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node129 -> Node137 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node137 [label="util::inv",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#ad4f18aba6f461c113b723df12cdaf685",tooltip="Computes the determinant of matrix. "];
+  Node137 -> Node131 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node137 -> Node133 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node137 -> Node135 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+}

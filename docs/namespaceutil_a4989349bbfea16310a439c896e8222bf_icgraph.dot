@@ -1,0 +1,13 @@
+digraph "util::angle"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node2 [label="util::angle",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node2 -> Node3 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="util::angle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a61e14a30b244c6b3764234fd024a35c8",tooltip="Computes angle between two vectors. "];
+  Node2 -> Node4 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="util::distanceBetweenPlanes",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a40d4628247bdf3fdd57b068d4a322c95",tooltip="Compute distance between planes. "];
+  Node2 -> Node5 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="util::doLinesIntersect",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil.html#a250e0cd1a3e9c62d9ebad16c69e63635",tooltip="Do lines intersect. "];
+}
