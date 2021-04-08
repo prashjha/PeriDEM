@@ -24,6 +24,7 @@ RUN cd /PeriDEM && \
 		cd build && \
 		cmake -DHPX_IGNORE_COMPILER_COMPATIBILITY=ON \
 					-DCMAKE_BUILD_TYPE=Release \
+					-DEnable_Tests=ON \
 					.. && \
 		make -j 2 && \
 		make install
