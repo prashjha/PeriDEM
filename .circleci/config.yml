@@ -72,23 +72,57 @@ jobs:
                  docker tag ${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
                  docker push docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
               fi
+    codecoverage:
+      docker:
+        - image: prashjha/u1804-pd:latest
+      steps:
+        - checkout
+        - run:
+            name: Configure
+            command: |
+              mkdir -p build
+              cd build
+              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tools=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" ..
+              make
+        - run:
+            name: Run tests
+            command: |
+              cd build
+              ctest
+        - run:
+            name: Report
+            command: |
+              cd build
+              gcovr --exclude-directories=build --exclude-directories=data -r ..
+        - run:
+            name: Publish code coverage
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                cd build
+                coveralls --gcov-options '\-lp' -t ${CODECOV_TOKEN}
+              fi
 workflows:
   version: 2
   build_doc_deploy:
     jobs:
-      - build:
+      - codecoverage:
           filters:
             branches:
               ignore: gh-pages
-      - documentation:
-            filters:
-              branches:
-                ignore: gh-pages
-            requires:
-              - build
-      - deploy:
-          filters:
-            branches:
-              ignore: gh-pages
-          requires:
-              - build
+
+#      - build:
+#          filters:
+#            branches:
+#              ignore: gh-pages
+#      - documentation:
+#            filters:
+#              branches:
+#                ignore: gh-pages
+#            requires:
+#              - build
+#      - deploy:
+#          filters:
+#            branches:
+#              ignore: gh-pages
+#          requires:
+#              - build
