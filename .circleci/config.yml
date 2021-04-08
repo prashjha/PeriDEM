@@ -44,9 +44,37 @@ jobs:
             command: |
               cd build
               make doc
+    deploy:
+      machine:
+        image: ubuntu-2004:202008-01
+      environment:
+        IMAGE_FOLDER_NAME: .circleci/Docker
+        IMAGE_NAME: prashjha/peridem-u1804:latest
+      steps:
+        - checkout
+        - run:
+            name: Build PeriDEM docker
+            command: |
+              docker build -t ${IMAGE_NAME} ${IMAGE_FOLDER_NAME}
+              docker images
+        - run:
+            name: Deploy to docker hub
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                 docker login -u $DOCKER_USER -p $DOCKER_PASS
+                 docker push ${IMAGE_NAME}
+              fi
+        - run:
+            name: Deploy to github
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                 docker login docker.pkg.github.com --username prashjha -p ${G_TOKEN}
+                 docker tag ${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
+                 docker push docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
+              fi
 workflows:
   version: 2
-  build_and_doc:
+  build_doc_deploy:
     jobs:
       - build:
           filters:
@@ -57,4 +85,10 @@ workflows:
               branches:
                 ignore: gh-pages
             requires:
+              - build
+      - deploy:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
               - build
