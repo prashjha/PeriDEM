@@ -36,17 +36,24 @@ fi
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
 # echo "CMAKE"
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
-CMAKE_EXE="${HOME}/Softwares/local/cmake/cmake-3.19.4-gcc7/bin/cmake"
+CMAKE_EXE="cmake"
 
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
 # echo "HPX"
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
-HPX_INSTALL_PATH="${HOME}/Softwares/local_pd/hpx/1.3.0-opt-gcc7"
+HPX_INSTALL_PATH="0"
+if [[ $HPX_INSTALL_PATH -eq "0" ]]; then
+  echo "Please provide path where HPX is installed in HPX_INSTALL_PATH variable and then rerun the script again."
+fi
+
 
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
 # echo "PCL"
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
-PCL_INSTALL_PATH="${HOME}/Softwares/local_pd/pcl/1.11.1"
+PCL_INSTALL_PATH="0"
+if [[ $PCL_INSTALL_PATH -eq "0" ]]; then
+  echo "Please provide path where PCL is installed in PCL_INSTALL_PATH variable and then rerun the script again."
+fi
 
 echo "<<<<<<<<<<< >>>>>>>>>>>"
 echo "PERIDEM"

@@ -78,27 +78,50 @@ Setup for this test consists of 502 circular and hexagonal shaped particles of v
 ## Installation
 
 ### Dependencies
-Core dependencies for building the executible:
+Core dependencies for building the executible (recommended method is mentioned in bracket):
 
-- cmake 
-- boost
-- hwloc
-- jemalloc
-- hpx
-- vtk
-- flann
-- pcl
-- yaml
-- fmt (included as external library in the code)
+- [cmake](https://cmake.org/) 
+  - recommend to install using `apt-get`
+- [boost](boost.org) 
+  - recommend to install using `apt-get`
+  - required for building YAML, HPX, and possibly PCL libraries
+- [hwloc](open-mpi.org/projects/hwloc/) 
+  - recommend to install using `apt-get`
+  - required to build HPX library
+- jemalloc 
+  - recommend to install using `apt-get`
+  - required to build HPX library
+- hpx 
+  - use build script to install
+  - used for multi-threading calculations
+- vtk 
+  - recommend to install using `apt-get`
+  - required to output simulation results in `.vtu` format
+- flann 
+  - recommend to install using `apt-get`
+  - required to build PCL library
+- pcl 
+  - use build script to install
+  - required for tree search
+- yaml 
+  - recommend to install using `apt-get`
+  - required to parse input file
+- fmt 
+  - included as external library in the code
+  - required to output formatted strings
 
 Dependencies for running the examples:
 
 - gmsh
+  - recommend to install using `apt-get`
+  - required to build the mesh of various objects in the test
 - python3 
+  - required to run the test python scripts
 - numpy
+  - required to run the test python scripts
 
 ### Building the code
-If all the libraries are installed in global space, commands for building the code is as simple as
+If all the libraries are installed in global space, commands for building the PeriDEM code is as simple as
 ```sh
 cmake   -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
@@ -108,10 +131,10 @@ cmake   -DEnable_Documentation=ON \
 make -j 4
 ```
 
-If libraries such as hpx, pcl are installed in custom paths, we will write
+If libraries such as hpx and pcl are installed in custom paths, we will write
 ```sh
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
-        -DPCL_DIR="<pcl directory>" \
+        -DPCL_DIR="<pcl directory>/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         -DCMAKE_BUILD_TYPE=Release \
@@ -119,26 +142,84 @@ cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
 
 make -j 4
 ```
+
+> :exclamation: Note that for HPX we provide <hpx directory>/lib/cmake/HPX and for PCL we provide <pcl directory>/share/pcl-1.11. <hpx directory> and <pcl directory> are the root path of location where HPX and PCL are installed. 
+
 
 ### Recommendations for quick build of the code
-1. Install following dependencies
+1. Install following dependencies:
+
+  - If you want to install minimal set of libraries
+
 ```sh
-sudo apt-get install libboost-dev libvtk7-dev \
-		 libyaml-cpp-dev libhwloc-dev libjemalloc-dev libflann-dev
+sudo apt-get install -y wget lzip \
+  cmake liblapack-dev libblas-dev libopenmpi-dev \
+  doxygen doxygen-latex graphviz ghostscript \
+  gfortran libmpfr-dev libgmp-dev \
+  libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
+  libvtk7-dev gmsh libflann-dev python3-pip && \
+
+pip3 install numpy
 ```
 
-2. Build hpx and pcl. See shell scripts [ubuntu 18.04](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u1804-pd/install.sh) and [ubuntu 20.04](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u2004-pd/install.sh) For mac too the steps will be same assuming all other dependencies are installed using brew.
+  - If you want to install everything that is installed in docker image for testing the compilation
 
-3. Build peridem [see script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_peridem.sh)
 ```sh
+sudo apt-get update && \
+  sudo apt-get install -y build-essential ubuntu-dev-tools rpm gcovr \
+  git wget lzip \
+  cmake autoconf libtool pkg-config \
+  liblapack-dev libblas-dev libopenmpi-dev \
+  doxygen doxygen-latex graphviz ghostscript \
+  gfortran libmpfr-dev libgmp-dev \
+  libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
+  libvtk7-dev gmsh libflann-dev python3-pip && \
+  sudo apt-get autoremove -y && \
+  sudo apt-get autoclean -y
+
+pip3 install numpy pyvista pandas
+```
+
+> :zap: Above is also available in the bash script [install_base.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/build_scripts/ubuntu-18.04/install_base.sh). Using this you can simply run:
+
+```sh
+./install_base.sh
+```
+
+2. Build hpx and pcl. On Ubuntu 18.04, you can get the [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
+```sh
+./install_libs.sh
+```
+
+For Ubuntu 20.04, you may get help from the script we used to build the base docker image. In the docker image, we installed HPX and PCL using the scripts:
+
+- [ubuntu 18.04 script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u1804-pd/install.sh) 
+- [ubuntu 20.04 script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u2004-pd/install.sh)
+
+For mac the steps will be same assuming all other dependencies are installed using brew. 
+
+> :warning: With recent update in homebrew where they changed the current version of boost, I am no longer able to build the HPX and PCL in mac Big Sur 11.2.1. 
+
+3. Build peridem using [install_peridem.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_peridem.sh)
+```sh
+./install_peridem.sh
+```
+
+> :warning: Be sure to modify the paths to where HPX and PCL are installed in the install_peridem.sh script!
+
+Or if you have already cloned the PeriDEM and are in the root directory of PeriDEM, simply run following in the terminal:
+```sh
+mkdir build && cd build 
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
-        -DPCL_DIR="<pcl directory>" \
+        -DPCL_DIR="<pcl directory>/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         -DCMAKE_BUILD_TYPE=Release \
-        <PeriDEM source directory>
+        ../.
 
 make -j 4
+
+ctest --verbose
 ```
 
 4. Running the simulation. Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle and wall and particle locations file are created and their filenames with paths are provided in the `input.yaml` file, we will run the problem (using 4 threads) 

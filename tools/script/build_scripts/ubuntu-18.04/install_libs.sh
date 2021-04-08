@@ -8,7 +8,7 @@ BUILDDIR="$SCRIPTPATH/build/"
 BUILDTHREADS="12"
 INSTALLATGLOBAL="0" # if 1, then libraries will be installed in /usr/local <-- for containers
 
-cmake_build="1" # set to 1 to install
+cmake_build="0" # set to 1 to install
 hpx_build="1"
 pcl_build="1"
 
@@ -49,6 +49,9 @@ fi
 CMAKE_BUILD_PATH=$BUILDDIR/cmake/$BUILD_TYPE/
 CMAKE_SOURCE_DIR=$SOURCEDIR/cmake/$CMAKE_VER
 CMAKE_EXE="$CMAKE_INSTALL_PATH/bin/cmake"
+if [[ $cmake_build -eq "0" ]]; then
+  CMAKE_EXE="cmake"
+fi
 
 
 if [[ $cmake_build -eq "1" ]]; then
@@ -68,6 +71,10 @@ if [[ $cmake_build -eq "1" ]]; then
     make install
   fi
 fi
+
+echo " "
+echo "Cmake exe is $CMAKE_EXE"
+echo " "
 
 echo "<<<<<<<<<<< >>>>>>>>>>>"
 echo "GMSH"
