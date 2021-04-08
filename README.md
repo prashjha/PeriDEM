@@ -74,6 +74,89 @@ Setup for this test consists of 502 circular and hexagonal shaped particles of v
 | :---: | 
 | Compressive test simulation |
 
+## Brief implementation details
+Main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem). The model is implemented in class `DEMModel`, see [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp).  After, we read the input file, create particle and wall system, and all preliminary steps, we call function `DEMModel::integrate()`, see `DEMModel::init()` for steps before actually running the simulation.
+
+### function DEMModel::integrate()
+Basic steps in  `DEMModel::integrate()` are 
+```c++
+// apply initial condition
+if (d_n == 0)
+  applyInitialCondition();
+
+// apply loading
+computeExternalDisplacementBC();
+computeForces();
+
+// time step
+for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
+  
+  // advance simulation to next step
+  integrateStep();
+  
+  // perform output if needed
+  output();
+} 
+```
+
+In `DEMModel::integrateStep()`, we either follow central-difference scheme, in `DEMModel::integrateCD()`, or velocity-verlet scheme, in `DEMModel::integrateVerlet()`. As an example, the steps in `DEMModel::integrateCD()` are
+
+```c++
+const auto dt = d_modelDeck_p->d_dt;
+const auto dim = d_modelDeck_p->d_dim;
+
+// update velocity and displacement
+auto f = hpx::parallel::for_loop(
+    hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
+    d_fPdCompNodes.size(),
+    [this, dt, dim](boost::uint64_t II) {
+      auto i = this->d_fPdCompNodes[II];
+
+      const auto rho = this->getDensity(i);
+      const auto &fix = this->d_fix[i];
+
+      for (int dof = 0; dof < dim; dof++) {
+        if (util::methods::isFree(fix, dof)) {
+          this->d_v[i][dof] += (dt / rho) * this->d_f[i][dof];
+          this->d_u[i][dof] += dt * this->d_v[i][dof];
+          this->d_x[i][dof] += dt * this->d_v[i][dof];
+        }
+      }
+    } // loop over nodes
+);    // end of parallel for loop
+f.get();
+
+d_n++;
+d_time += dt;
+
+// update displacement bc
+computeExternalDisplacementBC();
+
+// compute force
+computeForces();
+```
+
+### function DEMModel::computeForces()
+In this function, we compute internal and external forces at each node of a particle. This function looks like
+```c++
+// update tree for search
+auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
+pt_cloud_update_time += d_nsearch_p->setInputCloud();
+
+// reset all forces
+
+// compute peridynamic force (internal force)
+computePeridynamicForces();
+
+// compute contact force
+computeContactForces();
+
+// compute external force (e.g. due to container motion, etc)
+computeExternalForces();
+```
+
+### Further reading
+Above gives the basic idea of simulation steps. For more thorough understanding of the implementation, interested readers can look at [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp). 
 
 ## Installation
 
