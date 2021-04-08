@@ -435,10 +435,10 @@ if [[ $pcl_build -eq "1" ]]; then
              -DBUILD_tools=OFF \
              -DBUILD_tracking=OFF \
              -DBUILD_visualization=OFF \
-             -DWITH_VTK=OFF \
              $PCL_SOURCE_DIR
 
 
+             #-DWITH_VTK=OFF \
              #-DVTK_ROOT=$VTK_INSTALL_PATH \
              #-DCMAKE_INSTALL_RPATH=$PCL_INSTALL_PATH \
              #-DFLANN_ROOT="$FLANN_INSTALL_PATH" \
