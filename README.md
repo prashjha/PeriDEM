@@ -78,7 +78,7 @@ Setup for this test consists of 502 circular and hexagonal shaped particles of v
 ## Installation
 
 ### Dependencies
-Core dependencies for building the executible (recommended method is mentioned in bracket):
+Core dependencies for building the executible:
 
 - [cmake](https://cmake.org/) 
   - recommend to install using `apt-get`
@@ -179,7 +179,7 @@ sudo apt-get install -y build-essential ubuntu-dev-tools rpm gcovr \
 pip3 install numpy pyvista pandas
 ```
 
-> :zap: Above is also available in the bash script [install_base.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/build_scripts/ubuntu-18.04/install_base.sh). Using this you can simply run:
+> :zap: Above is also available in the bash script [install_base.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_base.sh). Using this you can simply run:
 
 ```sh
 ./install_base.sh
@@ -227,12 +227,6 @@ make -j 4
 ctest --verbose
 ```
 
-4. Running the simulation. Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle and wall and particle locations file are created and their filenames with paths are provided in the `input.yaml` file, we will run the problem (using 4 threads) 
-
-```sh
-<path of PeriDEM>/bin/PeriDEM -i input.yaml --hpx:threads=4
-```
-
 ### Build scripts
 Some shell scripts are provided that may help in building the code on ubuntu 18.04, 20.04, and mac. 
 
@@ -249,12 +243,12 @@ We also provide the docker image of the peridem code. The docker image is built 
 Dockerfile associated to all layers listed above can be found in [build scripts](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker). Image corresponding to layer 2 above can be downloaded from the dockerhub:
 
 - for ubuntu 18.04 
-	- link: https://hub.docker.com/r/prashjha/u1804-pd
-	- `docker pull prashjha/u1804-pd`
+        - link: https://hub.docker.com/r/prashjha/u1804-pd
+        - `docker pull prashjha/u1804-pd`
 
 - for ubuntu 20.04 
-	- link: https://hub.docker.com/r/prashjha/u2004-pd
-	- `docker pull prashjha/u2004-pd`
+        - link: https://hub.docker.com/r/prashjha/u2004-pd
+        - `docker pull prashjha/u2004-pd`
 
 ### Future plans to remove some dependencies
 PeriDEM currently depends on 4 major libraries: Boost, VTK, HPX, PCL
@@ -266,6 +260,40 @@ PeriDEM currently depends on 4 major libraries: Boost, VTK, HPX, PCL
 
 ### Seek help
 Building PeriDEM is not a piece of cake! This I know from my experience trying to build the dependencies in different operating systems and with different configurations. If you are stuck, feel free to reach out, or open an issue. 
+
+## Running the simulation 
+Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle and wall and particle locations file are created and their filenames with paths are provided in the `input.yaml` file, we will run the problem (using 4 threads) 
+
+```sh
+<path of PeriDEM>/bin/PeriDEM -i input.yaml --hpx:threads=4
+```
+
+Some examples:
+
+### Two particle with wall
+
+Navigate to the example directory `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp` and run the example as follows
+```sh
+mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
+<peridem build path>bin/PeriDEM -i input_0.yaml --hpx:threads=2
+```
+
+You may also use the included [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp/problem_setup.py) to modify some parameters and [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/run.sh) (in directoy `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size`) to run the simulation. `run.sh` shows how different input files are created for simulation.
+
+> :exclamation: You will need to modify the path of `PeriDEM` executible in `run.sh` file, see variable `execsrc`. 
+
+### Compressive test
+
+Navigate to the example directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp` and run the example as follows (note that this is expensive example)
+```sh
+mkdir ../out 
+<peridem build path>bin/PeriDEM -i input_0.yaml --hpx:threads=12
+```
+
+As in the case of previous example:
+
+ - you can modify [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py) to change the simulation settings 
+ - and then use the [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1`) to run the new simulation
 
 ## Developers
 
