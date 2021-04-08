@@ -82,42 +82,42 @@ Core dependencies for building the executible (recommended method is mentioned i
 
 - [cmake](https://cmake.org/) 
   - recommend to install using `apt-get`
-- [boost](boost.org) 
+- [boost](https://www.boost.org/) 
   - recommend to install using `apt-get`
   - required for building YAML, HPX, and possibly PCL libraries
-- [hwloc](open-mpi.org/projects/hwloc/) 
+- [hwloc](https://github.com/open-mpi/hwloc) 
   - recommend to install using `apt-get`
   - required to build HPX library
-- jemalloc 
+- [jemalloc](https://github.com/jemalloc/jemalloc)
   - recommend to install using `apt-get`
   - required to build HPX library
-- hpx 
+- [hpx](https://github.com/STEllAR-GROUP/hpx)
   - use build script to install
   - used for multi-threading calculations
-- vtk 
+- [vtk](https://vtk.org/)
   - recommend to install using `apt-get`
   - required to output simulation results in `.vtu` format
-- flann 
+- [flann](https://github.com/mariusmuja/flann)
   - recommend to install using `apt-get`
   - required to build PCL library
-- pcl 
+- [pcl](https://pointclouds.org/)
   - use build script to install
   - required for tree search
-- yaml 
+- [yaml-cpp](https://github.com/jbeder/yaml-cpp)
   - recommend to install using `apt-get`
   - required to parse input file
-- fmt 
+- [fmt](https://github.com/fmtlib/fmt)
   - included as external library in the code
   - required to output formatted strings
 
 Dependencies for running the examples:
 
-- gmsh
+- [gmsh](https://gmsh.info/)
   - recommend to install using `apt-get`
   - required to build the mesh of various objects in the test
-- python3 
+- [python3](https://www.python.org/)
   - required to run the test python scripts
-- numpy
+- [numpy](https://numpy.org/)
   - required to run the test python scripts
 
 ### Building the code
@@ -143,10 +143,10 @@ cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
 make -j 4
 ```
 
-> :exclamation: Note that for HPX we provide <hpx directory>/lib/cmake/HPX and for PCL we provide <pcl directory>/share/pcl-1.11. <hpx directory> and <pcl directory> are the root path of location where HPX and PCL are installed. 
+> :exclamation: Note that for HPX we provide `<hpx directory>/lib/cmake/HPX` and for PCL we provide `<pcl directory>/share/pcl-1.11`. Here, `<hpx directory>` and `<pcl directory>` are the root path of location where HPX and PCL are installed. 
 
 
-### Recommendations for quick build of the code
+### Recommendations for quickly building the PeriDEM library
 1. Install following dependencies:
 
   - If you want to install minimal set of libraries
@@ -157,7 +157,7 @@ sudo apt-get install -y wget lzip \
   doxygen doxygen-latex graphviz ghostscript \
   gfortran libmpfr-dev libgmp-dev \
   libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
-  libvtk7-dev gmsh libflann-dev python3-pip && \
+  libvtk7-dev gmsh libflann-dev python3-pip 
 
 pip3 install numpy
 ```
@@ -165,17 +165,16 @@ pip3 install numpy
   - If you want to install everything that is installed in docker image for testing the compilation
 
 ```sh
-sudo apt-get update && \
-  sudo apt-get install -y build-essential ubuntu-dev-tools rpm gcovr \
+sudo apt-get update 
+  
+sudo apt-get install -y build-essential ubuntu-dev-tools rpm gcovr \
   git wget lzip \
   cmake autoconf libtool pkg-config \
   liblapack-dev libblas-dev libopenmpi-dev \
   doxygen doxygen-latex graphviz ghostscript \
   gfortran libmpfr-dev libgmp-dev \
   libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
-  libvtk7-dev gmsh libflann-dev python3-pip && \
-  sudo apt-get autoremove -y && \
-  sudo apt-get autoclean -y
+  libvtk7-dev gmsh libflann-dev python3-pip 
 
 pip3 install numpy pyvista pandas
 ```
@@ -186,17 +185,23 @@ pip3 install numpy pyvista pandas
 ./install_base.sh
 ```
 
-2. Build hpx and pcl. On Ubuntu 18.04, you can get the [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
+2. Build hpx and pcl. For Ubuntu 18.04, you can use the [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
 ```sh
 ./install_libs.sh
 ```
 
-For Ubuntu 20.04, you may get help from the script we used to build the base docker image. In the docker image, we installed HPX and PCL using the scripts:
+For Ubuntu 20.04, above script should work. You may also get some help from the script we used to build the base docker images. We installed HPX and PCL in docker image using the scripts:
 
 - [ubuntu 18.04 script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u1804-pd/install.sh) 
 - [ubuntu 20.04 script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u2004-pd/install.sh)
 
-For mac the steps will be same assuming all other dependencies are installed using brew. 
+For mac the steps will be same assuming 
+  - key dependencies are installed using homebrew
+```sh
+brew install boost vtk yaml-cpp hwloc jemalloc flann cmake
+```
+
+  - HPX and PCL installed similar to above
 
 > :warning: With recent update in homebrew where they changed the current version of boost, I am no longer able to build the HPX and PCL in mac Big Sur 11.2.1. 
 
@@ -205,7 +210,7 @@ For mac the steps will be same assuming all other dependencies are installed usi
 ./install_peridem.sh
 ```
 
-> :warning: Be sure to modify the paths to where HPX and PCL are installed in the install_peridem.sh script!
+> :warning: Be sure to modify the paths where HPX and PCL are installed in the install_peridem.sh script!
 
 Or if you have already cloned the PeriDEM and are in the root directory of PeriDEM, simply run following in the terminal:
 ```sh
@@ -227,7 +232,6 @@ ctest --verbose
 ```sh
 <path of PeriDEM>/bin/PeriDEM -i input.yaml --hpx:threads=4
 ```
-
 
 ### Build scripts
 Some shell scripts are provided that may help in building the code on ubuntu 18.04, 20.04, and mac. 
@@ -252,6 +256,16 @@ Dockerfile associated to all layers listed above can be found in [build scripts]
 	- link: https://hub.docker.com/r/prashjha/u2004-pd
 	- `docker pull prashjha/u2004-pd`
 
+### Future plans to remove some dependencies
+PeriDEM currently depends on 4 major libraries: Boost, VTK, HPX, PCL
+
+- boost is not used directly but is required in building HPX, PCL, YAML-CPP 
+- if there are lightweight vtu writer and reader, dependency on VTK can be avoided
+- HPX is used for the multi-threading operation. Currently, HPX is little troublesome to build, especially in clusters
+- Only one feature of PCL is utilized currently. We do try to avoid building many libraries within PCL, but it will be nice to have more lightweight library that performs tree search and that can be included as external library in the code
+
+### Seek help
+Building PeriDEM is not a piece of cake! This I know from my experience trying to build the dependencies in different operating systems and with different configurations. If you are stuck, feel free to reach out, or open an issue. 
 
 ## Developers
 

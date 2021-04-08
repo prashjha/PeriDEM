@@ -19,6 +19,9 @@
 # jemalloc
 # brew install jemalloc
 
+# flann
+# brew install flann
+
 # hpx (Built with jemalloc 4.4.0 with cmake flag -DHPX_WITH_MALLOC=jemalloc)
 hpx_dir="${HOME}/work/peridem_works/build_all/hpx/Release/install/lib/cmake/HPX"
 
