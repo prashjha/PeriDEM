@@ -77,7 +77,7 @@ Setup for this test consists of 502 circular and hexagonal shaped particles of v
 ## Brief implementation details
 Main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem). The model is implemented in class `DEMModel`, see [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp). Function `DEMModel::run()` performs the simulation. We next look at this and few more function in more details:
 
-## DEMModel::run()
+### DEMModel::run()
 This function does three tasks:
 ```c++
 // initialize data
