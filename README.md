@@ -75,9 +75,25 @@ Setup for this test consists of 502 circular and hexagonal shaped particles of v
 | Compressive test simulation |
 
 ## Brief implementation details
-Main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem). The model is implemented in class `DEMModel`, see [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp).  After, we read the input file, create particle and wall system, and all preliminary steps, we call function `DEMModel::integrate()`, see `DEMModel::init()` for steps before actually running the simulation.
+Main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem). The model is implemented in class `DEMModel`, see [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp). Function `DEMModel::run()` performs the simulation. We next look at this and few more function in more details:
 
-### function DEMModel::integrate()
+## DEMModel::run()
+This function does three tasks:
+```c++
+// initialize data
+init();
+
+// check for restart
+if (d_modelDeck_p->d_isRestartActive)
+  restart(deck);
+
+// integrate in time
+integrate();
+```
+
+See `DEMModel::init()` where we setup the simulation by reading input files.
+
+### DEMModel::integrate()
 Basic steps in  `DEMModel::integrate()` are 
 ```c++
 // apply initial condition
@@ -136,7 +152,7 @@ computeExternalDisplacementBC();
 computeForces();
 ```
 
-### function DEMModel::computeForces()
+### DEMModel::computeForces()
 In this function, we compute internal and external forces at each node of a particle. This function looks like
 ```c++
 // update tree for search
