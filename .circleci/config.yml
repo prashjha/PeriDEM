@@ -23,7 +23,7 @@ commands:
         command: |
           mkdir -p build 
           cd build 
-          cmake << parameters.cmakeargs >> ..
+          cmake <<parameters.cmakeargs>> ..
 
 
 jobs:
