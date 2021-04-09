@@ -42,6 +42,13 @@ commands:
           command: |
             cd build 
             ctest <<parameters.verbflag>>
+  libdoc:
+    steps:
+      - run: 
+          name: Documentation
+          command: |
+            cd build 
+            make doc        
 
 jobs:
     build:
@@ -55,20 +62,12 @@ jobs:
             - libtest
     documentation:
       docker:
-        - image: prashjha/u1804-pd:latest
+        - image: << pipeline.parameters.dckimg >>
       steps:
         - checkout
-        - run:
-            name: Configure 
-            command: |
-              mkdir -p build 
-              cd build 
-              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON ..
-        - run:
-            name: Documentaiton
-            command: |
-              cd build
-              make doc
+        - libcmake:
+            cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON 
+        - libdoc
     deploy:
       machine:
         image: ubuntu-2004:202008-01
@@ -99,21 +98,14 @@ jobs:
               fi
     codecoverage:
       docker:
-        - image: prashjha/u1804-pd:latest
+        - image: << pipeline.parameters.dckimg >>
       steps:
         - checkout
-        - run:
-            name: Configure
-            command: |
-              mkdir -p build
-              cd build
-              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" ..
-              make
-        - run:
-            name: Tests
-            command: |
-              cd build
-              ctest
+        - libcmake:
+            cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
+        - libbuild
+        - libtest:
+            verbflag: ""
         - run:
             name: Report
             command: |
@@ -137,21 +129,21 @@ workflows:
           filters:
             branches:
               ignore: gh-pages
-#       - documentation:
-#           filters:
-#             branches:
-#               ignore: gh-pages
-#           requires:
-#             - build
-#       - deploy:
-#           filters:
-#             branches:
-#               ignore: gh-pages
-#           requires:
-#             - build
-#       - codecoverage:
-#           filters:
-#             branches:
-#               ignore: gh-pages
-#           requires:
-#             - build
+      - documentation:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
+      - deploy:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
+      - codecoverage:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
