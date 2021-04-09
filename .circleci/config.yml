@@ -72,7 +72,7 @@ jobs:
       machine:
         image: ubuntu-2004:202008-01
       environment:
-        IMAGE_FILE_NAME: .circleci/Docker-<<pipeline.parameters.docker-img-os>>
+        IMAGE_FILE_NAME: .circleci/Docker/Dockerfile-<<pipeline.parameters.docker-img-os>>
         IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
       steps:
         - checkout
