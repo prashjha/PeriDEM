@@ -7,12 +7,16 @@
 
 version: 2.1
 parameters:
-  docker-img:
+  docker-img-os:
     type: string
-    default: prashjha/u2004-pd:latest
+    default: u2004
   peridem-img:
     type: string
     default: peridem-u2004:latest
+  peridem-img:
+    type: string
+    default: peridem-u2004:latest
+
 
 commands:
   libcmake:
@@ -56,7 +60,7 @@ commands:
 jobs:
     build:
         docker:
-          - image: <<pipeline.parameters.docker-img>>
+          - image: prashjha/<<pipeline.parameters.docker-img-os>>-pd:latest
         steps:
             - checkout
             - libcmake:
@@ -65,7 +69,7 @@ jobs:
             - libtest
     documentation:
       docker:
-        - image: <<pipeline.parameters.docker-img>>
+        - image: prashjha/<<pipeline.parameters.docker-img-os>>-pd:latest
       steps:
         - checkout
         - libcmake:
@@ -75,33 +79,33 @@ jobs:
       machine:
         image: ubuntu-2004:202008-01
       environment:
-        IMAGE_FOLDER_NAME: .circleci/Docker
-        IMAGE_NAME: prashjha/<<pipeline.parameters.peridem-img>>
+        IMAGE_FILE_NAME: .circleci/Docker-<<pipeline.parameters.docker-img-os>>
+        IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
       steps:
         - checkout
         - run:
             name: Build docker
             command: |
-              docker build -t ${IMAGE_NAME} ${IMAGE_FOLDER_NAME}
+              docker build -t prashjha/${IMAGE_NAME} -f ${IMAGE_FILE_NAME}
               docker images
         - run:
             name: Deploy to docker hub
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                  docker login -u $DOCKER_USER -p $DOCKER_PASS
-                 docker push ${IMAGE_NAME}
+                 docker push prashjha/${IMAGE_NAME}
               fi
         - run:
             name: Deploy to github
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                  docker login docker.pkg.github.com --username prashjha -p ${G_TOKEN}
-                 docker tag ${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/<<pipeline.parameters.peridem-img>>
-                 docker push docker.pkg.github.com/prashjha/peridem/<<pipeline.parameters.peridem-img>>
+                 docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/{IMAGE_NAME}
+                 docker push docker.pkg.github.com/prashjha/peridem/{IMAGE_NAME}
               fi
     codecoverage:
       docker:
-        - image: <<pipeline.parameters.docker-img>>
+        - image: prashjha/<<pipeline.parameters.docker-img-os>>-pd:latest
       steps:
         - checkout
         - libcmake:

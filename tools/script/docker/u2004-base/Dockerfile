@@ -21,9 +21,10 @@ ENV DEBIAN_FRONTEND=nonintercative
 
 # Install essentials
 RUN apt-get update && \
-  apt-get install -y build-essential ubuntu-dev-tools rpm gcovr \
-  git wget lzip \
+  apt-get install -y build-essential ubuntu-dev-tools \
+  git wget curl lzip \
   cmake autoconf libtool pkg-config \
+  rpm gcovr ruby-coveralls \
   liblapack-dev libblas-dev libopenmpi-dev \
   doxygen doxygen-latex graphviz ghostscript \
   gfortran libmpfr-dev libgmp-dev \
