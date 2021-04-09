@@ -5,19 +5,35 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-version: 2
+version: 2.1
+parameters:
+  dckimg:
+    type: string
+    default: prashjha/u1804-pd:latest
+
+commands:
+  cmakeconfig:
+    parameters:
+      cmakeargs:
+        type: string
+        default: "-DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON"
+    steps:
+      - run: 
+        name: Configure
+        command: |
+          mkdir -p build 
+          cd build 
+          cmake << pipeline.parameters.cmakeargs >> ..
+
+
 jobs:
     build:
         docker:
-          - image: prashjha/u2004-pd:latest
+          - image: << pipeline.parameters.dckimg >>
         steps:
             - checkout
-            - run:
-                name: Configure
-                command: | 
-                  mkdir -p build 
-                  cd build 
-                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON ..
+            - cmakeconfig:
+                cmakeargs: " -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON "
             - run:
                 name: Build
                 command: |  
@@ -112,21 +128,21 @@ workflows:
           filters:
             branches:
               ignore: gh-pages
-      - documentation:
-          filters:
-            branches:
-              ignore: gh-pages
-          requires:
-            - build
-      - deploy:
-          filters:
-            branches:
-              ignore: gh-pages
-          requires:
-            - build
-      - codecoverage:
-          filters:
-            branches:
-              ignore: gh-pages
-          requires:
-            - build
+#       - documentation:
+#           filters:
+#             branches:
+#               ignore: gh-pages
+#           requires:
+#             - build
+#       - deploy:
+#           filters:
+#             branches:
+#               ignore: gh-pages
+#           requires:
+#             - build
+#       - codecoverage:
+#           filters:
+#             branches:
+#               ignore: gh-pages
+#           requires:
+#             - build
