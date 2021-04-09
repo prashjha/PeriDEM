@@ -10,14 +10,7 @@ parameters:
   docker-img-os:
     type: string
     default: u2004
-  peridem-img:
-    type: string
-    default: peridem-u2004:latest
-  peridem-img:
-    type: string
-    default: peridem-u2004:latest
-
-
+    
 commands:
   libcmake:
     parameters:
