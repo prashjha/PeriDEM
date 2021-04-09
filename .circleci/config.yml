@@ -19,11 +19,11 @@ commands:
         default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON
     steps:
       - run: 
-        name: Configure
-        command: |
-          mkdir -p build 
-          cd build 
-          cmake <<parameters.cmakeargs>> ..
+          name: Configure
+          command: |
+            mkdir -p build 
+            cd build 
+            cmake <<parameters.cmakeargs>> ..
 
 
 jobs:
