@@ -93,8 +93,8 @@ jobs:
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                  docker login docker.pkg.github.com --username prashjha -p ${G_TOKEN}
-                 docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/{IMAGE_NAME}
-                 docker push docker.pkg.github.com/prashjha/peridem/{IMAGE_NAME}
+                 docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 docker push docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
               fi
     codecoverage:
       docker:
