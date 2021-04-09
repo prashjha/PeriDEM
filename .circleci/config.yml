@@ -7,14 +7,20 @@
 
 version: 2.1
 parameters:
-  dckimg:
+  docker-os-tag:
     type: string
-    default: prashjha/u1804-pd:latest
+    default: u2004
+  docker-img:
+    type: string
+    default: prashjha/<<pipeline.parameters.docker-os-tag>>-pd:latest
+  peridem-img:
+    type: string
+    default: peridem-<<pipeline.parameters.docker-os-tag>>:latest
 
 commands:
   libcmake:
     parameters:
-      cmakeargs:
+      cmake-args:
         type: string
         default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON
     steps:
@@ -23,8 +29,8 @@ commands:
           command: |
             mkdir -p build 
             cd build 
-            cmake <<parameters.cmakeargs>> ..
-  libbuild:
+            cmake <<parameters.cmake-args>> ..
+  libmake:
     steps:
       - run: 
           name: Build
@@ -33,7 +39,7 @@ commands:
             make -j 2
   libtest:
     parameters:
-      verbflag:
+      verb-flag:
         type: string
         default: --verbose
     steps:
@@ -41,7 +47,7 @@ commands:
           name: Test
           command: |
             cd build 
-            ctest <<parameters.verbflag>>
+            ctest <<parameters.verb-flag>>
   libdoc:
     steps:
       - run: 
@@ -53,27 +59,27 @@ commands:
 jobs:
     build:
         docker:
-          - image: << pipeline.parameters.dckimg >>
+          - image: <<pipeline.parameters.docker-img>>
         steps:
             - checkout
             - libcmake:
-                cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON 
-            - libbuild
+                cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON 
+            - libmake
             - libtest
     documentation:
       docker:
-        - image: << pipeline.parameters.dckimg >>
+        - image: <<pipeline.parameters.docker-img>>
       steps:
         - checkout
         - libcmake:
-            cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON 
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON 
         - libdoc
     deploy:
       machine:
         image: ubuntu-2004:202008-01
       environment:
         IMAGE_FOLDER_NAME: .circleci/Docker
-        IMAGE_NAME: prashjha/peridem-u1804:latest
+        IMAGE_NAME: prashjha/<<pipeline.parameters.peridem-img>>
       steps:
         - checkout
         - run:
@@ -93,19 +99,19 @@ jobs:
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                  docker login docker.pkg.github.com --username prashjha -p ${G_TOKEN}
-                 docker tag ${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
-                 docker push docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
+                 docker tag ${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/<<pipeline.parameters.peridem-img>>
+                 docker push docker.pkg.github.com/prashjha/peridem/<<pipeline.parameters.peridem-img>>
               fi
     codecoverage:
       docker:
-        - image: << pipeline.parameters.dckimg >>
+        - image: <<pipeline.parameters.docker-img>>
       steps:
         - checkout
         - libcmake:
-            cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
-        - libbuild
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
+        - libmake
         - libtest:
-            verbflag: ""
+            verb-flag: ""
         - run:
             name: Report
             command: |
@@ -114,7 +120,7 @@ jobs:
                     --exclude-directories=examples --exclude-directories=tools \
                     -r ..
         - run:
-            name: Publish code coverage
+            name: Publish 
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                 cd build
