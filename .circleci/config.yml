@@ -108,25 +108,25 @@ workflows:
   version: 2
   build_doc_deploy_cov:
     jobs:
-     - build:
-         filters:
-           branches:
-             ignore: gh-pages
-     - documentation:
-         filters:
-           branches:
-             ignore: gh-pages
-           requires:
-             - build
-     - deploy:
-         filters:
-           branches:
-             ignore: gh-pages
-         requires:
-             - build
-     - codecoverage:
-         filters:
-           branches:
-             ignore: gh-pages
-         requires:
-             - build
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - documentation:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
+      - deploy:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
+      - codecoverage:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
