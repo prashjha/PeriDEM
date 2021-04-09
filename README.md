@@ -1,10 +1,35 @@
-## Peridynamics-based discrete element method (PeriDEM) model of granular systems
+# Peridynamics-based discrete element method (PeriDEM) model of granular systems
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues)
 
 <p align="center"> <img src="https://github.com/prashjha/PeriDEM/blob/main/assets/logo/logo.png"> </p>
 
+## Table of contents
+- [Introduction](#introduction)
+- [Documentation](#documentation)
+- [Examples](#examples)
+  * [Two-particle tests](#two-particle%20tests)
+  * [Two-particle with wall test](#two-particle%20with%20wall%20test)
+  * [Compressive test](#compressive%20test)
+- [Brief implementation details](#brief%20implementation%20details)
+  * [DEMModel::run()](#dEMModel::run())
+  * [DEMModel::integrate()](#dEMModel::integrate())
+  * [DEMModel::computeForces()](#dEMModel::computeForces())
+  * [Further reading](#further reading)
+- [Installation](#installation)
+  * [Dependencies](#dependencies)
+  * [Building the code](#building%20the%20code)
+  * [Recommendations for quick build](#recommendations%20for%20quick%20build)
+  * [Build scripts](#build%20scripts)
+  * [Docker](#docker)
+  * [Future plans to remove some dependencies](#future%20plans%20to%20remove%20some%20dependencies)
+  * [Seek help](#seek%20help)
+- [Running the simulation](#running%20the%20simulation)
+  * [Two-particle with wall](#two-particle%20with%20wall)
+  * [Compressive test](#compressive%20test)
+- [Developers](#developers)
 
+## Introduction
 Implementation of high-fidelity model of granular media that combines the advantages of peridynamics and discrete element method (DEM). The model has following advantages over existing mechanical models for granular media:
 
 - handle intra-particle deformation and breakage/damage
@@ -247,7 +272,7 @@ make -j 4
 > :exclamation: Note that for HPX we provide `<hpx directory>/lib/cmake/HPX` and for PCL we provide `<pcl directory>/share/pcl-1.11`. Here, `<hpx directory>` and `<pcl directory>` are the root path of location where HPX and PCL are installed. 
 
 
-### Recommendations for quickly building the PeriDEM library
+### Recommendations for quick build
 1. Install following dependencies:
 
   - If you want to install minimal set of libraries
@@ -371,7 +396,7 @@ Assuming that the input file is `input.yaml` and all other files such as `.msh` 
 
 Some examples:
 
-### Two particle with wall
+### Two-particle with wall
 
 Navigate to the example directory `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp` and run the example as follows
 ```sh
