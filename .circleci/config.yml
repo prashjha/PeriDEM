@@ -7,15 +7,12 @@
 
 version: 2.1
 parameters:
-  docker-os-tag:
-    type: string
-    default: u2004
   docker-img:
     type: string
-    default: prashjha/<<pipeline.parameters.docker-os-tag>>-pd:latest
+    default: prashjha/u2004-pd:latest
   peridem-img:
     type: string
-    default: peridem-<<pipeline.parameters.docker-os-tag>>:latest
+    default: peridem-u2004:latest
 
 commands:
   libcmake:
