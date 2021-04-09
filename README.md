@@ -6,18 +6,18 @@
 
 ## Table of contents
 
-  - [Introduction](##Introduction)
-  - [Documentation](##Documentation)
-  - [Examples](##Examples)
-  - [Brief implementation details](##Brief-implementation-details)
-  - [Installation](##Installation)
-    * [Dependencies](###Dependencies)
-    * [Building the code](###Building-the-code)
-    * [Recommendations for quick build](###Recommendations-for-quick-build)
-  - [Running simulations](##Running-simulations)
-    * [Two-particle with wall](###Two-particle-with-wall)
-    * [Compressive test](###Compressive-test)
-  - [Developers](##Developers)
+  - [Introduction](#Introduction)
+  - [Documentation](#Documentation)
+  - [Examples](#Examples)
+  - [Brief implementation details](#Brief-implementation-details)
+  - [Installation](#Installation)
+    * [Dependencies](#Dependencies)
+    * [Building the code](#Building-the-code)
+    * [Recommendations for quick build](#Recommendations-for-quick-build)
+  - [Running simulations](#Running-simulations)
+    * [Two-particle with wall](#Two-particle-with-wall)
+    * [Compressive test](#Compressive-test)
+  - [Developers](#Developers)
 
 ## Introduction
 Implementation of high-fidelity model of granular media that combines the advantages of peridynamics and discrete element method (DEM). The model has following advantages over existing mechanical models for granular media:
