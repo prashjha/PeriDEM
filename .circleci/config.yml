@@ -9,7 +9,7 @@ version: 2.1
 parameters:
   docker-img-os:
     type: string
-    default: u2004
+    default: u1804
     
 commands:
   libcmake:
