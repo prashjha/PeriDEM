@@ -64,7 +64,7 @@ To create example input files, the python script is provided. Python script allo
 | :---: | 
 | [Concave particles](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/) |
 
-### Compressive test
+### Compressive tests
 
 Setup for this test consists of 502 circular and hexagonal shaped particles of varrying radius and orientation within a rectangle container. The top wall of the container is moving downward with prescribed speed resulting in compression of the particle system. The quantity of interest is the compressive strength of media; it is expected that the moving wall register reaction for with increasing penetration, however, after a certain amount of compression of media, the damage will initiate in individual particles especially those connected by force chain resulting in yielding of the media. For more details, we refer to [Jha et al 2021](https://prashjha.github.io/publication/jha-2020-peridem/)
 
@@ -352,7 +352,7 @@ PeriDEM currently depends on 4 major libraries: Boost, VTK, HPX, PCL
 ### Ask for help
 Building PeriDEM is not a piece of cake! This I know from my experience trying to build the dependencies in different operating systems and with different configurations. If you are stuck, feel free to reach out, or open an issue. 
 
-## Running the simulation 
+## Running simulations
 Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle and wall and particle locations file are created and their filenames with paths are provided in the `input.yaml` file, we will run the problem (using 4 threads) 
 ```sh
 <path of PeriDEM>/bin/PeriDEM -i input.yaml --hpx:threads=4
