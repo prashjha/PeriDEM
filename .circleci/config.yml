@@ -12,7 +12,7 @@ parameters:
     default: prashjha/u1804-pd:latest
 
 commands:
-  cmakeconfig:
+  libcmake:
     parameters:
       cmakeargs:
         type: string
@@ -24,7 +24,24 @@ commands:
             mkdir -p build 
             cd build 
             cmake <<parameters.cmakeargs>> ..
-
+  libbuild:
+    steps:
+      - run: 
+          name: Build
+          command: |
+            cd build 
+            make -j 2
+  libtest:
+    parameters:
+      verbflag:
+        type: string
+        default: --verbose
+    steps:
+      - run: 
+          name: Test
+          command: |
+            cd build 
+            ctest <<parameters.verbflag>>
 
 jobs:
     build:
@@ -32,18 +49,10 @@ jobs:
           - image: << pipeline.parameters.dckimg >>
         steps:
             - checkout
-            - cmakeconfig:
+            - libcmake:
                 cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON 
-            - run:
-                name: Build
-                command: |  
-                  cd build 
-                  make -j 2
-            - run:
-                name: Test
-                command: |
-                  cd build 
-                  ctest --verbose
+            - libbuild
+            - libtest
     documentation:
       docker:
         - image: prashjha/u1804-pd:latest
