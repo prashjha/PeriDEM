@@ -324,7 +324,6 @@ In [Packages](https://github.com/prashjha?tab=packages&repo_name=PeriDEM), docke
 
 ### Future plans to remove some dependencies
 PeriDEM currently depends on four major libraries: Boost, VTK, HPX, PCL
-
   - Boost is not used directly but is required in building HPX, PCL, YAML-CPP 
   - If there are lightweight vtu writer and reader, dependency on VTK can be avoided
   - HPX is used for the multi-threading operation. Currently, HPX is a little troublesome to build, especially in clusters
@@ -356,7 +355,7 @@ You may also use the included [problem_setup.py](https://github.com/prashjha/Per
 
 > In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`. Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
-> :exclamation: In the end, `<some name for input>.yaml` is only important other than `.msh` and `particle_locations.csv` files. So you may directly modify the parameter values in `<some name for input>.yaml` and re-run the simulation to see the effects.
+> :exclamation: To test quickly, you can modify `input.yaml` and re-run the simulation as shown above. For example, you can alter `Final_Time`, `Time_Steps`, `Contact_Radius_Factor`, `Kn`, and other fields in the yaml file. Make sure to not modify those parameters in `input.yaml` which require remeshing the particles/walls and recomputing the particle locations.
 
 ### Compressive test
 Navigate to the example directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp` and run the example as follows (note that this is an expensive example)
