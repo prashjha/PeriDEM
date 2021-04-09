@@ -79,7 +79,7 @@ jobs:
         - run:
             name: Build docker
             command: |
-              docker build -t prashjha/${IMAGE_NAME} -f ${IMAGE_FILE_NAME}
+              docker build -t prashjha/${IMAGE_NAME} -f ${IMAGE_FILE_NAME} .
               docker images
         - run:
             name: Deploy to docker hub
