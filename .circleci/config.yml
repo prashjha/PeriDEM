@@ -16,7 +16,7 @@ commands:
     parameters:
       cmakeargs:
         type: string
-        default: "-DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON"
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON
     steps:
       - run: 
         name: Configure
@@ -33,7 +33,7 @@ jobs:
         steps:
             - checkout
             - cmakeconfig:
-                cmakeargs: " -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON "
+                cmakeargs: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON 
             - run:
                 name: Build
                 command: |  
