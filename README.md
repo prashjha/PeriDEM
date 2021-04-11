@@ -17,6 +17,7 @@
   - [Running simulations](#Running-simulations)
     * [Two-particle with wall](#Two-particle-with-wall)
     * [Compressive test](#Compressive-test)
+  - [Visualizing results](#Visualizing-results)
   - [Developers](#Developers)
 
 ## Introduction
@@ -182,38 +183,38 @@ Above gives the basic idea of simulation steps. For more thorough understanding 
 
 ### Dependencies
 Core dependencies are:
-  - [cmake](https://cmake.org/) 
+  - [cmake](https://cmake.org/)(3.10.2 or above) 
     * recommend to install using `apt-get`
-  - [boost](https://www.boost.org/) 
+  - [boost](https://www.boost.org/)(1.65.1)
     * recommend to install using `apt-get`
     * required for building YAML, HPX, and possibly PCL libraries
-  - [hwloc](https://github.com/open-mpi/hwloc) 
+  - [hwloc](https://github.com/open-mpi/hwloc)(1.11.9)
     * recommend to install using `apt-get`
     * required to build HPX library
-  - [jemalloc](https://github.com/jemalloc/jemalloc)
+  - [jemalloc](https://github.com/jemalloc/jemalloc)(3.6.0)
     * recommend to install using `apt-get`
     * required to build HPX library
-  - [hpx](https://github.com/STEllAR-GROUP/hpx)
+  - [hpx](https://github.com/STEllAR-GROUP/hpx)(1.3.0)
     * use build script to install
     * used for multi-threading calculations
-  - [vtk](https://vtk.org/)
+  - [vtk](https://vtk.org/)(7.1.1)
     * recommend to install using `apt-get`
     * required to output simulation results in `.vtu` format
-  - [flann](https://github.com/mariusmuja/flann)
+  - [flann](https://github.com/mariusmuja/flann)(1.9.1)
     * recommend to install using `apt-get`
     * required to build PCL library
-  - [pcl](https://pointclouds.org/)
+  - [pcl](https://pointclouds.org/)(1.11.1)
     * use build script to install
     * required for tree search
-  - [yaml-cpp](https://github.com/jbeder/yaml-cpp)
+  - [yaml-cpp](https://github.com/jbeder/yaml-cpp)(0.5.2)
     * recommend to install using `apt-get`
     * required to parse input file
-  - [fmt](https://github.com/fmtlib/fmt)
+  - [fmt](https://github.com/fmtlib/fmt)(7.1.3)
     * included as external library in the code
     * required to output formatted strings
 
 Dependencies for running the examples:
-  - [gmsh](https://gmsh.info/)
+  - [gmsh](https://gmsh.info/)(3.0.6)
     * recommend to install using `apt-get`
     * required to build the mesh of various objects in the test
   - [python3](https://www.python.org/)
@@ -368,6 +369,15 @@ As before:
   - you can modify [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
   - run the simulation using [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1`).
 
+## Visualizing results
+Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/)(tested on 5.4.1 and later version) or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit)(tested on 2.13.3). 
+
+By default, in all tests and examples, we only output the particle mesh, i.e., pair of nodal coordinate and nodal volume, and not the finite element mesh (it can be enabled by setting `Perform_FE_Out: true` within `Output` block in the input `yaml` file). After loading the file in ParaView, the first thing to do is to change the plot type from `**Surface**` to `**Point Gaussian**`. Next, a couple of things to do are:
+  - Adjust the radius of circle/sphere at the nodes by going to the `Properties` tab on the left side and change the value of `**Gaussian Radius**`
+  - You may also want to choose the field to display. For starter, you could select the `Damage_Z` variable, a ratio of **maximum bond strain in the neighborhood of a node and critical bond strain**. When the `Damage_Z` value is below one at a given node, the deformation in the vicinity of that node is elastic, whereas when the value is above 1, it indicates there is at least one node in the neighborhood which has bond strain above critical strain (meaning the bond between these two nodes is broken)
+  - You may also need to rescale the plot by clicking on the `**Zoom to Data**` button in ParaView
+  - Lastly, when the `Damage_Z` is very high at few nodes, you may want to rescale the data to the range, say `[0,2]` or `[0,10]`, so that it is easier to identify regions with elastic deformation and region with fracture.
+ 
 ## Citations
 If this library was useful in your work, we recommend citing the following article:
 
