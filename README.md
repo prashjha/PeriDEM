@@ -354,9 +354,17 @@ You may also use the included [problem_setup.py](https://github.com/prashjha/Per
 
 > :exclamation: You will need to modify the path of `PeriDEM` executible in `run.sh` file, see variable `execsrc`. 
 
+
 > In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`. Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
-> :exclamation: To test quickly, you can modify `input.yaml` and re-run the simulation as shown above. For example, you can alter `Final_Time`, `Time_Steps`, `Contact_Radius_Factor`, `Kn`, and other fields in the yaml file. Make sure to not modify those parameters in `input.yaml` which require remeshing the particles/walls and recomputing the particle locations.
+#### Important remark on modifying input.yaml file
+To test the examples quickly, you can directly modify the `input.yaml` and re-run the simulation as shown above. For example, you can alter `Final_Time`, `Time_Steps`, `Contact_Radius_Factor`, `Kn`, and other fields in the yaml file. 
+
+However, some care is required when changing the geometrical details of particles and walls in the `input.yaml` file. If you change these details in the `.yaml` file, you will have to ensure that the `.msh` file correspond to the new geometry. 
+
+Except geometrical parameters of walls and particles, rest of the parameters in `input.yaml` can be modified.
+
+> In due time, we will provide more information on setting up input files and covering all aspects of the simulation.
 
 ### Compressive test
 Navigate to the example directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp` and run the example as follows (note that this is an expensive example)
