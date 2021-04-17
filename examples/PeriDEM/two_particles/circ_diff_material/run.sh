@@ -34,8 +34,6 @@ f_p_2_mesh="mesh_cir_2$f_suf"
 gmsh "$f_p_2_mesh.geo" -2 &> /dev/null
 gmsh "$f_p_2_mesh.geo" -2 -o "$f_p_2_mesh.vtk"  &> /dev/null
 
-exit
-
 echo "Running PeriDEM ... "
 f_inp="input$f_suf.yaml"
 "$execsrc" -i "$f_inp" --hpx:threads=$nts

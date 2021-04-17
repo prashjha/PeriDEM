@@ -183,38 +183,38 @@ Above gives the basic idea of simulation steps. For more thorough understanding 
 
 ### Dependencies
 Core dependencies are:
-  - [cmake](https://cmake.org/)(3.10.2 or above) 
+  - [cmake](https://cmake.org/) (3.10.2 or above) 
     * recommend to install using `apt-get`
-  - [boost](https://www.boost.org/)(1.65.1)
+  - [boost](https://www.boost.org/) (1.65.1)
     * recommend to install using `apt-get`
     * required for building YAML, HPX, and possibly PCL libraries
-  - [hwloc](https://github.com/open-mpi/hwloc)(1.11.9)
+  - [hwloc](https://github.com/open-mpi/hwloc) (1.11.9)
     * recommend to install using `apt-get`
     * required to build HPX library
-  - [jemalloc](https://github.com/jemalloc/jemalloc)(3.6.0)
+  - [jemalloc](https://github.com/jemalloc/jemalloc) (3.6.0)
     * recommend to install using `apt-get`
     * required to build HPX library
-  - [hpx](https://github.com/STEllAR-GROUP/hpx)(1.3.0)
+  - [hpx](https://github.com/STEllAR-GROUP/hpx) (1.3.0)
     * use build script to install
     * used for multi-threading calculations
-  - [vtk](https://vtk.org/)(7.1.1)
+  - [vtk](https://vtk.org/) (7.1.1)
     * recommend to install using `apt-get`
     * required to output simulation results in `.vtu` format
-  - [flann](https://github.com/mariusmuja/flann)(1.9.1)
+  - [flann](https://github.com/mariusmuja/flann) (1.9.1)
     * recommend to install using `apt-get`
     * required to build PCL library
-  - [pcl](https://pointclouds.org/)(1.11.1)
+  - [pcl](https://pointclouds.org/) (1.11.1)
     * use build script to install
     * required for tree search
-  - [yaml-cpp](https://github.com/jbeder/yaml-cpp)(0.5.2)
+  - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (0.5.2)
     * recommend to install using `apt-get`
     * required to parse input file
-  - [fmt](https://github.com/fmtlib/fmt)(7.1.3)
+  - [fmt](https://github.com/fmtlib/fmt) (7.1.3)
     * included as external library in the code
     * required to output formatted strings
 
 Dependencies for running the examples:
-  - [gmsh](https://gmsh.info/)(3.0.6)
+  - [gmsh](https://gmsh.info/) (3.0.6)
     * recommend to install using `apt-get`
     * required to build the mesh of various objects in the test
   - [python3](https://www.python.org/)
@@ -377,13 +377,27 @@ As before:
   - you can modify [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
   - run the simulation using [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1`).
 
-## Visualizing results
-Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/)(tested on 5.4.1 and later version) or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit)(tested on 2.13.3). 
+### Compute times for various examples
+For reference, we list the compute times for various examples.
+  - `T` is the total compute time in units of `second`
+  - `T(n)` means compute time when running the example with `n` threads.
 
-By default, in all tests and examples, we only output the particle mesh, i.e., pair of nodal coordinate and nodal volume, and not the finite element mesh (it can be enabled by setting `Perform_FE_Out: true` within `Output` block in the input `yaml` file). After loading the file in ParaView, the first thing to do is to change the plot type from `**Surface**` to `**Point Gaussian**`. Next, a couple of things to do are:
-  - Adjust the radius of circle/sphere at the nodes by going to the `Properties` tab on the left side and change the value of `**Gaussian Radius**`
+| Test | T(1) | T(2) | T(4) | T(8) |
+| :--- | :---: |  :---: |  :---: |  :---: |
+| two_particles/circ_damp | 143.7 | 95.1 | 76.4 | 78.6 |
+| two_particles/circ_damp_diff_radius | 164 | 114.6 | 96.7 | 99.4 |
+| two_particles/circ_diff_material | 287.7 | 190.1 | 152.7 | 160 |
+| two_particles/circ_diff_radius_diff_material | 329.1 | 229.4 | 195.3 | 200 |
+| two_particles/circ_no_damp | 143.8 | 94.5 | 76.7 | 78.5 |
+| two_particles_wall/concave_diff_material_diff_size | 2749.9 | 1534.6 | 980.8 | 691.1 |
+
+## Visualizing results
+Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) (tested on 5.4.1 and later version) or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit) (tested on 2.13.3). 
+
+By default, in all tests and examples, we only output the particle mesh, i.e., pair of nodal coordinate and nodal volume, and not the finite element mesh (it can be enabled by setting `Perform_FE_Out: true` within `Output` block in the input `yaml` file). After loading the file in ParaView, the first thing to do is to change the plot type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do are:
+  - Adjust the radius of circle/sphere at the nodes by going to the `Properties` tab on the left side and change the value of **`Gaussian Radius`**
   - You may also want to choose the field to display. For starter, you could select the `Damage_Z` variable, a ratio of **maximum bond strain in the neighborhood of a node and critical bond strain**. When the `Damage_Z` value is below one at a given node, the deformation in the vicinity of that node is elastic, whereas when the value is above 1, it indicates there is at least one node in the neighborhood which has bond strain above critical strain (meaning the bond between these two nodes is broken)
-  - You may also need to rescale the plot by clicking on the `**Zoom to Data**` button in ParaView
+  - You may also need to rescale the plot by clicking on the **`Zoom to Data`** button in ParaView
   - Lastly, when the `Damage_Z` is very high at few nodes, you may want to rescale the data to the range, say `[0,2]` or `[0,10]`, so that it is easier to identify regions with elastic deformation and region with fracture.
  
 ## Citations
