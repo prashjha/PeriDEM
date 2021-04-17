@@ -4,6 +4,9 @@ MY_PWD=$(pwd)
 # locate executible
 execsrc="../../../../../../bin/PeriDEM"
 nts="2"
+if [[ $# -gt 0 ]]; then
+	nts="$1"
+fi
 
 if [[ ! -d "out" ]]; then
 	mkdir "out"
@@ -14,8 +17,8 @@ cd "inp"
 
 # get tag from command line
 pp_tag="0"
-if [[ $# -gt 0 ]]; then
-	pp_tag="$1"
+if [[ $# -gt 1 ]]; then
+	pp_tag="$2"
 fi
 
 f_suf="_$pp_tag"

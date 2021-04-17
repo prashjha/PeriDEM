@@ -20,6 +20,9 @@ for d in ${dirs[@]}; do
 	echo "****** Directory = $d ******"
 	echo " "
 	cd $d
-	./run.sh
+
+	# Optional: specify number of threads by passing the argument to script
+	# default is 2
+	./run.sh 2
 	
 done
