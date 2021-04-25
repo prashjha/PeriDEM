@@ -14,7 +14,6 @@
 #include <string>
 #include <vector>
 #include "fmt/format.h"
-#include "nanoflann/include/nanoflann.hpp"
 
 namespace test {
 
@@ -24,7 +23,7 @@ namespace test {
  */
 void testNSearch(size_t N);
 
-std::string testNanoflann(size_t N, double L, double dL, int seed);
+std::string testNanoflannAndPCL(size_t N, double L, double dL, int seed);
 
 } // namespace test
 

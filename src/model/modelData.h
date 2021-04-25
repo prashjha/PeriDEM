@@ -19,7 +19,8 @@
 #include "geometry/fracture.h"
 #include <vector>
 
-typedef nsearch::NSearchKd NSearch;
+typedef nsearch::NFlannSearchKd NSearch;
+//typedef nsearch::NSearchKd NSearch;
 
 // forward declare particle and wall
 namespace particle {

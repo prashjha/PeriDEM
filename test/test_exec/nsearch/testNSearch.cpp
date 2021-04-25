@@ -32,32 +32,33 @@ int main(int argc, char *argv[]) {
   }
 
   // read input file
-  size_t N;
-  if (vm.count("num-points")) N = vm["num-points"].as<size_t>();
+  int N;
+  if (vm.count("num-points")) N = vm["num-points"].as<int>();
   else {
     std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
               << MINOR_VERSION << "." << UPDATE_VERSION
               << ") -i <num-points>" << std::endl;
-    std::cout << "Runing test with num-points = 20\n";
+    std::cout << "Running test with num-points = 20\n";
     N = 20;
   }
 
   //
   // test transformation
   //
-  //test::testNSearch(N);
   std::vector<double> L_test = {1., 1000., 0.01};
   std::vector<double> dL_test = {0.2, 0.5};
   std::vector<int> seeds = {1093};//, 13828, 78474};
-  std::vector<int> N_test = {10, 20, 40};
+  std::vector<int> N_test = {N};
   int test_count = 0;
   for (auto L : L_test)
     for (auto dL : dL_test)
       for (auto seed : seeds)
-        for (auto N : N_test) {
+        for (auto n : N_test) {
           std::cout << "**** Test number = " << test_count++ << " ****\n";
-          std::cout << fmt::format("Test parameters: L = {}, dL = {}, seed = {}, N = {}\n\n", L, dL, seed, N);
-          auto msg = test::testNanoflann(N, L, dL*L, seed);
+          std::cout << fmt::format("Test parameters: L = {}, lattice "
+                                   "perturbation = {}, seed = {}, N = {}\n\n",
+                                   L, dL * L, seed, n);
+          auto msg = test::testNanoflannAndPCL(n, L, dL*L, seed);
           std::cout << msg;
         }
 

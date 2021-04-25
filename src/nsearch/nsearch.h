@@ -272,7 +272,7 @@ public:
 
   double updatePointCloud(const std::vector<util::Point> &x,
                           bool parallel = true) override {
-    return setInputCloud();
+    return 0;
   }
 
   size_t radiusSearch(
