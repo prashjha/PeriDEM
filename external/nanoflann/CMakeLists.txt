@@ -69,7 +69,7 @@ install(TARGETS nanoflann
 add_library(nanoflann::nanoflann ALIAS nanoflann)
 
 # Examples
-option(BUILD_EXAMPLES "Build examples" ON)
+option(BUILD_EXAMPLES "Build examples" OFF)
 if(BUILD_EXAMPLES)
 	add_subdirectory(examples)
 endif()
@@ -85,7 +85,7 @@ if(BUILD_BENCHMARKS)
 endif()
 
 # Tests
-option(BUILD_TESTS "Build unit tests" ON)
+option(BUILD_TESTS "Build unit tests" OFF)
 if(BUILD_TESTS)
 	enable_testing()
 	add_subdirectory(tests)

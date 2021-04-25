@@ -708,13 +708,14 @@ void model::DEMModel::computeContactForces() {
         const auto &vi = this->d_v[i];
         const auto &voli = this->d_vol[i];
 
-        pcl::PointXYZ searchPoint;
-        searchPoint.x = yi.d_x;
-        searchPoint.y = yi.d_y;
-        searchPoint.z = yi.d_z;
-
-        auto search_status = this->d_nsearch_p->d_tree.radiusSearch(
-            searchPoint, search_r, neighs, sqr_dist);
+        //pcl::PointXYZ searchPoint;
+        //searchPoint.x = yi.d_x;
+        //searchPoint.y = yi.d_y;
+        //searchPoint.z = yi.d_z;
+        //auto search_status = this->d_nsearch_p->d_tree.radiusSearch(
+        //    searchPoint, search_r, neighs, sqr_dist);
+        auto search_status = this->d_nsearch_p->radiusSearch(
+            yi, search_r, neighs, sqr_dist);
 
         std::vector<size_t> wall_nodes;
 
@@ -1277,12 +1278,12 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
         std::vector<int> neighs;
         std::vector<float> sqr_dist;
 
-        pcl::PointXYZ searchPoint;
-        searchPoint.x = this->d_x[i].d_x;
-        searchPoint.y = this->d_x[i].d_y;
-        searchPoint.z = this->d_x[i].d_z;
+        //pcl::PointXYZ searchPoint;
+        //searchPoint.x = this->d_x[i].d_x;
+        //searchPoint.y = this->d_x[i].d_y;
+        //searchPoint.z = this->d_x[i].d_z;
 
-        if (this->d_nsearch_p->d_tree.radiusSearch(searchPoint, search_r,
+        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r,
                                                    neighs, sqr_dist) > 0) {
           for (std::size_t j = 0; j < neighs.size(); ++j)
             if (neighs[j] != i && this->d_ptId[neighs[j]] == pi) {
@@ -1307,12 +1308,12 @@ void model::DEMModel::updateContactNeighborlist() {
         std::vector<int> neighs;
         std::vector<float> sqr_dist;
 
-        pcl::PointXYZ searchPoint;
-        searchPoint.x = this->d_x[i].d_x;
-        searchPoint.y = this->d_x[i].d_y;
-        searchPoint.z = this->d_x[i].d_z;
+        //pcl::PointXYZ searchPoint;
+        //searchPoint.x = this->d_x[i].d_x;
+        //searchPoint.y = this->d_x[i].d_y;
+        //searchPoint.z = this->d_x[i].d_z;
 
-        if (this->d_nsearch_p->d_tree.radiusSearch(searchPoint, search_r,
+        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r,
                                                    neighs, sqr_dist) > 0) {
           for (std::size_t j = 0; j < neighs.size(); ++j)
             if (neighs[j] != i && this->d_ptId[neighs[j]] != pi) {
@@ -1343,12 +1344,12 @@ void model::DEMModel::updateNeighborlistCombine() {
         std::vector<int> neighs;
         std::vector<float> sqr_dist;
 
-        pcl::PointXYZ searchPoint;
-        searchPoint.x = this->d_x[i].d_x;
-        searchPoint.y = this->d_x[i].d_y;
-        searchPoint.z = this->d_x[i].d_z;
+        //pcl::PointXYZ searchPoint;
+        //searchPoint.x = this->d_x[i].d_x;
+        //searchPoint.y = this->d_x[i].d_y;
+        //searchPoint.z = this->d_x[i].d_z;
 
-        if (this->d_nsearch_p->d_tree.radiusSearch(searchPoint, search_r,
+        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r,
                                                    neighs, sqr_dist) > 0) {
           for (std::size_t j = 0; j < neighs.size(); ++j) {
             auto &j_id = neighs[j];
