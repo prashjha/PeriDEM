@@ -200,12 +200,9 @@ Core dependencies are:
   - [vtk](https://vtk.org/) (7.1.1)
     * recommend to install using `apt-get`
     * required to output simulation results in `.vtu` format
-  - [flann](https://github.com/mariusmuja/flann) (1.9.1)
-    * recommend to install using `apt-get`
-    * required to build PCL library
-  - [pcl](https://pointclouds.org/) (1.11.1)
-    * use build script to install
-    * required for tree search
+  - [nanoflann](https://github.com/jlblancoc/nanoflann) (1.3.2)
+    * included as external library in the code
+    * required for neighbor search
   - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (0.5.2)
     * recommend to install using `apt-get`
     * required to parse input file
@@ -236,7 +233,6 @@ make -j 4
 If libraries such as hpx and pcl are installed on the custom paths, we will write
 ```sh
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
-        -DPCL_DIR="<pcl directory>/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         -DCMAKE_BUILD_TYPE=Release \
@@ -245,7 +241,7 @@ cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
 make -j 4
 ```
 
-> :exclamation: Note that for HPX we provide `<hpx directory>/lib/cmake/HPX` and for PCL we provide `<pcl directory>/share/pcl-1.11`. Here, `<hpx directory>` and `<pcl directory>` are the root paths of the location where HPX and PCL are installed. 
+> :exclamation: Note that for HPX we provide `<hpx directory>/lib/cmake/HPX`, where `<hpx directory>` is the root paths of the location where HPX is installed. 
 
 
 ### Recommendations for quick build
@@ -281,7 +277,7 @@ For Ubuntu 20.04, above script should work. You may also get some help from the 
 For mac the steps will be same assuming 
   - key dependencies are installed using homebrew instead of `apt-get`
 ```sh
-brew install boost vtk yaml-cpp hwloc jemalloc flann cmake
+brew install boost vtk yaml-cpp hwloc jemalloc cmake
 ```
   - HPX and PCL installed similar to above
 
@@ -298,7 +294,6 @@ Alternatively, if you have already cloned the PeriDEM library and are in the roo
 ```sh
 mkdir build && cd build 
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
-        -DPCL_DIR="<pcl directory>/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         -DCMAKE_BUILD_TYPE=Release \
@@ -324,11 +319,11 @@ Docker files used for creating the above images can be accessed from [docker fil
 In [Packages](https://github.com/prashjha?tab=packages&repo_name=PeriDEM), docker images of PeriDEM are provided. They are built on ubuntu-18.04 (`prashjha/u1804-pd`) and ubuntu-20.04(`prashjha/u2004-pd`) images.
 
 ### Future plans to remove some dependencies
-PeriDEM currently depends on four major libraries: Boost, VTK, HPX, PCL
+PeriDEM currently depends on four major libraries: Boost, VTK, HPX, ~~PCL~~
   - Boost is not used directly but is required in building HPX, PCL, YAML-CPP 
   - If there are lightweight vtu writer and reader, dependency on VTK can be avoided
   - HPX is used for the multi-threading operation. Currently, HPX is a little troublesome to build, especially in clusters
-  - Only one feature of PCL is utilized currently. We do try to avoid building many libraries within PCL, but it will be nice to have a more lightweight library that performs tree search and that can be included as an external library in the code.
+  - [**We now use nanoflann for tree search**] Only one feature of PCL is utilized currently. We do try to avoid building many libraries within PCL, but it will be nice to have a more lightweight library that performs tree search and that can be included as an external library in the code.
 
 ### Ask for help
 Because this library depends on complex libraries, it may get a little challenging to build it. If you carefully read the instructions, you should be able to compile PeriDEM in both ubuntu 18.04 and 20.04! For mac, as mentioned before, building this code is challenging, and we have not been successful yet. 

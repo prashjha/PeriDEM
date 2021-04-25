@@ -18,7 +18,7 @@ int main(int argc, char *argv[]) {
 
   boost::program_options::options_description desc("Allowed options");
   desc.add_options()("help", "produce help message")(
-      "num-points,i", boost::program_options::value<size_t>(),
+      "num-points,i", boost::program_options::value<int>(),
       "Configuration file");
 
   boost::program_options::variables_map vm;

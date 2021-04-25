@@ -218,9 +218,6 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
 std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
 
   // create 3D lattice and perturb each lattice point
-  // int seed = 1020;
-  // double L = 1.;
-  // double dL = 0.2;
   size_t Nx, Ny, Nz;
   Nx = Ny = Nz = N;
   size_t N_tot = Nx * Ny * Nz;
@@ -249,16 +246,6 @@ std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
       neighSearchBrute(x, search_r, neigh_brute, neigh_brute_sq_dist);
 
   //
-  // pcl tree search
-  //
-  //  std::unique_ptr<nsearch::NSearchKd> pcl_nsearch = std::make_unique<nsearch::NSearchKd>(0, 1.);
-  //  auto pcl_tree_set_time = pcl_nsearch->updatePointCloud(x, true);
-  //  pcl_tree_set_time += pcl_nsearch->setInputCloud();
-  //
-  //  auto pcl_tree_search_time =
-  //      neighSearchTree(x, pcl_nsearch, search_r, neigh_pcl, neigh_pcl_sq_dist);
-
-  //
   // nanoflann tree search
   //
   std::unique_ptr<nsearch::NFlannSearchKd> nflann_nsearch = std::make_unique<nsearch::NFlannSearchKd>(x, 0);
@@ -272,15 +259,6 @@ std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
   //
   auto nflann_brute_compare = compare_results(
       neigh_nflann, neigh_brute, {"nflann_tree", "brute_force"}, -1, true);
-
-  //  auto nflann_pcl_compare = compare_results(
-  //      neigh_nflann, neigh_pcl, {"nflann_tree", "pcl_tree"}, -1, true);
-  //
-  //  auto pcl_nflann_compare = compare_results(
-  //      neigh_pcl, neigh_nflann, {"pcl_tree", "nflann_tree"}, -1, true);
-
-  //  auto pcl_brute_compare = compare_results(
-  //      neigh_pcl, neigh_brute, {"pcl_tree", "brute_force"}, -1, true);
 
   std::ostringstream msg;
   msg << fmt::format("  Setup times: \n"
