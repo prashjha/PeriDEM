@@ -10,7 +10,6 @@ INSTALLATGLOBAL="0" # if 1, then libraries will be installed in /usr/local <-- f
 
 cmake_build="0" # set to 1 to install
 hpx_build="1"
-pcl_build="1"
 
 # some preliminary setup
 if [ ! -d "$SOURCEDIR" ]; then
@@ -370,92 +369,6 @@ if [[ $hpx_build -eq "1" ]]; then
 
 
   cd "$HPX_BUILD_PATH"
-  make -j -l$BUILDTHREADS
-  make install
-fi
-
-echo "<<<<<<<<<<< >>>>>>>>>>>"
-echo "FLANN"
-echo "<<<<<<<<<<< >>>>>>>>>>>"
-# sudo apt install libflann-dev
-# brew install flann
-
-echo "<<<<<<<<<<< >>>>>>>>>>>"
-echo "PCL"
-echo "<<<<<<<<<<< >>>>>>>>>>>"
-PCL_VER="1.11.1"
-PCL_TAR_FILE="pcl-$PCL_VER.tar.gz"
-PCL_INSTALL_PATH=$SCRIPTPATH/local/pcl/$PCL_VER/$BUILD_TYPE
-if [[ "$INSTALLATGLOBAL" -eq "1" ]]; then
-  PCL_INSTALL_PATH="/usr/local"
-fi
-PCL_BUILD_PATH=$BUILDDIR/pcl/$PCL_VER/$BUILD_TYPE/
-PCL_SOURCE_DIR=$SOURCEDIR/pcl/$PCL_VER
-
-if [[ $pcl_build -eq "1" ]]; then
-  # download library
-  cd $SOURCEDIR
-  if [ ! -f "$PCL_TAR_FILE" ]; then
-    wget "https://github.com/PointCloudLibrary/pcl/archive/$PCL_TAR_FILE"
-  fi
-
-  if [ ! -d "$PCL_SOURCE_DIR" ]; then
-    mkdir -p $PCL_SOURCE_DIR
-    tar -zxf $PCL_TAR_FILE -C $PCL_SOURCE_DIR --strip-components=1
-  fi
-
-  # build library
-  cd $BUILDDIR
-
-  if [ ! -d "$PCL_BUILD_PATH" ]; then
-    mkdir -p "$PCL_BUILD_PATH"
-  else 
-    rm -rf $PCL_BUILD_PATH
-    mkdir -p $PCL_BUILD_PATH
-  fi
-
-  cd "$PCL_BUILD_PATH"
-
-  $CMAKE_EXE -DCMAKE_BUILD_TYPE=$BUILD_TYPE  \
-             -DCMAKE_INSTALL_PREFIX=$PCL_INSTALL_PATH \
-             -DBUILD_2d=OFF \
-             -DBUILD_apps=OFF \
-             -DBUILD_common=On \
-             -DBUILD_examples=OFF \
-             -DBUILD_features=OFF \
-             -DBUILD_filters=OFF \
-             -DBUILD_geometry=OFF \
-             -DBUILD_global_tests=OFF \
-             -DBUILD_io=OFF \
-             -DBUILD_keypoints=OFF \
-             -DBUILD_ml=OFF \
-             -DBUILD_outofcore=OFF \
-             -DBUILD_people=OFF \
-             -DBUILD_recognition=OFF \
-             -DBUILD_registration=OFF \
-             -DBUILD_sample_consensus=OFF \
-             -DBUILD_segmentation=OFF \
-             -DBUILD_simulation=OFF \
-             -DBUILD_stereo=OFF \
-             -DBUILD_surface=OFF \
-             -DBUILD_surface_on_nurbs=OFF \
-             -DBUILD_tools=OFF \
-             -DBUILD_tracking=OFF \
-             -DBUILD_visualization=OFF \
-             $PCL_SOURCE_DIR
-
-
-             #-DWITH_VTK=OFF \
-             #-DVTK_ROOT=$VTK_INSTALL_PATH \
-             #-DCMAKE_INSTALL_RPATH=$PCL_INSTALL_PATH \
-             #-DFLANN_ROOT="$FLANN_INSTALL_PATH" \
-             #-DFLANN_LIBRARY="$FLANN_INSTALL_PATH/lib" \
-             #-DFLANN_INCLUDE_DIR="$FLANN_INSTALL_PATH/include" \
-             # -DBOOST_ROOT=$BOOST_INSTALL_PATH \
-             # -DBoost_INCLUDE_DIR=$BOOST_INSTALL_PATH/include \
-             # -DVTK_ROOT=$VTK_INSTALL_PATH \
- 
-  cd "$PCL_BUILD_PATH"
   make -j -l$BUILDTHREADS
   make install
 fi

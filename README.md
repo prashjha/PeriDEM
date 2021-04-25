@@ -187,7 +187,7 @@ Core dependencies are:
     * recommend to install using `apt-get`
   - [boost](https://www.boost.org/) (1.65.1)
     * recommend to install using `apt-get`
-    * required for building YAML, HPX, and possibly PCL libraries
+    * required for building YAML and HPX
   - [hwloc](https://github.com/open-mpi/hwloc) (1.11.9)
     * recommend to install using `apt-get`
     * required to build HPX library
@@ -230,7 +230,7 @@ cmake   -DEnable_Documentation=ON \
 make -j 4
 ```
 
-If libraries such as hpx and pcl are installed on the custom paths, we will write
+If HPX is installed on the custom paths, we will write
 ```sh
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
         -DEnable_Documentation=ON \
@@ -257,7 +257,7 @@ sudo apt-get install -y build-essential ubuntu-dev-tools \
   doxygen doxygen-latex graphviz ghostscript \
   gfortran libmpfr-dev libgmp-dev \
   libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
-  libvtk7-dev gmsh libflann-dev python3-pip 
+  libvtk7-dev gmsh python3-pip 
 
 # pyvista and pandas are not required, so they can be excluded
 pip3 install numpy pyvista pandas
@@ -265,7 +265,7 @@ pip3 install numpy pyvista pandas
 
 > :zap: Above is also available in the bash script [install_base.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_base.sh). 
 
-2. Build hpx and pcl. For Ubuntu 18.04, you can use [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
+2. Build hpx. For Ubuntu 18.04, you can use [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
 ```sh
 ./install_libs.sh
 ```
@@ -279,16 +279,16 @@ For mac the steps will be same assuming
 ```sh
 brew install boost vtk yaml-cpp hwloc jemalloc cmake
 ```
-  - HPX and PCL installed similar to above
+  - HPX is installed similar to above
 
-> :warning: With the recent update in homebrew where they changed the current version of the boost, I am no longer able to build the HPX and PCL in mac Big Sur 11.2.1. 
+> :warning: With the recent update in homebrew where they changed the current version of the boost, I am no longer able to build the HPX in mac Big Sur 11.2.1. 
 
 3. Build peridem using [install_peridem.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_peridem.sh):
 ```sh
 ./install_peridem.sh
 ```
 
-> :warning: Be sure to modify `install_peridem.sh` file to specify the correct paths where HPX and PCL are installed!
+> :warning: Be sure to modify `install_peridem.sh` file to specify the correct paths where HPX is installed!
 
 Alternatively, if you have already cloned the PeriDEM library and are in the root directory of PeriDEM, run following in the terminal:
 ```sh
@@ -320,10 +320,10 @@ In [Packages](https://github.com/prashjha?tab=packages&repo_name=PeriDEM), docke
 
 ### Future plans to remove some dependencies
 PeriDEM currently depends on four major libraries: Boost, VTK, HPX, ~~PCL~~
-  - Boost is not used directly but is required in building HPX, PCL, YAML-CPP 
+  - Boost is not used directly but is required in building HPX, ~~PCL~~, YAML-CPP 
   - If there are lightweight vtu writer and reader, dependency on VTK can be avoided
   - HPX is used for the multi-threading operation. Currently, HPX is a little troublesome to build, especially in clusters
-  - [**We now use nanoflann for tree search**] Only one feature of PCL is utilized currently. We do try to avoid building many libraries within PCL, but it will be nice to have a more lightweight library that performs tree search and that can be included as an external library in the code.
+  - [**We now use nanoflann for tree search**] Only one feature of ~~PCL~~ is utilized currently. We do try to avoid building many libraries within ~~PCL~~, but it will be nice to have a more lightweight library that performs tree search and that can be included as an external library in the code.
 
 ### Ask for help
 Because this library depends on complex libraries, it may get a little challenging to build it. If you carefully read the instructions, you should be able to compile PeriDEM in both ubuntu 18.04 and 20.04! For mac, as mentioned before, building this code is challenging, and we have not been successful yet. 
