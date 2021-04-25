@@ -56,9 +56,9 @@ int main(int argc, char *argv[]) {
     for (size_t i = 1; i < 6; i++)
       test::testQuadElem(i, filepath);
 
-    //    // test quad data for triangle element
-    //    for (size_t i = 1; i < 4; i++)
-    //      test::testTetElem(i, filepath);
+    // test quad data for triangle element
+    for (size_t i = 1; i < 4; i++)
+      test::testTetElem(i, filepath);
 
     // test additional time in computing quad points instead of storing it
     if (false) {
