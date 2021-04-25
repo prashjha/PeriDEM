@@ -30,8 +30,6 @@ public:
   /*!
    * @brief Constructor
    */
-  //NSearch() : d_cloud_p(new pcl::PointCloud<pcl::PointXYZ>), d_tree
-  // (false) {};
   BaseNSearch(std::string name, size_t debug = 0)
       : d_debug(debug), d_treeType(name) {}
 

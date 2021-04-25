@@ -185,13 +185,6 @@ void model::DEMModel::init() {
   log("DEMModel: Creating neighbor search tree.\n");
 
   // create tree object
-
-  // if using pcl search
-  // double tree_resolution = 0.2 * d_hMin; // used in octree
-  // d_nsearch_p =
-  //      std::make_unique<NSearch>(d_outputDeck_p->d_debug, tree_resolution);
-
-  // if using nanoflann search
   d_nsearch_p = std::make_unique<NSearch>(d_x, d_outputDeck_p->d_debug);
 
   // setup tree
