@@ -13,6 +13,8 @@
 #include <hpx/config.hpp>
 #include <string>
 #include <vector>
+#include "fmt/format.h"
+#include "nanoflann/include/nanoflann.hpp"
 
 namespace test {
 
@@ -21,6 +23,8 @@ namespace test {
  * @param N size of particle cloud in each dimension. total size would be N^3
  */
 void testNSearch(size_t N);
+
+std::string testNanoflann(size_t N, double L, double dL, int seed);
 
 } // namespace test
 

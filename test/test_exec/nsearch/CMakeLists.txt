@@ -6,3 +6,4 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 add_hpx_executable(TestNSearch SOURCES testNSearch.cpp testNSearchLib.cpp DEPENDENCIES Util FE Geometry Particle NSearch)
+#target_link_libraries(TestNSearch PUBLIC nanoflann::nanoflann)

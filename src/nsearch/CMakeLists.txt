@@ -11,4 +11,4 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_hpx_library(NSearch SOURCES ${SOURCES} DEPENDENCIES ${PCL_LIBRARIES})
-target_link_libraries(NSearch PUBLIC ${PCL_LIBRARIES})
+target_link_libraries(NSearch PUBLIC ${PCL_LIBRARIES} nanoflann::nanoflann)

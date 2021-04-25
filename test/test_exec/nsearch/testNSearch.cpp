@@ -13,6 +13,7 @@
 #include <iostream>
 #include <boost/program_options.hpp>            // program options
 
+
 int main(int argc, char *argv[]) {
 
   boost::program_options::options_description desc("Allowed options");
@@ -44,7 +45,21 @@ int main(int argc, char *argv[]) {
   //
   // test transformation
   //
-  test::testNSearch(N);
+  //test::testNSearch(N);
+  std::vector<double> L_test = {1., 1000., 0.01};
+  std::vector<double> dL_test = {0.2, 0.5};
+  std::vector<int> seeds = {1093};//, 13828, 78474};
+  std::vector<int> N_test = {10, 20, 40};
+  int test_count = 0;
+  for (auto L : L_test)
+    for (auto dL : dL_test)
+      for (auto seed : seeds)
+        for (auto N : N_test) {
+          std::cout << "**** Test number = " << test_count++ << " ****\n";
+          std::cout << fmt::format("Test parameters: L = {}, dL = {}, seed = {}, N = {}\n\n", L, dL, seed, N);
+          auto msg = test::testNanoflann(N, L, dL*L, seed);
+          std::cout << msg;
+        }
 
   return EXIT_SUCCESS;
 }
