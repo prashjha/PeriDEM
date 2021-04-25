@@ -215,96 +215,7 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
 }
 } // namespace
 
-void test::testNSearch(size_t N) {
-
-  // create 3D lattice and perturb each lattice point
-  int seed = 1000;
-  double L = 1.;
-  double dL = 0.2;
-  size_t Nx, Ny, Nz;
-  Nx = Ny = Nz = N;
-  size_t N_tot = Nx * Ny * Nz;
-
-  std::vector<util::Point> x(N_tot, util::Point());
-  lattice(L, Nx, Ny, Nz, dL, seed, x);
-  std::cout << "Total points = " << x.size() << "\n";
-
-  std::vector<std::vector<size_t>> neigh_tree(N_tot, std::vector<size_t>());
-  std::vector<std::vector<float>> neigh_sq_dist_tree(N_tot,
-                                                     std::vector<float>());
-  std::vector<std::vector<size_t>> neigh(N_tot, std::vector<size_t>());
-  std::vector<std::vector<float>> neigh_sq_dist(N_tot, std::vector<float>());
-
-  // create search object and report time needed for creation
-  std::cout << "Step 1: Initial setup \n";
-  std::unique_ptr<nsearch::NSearchKd> nsearch = std::make_unique<nsearch::NSearchKd>(0, 1.);
-  auto set_cloud_pts_time = nsearch->updatePointCloud(x, true);
-  auto set_tree_time = nsearch->setInputCloud();
-  std::cout << "    tree_setup_time = " << set_cloud_pts_time + set_tree_time
-            << " \n"
-            << std::flush;
-
-  //
-  double search_r = 1.5 * L;
-  std::cout << "Step 2: Search time \n";
-  auto tree_search_time =
-      neighSearchTree(x, nsearch, search_r, neigh_tree, neigh_sq_dist_tree);
-  std::cout << "    tree_search_time = " << tree_search_time << " \n"
-            << std::flush;
-
-  auto brute_search_time = neighSearchBrute(x, search_r, neigh, neigh_sq_dist);
-  std::cout << "    brute_force_search_time = " << brute_search_time << " \n"
-            << std::flush;
-
-  //
-  std::cout << "Step 3: Compare tree and brute results (match is not "
-               "necessary!! \n";
-  std::cout << compare_results(neigh_tree, neigh, {"pcl_tree", "brute_force"});
-
-  //
-  std::cout << "Step 4: Change points and redo calculations multiple times \n";
-  size_t N_test = 5;
-  // to change perturbation size
-  RandGenerator gen(get_rd_gen(seed * 39));
-  UniformDistribution dist(dL * 0.5, dL * 2.);
-
-  std::vector<double> compute_times_tree(N_test, 0.);
-  std::vector<double> compute_times_brute(N_test, 0.);
-  for (size_t i = 0; i < N_test; i++) {
-    double dL_rand = dist(gen);
-    lattice(L, Nx, Ny, Nz, dL_rand, seed + i + 1, x);
-
-    std::cout << "    Test number = " << i << "\n";
-
-    auto tree_search_time =
-        neighSearchTree(x, nsearch, search_r, neigh_tree, neigh_sq_dist_tree);
-    std::cout << "    tree_search_time = " << tree_search_time << " \n"
-              << std::flush;
-
-    auto brute_search_time =
-        neighSearchBrute(x, search_r, neigh, neigh_sq_dist);
-    std::cout << "    brute_force_search_time = " << brute_search_time << " \n"
-              << std::flush;
-
-    compute_times_tree[i] = tree_search_time;
-    compute_times_brute[i] = brute_search_time;
-  }
-
-  // compute stats and report
-  double mean_brute = 0., std_brute = 0.;
-  stats(compute_times_brute, mean_brute, std_brute);
-
-  double mean_tree = 0., std_tree = 0.;
-  stats(compute_times_tree, mean_tree, std_tree);
-
-  std::cout << "\n";
-  std::cout << "    brute_force search: mean = " << mean_brute
-            << ", std = " << std_brute << "\n";
-  std::cout << "    pcl_tree search: mean = " << mean_tree
-            << ", std = " << std_tree << "\n";
-}
-
-std::string test::testNanoflannAndPCL(size_t N, double L, double dL, int seed) {
+std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
 
   // create 3D lattice and perturb each lattice point
   // int seed = 1020;
@@ -340,12 +251,12 @@ std::string test::testNanoflannAndPCL(size_t N, double L, double dL, int seed) {
   //
   // pcl tree search
   //
-  std::unique_ptr<nsearch::NSearchKd> pcl_nsearch = std::make_unique<nsearch::NSearchKd>(0, 1.);
-  auto pcl_tree_set_time = pcl_nsearch->updatePointCloud(x, true);
-  pcl_tree_set_time += pcl_nsearch->setInputCloud();
-
-  auto pcl_tree_search_time =
-      neighSearchTree(x, pcl_nsearch, search_r, neigh_pcl, neigh_pcl_sq_dist);
+  //  std::unique_ptr<nsearch::NSearchKd> pcl_nsearch = std::make_unique<nsearch::NSearchKd>(0, 1.);
+  //  auto pcl_tree_set_time = pcl_nsearch->updatePointCloud(x, true);
+  //  pcl_tree_set_time += pcl_nsearch->setInputCloud();
+  //
+  //  auto pcl_tree_search_time =
+  //      neighSearchTree(x, pcl_nsearch, search_r, neigh_pcl, neigh_pcl_sq_dist);
 
   //
   // nanoflann tree search
@@ -362,36 +273,29 @@ std::string test::testNanoflannAndPCL(size_t N, double L, double dL, int seed) {
   auto nflann_brute_compare = compare_results(
       neigh_nflann, neigh_brute, {"nflann_tree", "brute_force"}, -1, true);
 
-  auto nflann_pcl_compare = compare_results(
-      neigh_nflann, neigh_pcl, {"nflann_tree", "pcl_tree"}, -1, true);
+  //  auto nflann_pcl_compare = compare_results(
+  //      neigh_nflann, neigh_pcl, {"nflann_tree", "pcl_tree"}, -1, true);
+  //
+  //  auto pcl_nflann_compare = compare_results(
+  //      neigh_pcl, neigh_nflann, {"pcl_tree", "nflann_tree"}, -1, true);
 
-  auto pcl_nflann_compare = compare_results(
-      neigh_pcl, neigh_nflann, {"pcl_tree", "nflann_tree"}, -1, true);
-
-  auto pcl_brute_compare = compare_results(
-      neigh_pcl, neigh_brute, {"pcl_tree", "brute_force"}, -1, true);
+  //  auto pcl_brute_compare = compare_results(
+  //      neigh_pcl, neigh_brute, {"pcl_tree", "brute_force"}, -1, true);
 
   std::ostringstream msg;
   msg << fmt::format("  Setup times: \n"
-                     "    pcl_tree_set_time = {}\n"
                      "    nflann_tree_set_time = {}\n",
-                     pcl_tree_set_time, nflann_tree_set_time);
+                     nflann_tree_set_time);
 
   msg << fmt::format("  Search times: \n"
                      "    brute_force_search_time = {}\n"
-                     "    pcl_tree_search_time = {}\n"
                      "    nflann_tree_search_time = {}\n",
                      brute_force_search_time,
-                     pcl_tree_search_time, nflann_tree_search_time);
+                     nflann_tree_search_time);
 
   msg << fmt::format("  Comparison results: \n"
-                     "    nflann_pcl_compare: \n{}\n"
-                     "    pcl_nflann_compare: \n{}\n"
-                     "    nflann_brute_compare: \n{}\n"
-                     "    pcl_brute_compare: \n{}\n",
-                     nflann_pcl_compare, pcl_nflann_compare,
-                     nflann_brute_compare,
-                     pcl_brute_compare);
+                     "    nflann_brute_compare: \n{}\n",
+                     nflann_brute_compare);
 
   return msg.str();
 }

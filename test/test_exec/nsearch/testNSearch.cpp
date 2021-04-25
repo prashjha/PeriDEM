@@ -58,7 +58,7 @@ int main(int argc, char *argv[]) {
           std::cout << fmt::format("Test parameters: L = {}, lattice "
                                    "perturbation = {}, seed = {}, N = {}\n\n",
                                    L, dL * L, seed, n);
-          auto msg = test::testNanoflannAndPCL(n, L, dL*L, seed);
+          auto msg = test::testNanoflann(n, L, dL*L, seed);
           std::cout << msg;
         }
 
