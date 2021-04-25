@@ -16,12 +16,7 @@
 #include <string.h> // size_t type
 #include <vector>
 
-#include <pcl/kdtree/kdtree_flann.h>
-#include <pcl/point_cloud.h>
-#include <pcl/octree/octree_search.h>
-
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
+#include "nflannSetup.h"
 
 /*! @brief Methods for performing efficient search of neighboring points */
 namespace nsearch {
@@ -35,95 +30,103 @@ public:
   /*!
    * @brief Constructor
    */
-  //NSearch() : d_cloud_p(new pcl::PointCloud<pcl::PointXYZ>), d_tree
-  // (false) {};
   BaseNSearch(std::string name, size_t debug = 0)
-      : d_debug(debug), d_treeType(name),
-        d_cloud_p(new pcl::PointCloud<pcl::PointXYZ>) {}
+      : d_debug(debug), d_treeType(name) {}
 
-  double updatePointCloud(const std::vector<util::Point> &x,
-                        bool parallel = true) {
-
-    auto t1 = steady_clock::now();
-    if (parallel) {
-      d_cloud_p->points.resize(x.size());
-
-      hpx::parallel::for_loop(
-          hpx::parallel::execution::par, 0, x.size(),
-          [this, &x](boost::uint64_t i) {
-            (*this->d_cloud_p)[i].x = x[i].d_x;
-            (*this->d_cloud_p)[i].y = x[i].d_y;
-            (*this->d_cloud_p)[i].z = x[i].d_z;
-          });
-    } else {
-      for (size_t i=0; i<x.size(); i++) {
-        (*this->d_cloud_p)[i].x = x[i].d_x;
-        (*this->d_cloud_p)[i].y = x[i].d_y;
-        (*this->d_cloud_p)[i].z = x[i].d_z;
-      }
-    }
-    auto t2 = steady_clock::now();
-    return util::methods::timeDiff(t1, t2);
-  }
+  virtual double updatePointCloud(const std::vector<util::Point> &x,
+                        bool parallel = true) = 0;
 
   virtual double setInputCloud() = 0;
+
+  virtual size_t radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<int> &neighs,
+      std::vector<float> &sqr_dist) = 0;
+
+  virtual size_t radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<size_t> &neighs,
+      std::vector<double> &sqr_dist) = 0;
 
 public:
   /*@brief control the verbosity */
   size_t d_debug;
-  /*@brief name of tree: kdtree or octree */
+
+  /*@brief name of tree: nflann_kdtree */
   std::string d_treeType;
-  /*@brief coordinates of the points */
-  pcl::PointCloud<pcl::PointXYZ>::Ptr d_cloud_p;
 };
 
 /*!
- * @brief A class for nearest neighbor search
+ * @brief A class for nearest neighbor search using nanoflann library
  */
-class NSearchKd : public BaseNSearch {
+class NFlannSearchKd : public BaseNSearch {
 
 public:
   /*!
    * @brief Constructor
    */
-  NSearchKd(size_t debug = 0, double tree_resolution = 1.)
-      : BaseNSearch("kdtree", debug) {}
+  NFlannSearchKd(const PointCloud &x, size_t debug = 0, double tree_resolution = 1.)
+      : BaseNSearch("nflann_kdtree", debug), d_cloud(x), d_tree(3, d_cloud,
+      nanoflann::KDTreeSingleIndexAdaptorParams(10 /* max leaf */)) {
+    d_params.sorted = false;
+  }
 
   double setInputCloud() override {
     auto t1 = steady_clock::now();
-    d_tree.setInputCloud(d_cloud_p);
+    d_tree.buildIndex();
     auto t2 = steady_clock::now();
     return util::methods::timeDiff(t1, t2);
   }
 
-public:
-  pcl::KdTreeFLANN<pcl::PointXYZ> d_tree;
-};
+  double updatePointCloud(const std::vector<util::Point> &x,
+                          bool parallel = true) override {
+    return 0;
+  }
 
-/*!
- * @brief A class for nearest neighbor search
- */
-class NSearchOct : public BaseNSearch {
+  size_t radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<size_t> &neighs,
+      std::vector<double> &sqr_dist) override {
 
-public:
-  /*!
-   * @brief Constructor
-   */
-  //NSearch() : d_cloud_p(new pcl::PointCloud<pcl::PointXYZ>), d_tree
-  // (false) {};
-  NSearchOct(size_t debug = 0, double tree_resolution = 1.)
-      : BaseNSearch("octree", debug), d_tree(tree_resolution){}
+    double query_pt[3] = {searchPoint[0], searchPoint[1], searchPoint[2]};
 
-  double setInputCloud() override {
-    auto t1 = steady_clock::now();
-    d_tree.setInputCloud(d_cloud_p);
-    d_tree.addPointsFromInputCloud();
-    auto t2 = steady_clock::now();
-    return util::methods::timeDiff(t1, t2);
+    TreeSearchRes resultSet(search_r * search_r, neighs, sqr_dist);
+    return d_tree.radiusSearchCustomCallback(&query_pt[0], resultSet, d_params);
+  }
+
+  size_t radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<int> &neighs,
+      std::vector<float> &sqr_dist) override {
+
+    // ugly but quick fix
+    // first, get results using int and float and then convert
+    std::vector<size_t> neighs_temp;
+    std::vector<double> sqr_dist_temp;
+    auto N =
+        this->radiusSearch(searchPoint, search_r, neighs_temp, sqr_dist_temp);
+
+    if (N > 0) {
+      neighs.resize(N);
+      sqr_dist.resize(N);
+      for (size_t i=0; i<N; i++) {
+        neighs.push_back(int(neighs_temp[i]));
+        sqr_dist.push_back(float(sqr_dist_temp[i]));
+      }
+    }
+
+    return N;
   }
 
 public:
-  pcl::octree::OctreePointCloudSearch<pcl::PointXYZ> d_tree;
+  /*! @brief coordinates of the points */
+  PointCloudAdaptor d_cloud;
+
+  /*! @brief Tree */
+  NFlannKdTree d_tree;
+
+  /*! @brief Tree search parameters */
+  nanoflann::SearchParams d_params;
 };
 
 } // namespace nsearch

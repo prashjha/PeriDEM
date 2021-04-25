@@ -47,14 +47,6 @@ if [[ $HPX_INSTALL_PATH -eq "0" ]]; then
 fi
 
 
-# echo "<<<<<<<<<<< >>>>>>>>>>>"
-# echo "PCL"
-# echo "<<<<<<<<<<< >>>>>>>>>>>"
-PCL_INSTALL_PATH="0"
-if [[ $PCL_INSTALL_PATH -eq "0" ]]; then
-  echo "Please provide path where PCL is installed in PCL_INSTALL_PATH variable and then rerun the script again."
-fi
-
 echo "<<<<<<<<<<< >>>>>>>>>>>"
 echo "PERIDEM"
 echo "<<<<<<<<<<< >>>>>>>>>>>"
@@ -91,7 +83,6 @@ if [[ $peridem_build -eq "1" ]]; then
         -DCMAKE_INSTALL_PREFIX=$PERIDEM_INSTALL_PATH \
         -DCMAKE_INSTALL_RPATH=$PERIDEM_INSTALL_PATH \
         -DHPX_DIR="$HPX_INSTALL_PATH/lib/cmake/HPX" \
-        -DPCL_DIR="$PCL_INSTALL_PATH/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         $PERIDEM_SOURCE_DIR

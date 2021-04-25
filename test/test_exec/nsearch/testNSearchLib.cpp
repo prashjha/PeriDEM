@@ -22,8 +22,6 @@
 // hpx lib
 #include <hpx/include/parallel_algorithm.hpp>
 
-typedef nsearch::NSearchKd NSearch;
-
 typedef std::mt19937 RandGenerator;
 typedef std::uniform_real_distribution<> UniformDistribution;
 
@@ -31,7 +29,7 @@ namespace {
 
 RandGenerator get_rd_gen(int seed) {
 
-  //return RandGenerator();
+  // return RandGenerator();
 
   if (seed < 0) {
     std::random_device rd;
@@ -51,9 +49,9 @@ bool isInList(const std::vector<size_t> *list, size_t i) {
 
 void stats(const std::vector<double> &x, double &mean, double &std) {
   double mu = 0.;
-  for (auto &y: x)
+  for (auto &y : x)
     mu += y;
-  mu = mu/x.size();
+  mu = mu / x.size();
 
   double s = 0.;
   for (auto &y : x)
@@ -70,25 +68,25 @@ void lattice(double L, size_t Nx, size_t Ny, size_t Nz, double dL, int seed,
   RandGenerator gen(get_rd_gen(seed));
   UniformDistribution dist(-dL, dL);
 
-  x.resize(Nx*Ny*Nz);
+  x.resize(Nx * Ny * Nz);
 
   size_t count = 0;
-  for (size_t i=0; i<Nx; i++)
-    for (size_t j=0; j<Ny; j++)
-      for (size_t k=0; k<Nz; k++) {
+  for (size_t i = 0; i < Nx; i++)
+    for (size_t j = 0; j < Ny; j++)
+      for (size_t k = 0; k < Nz; k++) {
         auto y = util::Point();
-        y.d_x = i*L + dist(gen);
-        y.d_y = j*L + dist(gen);
-        y.d_z = k*L + dist(gen);
+        y.d_x = i * L + dist(gen);
+        y.d_y = j * L + dist(gen);
+        y.d_z = k * L + dist(gen);
 
         x[count] = y;
         count++;
       }
 }
 
+template <class NSearch>
 double neighSearchTree(const std::vector<util::Point> &x,
-                       const std::unique_ptr<NSearch> &nsearch,
-                       const double &r,
+                       const std::unique_ptr<NSearch> &nsearch, const double &r,
                        std::vector<std::vector<size_t>> &neigh,
                        std::vector<std::vector<float>> &neigh_sq_dist) {
   neigh.resize(x.size());
@@ -97,17 +95,11 @@ double neighSearchTree(const std::vector<util::Point> &x,
   hpx::parallel::for_loop(
       hpx::parallel::execution::par, 0, x.size(),
       [&x, &neigh, &neigh_sq_dist, &nsearch, r](boost::uint64_t i) {
-
         std::vector<int> neighs;
         std::vector<float> sqr_dist;
 
-        pcl::PointXYZ searchPoint;
-        searchPoint.x = x[i].d_x;
-        searchPoint.y = x[i].d_y;
-        searchPoint.z = x[i].d_z;
-
-        if (nsearch->d_tree.radiusSearch(
-            searchPoint, r, neighs, sqr_dist) > 0) {
+        if (nsearch->radiusSearch(x[i], r, neighs, sqr_dist) >
+            0) {
           for (std::size_t j = 0; j < neighs.size(); ++j)
             if (size_t(neighs[j]) != i) {
               neigh[i].push_back(size_t(neighs[j]));
@@ -119,105 +111,92 @@ double neighSearchTree(const std::vector<util::Point> &x,
   return util::methods::timeDiff(t1, t2);
 }
 
-double neighSearchBrute(const std::vector<util::Point> &x,
-                        const double &r,
+template <class NSearch>
+double neighSearchTreeSizet(const std::vector<util::Point> &x,
+                       const std::unique_ptr<NSearch> &nsearch, const double &r,
+                       std::vector<std::vector<size_t>> &neigh,
+                       std::vector<std::vector<float>> &neigh_sq_dist) {
+  neigh.resize(x.size());
+  neigh_sq_dist.resize(x.size());
+  auto t1 = steady_clock::now();
+  hpx::parallel::for_loop(
+      hpx::parallel::execution::par, 0, x.size(),
+      [&x, &neigh, &neigh_sq_dist, &nsearch, r](boost::uint64_t i) {
+        std::vector<size_t> neighs;
+        std::vector<double> sqr_dist;
+
+        if (nsearch->radiusSearch(x[i], r, neighs, sqr_dist) >
+            0) {
+          for (std::size_t j = 0; j < neighs.size(); ++j)
+            if (size_t(neighs[j]) != i) {
+              neigh[i].push_back(size_t(neighs[j]));
+              neigh_sq_dist[i].push_back(sqr_dist[j]);
+            }
+        }
+      });
+  auto t2 = steady_clock::now();
+  return util::methods::timeDiff(t1, t2);
+}
+
+double neighSearchBrute(const std::vector<util::Point> &x, const double &r,
                         std::vector<std::vector<size_t>> &neigh,
                         std::vector<std::vector<float>> &neigh_sq_dist) {
   neigh.resize(x.size());
   neigh_sq_dist.resize(x.size());
 
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, x.size(),
-      [&x, &neigh, &neigh_sq_dist, r]
-          (boost::uint64_t i) {
+  hpx::parallel::for_loop(hpx::parallel::execution::par, 0, x.size(),
+                          [&x, &neigh, &neigh_sq_dist, r](boost::uint64_t i) {
+                            auto searchPoint = x[i];
 
-        auto searchPoint = x[i];
-
-        for (size_t j = 0; j < x.size(); j++) {
-          auto dx = searchPoint - x[j];
-          auto l = dx.length();
-          if (util::isLess(l, r) and j != i) {
-            neigh[i].push_back(j);
-            neigh_sq_dist[i].push_back(l);
-          }
-        }
-      });
+                            for (size_t j = 0; j < x.size(); j++) {
+                              auto dx = searchPoint - x[j];
+                              auto l = dx.length();
+                              if (util::isLess(l, r) and j != i) {
+                                neigh[i].push_back(j);
+                                neigh_sq_dist[i].push_back(l);
+                              }
+                            }
+                          });
   auto t2 = steady_clock::now();
   return util::methods::timeDiff(t1, t2);
 }
-}
 
-void test::testNSearch(size_t N) {
-
-  // create 3D lattice and perturb each lattice point
-  int seed = 1000;
-  double L = 1.;
-  double dL = 0.2;
-  size_t Nx, Ny, Nz;
-  Nx = Ny = Nz = N;
-  size_t N_tot = Nx*Ny*Nz;
-
-  std::vector<util::Point> x(N_tot, util::Point());
-  lattice(L, Nx, Ny, Nz, dL, seed, x);
-  std::cout << "Total points = " << x.size() << "\n";
-
-  std::vector<std::vector<size_t>> neigh_tree(N_tot, std::vector<size_t>());
-  std::vector<std::vector<float>> neigh_sq_dist_tree(N_tot,
-                                                     std::vector<float>());
-  std::vector<std::vector<size_t>> neigh(N_tot, std::vector<size_t>());
-  std::vector<std::vector<float>> neigh_sq_dist(N_tot, std::vector<float>());
-
-  // create search object and report time needed for creation
-  std::cout << "Step 1: Initial setup \n";
-  std::unique_ptr<NSearch> nsearch = std::make_unique<NSearch>(0, 1.);
-  auto set_cloud_pts_time = nsearch->updatePointCloud(x, true);
-  auto set_tree_time = nsearch->setInputCloud();
-  std::cout << "    tree_setup_time = " << set_cloud_pts_time + set_tree_time
-            << " \n" << std::flush;
-
-  //
-  double search_r = 1.5 * L;
-  std::cout << "Step 2: Search time \n";
-  auto tree_search_time = neighSearchTree(
-      x, nsearch, search_r, neigh_tree, neigh_sq_dist_tree);
-  std::cout << "    tree_search_time = " << tree_search_time << " \n"
-            << std::flush;
-
-  auto brute_search_time = neighSearchBrute(x, search_r, neigh, neigh_sq_dist);
-  std::cout << "    brute_search_time = " << brute_search_time << " \n"
-            << std::flush;
-
-  //
-  std::cout << "Step 3: Compare tree and brute results (match is not "
-               "necessary!! \n";
+std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
+                            const std::vector<std::vector<size_t>> &neigh2,
+                            std::vector<std::string> tags,
+                            int check_nodes_num = -1,
+                            bool only_err_count = false) {
   size_t error_size = 0;
   size_t error_nodes = 0;
   size_t error_neighs = 0;
   std::ostringstream composs;
-  for (size_t i=0; i<x.size(); i++) {
+  for (size_t i = 0; i < neigh1.size(); i++) {
+
+    if (check_nodes_num > 0 and i > check_nodes_num)
+      continue;
 
     size_t err_neighs = 0;
-    auto &tree_neigh = neigh_tree[i];
-    auto &brute_neigh = neigh[i];
+    auto &n1 = neigh1[i];
+    auto &n2 = neigh2[i];
 
     bool header_done = false;
-    if (tree_neigh.size() != brute_neigh.size()) {
+    if (n1.size() != n2.size()) {
       composs << "    Node = " << i << " \n";
-      composs << "      size (tree) " << tree_neigh.size() << " != "
-              << brute_neigh.size() << " (brute) not matching\n";
-
+      composs << fmt::format("      size ({}) {} != {} ({}) not matching\n",
+                             tags[0], n1.size(), n2.size(), tags[1]);
       header_done = true;
-
       error_size++;
     }
 
-    for (auto j : brute_neigh) {
-      if (!isInList(&tree_neigh, j)) {
+    for (auto j : n2) {
+      if (!isInList(&n1, j)) {
         if (!header_done)
           composs << "    Node = " << i << " \n";
 
-        composs << "      neigh = " << j << " not found in tree neighs\n";
+        composs << fmt::format("      neigh = {} in {} search not found in {} "
+                               "search neighs list\n",
+                               j, tags[1], tags[0]);
         err_neighs += 1;
       }
     }
@@ -225,50 +204,76 @@ void test::testNSearch(size_t N) {
     if (err_neighs > 0)
       error_neighs += err_neighs;
   }
-  std::cout << "    error_size = " << error_size << ", error_neighs = "
-            << error_neighs << "\n";
-  std::cout << composs.str() << "\n";
 
+  if (only_err_count)
+    return fmt::format("    error_size = {}, error_neighs = {}\n", error_size,
+                       error_neighs);
+  else
+    return fmt::format("    error_size = {}, error_neighs = {}\n", error_size,
+                       error_neighs) +
+           composs.str();
+}
+} // namespace
+
+std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
+
+  // create 3D lattice and perturb each lattice point
+  size_t Nx, Ny, Nz;
+  Nx = Ny = Nz = N;
+  size_t N_tot = Nx * Ny * Nz;
+
+  std::vector<util::Point> x(N_tot, util::Point());
+  lattice(L, Nx, Ny, Nz, dL, seed, x);
+  std::cout << "Total points = " << x.size() << "\n";
+
+  std::vector<std::vector<size_t>> neigh_nflann(N_tot, std::vector<size_t>());
+  std::vector<std::vector<float>> neigh_nflann_sq_dist(N_tot,
+                                                       std::vector<float>());
+
+  std::vector<std::vector<size_t>> neigh_brute(N_tot, std::vector<size_t>());
+  std::vector<std::vector<float>> neigh_brute_sq_dist(N_tot,
+                                                      std::vector<float>());
+
+  std::vector<std::vector<size_t>> neigh_pcl(N_tot, std::vector<size_t>());
+  std::vector<std::vector<float>> neigh_pcl_sq_dist(N_tot,
+                                                    std::vector<float>());
 
   //
-  std::cout << "Step 4: Change points and redo calculations multiple times \n";
-  size_t N_test = 5;
-  // to change perturbation size
-  RandGenerator gen(get_rd_gen(seed*39));
-  UniformDistribution dist(dL*0.5, dL*2.);
+  // brute-force search
+  //
+  double search_r = 1.5 * L;
+  auto brute_force_search_time =
+      neighSearchBrute(x, search_r, neigh_brute, neigh_brute_sq_dist);
 
-  std::vector<double> compute_times_tree(N_test, 0.);
-  std::vector<double> compute_times_brute(N_test, 0.);
-  for (size_t i=0; i<N_test; i++) {
-    double dL_rand = dist(gen);
-    lattice(L, Nx, Ny, Nz, dL_rand, seed + i + 1, x);
+  //
+  // nanoflann tree search
+  //
+  std::unique_ptr<nsearch::NFlannSearchKd> nflann_nsearch = std::make_unique<nsearch::NFlannSearchKd>(x, 0);
+  auto nflann_tree_set_time = nflann_nsearch->updatePointCloud(x, true);
+  nflann_tree_set_time += nflann_nsearch->setInputCloud();
+  auto nflann_tree_search_time =
+      neighSearchTreeSizet(x, nflann_nsearch, search_r, neigh_nflann, neigh_nflann_sq_dist);
 
-    std::cout << "    Test number = " << i << "\n";
+  //
+  // Compare three search lists
+  //
+  auto nflann_brute_compare = compare_results(
+      neigh_nflann, neigh_brute, {"nflann_tree", "brute_force"}, -1, true);
 
-    auto tree_search_time = neighSearchTree(
-        x, nsearch, search_r, neigh_tree, neigh_sq_dist_tree);
-    std::cout << "    tree_search_time = " << tree_search_time << " \n"
-              << std::flush;
+  std::ostringstream msg;
+  msg << fmt::format("  Setup times: \n"
+                     "    nflann_tree_set_time = {}\n",
+                     nflann_tree_set_time);
 
-    auto brute_search_time = neighSearchBrute(
-        x, search_r, neigh, neigh_sq_dist);
-    std::cout << "    brute_search_time = " << brute_search_time << " \n"
-              << std::flush;
+  msg << fmt::format("  Search times: \n"
+                     "    brute_force_search_time = {}\n"
+                     "    nflann_tree_search_time = {}\n",
+                     brute_force_search_time,
+                     nflann_tree_search_time);
 
-    compute_times_tree[i] = tree_search_time;
-    compute_times_brute[i] = brute_search_time;
-  }
+  msg << fmt::format("  Comparison results: \n"
+                     "    nflann_brute_compare: \n{}\n",
+                     nflann_brute_compare);
 
-  // compute stats and report
-  double mean_brute = 0., std_brute = 0.;
-  stats(compute_times_brute, mean_brute, std_brute);
-
-  double mean_tree = 0., std_tree = 0.;
-  stats(compute_times_tree, mean_tree, std_tree);
-
-  std::cout << "\n";
-  std::cout << "    brute state: mean = " << mean_brute
-            << ", std = " << std_brute << "\n";
-  std::cout << "    tree state: mean = " << mean_tree
-            << ", std = " << std_tree << "\n";
+  return msg.str();
 }
