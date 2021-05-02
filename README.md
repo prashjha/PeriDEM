@@ -1,21 +1,37 @@
-## Peridynamics-based discrete element method (PeriDEM) model of granular systems
+# PeriDEM - Peridynamics-based discrete element model of granular systems
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues) [![Join the chat at https://gitter.im/PeriDEM/community](https://badges.gitter.im/PeriDEM/community.svg)](https://gitter.im/PeriDEM/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub repo size](https://img.shields.io/github/repo-size/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/) [![DOI](https://zenodo.org/badge/334516168.svg)](https://zenodo.org/badge/latestdoi/334516168)
+
 
 <p align="center"> <img src="https://github.com/prashjha/PeriDEM/blob/main/assets/logo/logo.png"> </p>
 
+## Table of contents
 
-Implementation of high-fidelity model of granular media that combines the advantages of peridynamics and discrete element method (DEM). The model has following advantages over existing mechanical models for granular media:
+  - [Introduction](#Introduction)
+  - [Documentation](#Documentation)
+  - [Examples](#Examples)
+  - [Tutorial](#Tutorial)
+  - [Brief implementation details](#Brief-implementation-details)
+  - [Installation](#Installation)
+    * [Dependencies](#Dependencies)
+    * [Building the code](#Building-the-code)
+    * [Recommendations for quick build](#Recommendations-for-quick-build)
+  - [Running simulations](#Running-simulations)
+    * [Two-particle with wall](#Two-particle-with-wall)
+    * [Compressive test](#Compressive-test)
+  - [Visualizing results](#Visualizing-results)
+  - [Developers](#Developers)
 
-- handle intra-particle deformation and breakage/damage
-
-- handle arbitrary shape of particle. Inter-particle contact is not specific to any shape of particle
-
-- tunable inter-particle contact paramters
-
-- easy to add different mechanical constitutive laws within peridynamics for individual particle deformation
+## Introduction
+Implementation of the high-fidelity model of granular media that combines the advantages of peridynamics and discrete element method (DEM). The model has the following advantages over existing mechanical models for granular media:
+  - handle intra-particle deformation and breakage/damage
+  - handle arbitrary shape of the particle. Inter-particle contact is not specific to any shape of the particle
+  - tunable inter-particle contact parameters
+  - easy to add different mechanical constitutive laws within peridynamics for individual particle deformation
 
 For more details about the model and results, we refer to the paper:
 
-> Prashant K. Jha, Prathamesh S. Desai, Debdeep Bhattacharya, Robert P Lipton (2020). Peridynamics-based discrete element method (PeriDEM) model of granular systems involving breakage of arbitrarily shaped particles. *Journal of the Mechanics and Physics of Solids*, Volume 151, 2021. Doi https://doi.org/10.1016/j.jmps.2021.104376.
+> Prashant K. Jha, Prathamesh S. Desai, Debdeep Bhattacharya, Robert P Lipton (2020). **Peridynamics-based discrete element method (PeriDEM) model of granular systems involving breakage of arbitrarily shaped particles**. *Journal of the Mechanics and Physics of Solids, 151*, p.104376. Doi https://doi.org/10.1016/j.jmps.2021.104376.
 
 Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-peridem.pdf).
 
@@ -23,23 +39,17 @@ Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-
 Doxygen generated documentation of the code can be found [here](https://prashjha.github.io/PeriDEM/). Documentation will be improved in due time.
 
 ## Examples
-Some example cases. For more details, look at the `problem_setup.py` file or `input_0.yaml` file in [examples](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM).
+We next highlight some key examples. For more details, look at the `create_input_file()` within `problem_setup.py` or `input_0.yaml` in [examples](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM).
 
-To create example input files, the python script is provided. Python script allows parameterization of various modeling, geometrical parameters, and creating `.geo` files for `gmsh` and particle locations file. Typically, the input files consists of:
+To create input files, the python script is provided. Python script allows easy parameterization of various modeling and geometrical parameters and creating `.geo` files for `gmsh` and particle locations file. Typically, the input files consists of:
 
-- `input.yaml` -- the main instruction file for `PeriDEM` with details about material models, particle geometries, time step, etc
-
-- `particle_locations.csv` -- this file provides location and other details of the individual particles. Each row in the file consists of 
-
-* `i` -- zone id that particle belongs to
-
-* `x` -- x-coordinate of the center of the particle. Next two columns are similarly for `y` and `z` coordinates
-
-* `r` -- radius of the particle 
-
-* `o` -- orientation in radians. This is used to give particle (particle mesh) a rotation
-
-- `mesh.msh` -- mesh file for the reference particle or wall. For example, in [compressive test](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/init_config/inp) example, there are total four mesh files: one each for circular and hexagon shaped particle and one each for fixed and mobile wall
+  - `input.yaml` - the main instruction file for `PeriDEM` with details about material models, particle geometries, time step, etc
+  - `particle_locations.csv` - this file provides location and other details of the individual particles. Each row in the file consists of 
+    * `i` - zone id that particle belongs to
+    * `x` - x-coordinate of the center of the particle. Next two columns are similarly for `y` and `z` coordinates
+    * `r` - radius of the particle 
+    * `o` - orientation in radians. This is used to give particle (particle mesh) a rotation
+  - `mesh.msh` - mesh file for the reference particle or wall. For example, in [compressive test](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/init_config/inp) example, there are four mesh files: one each for the circular and hexagon-shaped particle and one each for the fixed and mobile wall.
 
 ### Two-particle tests
 
@@ -57,25 +67,26 @@ To create example input files, the python script is provided. Python script allo
 | :---: | 
 | [Concave particles](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/) |
 
-### Compressive test
-
-Setup for this test consists of 502 circular and hexagonal shaped particles of varrying radius and orientation within a rectangle container. The top wall of the container is moving downward with prescribed speed resulting in compression of the particle system. The quantity of interest is the compressive strength of media; it is expected that the moving wall register reaction for with increasing penetration, however, after a certain amount of compression of media, the damage will initiate in individual particles especially those connected by force chain resulting in yielding of the media. For more details, we refer to [Jha et al 2021](https://prashjha.github.io/publication/jha-2020-peridem/)
+### Compressive tests
+Setup for this test consists of 502 circular and hexagonal-shaped particles of varying radius and orientation inside a rectangle container. The container's top wall is moving downward at a prescribed speed, resulting in the compression of the particle system. The quantity of interest is the compressive strength of the media. The reaction force (downward) on the moving wall should increase with the increasing penetration of this wall; however, after a certain amount of compression of the media, the damage will initiate in individual particles, especially those connected by force chains, resulting in the yielding of the system. For more details, we refer to [Jha et al. 2021](https://prashjha.github.io/publication/jha-2020-peridem/)
 
 | <img src="assets/compressive_test_cir_hex_n500.jpg" width="600"> | 
 | :---: | 
 | [Compressive test setup](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/) |
 
-
 | <img src="assets/compressive_test_reaction_force_n500.jpg" width="600"> | 
 | :---: | 
-| **Top**: Plot of reaction force per unit area on top wall. **Bottom**: Particle state at four times. Color shows the damage at nodes. Damage 1 or above indicates the presence of broken bonds in the neighborhood of a node. |
+| **Top**: Plot of reaction force per unit area on the top wall. **Bottom**: Particle state at four times. Color shows the damage at nodes. Damage 1 or above indicates the presence of broken bonds in the neighborhood of a node. |
 
 | <img src="https://github.com/prashjha/PeriDEM/blob/main/assets/compressive_test.gif" width="600"> | 
 | :---: | 
 | Compressive test simulation |
 
+## Tutorial
+We explain the setting-up of simulations in further details in [tutorial](tutorial/README.md). We consider `two-particle` test setup with non-circular particles and `compressive-test` setups to discuss the various aspects of simulations. 
+
 ## Brief implementation details
-Main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem). The model is implemented in class `DEMModel`, see [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp). Function `DEMModel::run()` performs the simulation. We next look at this and few more function in more details:
+The main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem). The model is implemented in class `DEMModel`, see [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp). Function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more details:
 
 ### DEMModel::run()
 This function does three tasks:
@@ -91,10 +102,10 @@ if (d_modelDeck_p->d_isRestartActive)
 integrate();
 ```
 
-See `DEMModel::init()` where we setup the simulation by reading input files.
+In `DEMModel::init()`, the simulation is prepared by reading the input files (such as `.yaml`, `.msh`, `particle_locations.csv` files). 
 
 ### DEMModel::integrate()
-Basic steps in  `DEMModel::integrate()` are 
+Key steps in  `DEMModel::integrate()` are 
 ```c++
 // apply initial condition
 if (d_n == 0)
@@ -115,8 +126,7 @@ for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 } 
 ```
 
-In `DEMModel::integrateStep()`, we either follow central-difference scheme, in `DEMModel::integrateCD()`, or velocity-verlet scheme, in `DEMModel::integrateVerlet()`. As an example, the steps in `DEMModel::integrateCD()` are
-
+In `DEMModel::integrateStep()`, we either utilize the central-difference scheme, implemented in `DEMModel::integrateCD()`, or the velocity-verlet scheme, implemented in `DEMModel::integrateVerlet()`. As an example, we look at `DEMModel::integrateCD()` method below:
 ```c++
 const auto dt = d_modelDeck_p->d_dt;
 const auto dim = d_modelDeck_p->d_dim;
@@ -153,13 +163,13 @@ computeForces();
 ```
 
 ### DEMModel::computeForces()
-In this function, we compute internal and external forces at each node of a particle. This function looks like
+The key method in time integration is `DEMModel::computeForces()`. In this function, we compute internal and external forces at each node of a particle and also account for the external boundary conditions. This function looks like
 ```c++
 // update tree for search
 auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
 pt_cloud_update_time += d_nsearch_p->setInputCloud();
 
-// reset all forces
+// reset all forces (see file for details)
 
 // compute peridynamic force (internal force)
 computePeridynamicForces();
@@ -172,55 +182,50 @@ computeExternalForces();
 ```
 
 ### Further reading
-Above gives the basic idea of simulation steps. For more thorough understanding of the implementation, interested readers can look at [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp). 
+Above gives the basic idea of simulation steps. For more thorough understanding of the implementation, interested readers can look at [demModel.cpp](https://github.com/prashjha/PeriDEM/blob/main/src/model/dem/demModel.cpp).
 
 ## Installation
 
 ### Dependencies
-Core dependencies for building the executible:
-
-- [cmake](https://cmake.org/) 
-  - recommend to install using `apt-get`
-- [boost](https://www.boost.org/) 
-  - recommend to install using `apt-get`
-  - required for building YAML, HPX, and possibly PCL libraries
-- [hwloc](https://github.com/open-mpi/hwloc) 
-  - recommend to install using `apt-get`
-  - required to build HPX library
-- [jemalloc](https://github.com/jemalloc/jemalloc)
-  - recommend to install using `apt-get`
-  - required to build HPX library
-- [hpx](https://github.com/STEllAR-GROUP/hpx)
-  - use build script to install
-  - used for multi-threading calculations
-- [vtk](https://vtk.org/)
-  - recommend to install using `apt-get`
-  - required to output simulation results in `.vtu` format
-- [flann](https://github.com/mariusmuja/flann)
-  - recommend to install using `apt-get`
-  - required to build PCL library
-- [pcl](https://pointclouds.org/)
-  - use build script to install
-  - required for tree search
-- [yaml-cpp](https://github.com/jbeder/yaml-cpp)
-  - recommend to install using `apt-get`
-  - required to parse input file
-- [fmt](https://github.com/fmtlib/fmt)
-  - included as external library in the code
-  - required to output formatted strings
+Core dependencies are:
+  - [cmake](https://cmake.org/) (3.10.2 or above) 
+    * recommend to install using `apt-get`
+  - [boost](https://www.boost.org/) (1.65.1)
+    * recommend to install using `apt-get`
+    * required for building YAML and HPX
+  - [hwloc](https://github.com/open-mpi/hwloc) (1.11.9)
+    * recommend to install using `apt-get`
+    * required to build HPX library
+  - [jemalloc](https://github.com/jemalloc/jemalloc) (3.6.0)
+    * recommend to install using `apt-get`
+    * required to build HPX library
+  - [hpx](https://github.com/STEllAR-GROUP/hpx) (1.3.0)
+    * use build script to install
+    * used for multi-threading calculations
+  - [vtk](https://vtk.org/) (7.1.1)
+    * recommend to install using `apt-get`
+    * required to output simulation results in `.vtu` format
+  - [nanoflann](https://github.com/jlblancoc/nanoflann) (1.3.2)
+    * included as external library in the code
+    * required for neighbor search
+  - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (0.5.2)
+    * recommend to install using `apt-get`
+    * required to parse input file
+  - [fmt](https://github.com/fmtlib/fmt) (7.1.3)
+    * included as external library in the code
+    * required to output formatted strings
 
 Dependencies for running the examples:
-
-- [gmsh](https://gmsh.info/)
-  - recommend to install using `apt-get`
-  - required to build the mesh of various objects in the test
-- [python3](https://www.python.org/)
-  - required to run the test python scripts
-- [numpy](https://numpy.org/)
-  - required to run the test python scripts
+  - [gmsh](https://gmsh.info/) (3.0.6)
+    * recommend to install using `apt-get`
+    * required to build the mesh of various objects in the test
+  - [python3](https://www.python.org/)
+    * required to run the test python scripts
+  - [numpy](https://numpy.org/)
+    * required to run the test python scripts
 
 ### Building the code
-If all the libraries are installed in global space, commands for building the PeriDEM code is as simple as
+If all the dependencies are installed on the global path (e.g., `/usr/local/`), commands for building the PeriDEM code is as simple as
 ```sh
 cmake   -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
@@ -230,10 +235,9 @@ cmake   -DEnable_Documentation=ON \
 make -j 4
 ```
 
-If libraries such as hpx and pcl are installed in custom paths, we will write
+If HPX is installed on the custom paths, we will write
 ```sh
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
-        -DPCL_DIR="<pcl directory>/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         -DCMAKE_BUILD_TYPE=Release \
@@ -242,80 +246,59 @@ cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
 make -j 4
 ```
 
-> :exclamation: Note that for HPX we provide `<hpx directory>/lib/cmake/HPX` and for PCL we provide `<pcl directory>/share/pcl-1.11`. Here, `<hpx directory>` and `<pcl directory>` are the root path of location where HPX and PCL are installed. 
+> :exclamation: Note that for HPX we provide `<hpx directory>/lib/cmake/HPX`, where `<hpx directory>` is the root paths of the location where HPX is installed. 
 
 
-### Recommendations for quickly building the PeriDEM library
-1. Install following dependencies:
-
-  - If you want to install minimal set of libraries
-
-```sh
-sudo apt-get install -y wget lzip \
-  cmake liblapack-dev libblas-dev libopenmpi-dev \
-  doxygen doxygen-latex graphviz ghostscript \
-  gfortran libmpfr-dev libgmp-dev \
-  libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
-  libvtk7-dev gmsh libflann-dev python3-pip 
-
-pip3 install numpy
-```
-
-  - If you want to install everything that is installed in docker image for testing the compilation
-
+### Recommendations for quick build
+1. Install most of the dependencies using `apt-get`:
 ```sh
 sudo apt-get update 
   
-sudo apt-get install -y build-essential ubuntu-dev-tools rpm gcovr \
-  git wget lzip \
+sudo apt-get install -y build-essential ubuntu-dev-tools \
+  git wget curl lzip \
   cmake autoconf libtool pkg-config \
+  rpm gcovr ruby-coveralls \
   liblapack-dev libblas-dev libopenmpi-dev \
   doxygen doxygen-latex graphviz ghostscript \
   gfortran libmpfr-dev libgmp-dev \
   libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
-  libvtk7-dev gmsh libflann-dev python3-pip 
+  libvtk7-dev gmsh python3-pip 
 
+# pyvista and pandas are not required, so they can be excluded
 pip3 install numpy pyvista pandas
 ```
 
-> :zap: Above is also available in the bash script [install_base.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_base.sh). Using this you can simply run:
+> :zap: Above is also available in the bash script [install_base.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_base.sh). 
 
-```sh
-./install_base.sh
-```
-
-2. Build hpx and pcl. For Ubuntu 18.04, you can use the [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
+2. Build hpx. For Ubuntu 18.04, you can use [install_libs.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_libs.sh) script and run
 ```sh
 ./install_libs.sh
 ```
 
-For Ubuntu 20.04, above script should work. You may also get some help from the script we used to build the base docker images. We installed HPX and PCL in docker image using the scripts:
-
-- [ubuntu 18.04 script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u1804-pd/install.sh) 
-- [ubuntu 20.04 script](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker/u2004-pd/install.sh)
+For Ubuntu 20.04, above script should work. You may also get some help from the script we used to build the base docker images. We installed HPX in docker image using the scripts:
+  * [ubuntu 18.04 script](tools/script/docker/Dockerfile-u1804-comp) 
+  * [ubuntu 20.04 script](tools/script/docker/Dockerfile-u2004-comp)
 
 For mac the steps will be same assuming 
-  - key dependencies are installed using homebrew
+  - key dependencies are installed using homebrew instead of `apt-get`
 ```sh
-brew install boost vtk yaml-cpp hwloc jemalloc flann cmake
+brew install boost vtk yaml-cpp hwloc jemalloc cmake
 ```
+  - HPX is installed similar to above
 
-  - HPX and PCL installed similar to above
+> :warning: With the recent update in homebrew where they changed the current version of the boost, I am no longer able to build the HPX in mac Big Sur 11.2.1. 
 
-> :warning: With recent update in homebrew where they changed the current version of boost, I am no longer able to build the HPX and PCL in mac Big Sur 11.2.1. 
-
-3. Build peridem using [install_peridem.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_peridem.sh)
+3. Build peridem using [install_peridem.sh](https://github.com/prashjha/PeriDEM/blob/main/tools/script/build_scripts/ubuntu-18.04/install_peridem.sh):
 ```sh
 ./install_peridem.sh
 ```
 
-> :warning: Be sure to modify the paths where HPX and PCL are installed in the install_peridem.sh script!
+> :warning: Be sure to modify `install_peridem.sh` file to specify the correct paths where HPX is installed!
 
-Or if you have already cloned the PeriDEM and are in the root directory of PeriDEM, simply run following in the terminal:
+Alternatively, if you have already cloned the PeriDEM library and are in the root directory of PeriDEM, run following in the terminal:
 ```sh
 mkdir build && cd build 
 cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
-        -DPCL_DIR="<pcl directory>/share/pcl-1.11" \
         -DEnable_Documentation=ON \
         -DEnable_Tests=ON \
         -DCMAKE_BUILD_TYPE=Release \
@@ -323,81 +306,110 @@ cmake   -DHPX_DIR="<hpx directory>/lib/cmake/HPX" \
 
 make -j 4
 
+# ctest is optinal
 ctest --verbose
 ```
 
-### Build scripts
-Some shell scripts are provided that may help in building the code on ubuntu 18.04, 20.04, and mac. 
-
 ### Docker
-We also provide the docker image of the peridem code. The docker image is built using the three layers
+For `circle-ci` testing, we use docker images `prashjha/u1804-comp` and `prashjha/u2004-comp` of ubuntu 18.04 and 20.04. The associated dockerfiles and links to pull from docker hub are:
+  - for ubuntu 18.04 
+    * link: https://hub.docker.com/r/prashjha/u1804-comp
+    * `docker pull prashjha/u1804-comp`
+    * [dockerfile](tools/script/docker/Dockerfile-u1804-comp)
+  - for ubuntu 20.04 
+    * link: https://hub.docker.com/r/prashjha/u2004-comp
+    * `docker pull prashjha/u2004-comp`
+    * [dockerfile](tools/script/docker/Dockerfile-u2004-comp)
+  - clion setup for remote development
+  	* [dockerfile](tools/script/docker/Dockerfile-u1804-clion)
 
-- layer 1 (u1804-base or u2004-base) -- base ubuntu 18.04 or ubuntu 20.04 with some essential libraries installed
-
-- layer 2 (u1804-pd or u2004-pd) -- built hpx and pcl on layer 1
-
-- layer 3 (PeriDEM) -- built PeriDEM on layer 2
-
-
-Dockerfile associated to all layers listed above can be found in [build scripts](https://github.com/prashjha/PeriDEM/blob/main/tools/script/docker). Image corresponding to layer 2 above can be downloaded from the dockerhub:
-
-- for ubuntu 18.04 
-        - link: https://hub.docker.com/r/prashjha/u1804-pd
-        - `docker pull prashjha/u1804-pd`
-
-- for ubuntu 20.04 
-        - link: https://hub.docker.com/r/prashjha/u2004-pd
-        - `docker pull prashjha/u2004-pd`
+In [Packages](https://github.com/prashjha?tab=packages&repo_name=PeriDEM), docker images of PeriDEM are provided. They are built on ubuntu-18.04 (`prashjha/u1804-comp`) and ubuntu-20.04(`prashjha/u2004-comp`) images.
 
 ### Future plans to remove some dependencies
-PeriDEM currently depends on 4 major libraries: Boost, VTK, HPX, PCL
+PeriDEM currently depends on four major libraries: Boost, VTK, HPX
+  - Boost is not used directly but is required in building HPX and YAML-CPP 
+  - If there are lightweight vtu writer and reader, dependency on VTK can be avoided
+  - HPX is used for the multi-threading operation. Currently, HPX is a little troublesome to build, especially in clusters
+  - Previously, we used PCL library for kd-tree search. We now use nanoflann for tree search making code free of PCL dependency.
 
-- boost is not used directly but is required in building HPX, PCL, YAML-CPP 
-- if there are lightweight vtu writer and reader, dependency on VTK can be avoided
-- HPX is used for the multi-threading operation. Currently, HPX is little troublesome to build, especially in clusters
-- Only one feature of PCL is utilized currently. We do try to avoid building many libraries within PCL, but it will be nice to have more lightweight library that performs tree search and that can be included as external library in the code
+### Ask for help
+Because this library depends on complex libraries, it may get a little challenging to build it. If you carefully read the instructions, you should be able to compile PeriDEM in both ubuntu 18.04 and 20.04! For mac, as mentioned before, building this code is challenging, and we have not been successful yet. 
 
-### Seek help
-Building PeriDEM is not a piece of cake! This I know from my experience trying to build the dependencies in different operating systems and with different configurations. If you are stuck, feel free to reach out, or open an issue. 
+Still, if you are stuck, feel free to reach out or open an issue. For more open discussion of issues and ideas, we have created a [channel](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) on Gitter. If you like some help, want to contribute, extend the code, or discuss new ideas, please reach out.
 
-## Running the simulation 
-Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle and wall and particle locations file are created and their filenames with paths are provided in the `input.yaml` file, we will run the problem (using 4 threads) 
-
+## Running simulations
+Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle/wall and particle locations file are created and their filenames with paths are correctly provided in `input.yaml`, we will run the problem (using 4 threads) 
 ```sh
 <path of PeriDEM>/bin/PeriDEM -i input.yaml --hpx:threads=4
 ```
 
-Some examples:
+Some examples are listed below.
 
-### Two particle with wall
-
+### Two-particle with wall
 Navigate to the example directory `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp` and run the example as follows
 ```sh
 mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
 <peridem build path>bin/PeriDEM -i input_0.yaml --hpx:threads=2
 ```
 
-You may also use the included [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp/problem_setup.py) to modify some parameters and [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/run.sh) (in directoy `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size`) to run the simulation. `run.sh` shows how different input files are created for simulation.
+You may also use the included [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp/problem_setup.py) to modify simulation parameters and run the simulation using [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/run.sh) (in directoy `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size`). `run.sh` shows how different input files are created for the simulation.
 
 > :exclamation: You will need to modify the path of `PeriDEM` executible in `run.sh` file, see variable `execsrc`. 
 
+
 > In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`. Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
-### Compressive test
+#### Important remark on modifying input.yaml file
+To test the examples quickly, you can directly modify the `input.yaml` and re-run the simulation as shown above. For example, you can alter `Final_Time`, `Time_Steps`, `Contact_Radius_Factor`, `Kn`, and other fields in the yaml file. 
 
-Navigate to the example directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp` and run the example as follows (note that this is expensive example)
+However, some care is required when changing the geometrical details of particles and walls in the `input.yaml` file. If you change these details in the `.yaml` file, you will have to ensure that the `.msh` file correspond to the new geometry. 
+
+Except geometrical parameters of walls and particles, rest of the parameters in `input.yaml` can be modified.
+
+> In due time, we will provide more information on setting up input files and covering all aspects of the simulation.
+
+### Compressive test
+Navigate to the example directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp` and run the example as follows (note that this is an expensive example)
 ```sh
 mkdir ../out 
 <peridem build path>bin/PeriDEM -i input_0.yaml --hpx:threads=12
 ```
 
-As in the case of previous example:
+As before:
+  - you can modify [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
+  - run the simulation using [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1`).
 
- - you can modify [problem_setup.py](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py) to change the simulation settings 
- - and then use the [run.sh](https://github.com/prashjha/PeriDEM/blob/main/examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1`) to run the new simulation
+### Compute times for various examples
+For reference, we list the compute times for various examples.
+  - `T` is the total compute time in units of `second`
+  - `T(n)` means compute time when running the example with `n` threads.
 
-> In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`. Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
+| Test | T(1) | T(2) | T(4) | T(8) |
+| :--- | :---: |  :---: |  :---: |  :---: |
+| two_particles/circ_damp | 143.7 | 95.1 | 76.4 | 78.6 |
+| two_particles/circ_damp_diff_radius | 164 | 114.6 | 96.7 | 99.4 |
+| two_particles/circ_diff_material | 287.7 | 190.1 | 152.7 | 160 |
+| two_particles/circ_diff_radius_diff_material | 329.1 | 229.4 | 195.3 | 200 |
+| two_particles/circ_no_damp | 143.8 | 94.5 | 76.7 | 78.5 |
+| two_particles_wall/concave_diff_material_diff_size | 2749.9 | 1534.6 | 980.8 | 691.1 |
+
+## Visualizing results
+Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) (tested on 5.4.1 and later version) or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit) (tested on 2.13.3). 
+
+By default, in all tests and examples, we only output the particle mesh, i.e., pair of nodal coordinate and nodal volume, and not the finite element mesh (it can be enabled by setting `Perform_FE_Out: true` within `Output` block in the input `yaml` file). After loading the file in ParaView, the first thing to do is to change the plot type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do are:
+  - Adjust the radius of circle/sphere at the nodes by going to the `Properties` tab on the left side and change the value of **`Gaussian Radius`**
+  - You may also want to choose the field to display. For starter, you could select the `Damage_Z` variable, a ratio of **maximum bond strain in the neighborhood of a node and critical bond strain**. When the `Damage_Z` value is below one at a given node, the deformation in the vicinity of that node is elastic, whereas when the value is above 1, it indicates there is at least one node in the neighborhood which has bond strain above critical strain (meaning the bond between these two nodes is broken)
+  - You may also need to rescale the plot by clicking on the **`Zoom to Data`** button in ParaView
+  - Lastly, when the `Damage_Z` is very high at few nodes, you may want to rescale the data to the range, say `[0,2]` or `[0,10]`, so that it is easier to identify regions with elastic deformation and region with fracture.
+ 
+## Citations
+If this library was useful in your work, we recommend citing the following article:
+
+> Jha, P.K., Desai, P.S., Bhattacharya, D. and Lipton, R., 2021. **Peridynamics-based discrete element method (PeriDEM) model of granular systems involving breakage of arbitrarily shaped particles**. *Journal of the Mechanics and Physics of Solids, 151*, p.104376.
+
+You can also cite the PeriDEM using zenodo doi:
+
+> https://doi.org/10.5281/zenodo.4724168
 
 ## Developers
-
-- [Prashant K. Jha](https://prashjha.github.io/) (pjha.sci@gmail.com, pjha@utexas.edu)
+  - [Prashant K. Jha](https://prashjha.github.io/) (pjha.sci@gmail.com, pjha@utexas.edu)

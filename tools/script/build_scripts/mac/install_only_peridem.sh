@@ -19,14 +19,8 @@
 # jemalloc
 # brew install jemalloc
 
-# flann
-# brew install flann
-
 # hpx (Built with jemalloc 4.4.0 with cmake flag -DHPX_WITH_MALLOC=jemalloc)
-hpx_dir="${HOME}/work/peridem_works/build_all/hpx/Release/install/lib/cmake/HPX"
-
-# pcl 
-pcl_dir="$local/pcl/1.11.1/share/pcl-1.11"
+hpx_dir="${HOME}/Softwares/local_peridem/local/hpx/1.3.0/Release/lib/cmake/HPX"
 
 # target directory where code will be built
 target_build=$pwd
@@ -35,13 +29,12 @@ target_build=$pwd
 source="../../."
 
 # run cmake with flags
-cmake 	-DHPX_DIR="$hpx_dir/lib/cmake/HPX" \
-				-DPCL_DIR="$pcl_dir" \
-				-DCMAKE_INSTALL_PREFIX="$target_build" \
-				-DEnable_Documentation=ON \
-				-DEnable_Tests=ON \
-				-DCMAKE_BUILD_TYPE=Release \
-				"$source"
+cmake 	-DHPX_DIR="$hpx_dir" \
+	-DCMAKE_INSTALL_PREFIX="$target_build" \
+	-DEnable_Documentation=ON \
+	-DEnable_Tests=ON \
+	-DCMAKE_BUILD_TYPE=Release \
+	"$source"
 
 # make
 make -j 10

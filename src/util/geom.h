@@ -330,6 +330,27 @@ std::pair<util::Point, util::Point> toPointBox(const std::vector<double>
 double triangleArea(const util::Point &x1, const util::Point &x2,
                     const util::Point &x3);
 
+/*!
+ * @brief Computes l2 distance between two vectors
+ *
+ * @param x1 Vector 1
+ * @param x2 Vector 2
+ * @retun l2_dist L2 distance
+ */
+
+template <class T>
+inline T l2Dist(const std::vector<T> &x1, const std::vector<T> &x2) {
+
+  if (x1.size() != x2.size())
+    throw std::invalid_argument("size of two vectors not matching");
+
+  T sum = 0.;
+  for (size_t i=0; i<x1.size(); i++)
+    sum += (x1[i] - x2[i]) * (x1[i] - x2[i]);
+
+  return std::sqrt(sum);
+}
+
 } // namespace util
 
 #endif // UTIL_GEOMETRY_H

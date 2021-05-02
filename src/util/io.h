@@ -243,7 +243,7 @@ public:
   void log(const std::string &str, bool screen_out = false) {
 
     if (d_deck_p->d_printScreen || screen_out)
-      std::cout << str;
+      std::cout << str << std::flush;
 
     // log
     if (d_deck_p->d_printFile) {

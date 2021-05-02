@@ -68,3 +68,6 @@ src/Config.h
 __pycache__
 */__pycache__
 */__pycache__/*
+
+# ignore specific test directory
+test_ignored_dir

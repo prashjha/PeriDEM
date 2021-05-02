@@ -115,13 +115,13 @@ find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
 #<<<<<<<<<< PCL >>>>>>>>>>#
-find_package(PCL REQUIRED)
-
-if (${Enable_CMAKE_Debug_Build})
-    message("PCL_DIR = ${PCL_DIR}")
-    message("PCL_INCLUDE_DIRS = ${PCL_INCLUDE_DIRS}")
-    message("PCL_LIBRARIES = ${PCL_LIBRARIES}")
-endif()
+#find_package(PCL REQUIRED)
+#
+#if (${Enable_CMAKE_Debug_Build})
+#    message("PCL_DIR = ${PCL_DIR}")
+#    message("PCL_INCLUDE_DIRS = ${PCL_INCLUDE_DIRS}")
+#    message("PCL_LIBRARIES = ${PCL_LIBRARIES}")
+#endif()
 
 #----------------------------------#
 #<<<<<<<<<< Compiler flags >>>>>>>>>>#

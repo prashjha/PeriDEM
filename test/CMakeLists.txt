@@ -9,6 +9,12 @@
 #<<<<<<<<<< Lib tests >>>>>>>>>>#
 #----------------------------------#
 
+# util lib
+add_test(NAME testutil
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestUtil
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+        )
+
 # fe lib
 add_test(NAME testfe
     COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestFE -i ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/fe

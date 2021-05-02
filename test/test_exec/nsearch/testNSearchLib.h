@@ -13,14 +13,19 @@
 #include <hpx/config.hpp>
 #include <string>
 #include <vector>
+#include "fmt/format.h"
 
 namespace test {
 
 /*!
  * @brief Perform test on nsearch
  * @param N size of particle cloud in each dimension. total size would be N^3
+ * @param L Size of unit cell to create crystal lattice point cloud
+ * @param dL Perturbation of lattice sites
+ * @param seed Seed
+ * @return str String containing various information
  */
-void testNSearch(size_t N);
+std::string testNanoflann(size_t N, double L, double dL, int seed);
 
 } // namespace test
 

@@ -5,90 +5,144 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-version: 2
+version: 2.1
+parameters:
+  docker-img-os:
+    type: string
+    default: u1804
+    
+commands:
+  libcmake:
+    parameters:
+      cmake-args:
+        type: string
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX
+    steps:
+      - run: 
+          name: Configure
+          command: |
+            mkdir -p build 
+            cd build 
+            cmake <<parameters.cmake-args>> ..
+  libmake:
+    steps:
+      - run: 
+          name: Build
+          command: |
+            cd build 
+            make -j 2
+  libtest:
+    parameters:
+      verb-flag:
+        type: string
+        default: --verbose
+    steps:
+      - run: 
+          name: Test
+          command: |
+            cd build 
+            ctest <<parameters.verb-flag>>
+  libdoc:
+    steps:
+      - run: 
+          name: Documentation
+          command: |
+            cd build 
+            make doc        
+
 jobs:
     build:
         docker:
-          - image: prashjha/u1804-pd:latest
+          - image: prashjha/<<pipeline.parameters.docker-img-os>>-comp:latest
         steps:
             - checkout
-            - run:
-                name: Configure 
-                command: | 
-                  mkdir -p build 
-                  cd build 
-                  cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON ..
-            - run:
-                name: Build
-                command: |  
-                  cd build 
-                  make -j 2
-            - run:
-                name: Test
-                command: |
-                  cd build 
-                  ctest --verbose
+            - libcmake
+            - libmake
+            - libtest
     documentation:
       docker:
-        - image: prashjha/u1804-pd:latest
+        - image: prashjha/<<pipeline.parameters.docker-img-os>>-comp:latest
       steps:
         - checkout
-        - run:
-            name: Configure 
-            command: |
-              mkdir -p build 
-              cd build 
-              cmake -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON ..
-        - run:
-            name: Documentaiton
-            command: |
-              cd build
-              make doc
+        - libcmake:
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX
+        - libdoc
     deploy:
       machine:
         image: ubuntu-2004:202008-01
       environment:
-        IMAGE_FOLDER_NAME: .circleci/Docker
-        IMAGE_NAME: prashjha/peridem-u1804:latest
+        IMAGE_FILE_NAME: .circleci/Docker/Dockerfile-<<pipeline.parameters.docker-img-os>>
+        IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
       steps:
         - checkout
         - run:
-            name: Build PeriDEM docker
+            name: Build docker
             command: |
-              docker build -t ${IMAGE_NAME} ${IMAGE_FOLDER_NAME}
+              docker build -t prashjha/${IMAGE_NAME} -f ${IMAGE_FILE_NAME} .
               docker images
         - run:
             name: Deploy to docker hub
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                  docker login -u $DOCKER_USER -p $DOCKER_PASS
-                 docker push ${IMAGE_NAME}
+                 docker push prashjha/${IMAGE_NAME}
               fi
         - run:
             name: Deploy to github
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
                  docker login docker.pkg.github.com --username prashjha -p ${G_TOKEN}
-                 docker tag ${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
-                 docker push docker.pkg.github.com/prashjha/peridem/peridem-u1804:latest
+                 docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 docker push docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+              fi
+    codecoverage:
+      docker:
+        - image: prashjha/<<pipeline.parameters.docker-img-os>>-comp:latest
+      steps:
+        - checkout
+        - libcmake:
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
+        - libmake
+        - libtest:
+            verb-flag: ""
+        - run:
+            name: Report
+            command: |
+              cd build
+              gcovr --exclude-directories=build --exclude-directories=external \
+                    --exclude-directories=examples --exclude-directories=tools \
+                    -r ..
+        - run:
+            name: Publish 
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                cd build
+                #coveralls --gcov-options '\-lp' -t ${CODECOV_TOKEN}
+                bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
               fi
 workflows:
   version: 2
-  build_doc_deploy:
+  build_doc_deploy_cov:
     jobs:
       - build:
           filters:
             branches:
               ignore: gh-pages
       - documentation:
-            filters:
-              branches:
-                ignore: gh-pages
-            requires:
-              - build
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
       - deploy:
           filters:
             branches:
               ignore: gh-pages
           requires:
-              - build
+            - build
+      - codecoverage:
+          filters:
+            branches:
+              ignore: gh-pages
+          requires:
+            - build
