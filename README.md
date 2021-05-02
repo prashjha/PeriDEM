@@ -409,7 +409,7 @@ If this library was useful in your work, we recommend citing the following artic
 
 You can also cite the PeriDEM using zenodo doi:
 
-> https://doi.org/10.5281/zenodo.4724168
+> http://doi.org/10.5281/zenodo.4733259
 
 ## Developers
   - [Prashant K. Jha](https://prashjha.github.io/) (pjha.sci@gmail.com, pjha@utexas.edu)
