@@ -35,6 +35,12 @@ For more details about the model and results, we refer to the paper:
 
 Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-peridem.pdf).
 
+We have created channels on various platforms: 
+- [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
+  * Gitter is absolutely open and easy to join.
+- [PeriDEM on slack](peridem.slack.com)
+  * Send me an email if interested in joining the workspace.
+
 ## Documentation
 Doxygen generated documentation of the code can be found [here](https://prashjha.github.io/PeriDEM/). Documentation will be improved in due time.
 
@@ -335,9 +341,7 @@ PeriDEM currently depends on four major libraries: Boost, VTK, HPX
 ### Ask for help
 Because this library depends on complex libraries, it may get a little challenging to build it. If you carefully read the instructions, you should be able to compile PeriDEM in both ubuntu 18.04 and 20.04! For mac, as mentioned before, building this code is challenging, and we have not been successful yet. 
 
-Still, if you are stuck, feel free to reach out or open an issue. For more open discussion of issues and ideas, we have created a [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) on Gitter. If you like some help, want to contribute, extend the code, or discuss new ideas, please reach out.
-
-We also have dedicated channel for PeriDEM on slack: [PeriDEM on slack](peridem.slack.com). Send me an email if interested in joining the workspace.
+Still, if you are stuck, feel free to reach out or open an issue. For more open discussion of issues and ideas, contact via [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) or [PeriDEM on slack](peridem.slack.com) (for slack, send me an email to join). If you like some help, want to contribute, extend the code, or discuss new ideas, please reach out.
 
 ## Running simulations
 Assuming that the input file is `input.yaml` and all other files such as `.msh` file for particle/wall and particle locations file are created and their filenames with paths are correctly provided in `input.yaml`, we will run the problem (using 4 threads) 
