@@ -9,7 +9,7 @@ version: 2.1
 parameters:
   docker-img-os:
     type: string
-    default: u1804
+    default: bionic
     
 commands:
   libcmake:
@@ -53,7 +53,7 @@ commands:
 jobs:
     build:
         docker:
-          - image: prashjha/<<pipeline.parameters.docker-img-os>>-comp:latest
+          - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
         steps:
             - checkout
             - libcmake
@@ -61,7 +61,7 @@ jobs:
             - libtest
     documentation:
       docker:
-        - image: prashjha/<<pipeline.parameters.docker-img-os>>-comp:latest
+        - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
       steps:
         - checkout
         - libcmake:
@@ -97,7 +97,7 @@ jobs:
               fi
     codecoverage:
       docker:
-        - image: prashjha/<<pipeline.parameters.docker-img-os>>-comp:latest
+        - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
       steps:
         - checkout
         - libcmake:
@@ -128,12 +128,12 @@ workflows:
           filters:
             branches:
               ignore: gh-pages
-      - documentation:
-          filters:
-            branches:
-              ignore: gh-pages
-          requires:
-            - build
+      # - documentation:
+      #     filters:
+      #       branches:
+      #         ignore: gh-pages
+      #     requires:
+      #       - build
       - deploy:
           filters:
             branches:

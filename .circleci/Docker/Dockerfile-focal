@@ -6,7 +6,7 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 # base ubuntu image with petsc, libmesh, hpx
-FROM prashjha/u2004-comp:latest
+FROM prashjha/peridem-base-focal:latest
 
 # Set metadata
 LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
