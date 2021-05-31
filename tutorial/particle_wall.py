@@ -2,8 +2,8 @@ import os
 import numpy as np
 import sys
 from pathlib import Path
-
-sys.path.insert(0, '/home/prashant/work/peridem_works/PeriDEM/tools/script/python_utils/')
+import subprocess
+import argparse
 
 # import util functions
 from util import *
@@ -37,9 +37,18 @@ def particle_locations(filename, radius, centers, pp_tag = None):
 
 if __name__ == "__main__":
 
-  fpath = './particle_wall/'
-  Path(fpath).mkdir(parents=True, exist_ok=True)
+  parser = argparse.ArgumentParser(description='Setup and run PeriDEM simulation')
+  parser.add_argument('--peridem_path',
+                      default=None,
+                      type=str,
+                      help="Path to PeriDEM executible")
+  args = parser.parse_args()
+  if args.peridem_path is None:
+    raise ValueError("Invalid path to PeriDEM executible")
+  if Path(args.peridem_path).is_file() == False:
+    raise ValueError("PeriDEM executible does not exist")
 
+  fpath = './'
   ## origin (this center is used to discretize the particle and
   ## later discretization is translated and rotated appropriately)
   center = [0., 0., 0.]
@@ -66,12 +75,12 @@ if __name__ == "__main__":
   v0 = [0, -np.sqrt(2. * np.abs(g[1]) * delta), 0.]
 
   ## final time and time step
-  T = 0.04
-  N_steps = 200000 
+  T = 0.1
+  N_steps = 2000000 
   # if dt is large, the simulation could produce garbage results so care is needed
   dt = T / N_steps 
   # steps per output, i.e., simulation will generate output every 50 steps
-  N_out = N_steps / 50
+  N_out = N_steps / 100
 
   ## material
   # for zone 1 (in this case zone 1 has just one particle)
@@ -104,7 +113,7 @@ if __name__ == "__main__":
   ## define beta_n parameter for normal damping
   beta_n_eps = 0.9
   # factor for damping (Constant C in the PeriDEM paper)
-  beta_n_factor = 100.
+  beta_n_factor = 5000.
   damping_active = True 
 
   ## friction coefficient
@@ -114,6 +123,7 @@ if __name__ == "__main__":
   # create particle_locations.csv file 
   centers = []
   centers.append([R, wall_rect[4] + (d - delta) + R, 0.])
+  print('top height = %Lf' % (wall_rect[4] + d + 2*R))
   particle_locations(fpath + 'particle_locations', [R], centers)
 
   ## file below creates .geo file (see util.py)
@@ -301,34 +311,33 @@ if __name__ == "__main__":
 
   ## Displacement
   inpf.write("Displacement_BC:\n")
-  # it is typical to have many different type of boundary conditions so it is conventient to 
-  # consider a sets of boundary condition (force boundary condition is similar)
-  # in this case we just have 1 set
-  inpf.write("  Sets: 1\n")
+  inpf.write("  Sets: 2\n")
   inpf.write("  Set_1:\n")
-  # this set is applicable to `0` particle (bottom)
   inpf.write("    Wall_List: [0]\n")
-  # displacement components along x and y are impacted
   inpf.write("    Direction: [1,2]\n")
-  # displacement is fixed by a function which is constant in time and space. Further, the value of this 
-  # constant is 0 (see Parameters block which expects single parameter for constant type function)
   inpf.write("    Time_Function:\n")
   inpf.write("      Type: constant\n")
   inpf.write("      Parameters:\n")
   inpf.write("        - 0.0\n")
   inpf.write("    Spatial_Function:\n")
   inpf.write("      Type: constant\n")
-  # for `0` particle we have fixed all degree of freedoms and the displacement is fixed to 0
-  # so we explicitly say that for this particle all defs are zero
-  # this extra information allows us to not compute this boundary condition every time step as there is nothing
-  # really to compute (displacemnts are always fixed to zero)
   inpf.write("    Zero_Displacement: true\n")
+
+  inpf.write("  Set_2:\n")
+  inpf.write("    Particle_List: [0]\n")
+  inpf.write("    Direction: [1]\n")
+  inpf.write("    Time_Function:\n")
+  inpf.write("      Type: constant\n")
+  inpf.write("      Parameters:\n")
+  inpf.write("        - 0.0\n")
+  inpf.write("    Spatial_Function:\n")
+  inpf.write("      Type: constant\n")
 
   ## Output info
   ## in this block, we take care of simulation output
   inpf.write("Output:\n")
   # where to write files
-  inpf.write("  Path: %s\n" %(fpath))
+  inpf.write("  Path: ./\n")
   inpf.write("  Tags:\n")
   # list the variable that you want to output in the .vtu file
   inpf.write("    - Displacement\n")
@@ -366,3 +375,20 @@ if __name__ == "__main__":
   ## close file
   ## damn I feel tired already!!
   inpf.close()
+
+  ## run 
+  ## step 1: run gmsh
+  print('running gmsh')
+  cmd = "gmsh p.geo -2 &> /dev/null"
+  process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+  output, error = process.communicate()
+
+  cmd = "gmsh w.geo -2 &> /dev/null"
+  process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+  output, error = process.communicate()
+
+  ## step 2: run peridem
+  print('running peridem')
+  cmd = args.peridem_path + " -i input.yaml --hpx:threads=8"
+  process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
+  output, error = process.communicate()

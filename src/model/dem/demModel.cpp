@@ -862,6 +862,8 @@ void model::DEMModel::computeContactForces() {
               auto &j_id = neighs[j];
               auto &ptIdj = this->d_ptId[j_id];
               auto &pj = this->getBaseParticle(ptIdj);
+
+              // we are only interested in nodes from wall
               if (pj->getTypeIndex() == 1) {
                 double Rji = (this->d_x[j_id] - yi).length();
                 const auto &contact =
@@ -872,6 +874,8 @@ void model::DEMModel::computeContactForces() {
             }
           }
         });
+
+    // condense wall nodes into single vector
     std::vector<size_t> wall_nodes_condense;
     for (auto &nds : wall_nodes) {
       for (auto &j : nds)
@@ -884,8 +888,8 @@ void model::DEMModel::computeContactForces() {
       auto &pj = this->getWall(this->d_allParticles[ptIdj]->getTypeId());
       auto rhoj = pj->getDensity();
       auto volj = this->d_vol[j];
-      //auto meq = rhoi * vol_pi;
-      auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
+      auto meq = rhoi * vol_pi;
+      //auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
 
       const auto &contact = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
 
