@@ -859,15 +859,16 @@ void model::DEMModel::computeContactForces() {
 
           if (search_status > 0) {
             for (std::size_t j = 0; j < neighs.size(); ++j) {
-
               auto &j_id = neighs[j];
-              double Rji = (this->d_x[j_id] - yi).length();
               auto &ptIdj = this->d_ptId[j_id];
               auto &pj = this->getBaseParticle(ptIdj);
-              const auto &contact =
-                  d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
-              if (util::isLess(Rji, contact.d_contactR))
-                wall_nodes[i].push_back(j_id);
+              if (pj->getTypeIndex() == 1) {
+                double Rji = (this->d_x[j_id] - yi).length();
+                const auto &contact =
+                    d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+                if (util::isLess(Rji, contact.d_contactR))
+                  wall_nodes[i].push_back(j_id);
+              }
             }
           }
         });
