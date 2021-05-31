@@ -689,6 +689,11 @@ void model::DEMModel::computeExternalDisplacementBC() {
 
 void model::DEMModel::computeContactForces() {
 
+  // Description:
+  // 1. Normal contact is applied between nodes of particles and walls
+  // 2. Normal damping is applied between particle centers
+  // 3. Normal damping is applied between nodes of particle and wall pairs
+
   hpx::parallel::for_loop(
       hpx::parallel::execution::par, 0, d_fContCompNodes.size(),
       [this](boost::uint64_t II) {
@@ -716,8 +721,6 @@ void model::DEMModel::computeContactForces() {
         auto search_status =
             this->d_nsearch_p->radiusSearch(yi, search_r, neighs, sqr_dist);
 
-        std::vector<size_t> wall_nodes;
-
         if (search_status > 0) {
           for (std::size_t j = 0; j < neighs.size(); ++j) {
 
@@ -733,18 +736,8 @@ void model::DEMModel::computeContactForces() {
                 (pi->getTypeIndex() == 1 and pj->getTypeIndex() == 1);
 
             if (j_id != i) {
-              //              if (ptIdj == ptIdi) {
-              //                // apply self-contact here
-              //                auto en = (this->d_x[j_id] - yi) / Rji;
-              //                const auto &volj = this->d_vol[j_id];
-              //
-              //                scalar_f = pi->d_Kn * (Rji - pi->d_Rc) * volj;
-              //                if (scalar_f > 0.)
-              //                  scalar_f = 0.;
-              //                force_i += scalar_f * en;
-              //              } // self-contact
               if (ptIdj != ptIdi && !both_walls) {
-                // apply partic-particle or particle-wall contact here
+                // apply particle-particle or particle-wall contact here
                 const auto &contact =
                     d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
                 if (util::isLess(Rji, contact.d_contactR)) {
@@ -772,123 +765,156 @@ void model::DEMModel::computeContactForces() {
                   // compute friction force (since f < 0, |f| = -f)
                   force_i += contact.d_mu * scalar_f * et;
 
+                  // if particle-wall pair, apply damping contact here <--
+                  // doesnt seem to work
                   bool node_lvl_damp = false;
+                  // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
+                  //   node_lvl_damp = true;
+
                   if (node_lvl_damp) {
                     // apply damping at the node level
                     auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
                     auto beta_n =
                         contact.d_betan *
                         std::sqrt(contact.d_kappa * contact.d_contactR * meq);
+
+                    auto &pii = this->d_particles[pi->getTypeId()];
+                    vji = this->d_v[j_id] - pii->getVCenter();
+                    vn_mag = (vji * en);
                     if (vn_mag > 0.)
                       vn_mag = 0.;
                     force_i += beta_n * vn_mag * en / voli;
                   }
-
-                  // if i is from particle and j_id is from wall, add to the
-                  // list
-                  if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
-                    wall_nodes.push_back(j_id);
                 } // within contact radius
               }   // particle-particle contact
             }     // if j_id is not i
           }       // loop over neighbors
         }         // contact neighbor
 
-        // apply damping to this node from particle and wall
-        double Rj = 0.;
-        double vol_pj = 0.;
-        double rhoj = 0.;
-        double meq = 0.;
-        double beta_n = 0.;
-        double dist_xcji = 0.;
-        auto xc_ji = util::Point();
-        auto hat_xc_ji = util::Point();
-        auto vc_ji = util::Point();
-        double vc_mag = 0.;
-
-        {
-          if (pi->getTypeIndex() == 0) {
-            auto &pii = this->d_particles[pi->getTypeId()];
-            double Ri = pii->d_geom_p->boundingRadius();
-            double vol_pi = M_PI * Ri * Ri;
-
-            // particle loop
-            for (auto &pj : this->d_particles) {
-              if (pj->getId() != ptIdi) {
-                Rj = pj->d_geom_p->boundingRadius();
-                xc_ji = pj->getXCenter() - pii->getXCenter();
-                dist_xcji = xc_ji.length();
-
-                const auto &contact =
-                    d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
-
-                if (util::isLess(dist_xcji,
-                                 Rj + Ri + 1.01 * contact.d_contactR)) {
-
-                  vol_pj = M_PI * Rj * Rj;
-                  rhoj = pj->getDensity();
-                  // equivalent mass
-                  meq = util::equivalentMass(rhoi * vol_pi, rhoj * vol_pj);
-
-                  // beta_n
-                  auto beta_n =
-                      contact.d_betan *
-                      std::sqrt(contact.d_kappa * contact.d_contactR * meq);
-
-                  // center-center vector
-                  if (util::isGreater(dist_xcji, 0.))
-                    hat_xc_ji = xc_ji / dist_xcji;
-                  else
-                    hat_xc_ji = util::Point();
-
-                  // center-center velocity
-                  vc_ji = pj->getVCenter() - pii->getVCenter();
-                  vc_mag = vc_ji * hat_xc_ji;
-                  if (vc_mag > 0.)
-                    vc_mag = 0.;
-
-                  // force at node of pi
-                  force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
-                } // if within contact distance
-              }   // if not same particles
-            }     // other particles
-
-            // wall loop <-- loop over neighboring nodes of walls
-            // reuse the neighbor list computed above
-            for (const auto &j : wall_nodes) {
-              auto &ptIdj = this->d_ptId[j];
-              auto &pj =
-                  this->getWall(this->d_allParticles[ptIdj]->getTypeId());
-              rhoj = pj->getDensity();
-              meq = rhoi * vol_pi;
-
-              const auto &contact =
-                  d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
-
-              // beta_n
-              beta_n = contact.d_betan *
-                       std::sqrt(contact.d_kappa * contact.d_contactR * meq);
-
-              // center-node vector
-              xc_ji = this->d_x[j] - pii->getXCenter();
-              hat_xc_ji = util::Point();
-              if (util::isGreater(xc_ji.length(), 0.))
-                hat_xc_ji = xc_ji / xc_ji.length();
-
-              // center-node velocity
-              vc_ji = this->d_v[j] - pii->getVCenter();
-              vc_mag = vc_ji * hat_xc_ji;
-              if (vc_mag > 0.)
-                vc_mag = 0.;
-
-              // force at node of pi
-              force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
-            } // nodes of walls
-          }   // if node is from particle
-        }     // damping calculation
-
         this->d_f[i] += force_i;
       });
+
+  // damping force
+  for (auto &pi : d_particles) {
+
+    double Ri = pi->d_geom_p->boundingRadius();
+    double vol_pi = M_PI * Ri * Ri;
+    auto pi_xc = pi->getXCenter();
+    auto pi_vc = pi->getVCenter();
+    auto rhoi = pi->getDensity();
+    util::Point force_i = util::Point();
+
+    // particle-particle
+    for (auto &pj : this->d_particles) {
+      if (pj->getId() != pi->getId()) {
+        auto Rj = pj->d_geom_p->boundingRadius();
+        auto xc_ji = pj->getXCenter() - pi_xc;
+        auto dist_xcji = xc_ji.length();
+
+        const auto &contact = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+
+        if (util::isLess(dist_xcji, Rj + Ri + 1.01 * contact.d_contactR)) {
+
+          auto vol_pj = M_PI * Rj * Rj;
+          auto rhoj = pj->getDensity();
+          // equivalent mass
+          auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * vol_pj);
+
+          // beta_n
+          auto beta_n = contact.d_betan *
+                        std::sqrt(contact.d_kappa * contact.d_contactR * meq);
+
+          // center-center vector
+          auto hat_xc_ji = util::Point();
+          if (util::isGreater(dist_xcji, 0.))
+            hat_xc_ji = xc_ji / dist_xcji;
+          else
+            hat_xc_ji = util::Point();
+
+          // center-center velocity
+          auto vc_ji = pj->getVCenter() - pi_vc;
+          auto vc_mag = vc_ji * hat_xc_ji;
+          if (vc_mag > 0.)
+            vc_mag = 0.;
+
+          // force at node of pi
+          force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
+        } // if within contact distance
+      }   // if not same particles
+    }     // other particles
+
+    // particle-wall
+    // Step 1: Create list of wall nodes that are within the Rc distance
+    // of at least one of the particle
+    std::vector<std::vector<size_t>> wall_nodes(pi->getNumNodes());
+    hpx::parallel::for_loop(
+        hpx::parallel::execution::par, 0, pi->getNumNodes(),
+        [this, pi, &wall_nodes](boost::uint64_t i) {
+          auto yi = this->d_x[pi->getNodeId(i)];
+          double search_r = this->d_maxContactR;
+          std::vector<size_t> neighs;
+          std::vector<double> sqr_dist;
+          auto search_status =
+              this->d_nsearch_p->radiusSearch(yi, search_r, neighs, sqr_dist);
+
+          if (search_status > 0) {
+            for (std::size_t j = 0; j < neighs.size(); ++j) {
+
+              auto &j_id = neighs[j];
+              double Rji = (this->d_x[j_id] - yi).length();
+              auto &ptIdj = this->d_ptId[j_id];
+              auto &pj = this->getBaseParticle(ptIdj);
+              const auto &contact =
+                  d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+              if (util::isLess(Rji, contact.d_contactR))
+                wall_nodes[i].push_back(j_id);
+            }
+          }
+        });
+    std::vector<size_t> wall_nodes_condense;
+    for (auto &nds : wall_nodes) {
+      for (auto &j : nds)
+        addToList(&wall_nodes_condense, j);
+    }
+
+    // now loop over wall nodes and add force to center of particle
+    for (auto &j : wall_nodes_condense) {
+      auto &ptIdj = this->d_ptId[j];
+      auto &pj = this->getWall(this->d_allParticles[ptIdj]->getTypeId());
+      auto rhoj = pj->getDensity();
+      auto volj = this->d_vol[j];
+      //auto meq = rhoi * vol_pi;
+      auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
+
+      const auto &contact = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+
+      // beta_n
+      auto beta_n = contact.d_betan *
+                    std::sqrt(contact.d_kappa * contact.d_contactR * meq);
+
+      // center-node vector
+      auto xc_ji = this->d_x[j] - pi_xc;
+      auto hat_xc_ji = util::Point();
+      if (util::isGreater(xc_ji.length(), 0.))
+        hat_xc_ji = xc_ji / xc_ji.length();
+
+      // center-node velocity
+      auto vc_ji = this->d_v[j] - pi_vc;
+      auto vc_mag = vc_ji * hat_xc_ji;
+      if (vc_mag > 0.)
+        vc_mag = 0.;
+
+      // force at node of pi
+      force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
+    }
+
+    // distribute force_i to all nodes of particle pi
+    hpx::parallel::for_loop(
+        hpx::parallel::execution::par, 0, pi->getNumNodes(),
+        [this, pi, force_i](boost::uint64_t i) {
+          this->d_f[pi->getNodeId(i)] += force_i;
+        });
+  }
 }
 
 void model::DEMModel::applyInitialCondition() {
