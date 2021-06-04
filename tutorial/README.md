@@ -17,6 +17,10 @@ See [particle_wall.py](particle_wall.py). You can run the example using
 python3 particle_wall.py --peridem_path=<path to PeriDEM executible>
 ```
 
+| <img src="assets/particle_wall.gif" width="600"> | 
+| :---: | 
+| Particle wall simulation | 
+
 ## Two-particles with wall test
 This is an simple extension of above test and the python script to create the input files are provided in [two-particles with wall test](setup_two_particles_wall.py). In this test, we have two concave particles and a rectangular wall. Top particle is assigned a high downward velocity where as the second particle below the top particle and above the wall is falling freely on wall due to gravity. Wall is fixed to its place using zero displacement boundary condiiton.
 
