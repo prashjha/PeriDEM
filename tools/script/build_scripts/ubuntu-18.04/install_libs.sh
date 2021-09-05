@@ -9,7 +9,7 @@ BUILDTHREADS="12"
 INSTALLATGLOBAL="0" # if 1, then libraries will be installed in /usr/local <-- for containers
 
 cmake_build="0" # set to 1 to install
-hpx_build="0"
+hpx_build="1"
 
 # some preliminary setup
 if [ ! -d "$SOURCEDIR" ]; then

@@ -8,7 +8,7 @@ BUILDDIR="$SCRIPTPATH/build/"
 BUILDTHREADS="12"
 INSTALLATGLOBAL="0" # if 1, then libraries will be installed in /usr/local <-- for containers
 
-peridem_build="0" # set to 1 to install and 0 to do nothing
+peridem_build="1" # set to 1 to install and 0 to do nothing
 
 # some preliminary setup
 if [ ! -d "$SOURCEDIR" ]; then
