@@ -87,14 +87,17 @@ model::DEMModel::DEMModel(inp::Input *deck) : ModelData(deck) {
                        d_outputDeck_p->d_path + "log.txt");
 }
 
-void model::DEMModel::log(std::ostringstream &oss, int priority,
+void model::DEMModel::log(std::ostringstream &oss, int priority, bool check_condition, int override_priority,
                           bool screen_out) {
-  if (d_outputDeck_p->d_debug > priority)
+  int op = override_priority == -1 ? priority : override_priority;
+  //if (d_outputDeck_p->d_debug > priority)
+  if ((check_condition and d_outputDeck_p->d_debug > priority) or d_outputDeck_p->d_debug > op)
     util::io::log(oss, screen_out);
 }
-void model::DEMModel::log(const std::string &str, int priority,
+void model::DEMModel::log(const std::string &str, int priority, bool check_condition, int override_priority,
                           bool screen_out) {
-  if (d_outputDeck_p->d_debug > priority)
+  int op = override_priority == -1 ? priority : override_priority;  
+  if ((check_condition and d_outputDeck_p->d_debug > priority) or d_outputDeck_p->d_debug > op)
     util::io::log(str, screen_out);
 }
 
@@ -190,7 +193,7 @@ void model::DEMModel::init() {
   // setup tree
   double set_tree_time = d_nsearch_p->updatePointCloud(d_x, true);
   set_tree_time += d_nsearch_p->setInputCloud();
-  log(fmt::format("DEMModel: Tree setup time (ms) = {} \n", set_tree_time));
+  log(fmt::format("DEMModel: Tree setup time (ms) = {}. \n", set_tree_time));
 
   // create neighborlists
   log("DEMModel: Creating neighborlist for peridynamics.\n");
@@ -229,11 +232,11 @@ void model::DEMModel::init() {
   if (d_pDeck_p->d_testName == "two_particle")
     d_particles[0]->d_computeForce = false;
 
-  log(fmt::format("DEMModel: Total particles = {} \n", d_particles.size()));
+  log(fmt::format("DEMModel: Total particles = {}. \n", d_particles.size()));
 
   for (const auto &w : d_walls)
     if (!w->d_computeForce)
-      log(fmt::format("DEMModel: force OFF in Wall i = {} \n", w->getTypeId()));
+      log(fmt::format("DEMModel: force OFF in Wall i = {}. \n", w->getTypeId()));
 
   log("DEMModel: Creating list of nodes on which force is to be computed.\n");
   // TODO for now we simply look at particle/wall and check if we compute
@@ -254,7 +257,7 @@ void model::DEMModel::init() {
   d_Z = std::vector<float>(d_x.size(), 0.);
 
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Total setup time (ms) = {} \n",
+  log(fmt::format("DEMModel: Total setup time (ms) = {}. \n",
                   util::methods::timeDiff(t1, t2)));
 
   // compute complexity information
@@ -267,7 +270,7 @@ void model::DEMModel::init() {
   log(fmt::format("DEMModel: Computational complexity information \n"
                   "  Number of "
                   "particles = {}, number of walls = {}, number of dofs = {},"
-                  " number of free dofs = {}\n",
+                  " number of free dofs = {}. \n",
                   d_particles.size(), d_walls.size(), 3 * d_x.size(),
                   free_dofs));
 }
@@ -288,29 +291,26 @@ void model::DEMModel::integrate() {
 
   for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 
-    if (d_n % d_infoN == 0)
-      log(fmt::format("DEMModel: Time step: {}, time: {:.6f}\n", i, d_time), 2);
-
+    log(fmt::format("DEMModel: Time step: {}, time: {:.6f}\n", i, d_time), 2, d_n % d_infoN == 0, 3);
+    
     clock_begin = steady_clock::now();
+    log("Integrating\n", false, 0, 3);
     integrateStep();
     double integrate_time =
         util::methods::timeDiff(clock_begin, steady_clock::now());
     integrate_compute_time += integrate_time;
 
-    if (d_n % d_infoN == 0)
-      log(fmt::format("  Integration time (ms) = {}\n", integrate_time), 2);
+    log(fmt::format("  Integration time (ms) = {}\n", integrate_time), 2, d_n % d_infoN == 0, 3);
 
     if (d_pDeck_p->d_testName == "two_particle") {
 
       // compute location of maximum shear stress and also compute
       // penetration length
       auto msg = ppTwoParticleTest();
-      if (d_n % d_infoN == 0)
-        log(msg, 2);
+      log(msg, 2, d_n % d_infoN == 0, 3);
     } else if (d_pDeck_p->d_testName == "compressive_test") {
       auto msg = ppCompressiveTest();
-      if (d_n % d_infoN == 0)
-        log(msg, 2);
+      log(msg, 2, d_n % d_infoN == 0, 3);
     }
 
     // handle general output
@@ -331,8 +331,7 @@ void model::DEMModel::integrate() {
           "Tree update = {:.6f}, External force = {:.6f}\n",
           integrate_compute_time * 1.e-6, pd_compute_time * 1.e-6,
           contact_compute_time * 1.e-6, tree_compute_time * 1.e-6,
-          extf_compute_time * 1.e-6),
-      1);
+          extf_compute_time * 1.e-6), 1);
 }
 
 void model::DEMModel::integrateStep() {
@@ -433,55 +432,51 @@ void model::DEMModel::integrateVerlet() {
 
 void model::DEMModel::computeForces() {
 
-  if (d_n % d_infoN == 0)
-    log("  Compute forces \n", 2);
+  bool dbg_condition = d_n % d_infoN == 0;
+
+  log("  Compute forces \n", 2, dbg_condition, 3);
 
   // update the point cloud (make sure that d_x is updated along with
   // displacment)
   auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
   pt_cloud_update_time += d_nsearch_p->setInputCloud();
   tree_compute_time += pt_cloud_update_time;
-  if (d_n % d_infoN == 0)
-    log(fmt::format("    Point cloud update time (ms) = {} \n",
-                    pt_cloud_update_time),
-        2);
+  log(fmt::format("    Point cloud update time (ms) = {} \n",
+                    pt_cloud_update_time), 2, dbg_condition, 3);
 
   // reset force
   auto t1 = steady_clock::now();
   hpx::parallel::for_loop(
       hpx::parallel::execution::par, 0, d_x.size(),
       [this](boost::uint64_t i) { this->d_f[i] = util::Point(); });
-  if (d_n % d_infoN == 0)
-    log(fmt::format("    Force reset time (ms) = {} \n",
-                    util::methods::timeDiff(t1, steady_clock::now())),
-        2);
+  log(fmt::format("    Force reset time (ms) = {} \n",
+                    util::methods::timeDiff(t1, steady_clock::now())), 2, dbg_condition, 3);
 
   // compute peridynamic forces
   t1 = steady_clock::now();
   computePeridynamicForces();
   auto pd_time = util::methods::timeDiff(t1, steady_clock::now());
   pd_compute_time += pd_time;
-  if (d_n % d_infoN == 0)
-    log(fmt::format("    Peridynamics force time (ms) = {} \n", pd_time), 2);
+  log(fmt::format("    Peridynamics force time (ms) = {} \n", pd_time), 2, dbg_condition, 3);
 
   // compute contact forces between particles
   t1 = steady_clock::now();
   computeContactForces();
   auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
   contact_compute_time += contact_time;
-  if (d_n % d_infoN == 0)
-    log(fmt::format("    Contact force time (ms) = {} \n", contact_time), 2);
+  log(fmt::format("    Contact force time (ms) = {} \n", contact_time), 2, dbg_condition, 3);
 
   // Compute external forces
   t1 = steady_clock::now();
   computeExternalForces();
   auto extf_time = util::methods::timeDiff(t1, steady_clock::now());
   extf_compute_time += extf_time;
-  if (d_n % d_infoN == 0)
-    log(fmt::format("    External force time (ms) = {} \n", extf_time), 2);
+  log(fmt::format("    External force time (ms) = {} \n", extf_time), 2, dbg_condition, 3);
 }
 
 void model::DEMModel::computePeridynamicForces() {
+
+  log("    Computing peridynamic force \n", 3);
 
   const auto dim = d_modelDeck_p->d_dim;
   const bool is_state = d_allParticles[0]->getMaterial()->isStateActive();
@@ -664,6 +659,8 @@ void model::DEMModel::computePeridynamicForces() {
 
 void model::DEMModel::computeExternalForces() {
 
+  log("    Computing external force \n", 3);
+
   auto gravity = d_pDeck_p->d_gravity;
 
   if (gravity.length() > 1.0E-8) {
@@ -683,11 +680,14 @@ void model::DEMModel::computeExternalForces() {
 }
 
 void model::DEMModel::computeExternalDisplacementBC() {
+  log("    Computing external displacement bc \n", 3);
   for (auto &p : d_allParticles)
     d_uLoading_p->apply(d_time, p); // applied in parallel
 }
 
 void model::DEMModel::computeContactForces() {
+
+  log("    Computing normal contact force \n", 3);
 
   // Description:
   // 1. Normal contact is applied between nodes of particles and walls
@@ -795,6 +795,7 @@ void model::DEMModel::computeContactForces() {
       });
 
   // damping force
+  log("    Computing normal damping force \n", 3);
   for (auto &pi : d_particles) {
 
     double Ri = pi->d_geom_p->boundingRadius();
@@ -924,7 +925,7 @@ void model::DEMModel::computeContactForces() {
 
 void model::DEMModel::applyInitialCondition() {
 
-  // std::cout << "applying initial condition\n";
+  log("Applying initial condition \n", 3);
 
   if (!d_pDeck_p->d_icDeck.d_icActive)
     return;
@@ -973,13 +974,13 @@ void model::DEMModel::createParticles() {
     auto rep_p_params = pz.d_params;
 
     // read mesh data
-    util::io::log("DEMModel: Creating mesh for reference particle in zone = " +
+    log("DEMModel: Creating mesh for reference particle in zone = " +
                   std::to_string(z_id) + "\n");
     auto *mesh = new fe::Mesh(&pz.d_meshDeck);
     // mesh->print();
 
     // create the reference particle
-    util::io::log("DEMModel: Creating reference particle in zone = " +
+    log("DEMModel: Creating reference particle in zone = " +
                   std::to_string(z_id) + "\n");
 
     auto ref_p = std::make_shared<particle::RefParticle>(&pz, mesh);
@@ -1006,7 +1007,7 @@ void model::DEMModel::createParticles() {
     // mdeck.print();
 
     // check the particle generation method
-    util::io::log("DEMModel: Creating particles in zone = " +
+    log("DEMModel: Creating particles in zone = " +
                   std::to_string(z_id) + "\n");
 
     if (pz.d_genMethod == "From_File")
@@ -1059,10 +1060,9 @@ void model::DEMModel::createParticlesFromFile(
                                               &rads, &orients, z_id);
   }
 
-  if (d_outputDeck_p->d_debug > 2)
-    log(fmt::format("zone_id: {}, rads: {}, orients: {}, centers: {} \n", z_id,
+  log(fmt::format("zone_id: {}, rads: {}, orients: {}, centers: {} \n", z_id,
                     util::io::printStr(rads), util::io::printStr(orients),
-                    util::io::printStr(centers)));
+                    util::io::printStr(centers)), 2);
 
   // get representative particle for this zone
   const auto &rep_p = pz.d_particle_p;
@@ -1155,7 +1155,7 @@ void model::DEMModel::createWalls() {
     // read and create mesh data
     fe::Mesh *mesh;
     if (wz.d_meshFlag) {
-      util::io::log("DEMModel: Creating mesh for wall in zone = " +
+      log("DEMModel: Creating mesh for wall in zone = " +
                     std::to_string(z_id) + "\n");
       // wz.d_meshDeck.print();
       mesh = new fe::Mesh(&wz.d_meshDeck);
@@ -1187,7 +1187,7 @@ void model::DEMModel::createWalls() {
     mdeck.d_horizon = horizon;
 
     // create wall
-    util::io::log("DEMModel: Creating wall in zone = " + std::to_string(z_id) +
+    log("DEMModel: Creating wall in zone = " + std::to_string(z_id) +
                   "\n");
     auto wall =
         new particle::Wall(z + wall_id_begin, z, wz, z_id, mesh,
@@ -1218,8 +1218,7 @@ void model::DEMModel::setupContact() {
       d_hMax = h;
   }
 
-  log("DEMModel: Contact setup");
-  log(fmt::format("  hmin = {:.6f}, hmax = {:.6f} \n", d_hMin, d_hMax));
+  log(fmt::format("DEMModel: Contact setup\n  hmin = {:.6f}, hmax = {:.6f} \n", d_hMin, d_hMax), 1);
 
   d_maxContactR = 0.;
   // precompute bulk modulus of all zones
@@ -1283,7 +1282,7 @@ void model::DEMModel::setupContact() {
                       "Vmax = {:5.3e}, "
                       "betan = {:7.5f}, mu = {:.4f}, kappa = {:5.3e}\n",
                       deck->d_contactR, d_hMin, deck->d_Kn, deck->d_vMax,
-                      deck->d_betan, deck->d_mu, deck->d_kappa));
+                      deck->d_betan, deck->d_mu, deck->d_kappa), 1);
     }
   }
 }
@@ -1311,8 +1310,7 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
       });
   auto t2 = steady_clock::now();
   log(fmt::format("DEMModel: Peridynamics neighbor update time = {}\n",
-                  util::methods::timeDiff(t1, t2)),
-      2);
+                  util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::updateContactNeighborlist() {
@@ -1336,8 +1334,7 @@ void model::DEMModel::updateContactNeighborlist() {
       });
   auto t2 = steady_clock::now();
   log(fmt::format("DEMModel: Contact neighbor update time = {}\n",
-                  util::methods::timeDiff(t1, t2)),
-      2);
+                  util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::updateNeighborlistCombine() {
@@ -1380,8 +1377,7 @@ void model::DEMModel::updateNeighborlistCombine() {
       });
   auto t2 = steady_clock::now();
   log(fmt::format("DEMModel: Peridynamics+Contact neighbor update time = {}\n",
-                  util::methods::timeDiff(t1, t2)),
-      2);
+                  util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::output() {

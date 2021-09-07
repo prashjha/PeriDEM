@@ -39,11 +39,15 @@ public:
    */
   explicit DEMModel(inp::Input *deck);
 
-  /*! logging */
-  void log(std::ostringstream &oss, int priority =
-      0, bool screen_out = false);
-  void log(const std::string &str, int priority =
-  0, bool screen_out = false);
+  /*! logging 
+   * 
+   * Prints message if any of these two conditions are true
+   * 1. if check_condition == true and dbg_lvl > priority
+   * OR
+   * 2. dbg_lvl > override_priority
+   */
+  void log(std::ostringstream &oss, int priority = 0, bool check_condition = true, int override_priority = -1, bool screen_out = false);
+  void log(const std::string &str, int priority = 0, bool check_condition = true, int override_priority = -1, bool screen_out = false);
 
   /*!
    * @brief Main driver to simulate
