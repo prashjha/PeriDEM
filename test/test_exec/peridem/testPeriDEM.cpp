@@ -8,38 +8,24 @@
  */
 
 #include <PeriDEMConfig.h>
-#include <hpx/hpx_main.hpp>           // Need main source file
 #include "testPeriDEMLib.h"
+#include "util/io.h"
 #include <iostream>
-#include <boost/program_options.hpp>            // program options
 
 int main(int argc, char *argv[]) {
 
-  boost::program_options::options_description desc("Allowed options");
-  desc.add_options()("help", "produce help message")(
-      "data-filepath,i", boost::program_options::value<std::string>(),
-      "Data filepath");
+  util::io::InputParser input(argc, argv);
 
-  boost::program_options::variables_map vm;
-  boost::program_options::store(
-      boost::program_options::parse_command_line(argc, argv, desc), vm);
-  boost::program_options::notify(vm);
-
-  if (vm.count("help")) {
-    std::cout << desc << "\n";
-    return 1;
+  if (input.cmdOptionExists("-h") or !input.cmdOptionExists("-i")) {
+    // print help
+    std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
+              << MINOR_VERSION << "." << UPDATE_VERSION
+              << ") -i <data-filepath>" << std::endl;
+    exit(EXIT_FAILURE);
   }
 
   // read input file
-  std::string filepath;
-  if (vm.count("data-filepath")) filepath = vm["data-filepath"].as<std::string>();
-
-  if (filepath.empty()) {
-    std::cerr << argv[0] << " (Version " << MAJOR_VERSION << "."
-              << MINOR_VERSION << "." << UPDATE_VERSION
-              << ") -i <data-filepath> --hpx:threads=n" << std::endl;
-    exit(1);
-  }
+  std::string filepath = input.getCmdOption("-i");
 
   // run test
   auto msg = test::testPeriDEM(filepath);

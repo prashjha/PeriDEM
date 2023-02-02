@@ -8,7 +8,6 @@
  */
 
 #include "testParticleLib.h"
-#include <hpx/hpx_main.hpp>
 
 int main() {
 

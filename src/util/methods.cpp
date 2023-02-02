@@ -129,9 +129,16 @@ bool util::methods::isTagInList(const std::string &tag,
   return false;
 }
 
-float util::methods::timeDiff(std::chrono::steady_clock::time_point begin,
-                std::chrono::steady_clock::time_point end) {
+float util::methods::timeDiff(std::chrono::steady_clock::time_point begin, std::chrono::steady_clock::time_point end, std::string unit) {
 
-  return std::chrono::duration_cast<std::chrono::microseconds>(end -
-                                                               begin).count();
+  if (unit == "microseconds")
+    return std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+  else if (unit == "milliseconds")
+    return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+  else if (unit == "seconds")
+    return std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
+  else {
+    std::cerr << "Unit = " << unit << " not valid.\n";
+    exit(EXIT_FAILURE);
+  }
 }

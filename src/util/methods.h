@@ -94,10 +94,11 @@ bool isTagInList(const std::string &tag, const std::vector<std::string> &tags);
  * @brief Returns difference between two times
  * @param begin Beginning time
  * @param end Ending time
+ * @param unit Unit in which time difference is to be returned
  * @return time Time difference
  */
 float timeDiff(std::chrono::steady_clock::time_point begin,
-                std::chrono::steady_clock::time_point end);
+                std::chrono::steady_clock::time_point end, std::string unit = "microseconds");
 
 } // namespace methods
 

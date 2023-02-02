@@ -13,15 +13,15 @@
 #include "inp/input.h"                          // Input class
 #include "model/dem/demModel.h"                 // Model class
 #include "inp/decks/outputDeck.h"
-
-#include <hpx/util/high_resolution_clock.hpp>
+#include "util/methods.h"
+#include "util/io.h"
 #include <fstream>
 #include <string>
 
 std::string test::testPeriDEM(std::string filepath) {
 
   // current time
-  std::uint64_t begin = hpx::util::high_resolution_clock::now();
+  std::uint64_t begin = steady_clock::now();
 
   // read input data
   auto *deck = new inp::Input(filepath + "/input.yaml");
@@ -38,8 +38,8 @@ std::string test::testPeriDEM(std::string filepath) {
   }
 
   // get time elapsed
-  std::uint64_t end = hpx::util::high_resolution_clock::now();
-  double elapsed_secs = double(end - begin) / 1.0e9;
+  std::uint64_t end = steady_clock::now();
+  double elapsed_secs = util::methods::timeDiff(begin, end, "seconds");
 
   std::cout << "Total simulation time = " << elapsed_secs
             << " (seconds)" << std::endl;

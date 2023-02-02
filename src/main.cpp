@@ -18,15 +18,17 @@
 #include "inp/input.h"                          // Input class
 #include "model/dem/demModel.h"                 // Model class
 #include "util/io.h"                            // InputParser class
+#include "util/methods.h"
 
 int main(int argc, char *argv[]) {
 
-  InputParser input(argc, argv);
+  util::io::InputParser input(argc, argv);
 
-  if (input.cmdOptionExists("-h")) {
+  if (input.cmdOptionExists("-h") or !input.cmdOptionExists("-i")) {
     // print help
-    std::cout << "Syntax to run PeriDEM: ./PeriDEM -i <input file> -n <number of threads>"
-    std::cout << "Example: ./PeriDEM -i input.yaml -n 4"
+    std::cout << "Syntax to run PeriDEM: ./PeriDEM -i <input file> -n <number of threads>";
+    std::cout << "Example: ./PeriDEM -i input.yaml -n 4";
+    exit(EXIT_FAILURE);
   }
   
   // print program version
@@ -35,10 +37,10 @@ int main(int argc, char *argv[]) {
             << UPDATE_VERSION << ")" << std::endl;
 
   // current time
-  auto begin = std::clock();
+  auto begin = steady_clock::now();
 
   // read input data
-  filename = input.getCmdOption("-f");
+  std::string filename = input.getCmdOption("-i");
   auto *deck = new inp::Input(filename);
 
   // check which model to run
@@ -50,9 +52,9 @@ int main(int argc, char *argv[]) {
   }
 
   // get time elapsed
-  auto end = std::clock();
-  double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+  auto end = steady_clock::now();
 
-  std::cout << "Total simulation time (s) = " << elapsed_secs
+  std::cout << "Total simulation time (s) = " 
+            << util::methods::timeDiff(begin, end, "seconds") 
             << std::endl;
 }

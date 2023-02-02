@@ -19,8 +19,7 @@
 #include <random>
 #include <vector>
 
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
+#include <taskflow/taskflow/taskflow.hpp>
 
 typedef std::mt19937 RandGenerator;
 typedef std::uniform_real_distribution<> UniformDistribution;
@@ -92,23 +91,29 @@ double neighSearchTree(const std::vector<util::Point> &x,
   neigh.resize(x.size());
   neigh_sq_dist.resize(x.size());
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, x.size(),
-      [&x, &neigh, &neigh_sq_dist, &nsearch, r](boost::uint64_t i) {
-        std::vector<int> neighs;
-        std::vector<float> sqr_dist;
 
-        if (nsearch->radiusSearch(x[i], r, neighs, sqr_dist) >
-            0) {
-          for (std::size_t j = 0; j < neighs.size(); ++j)
-            if (size_t(neighs[j]) != i) {
-              neigh[i].push_back(size_t(neighs[j]));
-              neigh_sq_dist[i].push_back(sqr_dist[j]);
-            }
-        }
-      });
+  tf::Executor executor;
+  tf::Taskflow taskflow;
+
+  taskflow.for_each(0, x.size(), [&x, &neigh, &neigh_sq_dist, &nsearch, r](uint64_t i) {
+      std::vector<int> neighs;
+      std::vector<float> sqr_dist;
+
+      if (nsearch->radiusSearch(x[i], r, neighs, sqr_dist) >
+          0) {
+        for (std::size_t j = 0; j < neighs.size(); ++j)
+          if (size_t(neighs[j]) != i) {
+            neigh[i].push_back(size_t(neighs[j]));
+            neigh_sq_dist[i].push_back(sqr_dist[j]);
+          }
+      }
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   auto t2 = steady_clock::now();
-  return util::methods::timeDiff(t1, t2);
+  return util::methods::timeDiff(t1, t2, "microseconds");
 }
 
 template <class NSearch>
@@ -119,23 +124,29 @@ double neighSearchTreeSizet(const std::vector<util::Point> &x,
   neigh.resize(x.size());
   neigh_sq_dist.resize(x.size());
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, x.size(),
-      [&x, &neigh, &neigh_sq_dist, &nsearch, r](boost::uint64_t i) {
-        std::vector<size_t> neighs;
-        std::vector<double> sqr_dist;
 
-        if (nsearch->radiusSearch(x[i], r, neighs, sqr_dist) >
-            0) {
-          for (std::size_t j = 0; j < neighs.size(); ++j)
-            if (size_t(neighs[j]) != i) {
-              neigh[i].push_back(size_t(neighs[j]));
-              neigh_sq_dist[i].push_back(sqr_dist[j]);
-            }
-        }
-      });
+  tf::Executor executor;
+  tf::Taskflow taskflow;
+
+  taskflow.for_each(0, x.size(), [&x, &neigh, &neigh_sq_dist, &nsearch, r](uint64_t i) {
+      std::vector<size_t> neighs;
+      std::vector<double> sqr_dist;
+
+      if (nsearch->radiusSearch(x[i], r, neighs, sqr_dist) >
+          0) {
+        for (std::size_t j = 0; j < neighs.size(); ++j)
+          if (size_t(neighs[j]) != i) {
+            neigh[i].push_back(size_t(neighs[j]));
+            neigh_sq_dist[i].push_back(sqr_dist[j]);
+          }
+      }
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   auto t2 = steady_clock::now();
-  return util::methods::timeDiff(t1, t2);
+  return util::methods::timeDiff(t1, t2, "microseconds");
 }
 
 double neighSearchBrute(const std::vector<util::Point> &x, const double &r,
@@ -145,21 +156,28 @@ double neighSearchBrute(const std::vector<util::Point> &x, const double &r,
   neigh_sq_dist.resize(x.size());
 
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(hpx::parallel::execution::par, 0, x.size(),
-                          [&x, &neigh, &neigh_sq_dist, r](boost::uint64_t i) {
-                            auto searchPoint = x[i];
 
-                            for (size_t j = 0; j < x.size(); j++) {
-                              auto dx = searchPoint - x[j];
-                              auto l = dx.length();
-                              if (util::isLess(l, r) and j != i) {
-                                neigh[i].push_back(j);
-                                neigh_sq_dist[i].push_back(l);
-                              }
-                            }
-                          });
+  tf::Executor executor;
+  tf::Taskflow taskflow;
+
+  taskflow.for_each(0, x.size(), [&x, &neigh, &neigh_sq_dist, r](uint64_t i) {
+      auto searchPoint = x[i];
+
+      for (size_t j = 0; j < x.size(); j++) {
+        auto dx = searchPoint - x[j];
+        auto l = dx.length();
+        if (util::isLess(l, r) and j != i) {
+          neigh[i].push_back(j);
+          neigh_sq_dist[i].push_back(l);
+        }
+      }
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   auto t2 = steady_clock::now();
-  return util::methods::timeDiff(t1, t2);
+  return util::methods::timeDiff(t1, t2, "microseconds");
 }
 
 std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
@@ -261,11 +279,11 @@ std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
       neigh_nflann, neigh_brute, {"nflann_tree", "brute_force"}, -1, true);
 
   std::ostringstream msg;
-  msg << fmt::format("  Setup times: \n"
+  msg << fmt::format("  Setup times (microseconds): \n"
                      "    nflann_tree_set_time = {}\n",
                      nflann_tree_set_time);
 
-  msg << fmt::format("  Search times: \n"
+  msg << fmt::format("  Search times (microseconds): \n"
                      "    brute_force_search_time = {}\n"
                      "    nflann_tree_search_time = {}\n",
                      brute_force_search_time,

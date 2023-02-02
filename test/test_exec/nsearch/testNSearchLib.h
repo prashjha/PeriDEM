@@ -10,10 +10,8 @@
 #ifndef TEST_NSEARCH_LIB_H
 #define TEST_NSEARCH_LIB_H
 
-#include <hpx/config.hpp>
 #include <string>
 #include <vector>
-#include "fmt/format.h"
 
 namespace test {
 

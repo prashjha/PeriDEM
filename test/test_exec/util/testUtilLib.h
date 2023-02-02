@@ -10,7 +10,6 @@
 #ifndef TESTFELIB_H
 #define TESTFELIB_H
 
-#include <hpx/config.hpp>
 #include <string>
 #include <vector>
 

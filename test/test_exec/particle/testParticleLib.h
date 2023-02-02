@@ -10,7 +10,6 @@
 #ifndef TEST_PARTILCE_LIB_H
 #define TEST_PARTILCE_LIB_H
 
-#include <hpx/config.hpp>
 #include <string>
 #include <vector>
 
