@@ -7,4 +7,4 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_hpx_library(Geometry SOURCES ${SOURCES})
+add_library(Geometry SHARED ${SOURCES})

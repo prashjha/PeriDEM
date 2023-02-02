@@ -10,8 +10,6 @@
 #ifndef MODEL_FASTDEMMODEL_H
 #define MODEL_FASTDEMMODEL_H
 
-#include <hpx/config.hpp>
-
 #include "../modelData.h"
 
 namespace model {

@@ -10,7 +10,7 @@
 #include "fracture.h"
 #include "util/geom.h"
 #include "util/io.h"
-#include <hpx/include/parallel_algorithm.hpp>
+#include <taskflow/taskflow/taskflow.hpp>
 
 
 geometry::Fracture::Fracture() {}
@@ -21,27 +21,29 @@ geometry::Fracture::Fracture(const std::vector<util::Point> *nodes,
   auto n = nodes->size();
   d_fracture.resize(n);
 
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      n, [this, &nodes, &neighbor_list, n](boost::uint64_t i) {
+  tf::Executor executor;
+  tf::Taskflow taskflow;
 
-        // get neighborlist of node i if neighborlist is provided
-        std::vector<size_t> neighs;
-        if (neighbor_list != nullptr)
-          neighs = (*neighbor_list)[i];
+  taskflow.for_each(
+    0, n, [this, &nodes, &neighbor_list, n](uint64_t i) {
+      // get neighborlist of node i if neighborlist is provided
+      std::vector<size_t> neighs;
+      if (neighbor_list != nullptr)
+        neighs = (*neighbor_list)[i];
 
-        // compute number of neighbors
-        auto ns = n;
-        if (!neighs.empty())
-          ns = neighs.size();
+      // compute number of neighbors
+      auto ns = n;
+      if (!neighs.empty())
+        ns = neighs.size();
 
-        size_t s = ns / 8;
-        if (s * 8 < ns)
-          s++;
-        d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
-      }); // end of parallel for loop
+      size_t s = ns / 8;
+      if (s * 8 < ns)
+        s++;
+      d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
+    }
+  ); // for_each
 
-  f.get();
+  executor.run(taskflow).get();
 }
 
 void geometry::Fracture::setBondState(const size_t &i, const size_t &j,

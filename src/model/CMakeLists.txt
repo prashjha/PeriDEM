@@ -9,4 +9,7 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./dem SOURCES)
 
 add_library(Model ${SOURCES})
+
+target_include_directories(Model PUBLIC ${VTK_INCLUDE_DIRS})
+
 target_link_libraries(Model PUBLIC Util RW Inp Material Loading Geometry FE Particle NSearch)

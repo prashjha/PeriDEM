@@ -18,29 +18,24 @@
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
-
-// include high level class declarations
+#include "inp/pdecks/contactDeck.h"
+#include "rw/reader.h"
+#include "util/function.h"
+#include "util/geom.h"
+#include "util/methods.h"
+#include "util/randomDist.h"
 #include "inp/decks/materialDeck.h"
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
 
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
-
-// standard lib
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include <fstream>
-#include <inp/pdecks/contactDeck.h>
 #include <iostream>
 #include <random>
-#include <rw/reader.h>
-#include <rw/vtkParticleReader.h>
-#include <util/function.h>
-#include <util/geom.h>
-#include <util/methods.h>
-#include <util/randomDist.h>
+
+#include <taskflow/taskflow/taskflow.hpp>
 
 namespace {
 
@@ -347,10 +342,12 @@ void model::DEMModel::integrateCD() {
   const auto dt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(),
-      [this, dt, dim](boost::uint64_t II) {
+  tf::Executor executor;
+  tf::Taskflow taskflow;
+
+  taskflow.for_each(
+    0, d_fPdCompNodes.size(),
+      [this, dt, dim](uint64_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -364,8 +361,9 @@ void model::DEMModel::integrateCD() {
           }
         }
       } // loop over nodes
-  );    // end of parallel for loop
-  f.get();
+  ); // for_each
+
+  executor.run(taskflow).get();
 
   d_n++;
   d_time += dt;
@@ -383,25 +381,30 @@ void model::DEMModel::integrateVerlet() {
   const auto dt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(),
-      [this, dt, dim](boost::uint64_t II) {
-        auto i = this->d_fPdCompNodes[II];
+  {
+    tf::Executor executor;
+    tf::Taskflow taskflow;
 
-        const auto rho = this->getDensity(i);
-        const auto &fix = this->d_fix[i];
+    taskflow.for_each(
+      0, d_fPdCompNodes.size(),
+        [this, dt, dim](boost::uint64_t II) {
+          auto i = this->d_fPdCompNodes[II];
 
-        for (int dof = 0; dof < dim; dof++) {
-          if (util::methods::isFree(fix, dof)) {
-            this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
-            this->d_u[i][dof] += dt * this->d_v[i][dof];
-            this->d_x[i][dof] += dt * this->d_v[i][dof];
+          const auto rho = this->getDensity(i);
+          const auto &fix = this->d_fix[i];
+
+          for (int dof = 0; dof < dim; dof++) {
+            if (util::methods::isFree(fix, dof)) {
+              this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
+              this->d_u[i][dof] += dt * this->d_v[i][dof];
+              this->d_x[i][dof] += dt * this->d_v[i][dof];
+            }
           }
-        }
-      } // loop over nodes
-  );    // end of parallel for loop
-  f.get();
+        } // loop over nodes
+    ); // for_each
+
+    executor.run(taskflow).get();
+  }
 
   d_n++;
   d_time += dt;
@@ -412,9 +415,12 @@ void model::DEMModel::integrateVerlet() {
   // compute force
   computeForces();
 
-  f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(),
+  {
+    tf::Executor executor;
+    tf::Taskflow taskflow;
+
+    taskflow.for_each(
+      0, d_fPdCompNodes.size(),
       [this, dt, dim](boost::uint64_t II) {
         auto i = this->d_fPdCompNodes[II];
 
@@ -426,8 +432,10 @@ void model::DEMModel::integrateVerlet() {
           }
         }
       } // loop over nodes
-  );    // end of parallel for loop
-  f.get();
+    ); // for_each
+
+    executor.run(taskflow).get();
+  }
 }
 
 void model::DEMModel::computeForces() {
@@ -446,9 +454,16 @@ void model::DEMModel::computeForces() {
 
   // reset force
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_x.size(),
-      [this](boost::uint64_t i) { this->d_f[i] = util::Point(); });
+  tf::Executor executor;
+  tf::Taskflow taskflow;
+
+  taskflow.for_each(
+    0, d_x.size(),
+      [this](boost::uint64_t i) { this->d_f[i] = util::Point(); }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   log(fmt::format("    Force reset time (ms) = {} \n",
                     util::methods::timeDiff(t1, steady_clock::now())), 2, dbg_condition, 3);
 
@@ -471,7 +486,8 @@ void model::DEMModel::computeForces() {
   computeExternalForces();
   auto extf_time = util::methods::timeDiff(t1, steady_clock::now());
   extf_compute_time += extf_time;
-  log(fmt::format("    External force time (ms) = {} \n", extf_time), 2, dbg_condition, 3);
+  log(fmt::format("    External force time (ms) = {} \n", extf_
+  time), 2, dbg_condition, 3);
 }
 
 void model::DEMModel::computePeridynamicForces() {

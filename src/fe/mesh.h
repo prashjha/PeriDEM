@@ -11,7 +11,6 @@
 #define FE_MESH_H
 
 #include "util/point.h" // definition of struct Point
-#include <hpx/config.hpp>
 #include <string>
 #include <vector>
 

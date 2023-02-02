@@ -10,7 +10,6 @@
 #ifndef MODEL_MODELDATA_H
 #define MODEL_MODELDATA_H
 
-#include <hpx/config.hpp>
 #include "material/mparticle/material.h"
 #include "inp/input.h"
 #include "loading/particleFLoading.h"

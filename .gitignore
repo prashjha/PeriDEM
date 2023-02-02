@@ -44,6 +44,7 @@ build_2
 # ide directory
 .idea
 .idea/workspace.xml
+.vscode
 
 
 # docs directory

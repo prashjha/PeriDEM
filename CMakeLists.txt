@@ -16,7 +16,7 @@ set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamically enhanced DEM model for
 
 # version
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 1)
+set(VERSION_MINOR 2)
 set(VERSION_UPDATE 0)
 
 #----------------------------------#
@@ -79,20 +79,20 @@ if (${Enable_CMAKE_Debug_Build})
 endif()
 
 
-#<<<<<<<<<< HPX >>>>>>>>>>#
-find_package(HPX REQUIRED)
+# #<<<<<<<<<< HPX >>>>>>>>>>#
+# find_package(HPX REQUIRED)
 
-if (NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
-    message("HPX_BUILD_TYPE: " ${HPX_BUILD_TYPE} " CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-    message(FATAL_ERROR "ERROR: Build type of HPX and PeriDEM library do not match")
-endif ()
+# if (NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
+#     message("HPX_BUILD_TYPE: " ${HPX_BUILD_TYPE} " CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
+#     message(FATAL_ERROR "ERROR: Build type of HPX and PeriDEM library do not match")
+# endif ()
 
-# include hpx cmake
-list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
+# # include hpx cmake
+# list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
 
-if (${Enable_CMAKE_Debug_Build})
-    message("HPX_INCLUDE_DIRS = ${HPX_INCLUDE_DIRS}")
-endif()
+# if (${Enable_CMAKE_Debug_Build})
+#     message("HPX_INCLUDE_DIRS = ${HPX_INCLUDE_DIRS}")
+# endif()
 
 #<<<<<<<<<< YAML >>>>>>>>>>#
 find_package(YamlCpp REQUIRED)
@@ -132,13 +132,13 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif ()
 
-# set gnu standard to 14
+# set gnu standard to 17
 if (CMAKE_VERSION VERSION_LESS "3.1")
     if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "--std=gnu++14 ${CMAKE_CXX_FLAGS}")
+        set(CMAKE_CXX_FLAGS "--std=gnu++17 ${CMAKE_CXX_FLAGS}")
     endif ()
 else ()
-    set(CMAKE_CXX_STANDARD 14)
+    set(CMAKE_CXX_STANDARD 17)
 endif ()
 
 if (${Enable_CMAKE_Debug_Build})
@@ -151,7 +151,7 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
-include_directories(${HPX_INCLUDE_DIRS})
+# include_directories(${HPX_INCLUDE_DIRS})
 include_directories(SYSTEM external)
 include_directories(src)
 
@@ -196,7 +196,7 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< PeriDEM executible >>>>>>>>>>#
 #----------------------------------#
-add_hpx_executable(PeriDEM SOURCES src/main.cpp DEPENDENCIES Inp Model)
+add_executable(PeriDEM SOURCES src/main.cpp DEPENDENCIES Inp Model)
 
 
 #----------------------------------#

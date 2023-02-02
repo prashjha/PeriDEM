@@ -11,9 +11,7 @@
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include <iostream>
-
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
+#include <taskflow/taskflow/taskflow.hpp>
 
 namespace {
 
@@ -221,22 +219,23 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
     }
   } else {
 
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        model->d_x.size(),
-        [model](boost::uint64_t i) {
+    tf::Executor executor;
+    tf::Taskflow taskflow;
 
-          const auto &pti = model->getPtId(i);
-          const auto &particle = model->getBaseParticle(pti);
-          auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
-                                    model->d_neighPd, model->d_neighPdSqdDist,
-                                    particle->getMeshSize(),
-                                    particle->getMaterial());
+    taskflow.for_each(
+      0, model->d_x.size(), [model](uint64_t i) {
+        const auto &pti = model->getPtId(i);
+        const auto &particle = model->getBaseParticle(pti);
+        auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
+                                  model->d_neighPd, model->d_neighPdSqdDist,
+                                  particle->getMeshSize(),
+                                  particle->getMaterial());
 
-          model->setMx(i, mx);
-        } // loop over nodes
-    );    // end of parallel for loop
-    f.get();
+        model->setMx(i, mx);
+      }
+    ); // for_each
+
+    executor.run(taskflow).get();
   }
 }
 
@@ -262,25 +261,27 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
 
   } else {
 
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        model->d_x.size(),
-        [model](boost::uint64_t i) {
-          const auto &pti = model->getPtId(i);
-          const auto &particle = model->getBaseParticle(pti);
+    tf::Executor executor;
+    tf::Taskflow taskflow;
 
-          auto thetax = computeStateThetaxI(i, model->d_xRef, model->d_u,
-                                            model->d_vol,
-                                            model->d_neighPd, model->d_neighPdSqdDist,
-                                            particle->getMeshSize(),
-                                            particle->getMaterial(),
-                                            model->d_fracture_p.get(),
-                                            model->d_mX);
+    taskflow.for_each(
+      0, model->d_x.size(), [model](uint64_t i) {
+        const auto &pti = model->getPtId(i);
+        const auto &particle = model->getBaseParticle(pti);
 
-          model->setThetax(i, thetax);
-        } // loop over nodes
-    );    // end of parallel for loop
-    f.get();
+        auto thetax = computeStateThetaxI(i, model->d_xRef, model->d_u,
+                                          model->d_vol,
+                                          model->d_neighPd, model->d_neighPdSqdDist,
+                                          particle->getMeshSize(),
+                                          particle->getMaterial(),
+                                          model->d_fracture_p.get(),
+                                          model->d_mX);
+
+        model->setThetax(i, thetax);
+      }
+    ); // for_each
+
+    executor.run(taskflow).get();
   }
 }
 
@@ -304,26 +305,29 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
     }
   } else {
 
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        model->d_x.size(),
-        [model](boost::uint64_t i) {
+    tf::Executor executor;
+    tf::Taskflow taskflow;
 
-          const auto &pti = model->getPtId(i);
-          const auto &particle = model->getBaseParticle(pti);
+    taskflow.for_each(
+      0, model->d_x.size(), [model](uint64_t i) {
+        const auto &pti = model->getPtId(i);
+        const auto &particle = model->getBaseParticle(pti);
 
-          auto thetax = computeHydrostaticStrainI(i, model->d_xRef, model->d_u,
-                                                  model->d_vol,
-                                                  model->d_neighPd, model->d_neighPdSqdDist,
-                                                  particle->getMeshSize(),
-                                                  particle->getMaterial(),
-                                                  model->d_fracture_p.get(),
-                                                  particle->getDimension());
+        auto thetax = computeHydrostaticStrainI(i, 
+          model->d_xRef, 
+          model->d_u,
+          model->d_vol,
+          model->d_neighPd, model->d_neighPdSqdDist,
+          particle->getMeshSize(),
+          particle->getMaterial(),
+          model->d_fracture_p.get(),
+          particle->getDimension());
 
-          model->setThetax(i, thetax);
-        } // loop over nodes
-    );    // end of parallel for loop
-    f.get();
+        model->setThetax(i, thetax);
+      }
+    ); // for_each
+
+    executor.run(taskflow).get();
   }
 
 }
@@ -341,18 +345,23 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
     }
   } else {
 
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        model->d_x.size(),
-        [model](boost::uint64_t i) {
-          const auto &pti = model->getPtId(i);
-          const auto &particle = model->getBaseParticle(pti);
+    tf::Executor executor;
+    tf::Taskflow taskflow;
 
-          updateBondFractureDataI(i, model->d_xRef, model->d_neighPd, model->d_u,
-                                  particle->getMaterial(),
-                                  model->d_fracture_p.get());
-        } // loop over nodes
-    );    // end of parallel for loop
-    f.get();
+    taskflow.for_each(
+      0, model->d_x.size(), [model](uint64_t i) {
+        const auto &pti = model->getPtId(i);
+        const auto &particle = model->getBaseParticle(pti);
+
+        updateBondFractureDataI(i, 
+          model->d_xRef, 
+          model->d_neighPd, 
+          model->d_u,
+          particle->getMaterial(),
+          model->d_fracture_p.get());
+      }
+    ); // for_each
+
+    executor.run(taskflow).get();
   }
 }

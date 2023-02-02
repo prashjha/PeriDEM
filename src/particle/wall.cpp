@@ -14,10 +14,7 @@
 #include "util/geom.h"
 #include "util/io.h"
 #include "util/methods.h"
-#include <material/materialUtil.h>
-
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
+#include "material/materialUtil.h"
 
 // Wall class
 particle::Wall::Wall(size_t id, size_t wall_id, inp::WallZone &z_deck,

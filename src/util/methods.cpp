@@ -9,9 +9,7 @@
 
 #include "methods.h"
 #include "function.h"
-#include <hpx/include/parallel_algorithm.hpp>
-#include <hpx/include/parallel_minmax.hpp>
-#include <hpx/include/parallel_reduce.hpp>
+#include <taskflow/taskflow/taskflow.hpp>
 
 static bool compare_point(const util::Point &a, const util::Point &b) {
 
@@ -20,62 +18,98 @@ static bool compare_point(const util::Point &a, const util::Point &b) {
 
 double util::methods::add(const std::vector<double> &data) {
 
-  return hpx::parallel::reduce(hpx::parallel::execution::par, data.begin(),
-                               data.end());
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  double red = 0.;
+  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
+      return a + b; 
+    }
+  );
+  executor.run(taskflow).get();
+
+  return red;
 }
 
-double util::methods::max(const std::vector<double> &data, size_t *i) {
+double util::methods::max(const std::vector<double> &data) {
 
-  auto max_i = hpx::parallel::max_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  double red = 0.;
+  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
+      return std::max(a, b);
+    }
+  );
+  executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), max_i);
-  return data[std::distance(data.begin(), max_i)];
+  return red;
 }
 
-double util::methods::min(const std::vector<double> &data, size_t *i) {
+double util::methods::min(const std::vector<double> &data) {
 
-  auto min_i = hpx::parallel::min_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  double red = 0.;
+  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
+      return std::min(a, b);
+    }
+  );
+  executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), min_i);
-  return data[std::distance(data.begin(), min_i)];
+  return red;
 }
 
 float util::methods::add(const std::vector<float> &data) {
 
-  return hpx::parallel::reduce(hpx::parallel::execution::par, data.begin(),
-                               data.end());
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  float red = 0.;
+  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
+      return a + b; 
+    }
+  );
+  executor.run(taskflow).get();
+
+  return red;
 }
 
-float util::methods::max(const std::vector<float> &data, size_t *i) {
+float util::methods::max(const std::vector<float> &data) {
 
-  auto max_i = hpx::parallel::max_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  float red = 0.;
+  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
+      return std::max(a, b);
+    }
+  );
+  executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), max_i);
-  return data[std::distance(data.begin(), max_i)];
+  return red;
 }
 
-float util::methods::min(const std::vector<float> &data, size_t *i) {
+float util::methods::min(const std::vector<float> &data) {
 
-  auto min_i = hpx::parallel::min_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  float red = 0.;
+  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
+      return std::min(a, b);
+    }
+  );
+  executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), min_i);
-  return data[std::distance(data.begin(), min_i)];
+  return red;
 }
 
 util::Point util::methods::maxLength(const std::vector<util::Point> &data) {
 
-  auto max_i = hpx::parallel::max_element(
-      hpx::parallel::execution::par, data.begin(), data.end(), &compare_point);
 
-  return data[std::distance(data.begin(), max_i)];
+  tf::Taskflow taskflow;
+  tf::Executor executor;
+  util::Point red = util::Point();
+  taskflow.reduce(data.begin(), data.end(), red, &compare_point);
+  executor.run(taskflow).get();
+
+  return red;
 }
 
 bool util::methods::isFree(const int &i, const unsigned int &dof) {

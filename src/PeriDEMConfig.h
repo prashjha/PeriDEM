@@ -13,7 +13,7 @@
 #include<cstddef>
 
 size_t const MAJOR_VERSION = 0;
-size_t const MINOR_VERSION = 1;
+size_t const MINOR_VERSION = 2;
 size_t const UPDATE_VERSION = 0;
 
 #endif
