@@ -514,7 +514,7 @@ void test::testTriElemTime(size_t n, size_t N) {
   for (size_t i = 0; i < N; i++)
     elements.emplace_back(std::vector<size_t>{0, 1, 2});
 
-  std::uint64_t t11 = steady_clock::now();
+  auto t11 = steady_clock::now();
   // method 1: Compute quad points on the fly
   // loop over elements and compute I_approx
   double sum = 0.;
@@ -530,7 +530,7 @@ void test::testTriElemTime(size_t n, size_t N) {
     for (auto qd : qds)
       sum += qd.d_w * (qd.d_shapes[0] + qd.d_shapes[1] + qd.d_shapes[2]);
   }
-  std::uint64_t t12 = steady_clock::now();
+  auto t12 = steady_clock::now();
 
   // method 2: Compute quad points in the beginning and use it when needed
   size_t num_quad_pts = 0;
@@ -543,7 +543,7 @@ void test::testTriElemTime(size_t n, size_t N) {
       quad_data.emplace_back(qd);
   }
 
-  std::uint64_t t21 = steady_clock::now();
+  auto t21 = steady_clock::now();
   sum = 0.;
   for (size_t e = 0; e < N; e++) {
     for (size_t q = 0; q < num_quad_pts; q++) {
@@ -551,7 +551,7 @@ void test::testTriElemTime(size_t n, size_t N) {
       sum += qd.d_w * (qd.d_shapes[0] + qd.d_shapes[1] + qd.d_shapes[2]);
     }
   }
-  std::uint64_t t22 = steady_clock::now();
+  auto t22 = steady_clock::now();
 
   if (n == 1 and N == 1000) {
     std::cout << "**********************************\n";

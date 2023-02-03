@@ -65,8 +65,8 @@ void loading::ParticleFLoading::applyParticle(const double &time,
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, particle->getNumNodes(), [time, &particle, bc, box, this](uint64_t i) {
+    taskflow.for_each_index(
+      (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1, [time, &particle, bc, box, this](std::size_t i) {
         const auto x = particle->getXRefLocal(i);
         double fmax = 1.0;
 
@@ -169,8 +169,8 @@ void loading::ParticleFLoading::applyWall(const double &time,
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, wall->getNumNodes(), [time, &wall, bc, box, this] (uint64_t i) {
+    taskflow.for_each_index(
+      (std::size_t) 0, wall->getNumNodes(), (std::size_t) 1, [time, &wall, bc, box, this] (std::size_t i) {
         const auto x = wall->getXRefLocal(i);
         double fmax = 1.0;
 

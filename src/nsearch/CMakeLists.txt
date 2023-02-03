@@ -10,6 +10,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(NSearch SHARED ${SOURCES})
+add_library(NSearch ${SOURCES})
 
 target_link_libraries(NSearch PUBLIC nanoflann::nanoflann)

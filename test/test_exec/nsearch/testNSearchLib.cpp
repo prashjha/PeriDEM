@@ -13,6 +13,7 @@
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
+#include <fmt/format.h>
 #include <bitset>
 #include <fstream>
 #include <iostream>
@@ -95,7 +96,7 @@ double neighSearchTree(const std::vector<util::Point> &x,
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, x.size(), [&x, &neigh, &neigh_sq_dist, &nsearch, r](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x, &neigh, &neigh_sq_dist, &nsearch, r](std::size_t i) {
       std::vector<int> neighs;
       std::vector<float> sqr_dist;
 
@@ -128,7 +129,7 @@ double neighSearchTreeSizet(const std::vector<util::Point> &x,
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, x.size(), [&x, &neigh, &neigh_sq_dist, &nsearch, r](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x, &neigh, &neigh_sq_dist, &nsearch, r](std::size_t i) {
       std::vector<size_t> neighs;
       std::vector<double> sqr_dist;
 
@@ -160,7 +161,7 @@ double neighSearchBrute(const std::vector<util::Point> &x, const double &r,
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, x.size(), [&x, &neigh, &neigh_sq_dist, r](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x, &neigh, &neigh_sq_dist, r](std::size_t i) {
       auto searchPoint = x[i];
 
       for (size_t j = 0; j < x.size(); j++) {

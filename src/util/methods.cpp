@@ -9,6 +9,8 @@
 
 #include "methods.h"
 #include "function.h"
+#include <execution>
+#include <algorithm>
 #include <taskflow/taskflow/taskflow.hpp>
 
 static bool compare_point(const util::Point &a, const util::Point &b) {
@@ -18,98 +20,113 @@ static bool compare_point(const util::Point &a, const util::Point &b) {
 
 double util::methods::add(const std::vector<double> &data) {
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  double red = 0.;
-  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
-      return a + b; 
-    }
-  );
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // auto red = std::numeric_limits<double>::max();
+  // taskflow.reduce(data.begin(), data.end(), red, [] (double& a, double& b) {  
+  //     return a + b; 
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+
+  return std::reduce(std::execution::par, data.begin(), data.end());
 }
 
 double util::methods::max(const std::vector<double> &data) {
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  double red = 0.;
-  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
-      return std::max(a, b);
-    }
-  );
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // double red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (double a, double b) {  
+  //     return std::max(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+  auto red = std::max_element(std::execution::par, data.begin(), data.end());
+  return *red;
 }
 
 double util::methods::min(const std::vector<double> &data) {
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  double red = 0.;
-  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
-      return std::min(a, b);
-    }
-  );
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // double red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (double a, double b) {  
+  //     return std::min(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+  auto red = std::min_element(std::execution::par, data.begin(), data.end());
+  return *red;
 }
 
 float util::methods::add(const std::vector<float> &data) {
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  float red = 0.;
-  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
-      return a + b; 
-    }
-  );
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // float red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (float a, float b) {  
+  //     return a + b; 
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+
+  return std::reduce(std::execution::par, data.begin(), data.end());
 }
 
 float util::methods::max(const std::vector<float> &data) {
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  float red = 0.;
-  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
-      return std::max(a, b);
-    }
-  );
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // float red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (float a, float b) {  
+  //     return std::max(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+  auto red = std::max_element(std::execution::par, data.begin(), data.end());
+  return *red;
 }
 
 float util::methods::min(const std::vector<float> &data) {
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  float red = 0.;
-  taskflow.reduce(data.begin(), data.end(), red, [] (auto a, auto b) {  
-      return std::min(a, b);
-    }
-  );
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // float red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (float a, float b) {  
+  //     return std::min(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+  auto red = std::min_element(std::execution::par, data.begin(), data.end());
+  return *red;
 }
 
 util::Point util::methods::maxLength(const std::vector<util::Point> &data) {
 
 
-  tf::Taskflow taskflow;
-  tf::Executor executor;
-  util::Point red = util::Point();
-  taskflow.reduce(data.begin(), data.end(), red, &compare_point);
-  executor.run(taskflow).get();
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // util::Point red = util::Point();
+  // taskflow.reduce(data.begin(), data.end(), red, &compare_point);
+  // executor.run(taskflow).get();
 
-  return red;
+  // return red;
+
+  auto red = std::max_element(std::execution::par, data.begin(), data.end(), &compare_point);
+  return *red;
 }
 
 bool util::methods::isFree(const int &i, const unsigned int &dof) {

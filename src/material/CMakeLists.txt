@@ -8,4 +8,4 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./mparticle SOURCES)
 
-add_library(Material SHARED ${SOURCES})
+add_library(Material ${SOURCES})

@@ -35,7 +35,7 @@ public:
    * @param neighbor_list Pointer to neighbor list
    */
   Fracture(const std::vector<util::Point> *nodes,
-           const std::vector<std::vector<size_t>> *neighbor_list = nullptr);
+           const std::vector<std::vector<std::size_t>> *neighbor_list = nullptr);
 
   /*!
    * @brief Constructor
@@ -49,7 +49,7 @@ public:
    * @param j Local id of bond in neighbor list of i
    * @param state State which is applied to the bond
    */
-  void setBondState(const size_t &i, const size_t &j, const bool &state);
+  void setBondState(const std::size_t &i, const std::size_t &j, const bool &state);
 
   /*!
    * @brief Read bond state
@@ -58,7 +58,7 @@ public:
    * @param j Local id of bond in neighbor list of i
    * @return bool True if bond is fractured otherwise false
    */
-  bool getBondState(const size_t &i, const size_t &j) const;
+  bool getBondState(const std::size_t &i, const std::size_t &j) const;
 
   /*!
    * @brief Returns the list of bonds of node i
@@ -66,8 +66,8 @@ public:
    * @param i Nodal id
    * @return list Bonds of node i
    */
-  const std::vector<uint8_t> &getBonds(const size_t &i) const;
-  std::vector<uint8_t> &getBonds(const size_t &i);
+  const std::vector<uint8_t> &getBonds(const std::size_t &i) const;
+  std::vector<uint8_t> &getBonds(const std::size_t &i);
 
   /*!
    * @brief Prints the information

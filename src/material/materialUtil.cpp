@@ -222,8 +222,8 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, model->d_x.size(), [model](uint64_t i) {
+    taskflow.for_each_index(
+      (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
         const auto &particle = model->getBaseParticle(pti);
         auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
@@ -264,8 +264,8 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, model->d_x.size(), [model](uint64_t i) {
+    taskflow.for_each_index(
+      (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
         const auto &particle = model->getBaseParticle(pti);
 
@@ -308,8 +308,8 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, model->d_x.size(), [model](uint64_t i) {
+    taskflow.for_each_index(
+      (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
         const auto &particle = model->getBaseParticle(pti);
 
@@ -348,8 +348,8 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, model->d_x.size(), [model](uint64_t i) {
+    taskflow.for_each_index(
+      (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
         const auto &particle = model->getBaseParticle(pti);
 

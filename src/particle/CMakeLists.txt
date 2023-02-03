@@ -7,6 +7,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Particle SHARED ${SOURCES})
+add_library(Particle ${SOURCES})
 
 target_link_libraries(Particle PUBLIC FE Material Geometry)

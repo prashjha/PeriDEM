@@ -16,7 +16,7 @@ commands:
     parameters:
       cmake-args:
         type: string
-        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON 
     steps:
       - run: 
           name: Configure
@@ -65,7 +65,7 @@ jobs:
       steps:
         - checkout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON
         - libdoc
     deploy:
       machine:
@@ -101,7 +101,7 @@ jobs:
       steps:
         - checkout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
         - libmake
         - libtest:
             verb-flag: ""

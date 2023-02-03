@@ -13,6 +13,6 @@ AUX_SOURCE_DIRECTORY(./decks SOURCES)
 #target_include_directories(RW PUBLIC ${YAML_CPP_INCLUDE})
 #target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})
 
-add_library(Inp SHARED ${SOURCES})
+add_library(Inp ${SOURCES})
 
 target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})

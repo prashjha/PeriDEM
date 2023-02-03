@@ -219,8 +219,8 @@ void fe::Mesh::computeVol() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(
-    0, this->d_numNodes, [this, quads](uint64_t i) {
+  taskflow.for_each_index(
+    (std::size_t) 0, this->d_numNodes, (std::size_t) 1, [this, quads](std::size_t i) {
       double v = 0.0;
 
       for (auto e : this->d_nec[i]) {

@@ -196,7 +196,9 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< PeriDEM executible >>>>>>>>>>#
 #----------------------------------#
-add_executable(PeriDEM SOURCES src/main.cpp DEPENDENCIES Inp Model)
+add_executable(PeriDEM src/main.cpp)
+
+target_link_libraries(PeriDEM PUBLIC Inp Model)
 
 
 #----------------------------------#

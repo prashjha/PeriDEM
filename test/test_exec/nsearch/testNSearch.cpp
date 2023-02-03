@@ -10,6 +10,7 @@
 #include <PeriDEMConfig.h>
 #include "testNSearchLib.h"
 #include "util/io.h"
+#include <fmt/format.h>
 #include <iostream>
 
 
@@ -27,7 +28,7 @@ int main(int argc, char *argv[]) {
 
   // read input file
   int N;
-  if (input.cmdOptionExists("-i")) N = input.getCmdOption("-i");
+  if (input.cmdOptionExists("-i")) N = std::stoi(input.getCmdOption("-i"));
   else {
     std::cout << "Running test with default num-points = 20\n";
     N = 20;

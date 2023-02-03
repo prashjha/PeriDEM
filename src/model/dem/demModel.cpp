@@ -29,6 +29,7 @@
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
+#include "rw/vtkParticleReader.h"
 
 #include <fmt/format.h>
 #include <fstream>
@@ -345,9 +346,9 @@ void model::DEMModel::integrateCD() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(
-    0, d_fPdCompNodes.size(),
-      [this, dt, dim](uint64_t II) {
+  taskflow.for_each_index(
+    (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
+      [this, dt, dim](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -385,9 +386,9 @@ void model::DEMModel::integrateVerlet() {
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, d_fPdCompNodes.size(),
-        [this, dt, dim](uint64_t II) {
+    taskflow.for_each_index(
+      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
+        [this, dt, dim](std::size_t II) {
           auto i = this->d_fPdCompNodes[II];
 
           const auto rho = this->getDensity(i);
@@ -419,9 +420,9 @@ void model::DEMModel::integrateVerlet() {
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, d_fPdCompNodes.size(),
-      [this, dt, dim](uint64_t II) {
+    taskflow.for_each_index(
+      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
+      [this, dt, dim](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -457,9 +458,9 @@ void model::DEMModel::computeForces() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(
-    0, d_x.size(),
-      [this](uint64_t i) { this->d_f[i] = util::Point(); }
+  taskflow.for_each_index(
+    (std::size_t) 0, d_x.size(), (std::size_t) 1, 
+      [this](std::size_t i) { this->d_f[i] = util::Point(); }
   ); // for_each
 
   executor.run(taskflow).get();
@@ -486,8 +487,7 @@ void model::DEMModel::computeForces() {
   computeExternalForces();
   auto extf_time = util::methods::timeDiff(t1, steady_clock::now());
   extf_compute_time += extf_time;
-  log(fmt::format("    External force time (ms) = {} \n", extf_
-  time), 2, dbg_condition, 3);
+  log(fmt::format("    External force time (ms) = {} \n", extf_time), 2, dbg_condition, 3);
 }
 
 void model::DEMModel::computePeridynamicForces() {
@@ -503,8 +503,8 @@ void model::DEMModel::computePeridynamicForces() {
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(
-      0, d_fPdCompNodes.size(), [this](uint64_t II) {
+    taskflow.for_each_index(
+      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -566,15 +566,15 @@ void model::DEMModel::computePeridynamicForces() {
       } // loop over nodes
     ); // for_each
 
-    executor.run(taskflow).get()
+    executor.run(taskflow).get();
   }
 
   // compute the internal forces
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(
-    0, d_fPdCompNodes.size(), [this](uint64_t II) {
+  taskflow.for_each_index(
+    (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
       auto i = this->d_fPdCompNodes[II];
 
       // local variable to hold force
@@ -690,7 +690,7 @@ void model::DEMModel::computeExternalForces() {
     tf::Executor executor;
     tf::Taskflow taskflow;
 
-    taskflow.for_each(0, d_x.size(), [this, gravity](uint64_t i) {
+    taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t)1, [this, gravity](std::size_t i) {
           this->d_f[i] += this->getDensity(i) * gravity;
       } // loop over particles
     ); // for_each
@@ -721,7 +721,7 @@ void model::DEMModel::computeContactForces() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, d_fContCompNodes.size(), [this](uint64_t II) {
+  taskflow.for_each_index((std::size_t) 0, d_fContCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
       auto i = this->d_fContCompNodes[II];
 
       // local variable to hold force
@@ -882,7 +882,7 @@ void model::DEMModel::computeContactForces() {
       tf::Executor executor;
       tf::Taskflow taskflow;
 
-      taskflow.for_each(0, pi->getNumNodes(), [this, pi, &wall_nodes](uint64_t i) {
+      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, &wall_nodes](std::size_t i) {
           auto yi = this->d_x[pi->getNodeId(i)];
           double search_r = this->d_maxContactR;
           std::vector<size_t> neighs;
@@ -955,7 +955,7 @@ void model::DEMModel::computeContactForces() {
       tf::Executor executor;
       tf::Taskflow taskflow;
 
-      taskflow.for_each(0, pi->getNumNodes(), [this, pi, force_i](uint64_t i) {
+      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, force_i](std::size_t i) {
           this->d_f[pi->getNodeId(i)] += force_i;
         }
       ); // for_each
@@ -979,7 +979,7 @@ void model::DEMModel::applyInitialCondition() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, ic_p_list.size(), [this, ic_v, ic_p_list](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, ic_p_list.size(), (std::size_t) 1, [this, ic_v, ic_p_list](std::size_t i) {
       auto &p = this->d_particles[ic_p_list[i]];
 
       // velocity
@@ -1339,7 +1339,7 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, d_x.size(), [this](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
       const auto &pi = this->d_ptId[i];
       double search_r = this->d_allParticles[pi]->d_material_p->getHorizon();
 
@@ -1369,7 +1369,7 @@ void model::DEMModel::updateContactNeighborlist() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, d_x.size(), [this](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
       const auto &pi = this->d_ptId[i];
         double search_r = this->d_maxContactR;
         std::vector<size_t> neighs;
@@ -1401,7 +1401,7 @@ void model::DEMModel::updateNeighborlistCombine() {
   tf::Executor executor;
   tf::Taskflow taskflow;
 
-  taskflow.for_each(0, d_x.size(), [this](uint64_t i) {
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
       const auto &pi = this->d_ptId[i];
       double horizon = this->d_allParticles[pi]->d_material_p->getHorizon();
       double search_r = horizon;

@@ -13,6 +13,7 @@
 #include "point.h"           // definition of Point
 #include <vector>
 #include <chrono>
+
 using namespace std::chrono;
 
 namespace util {

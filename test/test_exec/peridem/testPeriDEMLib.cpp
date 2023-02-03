@@ -15,13 +15,14 @@
 #include "inp/decks/outputDeck.h"
 #include "util/methods.h"
 #include "util/io.h"
+#include <fmt/format.h>
 #include <fstream>
 #include <string>
 
 std::string test::testPeriDEM(std::string filepath) {
 
   // current time
-  std::uint64_t begin = steady_clock::now();
+  auto begin = steady_clock::now();
 
   // read input data
   auto *deck = new inp::Input(filepath + "/input.yaml");
@@ -38,7 +39,7 @@ std::string test::testPeriDEM(std::string filepath) {
   }
 
   // get time elapsed
-  std::uint64_t end = steady_clock::now();
+  auto end = steady_clock::now();
   double elapsed_secs = util::methods::timeDiff(begin, end, "seconds");
 
   std::cout << "Total simulation time = " << elapsed_secs

@@ -7,4 +7,4 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Loading SHARED ${SOURCES})
+add_library(Loading ${SOURCES})
