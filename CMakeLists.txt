@@ -9,7 +9,7 @@ cmake_minimum_required(VERSION 3.0)
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
 #----------------------------------#
-project(PeriDEM LANGUAGES CXX)
+project(PeriDEM LANGUAGES CXX C)
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
 set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamically enhanced DEM model for granular media")

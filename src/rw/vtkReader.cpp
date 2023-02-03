@@ -130,7 +130,7 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+    vtkIdType const *nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 
@@ -206,7 +206,7 @@ void rw::reader::VtkReader::readCells(size_t dim, size_t &element_type,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+    vtkIdType const *nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 
