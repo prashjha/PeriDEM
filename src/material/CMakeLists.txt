@@ -9,3 +9,5 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./mparticle SOURCES)
 
 add_library(Material ${SOURCES})
+
+target_link_libraries(Material PUBLIC Threads::Threads)

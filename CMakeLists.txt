@@ -78,6 +78,8 @@ if (${Enable_CMAKE_Debug_Build})
     message("BASH_PROGRAM = ${BASH_PROGRAM}")
 endif()
 
+# #<<<<<<<<<< Threads >>>>>>>>>>#
+find_package (Threads REQUIRED)
 
 # #<<<<<<<<<< HPX >>>>>>>>>>#
 # find_package(HPX REQUIRED)

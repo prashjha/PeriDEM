@@ -9,4 +9,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Util ${SOURCES})
 
-target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt)
+target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt Threads::Threads)

@@ -7,4 +7,4 @@
 
 add_executable(TestNSearch testNSearch.cpp testNSearchLib.cpp)
 
-target_link_libraries(TestNSearch PUBLIC Util FE Geometry Particle NSearch fmt::fmt)
+target_link_libraries(TestNSearch PUBLIC Util FE Geometry Particle NSearch fmt::fmt Threads::Threads)

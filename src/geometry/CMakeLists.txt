@@ -8,3 +8,5 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Geometry ${SOURCES})
+
+target_link_libraries(Geometry PUBLIC Threads::Threads)

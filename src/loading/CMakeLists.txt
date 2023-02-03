@@ -8,3 +8,5 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Loading ${SOURCES})
+
+target_link_libraries(Loading PUBLIC Threads::Threads)
