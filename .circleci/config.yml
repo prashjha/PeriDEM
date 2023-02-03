@@ -9,7 +9,7 @@ version: 2.1
 parameters:
   docker-img-os:
     type: string
-    default: focal
+    default: bionic
     
 commands:
   postcheckout:
@@ -17,6 +17,8 @@ commands:
       - run:
           name: "Pull submodules"
           command: |
+            apt-get update -y 
+            apt-get upgrade -y  
             apt install gcc libtbb-dev
             git submodule update --init --recursive
   libcmake:
