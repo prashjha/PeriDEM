@@ -35,6 +35,7 @@
 // prevent from using threads (edited by PK Jha)
 #ifndef CSV_IO_NO_THREAD
 #define CSV_IO_NO_THREAD
+#endif
 
 #include <algorithm>
 #include <cstdio>
