@@ -9,7 +9,7 @@ version: 2.1
 parameters:
   docker-img-os:
     type: string
-    default: bionic
+    default: focal
     
 commands:
   libcmake:
