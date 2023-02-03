@@ -107,6 +107,7 @@ if (VTK_VERSION VERSION_LESS "6")
 endif ()
 
 if (${Enable_CMAKE_Debug_Build})
+    message("VTK_MAJOR_VERSION = ${VTK_MAJOR_VERSION}")
     message("VTK_DIR = ${VTK_DIR}")
     message("VTK_LIBRARIES = ${VTK_LIBRARIES}")
     message("VTK_INCLUDE_DIRS = ${VTK_INCLUDE_DIRS}")

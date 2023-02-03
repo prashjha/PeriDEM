@@ -44,7 +44,7 @@ echo "Running PeriDEM ... "
 f_inp="input$f_suf.yaml"
 "$execsrc" -i "$f_inp" --hpx:threads=$nts
 
-) |& tee output.log
+) 2>&1 |  tee output.log
 
 
 # check if we have produced 'output_10.vtu' file

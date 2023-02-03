@@ -154,4 +154,4 @@ PERIDEM_SOURCE_DIR=\"$PERIDEM_SOURCE_DIR\"
 PERIDEM_BUILD_PATH=\"$PERIDEM_BUILD_PATH\"
 "
 
-) |& tee "build_peridem.log"
+) 2>&1 |  tee "build_peridem.log"

@@ -225,4 +225,4 @@ echo "
 
 "
 
-) |& tee "build.log"
+) 2>&1 |  tee "build.log"
