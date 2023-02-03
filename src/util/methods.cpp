@@ -9,8 +9,8 @@
 
 #include "methods.h"
 #include "function.h"
-#include <execution>
-#include <algorithm>
+// #include <execution>
+// #include <algorithm>
 #include <taskflow/taskflow/taskflow.hpp>
 
 static bool compare_point(const util::Point &a, const util::Point &b) {
@@ -31,7 +31,9 @@ double util::methods::add(const std::vector<double> &data) {
 
   // return red;
 
-  return std::reduce(std::execution::par, data.begin(), data.end());
+  // return std::reduce(std::execution::par, data.begin(), data.end());
+  std::cerr << "util::methods::add() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 double util::methods::max(const std::vector<double> &data) {
@@ -46,8 +48,10 @@ double util::methods::max(const std::vector<double> &data) {
   // executor.run(taskflow).get();
 
   // return red;
-  auto red = std::max_element(std::execution::par, data.begin(), data.end());
-  return *red;
+  // auto red = std::max_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::max() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 double util::methods::min(const std::vector<double> &data) {
@@ -62,8 +66,10 @@ double util::methods::min(const std::vector<double> &data) {
   // executor.run(taskflow).get();
 
   // return red;
-  auto red = std::min_element(std::execution::par, data.begin(), data.end());
-  return *red;
+  // auto red = std::min_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::min() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 float util::methods::add(const std::vector<float> &data) {
@@ -79,7 +85,9 @@ float util::methods::add(const std::vector<float> &data) {
 
   // return red;
 
-  return std::reduce(std::execution::par, data.begin(), data.end());
+  // return std::reduce(std::execution::par, data.begin(), data.end());
+  std::cerr << "util::methods::add() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 float util::methods::max(const std::vector<float> &data) {
@@ -94,8 +102,10 @@ float util::methods::max(const std::vector<float> &data) {
   // executor.run(taskflow).get();
 
   // return red;
-  auto red = std::max_element(std::execution::par, data.begin(), data.end());
-  return *red;
+  // auto red = std::max_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::max() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 float util::methods::min(const std::vector<float> &data) {
@@ -110,8 +120,10 @@ float util::methods::min(const std::vector<float> &data) {
   // executor.run(taskflow).get();
 
   // return red;
-  auto red = std::min_element(std::execution::par, data.begin(), data.end());
-  return *red;
+  // auto red = std::min_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::min() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 util::Point util::methods::maxLength(const std::vector<util::Point> &data) {
@@ -125,8 +137,10 @@ util::Point util::methods::maxLength(const std::vector<util::Point> &data) {
 
   // return red;
 
-  auto red = std::max_element(std::execution::par, data.begin(), data.end(), &compare_point);
-  return *red;
+  // auto red = std::max_element(std::execution::par, data.begin(), data.end(), &compare_point);
+  // return *red;
+  std::cerr << "util::methods::maxLength() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 bool util::methods::isFree(const int &i, const unsigned int &dof) {

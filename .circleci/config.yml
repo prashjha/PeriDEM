@@ -18,14 +18,14 @@ commands:
           name: "Pull submodules"
           command: |
             git submodule update --init --recursive
-      - run:
-          name: "Add required package"
-          command: |
-            apt-get update -y 
-            apt install gcc-10 g++-10 libtbb-dev -y
-            update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
-            update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
-            gcc -v
+      # - run:
+      #     name: "Add required package"
+      #     command: |
+      #       apt-get update -y 
+      #       apt install gcc-10 g++-10 libtbb-dev -y
+      #       update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100
+      #       update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
+      #       gcc -v
   libcmake:
     parameters:
       cmake-args:

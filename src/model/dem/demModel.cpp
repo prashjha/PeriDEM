@@ -1617,27 +1617,32 @@ void model::DEMModel::checkStop() {
       fclose(pp_file);
       exit(1);
     }
-  } else if (d_outputDeck_p->d_outCriteria == "max_node_dist") {
+  } 
+  else if (d_outputDeck_p->d_outCriteria == "max_node_dist") {
 
-    auto max_pt = util::methods::maxLength(d_x);
 
-    // check
-    if (util::isGreater(max_pt.length(),
-                        d_outputDeck_p->d_outCriteriaParams[0])) {
+    std::cerr << "This check = " << d_outputDeck_p->d_outCriteria
+              << " is no longer supported. In future, this test will be implemented when function util::methods::maxLength() is defined." << std::endl;
+    exit(EXIT_FAILURE);
+    // auto max_pt = util::methods::maxLength(d_x);
 
-      // close open file
-      if (pp_file)
-        fclose(pp_file);
+    // // check
+    // if (util::isGreater(max_pt.length(),
+    //                     d_outputDeck_p->d_outCriteriaParams[0])) {
 
-      log(fmt::format("DEMModel: Terminating simulation as one of the failing"
-                      " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
-                      "distance {:.6f} "
-                      "more than"
-                      " allowed distance {:.6f}\n",
-                      max_pt.d_x, max_pt.d_y, max_pt.d_z, max_pt.length(),
-                      d_outputDeck_p->d_outCriteriaParams[0]));
-      exit(1);
-    }
+    //   // close open file
+    //   if (pp_file)
+    //     fclose(pp_file);
+
+    //   log(fmt::format("DEMModel: Terminating simulation as one of the failing"
+    //                   " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
+    //                   "distance {:.6f} "
+    //                   "more than"
+    //                   " allowed distance {:.6f}\n",
+    //                   max_pt.d_x, max_pt.d_y, max_pt.d_z, max_pt.length(),
+    //                   d_outputDeck_p->d_outCriteriaParams[0]));
+    //   exit(1);
+    // }
   }
 }
 
