@@ -12,6 +12,9 @@ parameters:
     default: focal
     
 commands:
+  checkout:
+    post:
+      - git submodule update --init --recursive
   libcmake:
     parameters:
       cmake-args:
