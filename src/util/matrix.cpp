@@ -19,18 +19,23 @@ bool util::checkMatrix(const std::vector<std::vector<double>> &m) {
     exit(1);
   }
 
-  size_t col_size = m[0].size();
-  bool check = row_size > 1 and col_size != m[1].size();
-  if (!check)
-    check = row_size > 2 and col_size != m[2].size();
-
+  //size_t col_size = m[0].size();
+  std::ostringstream  oss;
+  bool check = false;
+  for (std::size_t i = 0; i < row_size; i++) {
+    if (row_size != m[i].size()) {
+      check = true;
+      oss << "Row size and column size for row = " << i << " don't match.\n";
+    }
+  }
   if (check) {
-    std::ostringstream  oss;
-    oss << "Error: Row size and col size do not match.\n Matrix = [";
+    std::ostringstream  oss2;
+    oss2 << "Error: " << oss.str();
+    oss2 << "Matrix = [";
     for (auto a : m)
-      oss << util::io::printStr(a) << "\n";
-    oss << "].\n";
-    std::cerr << oss.str();
+      oss2 << util::io::printStr(a) << "\n";
+    oss2 << "].\n";
+    std::cerr << oss2.str();
     exit(1);
   }
 }

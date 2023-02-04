@@ -1,0 +1,40 @@
+# ----------------------------------
+# Copyright (c) 2021 Prashant K. Jha
+# ----------------------------------
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+FROM prashjha/peridem-base-focal:latest
+
+## build command
+## docker build --network=host --no-cache  -t test-peridem -f Dockerfile-test-peridem .
+
+# Set metadata
+LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
+LABEL description="Test peridem using docker image prashjha/peridem-base-focal based on Ubuntu 20.04"
+
+# -----------------------
+# setup git pull method
+# -----------------------
+RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
+    git config --global url."https://".insteadOf git://
+
+# -----------------------
+# build peridem
+# -----------------------
+RUN git clone https://github.com/prashjha/PeriDEM.git && \
+    cd PeriDEM && \
+    git checkout remove_hpx && \
+    git submodule update --init --recursive && \
+    cd .. && \
+    mkdir peridem_build && \
+    cd peridem_build && \
+    cmake \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DEnable_Tests=ON \
+        -DVTK_DIR="/usr/local/lib/cmake/vtk-9.2" \
+        ../PeriDEM && \
+    make -j $(cat /proc/cpuinfo | grep processor | wc -l) VERBOSE=1 && \
+    ctest --verbose 
+
