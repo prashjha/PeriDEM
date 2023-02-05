@@ -153,6 +153,6 @@ workflows:
       - codecoverage:
           filters:
             branches:
-              ignore: gh-pages
+              only: main
           requires:
             - build

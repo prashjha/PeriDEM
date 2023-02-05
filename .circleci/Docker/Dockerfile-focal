@@ -1,0 +1,28 @@
+# ----------------------------------
+# Copyright (c) 2021 Prashant K. Jha
+# ----------------------------------
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# base ubuntu image with petsc, libmesh, hpx
+FROM prashjha/peridem-base-focal:latest
+
+# Set metadata
+LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
+LABEL description="PeriDEM docker image"
+
+WORKDIR /
+
+RUN git clone --recursive https://github.com/prashjha/PeriDEM.git
+
+RUN cd /PeriDEM && \
+		mkdir build && \
+		cd build && \
+		cmake -DCMAKE_BUILD_TYPE=Release \
+					-DEnable_Tests=ON \
+					-DVTK_DIR=/usr/local/lib/cmake/vtk-9.2 \
+					.. && \
+		make -j 2 && \
+		make install
+
