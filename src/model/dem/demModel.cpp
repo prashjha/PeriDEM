@@ -1620,10 +1620,13 @@ void model::DEMModel::checkStop() {
   } 
   else if (d_outputDeck_p->d_outCriteria == "max_node_dist") {
 
-
-    std::cerr << "This check = " << d_outputDeck_p->d_outCriteria
+    static int msg_printed = 0;
+    if (msg_printed == 0) {
+      std::cout << "Check = " << d_outputDeck_p->d_outCriteria
               << " is no longer supported. In future, this test will be implemented when function util::methods::maxLength() is defined." << std::endl;
-    exit(EXIT_FAILURE);
+      msg_printed = 1;
+    }
+    //exit(EXIT_FAILURE);
     // auto max_pt = util::methods::maxLength(d_x);
 
     // // check
