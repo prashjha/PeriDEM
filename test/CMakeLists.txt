@@ -31,10 +31,10 @@ add_test(NAME testnsearch
 #<<<<<<<<<< PeriDEM tests >>>>>>>>>>#
 #----------------------------------#
 #if (BASH_PROGRAM)
-# add_test(NAME twop_circ
-#         COMMAND ${BASH_PROGRAM} ./run.sh
-#         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ
-#         )
+add_test(NAME twop_circ
+        COMMAND ${BASH_PROGRAM} ./run.sh
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ
+        )
 
 # add_test(NAME twop_wall_concave_diff_material_diff_size
 #         COMMAND ${BASH_PROGRAM} ./run.sh
