@@ -1,0 +1,4 @@
+[submodule "taskflow"]
+	path = external/taskflow
+	url = git@github.com:taskflow/taskflow.git
+	branch = v3.7.0
