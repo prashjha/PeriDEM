@@ -12,4 +12,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(NSearch ${SOURCES})
 
-target_link_libraries(NSearch PUBLIC nanoflann::nanoflann)
+# target_link_libraries(NSearch PUBLIC nanoflann::nanoflann)
