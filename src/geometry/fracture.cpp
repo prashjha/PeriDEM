@@ -11,6 +11,7 @@
 #include "util/geom.h"
 #include "util/io.h"
 #include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 
 geometry::Fracture::Fracture() {}

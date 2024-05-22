@@ -19,6 +19,7 @@
 #include <cstdint>
 #include <iostream>
 #include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 fe::Mesh::Mesh(size_t dim)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),

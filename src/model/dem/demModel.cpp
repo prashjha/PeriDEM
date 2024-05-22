@@ -37,6 +37,7 @@
 #include <random>
 
 #include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 namespace {
 
