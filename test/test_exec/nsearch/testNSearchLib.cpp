@@ -21,6 +21,7 @@
 #include <vector>
 
 #include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 typedef std::mt19937 RandGenerator;
 typedef std::uniform_real_distribution<> UniformDistribution;
