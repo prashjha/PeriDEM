@@ -27,6 +27,12 @@ add_test(NAME testnsearch
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
         )
 
+# parallel computation test
+add_test(NAME testparallelcomp
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -i 1000000
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+)
+
 #----------------------------------#
 #<<<<<<<<<< PeriDEM tests >>>>>>>>>>#
 #----------------------------------#

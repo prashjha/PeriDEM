@@ -81,21 +81,6 @@ endif()
 # #<<<<<<<<<< Threads >>>>>>>>>>#
 find_package (Threads REQUIRED)
 
-# #<<<<<<<<<< HPX >>>>>>>>>>#
-# find_package(HPX REQUIRED)
-
-# if (NOT (HPX_BUILD_TYPE STREQUAL CMAKE_BUILD_TYPE))
-#     message("HPX_BUILD_TYPE: " ${HPX_BUILD_TYPE} " CMAKE_BUILD_TYPE: " ${CMAKE_BUILD_TYPE})
-#     message(FATAL_ERROR "ERROR: Build type of HPX and PeriDEM library do not match")
-# endif ()
-
-# # include hpx cmake
-# list(APPEND CMAKE_MODULE_PATH "${HPX_PREFIX}/../cmake/")
-
-# if (${Enable_CMAKE_Debug_Build})
-#     message("HPX_INCLUDE_DIRS = ${HPX_INCLUDE_DIRS}")
-# endif()
-
 #<<<<<<<<<< YAML >>>>>>>>>>#
 find_package(YamlCpp REQUIRED)
 
@@ -116,15 +101,6 @@ endif()
 #<<<<<<<<<< BLAS+LAPACK >>>>>>>>>>#
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
-
-#<<<<<<<<<< PCL >>>>>>>>>>#
-#find_package(PCL REQUIRED)
-#
-#if (${Enable_CMAKE_Debug_Build})
-#    message("PCL_DIR = ${PCL_DIR}")
-#    message("PCL_INCLUDE_DIRS = ${PCL_INCLUDE_DIRS}")
-#    message("PCL_LIBRARIES = ${PCL_LIBRARIES}")
-#endif()
 
 #----------------------------------#
 #<<<<<<<<<< Compiler flags >>>>>>>>>>#
@@ -154,7 +130,6 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
-# include_directories(${HPX_INCLUDE_DIRS})
 include_directories(SYSTEM external)
 include_directories(src)
 
