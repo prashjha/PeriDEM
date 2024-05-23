@@ -102,6 +102,8 @@ endif()
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
+find_package(Metis REQUIRED)
+
 #----------------------------------#
 #<<<<<<<<<< Compiler flags >>>>>>>>>>#
 #----------------------------------#

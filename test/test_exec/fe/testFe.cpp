@@ -62,5 +62,8 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  // test partitioning
+  test::testGraphPartitioning();
+
   return EXIT_SUCCESS;
 }

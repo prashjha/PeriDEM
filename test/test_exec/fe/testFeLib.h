@@ -168,6 +168,11 @@ void testTetElem(size_t n, std::string filepath);
  */
 void testTriElemTime(size_t n, size_t N);
 
+/*!
+ * @brief Tests metis partitioning of graph
+ */
+void testGraphPartitioning();
+
 /** @}*/
 
 /*!
@@ -225,6 +230,9 @@ double getExactIntegrationRefTet(size_t alpha, size_t beta, size_t theta);
  * @return Value Value of "n choose r"
  */
 double getNChooseR(size_t n, size_t r);
+
+void partGraphRecursiveTest( );
+void partGraphKwayTest( );
 
 } // namespace test
 

@@ -12,6 +12,7 @@
 #include "fe/quadElem.h"
 #include "fe/triElem.h"
 #include "fe/tetElem.h"
+#include "fe/meshPartitioning.h"
 #include "util/point.h"
 #include "util/feElementDefs.h"
 #include "util/methods.h"
@@ -188,6 +189,104 @@ double test::getExactIntegrationRefTet(size_t alpha, size_t beta,
 
   return I;
 }
+
+void test::partGraphRecursiveTest() {
+  // The number of vertices.
+  idx_t nvtxs = 6;
+
+  // Number of balancing constraints, which must be at least 1.
+  idx_t ncon = 1;
+
+  // Pointers to initial entries in adjacency array. size of array is nvtxs + 1
+  idx_t xadj[7] = { 0, 2, 5, 7, 9, 12, 14 };
+
+  // Adjacent vertices in consecutive index order.
+  int nedges = 7;
+  idx_t adjncy[14] = {1,3,0,4,2,1,5,0,4,3,1,5,4,2};
+
+  // The number of parts requested for the partition.
+  idx_t nParts = 3;
+
+  // On return, the edge cut volume of the partitioning solution.
+  idx_t objval;
+
+  // On return, the partition vector for the graph.
+  idx_t part[6];
+
+  printf ( "\n" );
+  printf ( "partGraphRecursiveTest:\n" );
+  printf ( "  METIS_PartGraphRecursive partitions a graph into K parts\n" );
+  printf ( "  using multilevel recursive bisection.\n" );
+
+  int ret = METIS_PartGraphRecursive ( &nvtxs, &ncon, xadj, adjncy, NULL, NULL,
+                                       NULL, &nParts, NULL, NULL, NULL, &objval, part );
+
+  printf ( "\n" );
+  printf ( "  Return code = %d\n", ret );
+  printf ( "  Edge cuts for partition = %d\n", ( int ) objval );
+
+  printf ( "\n" );
+  printf ( "  Partition vector:\n" );
+  printf ( "\n" );
+  printf ( "  Node  Part\n" );
+  printf ( "\n" );
+  for ( unsigned part_i = 0; part_i < nvtxs; part_i++ )
+  {
+    printf ( "     %d     %d\n", part_i, ( int ) part[part_i] );
+  }
+
+  return;
+}
+
+void test::partGraphKwayTest() {
+
+  // The number of vertices.
+  idx_t nvtxs = 6;
+
+  // Number of balancing constraints, which must be at least 1.
+  idx_t ncon = 1;
+
+  // Pointers to initial entries in adjacency array.
+  idx_t xadj[7] = { 0, 2, 5, 7, 9, 12, 14 };
+
+  // Adjacent vertices in consecutive index order.
+  int nedges = 7;
+  idx_t adjncy[14] = {1,3,0,4,2,1,5,0,4,3,1,5,4,2};
+
+  // The number of parts requested for the partition.
+  idx_t nParts = 3;
+
+  // On return, the edge cut volume of the partitioning solution.
+  idx_t objval;
+
+  // On return, the partition vector for the graph.
+  idx_t part[6];
+
+  printf ( "\n" );
+  printf ( "partGraphKwayTest:\n" );
+  printf ( "  METIS_PartGraphKway partitions a graph into K parts\n" );
+  printf ( "  using multilevel K-way partition.\n" );
+
+  int ret = METIS_PartGraphKway ( &nvtxs, &ncon, xadj, adjncy, NULL, NULL,
+                                  NULL, &nParts, NULL, NULL, NULL, &objval, part );
+
+  printf ( "\n" );
+  printf ( "  Return code = %d\n", ret );
+  printf ( "  Edge cuts for partition = %d\n", ( int ) objval );
+
+  printf ( "\n" );
+  printf ( "  Partition vector:\n" );
+  printf ( "\n" );
+  printf ( "  Node  Part\n" );
+  printf ( "\n" );
+  for ( unsigned part_i = 0; part_i < nvtxs; part_i++ )
+  {
+    printf ( "     %d     %d\n", part_i, ( int ) part[part_i] );
+  }
+
+  return;
+}
+
 
 void test::testLineElem(size_t n, std::string filepath) { return; }
 
@@ -758,4 +857,15 @@ void test::testTetElem(size_t n, std::string filepath) {
   //  else
   //    std::cout << "TEST 2 : FAIL. ";
   std::cout << "\n";
+}
+
+void test::testGraphPartitioning() {
+
+  printf ( "\n" );
+  printf ( "METIS_TEST\n" );
+  printf ( "  C version\n" );
+  printf ( "  Test the METIS library for graph partitioning.\n" );
+
+  test::partGraphKwayTest( );
+  test::partGraphRecursiveTest( );
 }
