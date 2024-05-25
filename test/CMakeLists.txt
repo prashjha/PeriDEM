@@ -25,12 +25,18 @@ add_test(NAME testfe
 add_test(NAME testnsearch
         COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 20
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
-        )
+)
 
 # parallel computation test
 add_test(NAME testparallelcomp
         COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -i 1000000
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+)
+
+# mesh partitioning test
+add_test(NAME testmeshpartitioning
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -i 50 -p 4 -m 3
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
 )
 
 #----------------------------------#

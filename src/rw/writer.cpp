@@ -35,6 +35,10 @@ void rw::writer::Writer::open(const std::string &filename,
   else if (d_format == "legacy_vtk")
     d_legacyVtkWriter_p =
         new rw::writer::LegacyVtkWriter(filename, compress_type);
+  else {
+    std::cerr << "File format " << d_format << " is not supported.\n";
+    exit(1);
+  }
 }
 
 rw::writer::Writer::~Writer() {

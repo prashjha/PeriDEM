@@ -317,6 +317,46 @@ class InputParser{
         std::vector <std::string> tokens;
 };
 
+/*!
+ * @brief Get filename removing path from the string
+ * Source - https://stackoverflow.com/a/24386991
+ *
+ * @param path Filename with path
+ * @param delims Delimiter to separate the filename from the path
+ * @return string Filename
+ */
+inline std::string getFilenameFromPath(std::string const & path, std::string const & delims = "/\\")
+{
+  return path.substr(path.find_last_of(delims) + 1);
+}
+
+/*!
+ * @brief Remove extension from the filename
+ * Source - https://stackoverflow.com/a/24386991
+ *
+ * @param filename Filename with extension
+ * @return string Filename without extension
+ */
+inline std::string removeExtensionFromFile(std::string const & filename)
+{
+  typename std::string::size_type const p(filename.find_last_of('.'));
+  return p > 0 && p != std::string::npos ? filename.substr(0, p) : filename;
+}
+
+/*!
+ * @brief Get extension from the filename
+ *
+ * @param filename Filename with extension
+ * @return string Extension
+ */
+inline std::string getExtensionFromFile(std::string const & filename)
+{
+  typename std::string::size_type const p(filename.find_last_of('.'));
+
+  //return filename.substr(p + 1);
+  return p > 0 && p != std::string::npos ? filename.substr(p+1) : "";
+}
+
 } // namespace io
 
 } // namespace util

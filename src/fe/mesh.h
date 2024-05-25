@@ -270,7 +270,7 @@ public:
 
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 
-private:
+public:
   /**
    * @name Utility methods
    */
@@ -287,6 +287,9 @@ private:
    * **.msh** file with element-node connectivity data.
    *
    * @param filename Name of the mesh file
+   * @param ref_config Flag which specifies if we need to subtract the
+   * displacement from nodes obtained from vtu file to get reference position
+   * of nodes
    * */
   void createData(const std::string &filename, bool
   ref_config = false);

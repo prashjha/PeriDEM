@@ -8,121 +8,124 @@
  */
 
 #include "testFeLib.h"
-#include "fe/mesh.h"
 #include "fe/quadElem.h"
 #include "fe/triElem.h"
 #include "fe/tetElem.h"
-#include "fe/meshPartitioning.h"
 #include "util/point.h"
 #include "util/feElementDefs.h"
 #include "util/methods.h"
+#include "nsearch/nsearch.h"
 #include <csv/csv.hpp>
 #include <algorithm>
 #include <fstream>
 #include <string>
 
-static int debug_id = -1;
-//
-// static methods
-//
-static const double tol = 1.0E-12;
+namespace {
 
-static void readNodes(const std::string &filename,
-                      std::vector<util::Point> &nodes) {
+    int debug_id = -1;
+    const double tol = 1.0E-12;
 
-  // csv reader
-  io::CSVReader<3> in(filename);
-  double x, y, z;
-  while (in.read_row(x, y, z))
-    nodes.emplace_back(x, y, z);
-}
+    void readNodes(const std::string &filename,
+                          std::vector<util::Point> &nodes) {
 
-static size_t readElements(const std::string &filename, const size_t &elem_type,
-                           std::vector<size_t> &elements) {
-
-  if (elem_type == util::vtk_type_triangle) {
-    io::CSVReader<3> in(filename);
-    std::vector<size_t> ids(3, 0);
-    while (in.read_row(ids[0], ids[1], ids[2])) {
-      for (auto id : ids)
-        elements.emplace_back(id);
+      // csv reader
+      io::CSVReader<3> in(filename);
+      double x, y, z;
+      while (in.read_row(x, y, z))
+        nodes.emplace_back(x, y, z);
     }
 
-    size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
-    return elements.size() / num_vertex;
-  } else if (elem_type == util::vtk_type_quad) {
-    io::CSVReader<4> in(filename);
-    std::vector<size_t> ids(4, 0);
-    while (in.read_row(ids[0], ids[1], ids[2], ids[3])) {
-      for (auto id : ids)
-        elements.emplace_back(id);
+    size_t readElements(const std::string &filename, const size_t &elem_type,
+                               std::vector<size_t> &elements) {
+
+      if (elem_type == util::vtk_type_triangle) {
+        io::CSVReader<3> in(filename);
+        std::vector<size_t> ids(3, 0);
+        while (in.read_row(ids[0], ids[1], ids[2])) {
+          for (auto id: ids)
+            elements.emplace_back(id);
+        }
+
+        size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
+        return elements.size() / num_vertex;
+      } else if (elem_type == util::vtk_type_quad) {
+        io::CSVReader<4> in(filename);
+        std::vector<size_t> ids(4, 0);
+        while (in.read_row(ids[0], ids[1], ids[2], ids[3])) {
+          for (auto id: ids)
+            elements.emplace_back(id);
+        }
+
+        size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
+        return elements.size() / num_vertex;
+      } else if (elem_type == util::vtk_type_tetra) {
+        io::CSVReader<4> in(filename);
+        std::vector<size_t> ids(4, 0);
+        while (in.read_row(ids[0], ids[1], ids[2], ids[3])) {
+          for (auto id: ids)
+            elements.emplace_back(id);
+        }
+
+        size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
+        return elements.size() / num_vertex;
+      } else {
+        std::cerr << "Error: readElements() only supports vtk_type_triangle, vtk_type_quad, and vtk_type_tetra elem_type in testing.\n";
+        exit(1);
+      }
     }
 
-    size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
-    return elements.size() / num_vertex;
-  } else if (elem_type == util::vtk_type_tetra) {
-    io::CSVReader<4> in(filename);
-    std::vector<size_t> ids(4, 0);
-    while (in.read_row(ids[0], ids[1], ids[2], ids[3])) {
-      for (auto id : ids)
-        elements.emplace_back(id);
+    bool checkRefIntegration(const size_t &n, const size_t &i,
+                                    const size_t &j,
+                                    const std::vector<fe::QuadData> &qds,
+                                    double &I_exact) {
+
+      double I_approx = 0.;
+      for (auto qd: qds)
+        I_approx += qd.d_w * std::pow(qd.d_p.d_x, i) * std::pow(qd.d_p.d_y, j);
+
+      if (std::abs(I_exact - I_approx) > tol) {
+        std::cout << "Error in order = " << n << ". Exact integration = " << I_exact
+                  << " and approximate integration = " << I_approx
+                  << " of polynomial of order (i = " << i << " + j = " << j
+                  << ") = " << i + j << " over reference element "
+                  << "is not matching using quadrature points.\n";
+
+        return false;
+      }
+
+      return true;
     }
 
-    size_t num_vertex = util::vtk_map_element_to_num_nodes[elem_type];
-    return elements.size() / num_vertex;
-  }
-}
+    bool checkRefIntegration(const size_t &n, const size_t &i,
+                                    const size_t &j, const size_t &k,
+                                    const std::vector<fe::QuadData> &qds,
+                                    double &I_exact) {
 
-static bool checkRefIntegration(const size_t &n, const size_t &i,
-                                const size_t &j,
-                                const std::vector<fe::QuadData> &qds,
-                                double &I_exact) {
+      double I_approx = 0.;
+      for (auto qd: qds)
+        I_approx += qd.d_w * std::pow(qd.d_p.d_x, i) * std::pow(qd.d_p.d_y, j) *
+                    std::pow(qd.d_p.d_z, k);
 
-  double I_approx = 0.;
-  for (auto qd : qds)
-    I_approx += qd.d_w * std::pow(qd.d_p.d_x, i) * std::pow(qd.d_p.d_y, j);
+      if (std::abs(I_exact - I_approx) > tol) {
+        std::cout << "Error in order = " << n << ". Exact integration = " << I_exact
+                  << " and approximate integration = " << I_approx
+                  << " of polynomial of order (i = " << i << " + j = " << j
+                  << " + k = " << k << ") = " << i + j + k
+                  << " over reference element "
+                  << "is not matching using quadrature points.\n";
 
-  if (std::abs(I_exact - I_approx) > tol) {
-    std::cout << "Error in order = " << n << ". Exact integration = " << I_exact
-              << " and approximate integration = " << I_approx
-              << " of polynomial of order (i = " << i << " + j = " << j
-              << ") = " << i + j << " over reference element "
-              << "is not matching using quadrature points.\n";
+        std::cout << "Print " << i << " " << j << " " << k
+                  << " debug id = " << debug_id << "\n";
+        for (auto qd: qds)
+          std::cout << qd.printStr() << "\n";
 
-    return false;
-  }
+        return false;
+      }
 
-  return true;
-}
+      return true;
+    }
 
-static bool checkRefIntegration(const size_t &n, const size_t &i,
-                                const size_t &j, const size_t &k,
-                                const std::vector<fe::QuadData> &qds,
-                                double &I_exact) {
-
-  double I_approx = 0.;
-  for (auto qd : qds)
-    I_approx += qd.d_w * std::pow(qd.d_p.d_x, i) * std::pow(qd.d_p.d_y, j) *
-                std::pow(qd.d_p.d_z, k);
-
-  if (std::abs(I_exact - I_approx) > tol) {
-    std::cout << "Error in order = " << n << ". Exact integration = " << I_exact
-              << " and approximate integration = " << I_approx
-              << " of polynomial of order (i = " << i << " + j = " << j
-              << " + k = " << k << ") = " << i + j + k
-              << " over reference element "
-              << "is not matching using quadrature points.\n";
-
-    std::cout << "Print " << i << " " << j << " " << k
-              << " debug id = " << debug_id << "\n";
-    for (auto qd : qds)
-      std::cout << qd.printStr() << "\n";
-
-    return false;
-  }
-
-  return true;
-}
+} // namespace
 
 //
 // Interface methods
@@ -188,103 +191,6 @@ double test::getExactIntegrationRefTet(size_t alpha, size_t beta,
   }
 
   return I;
-}
-
-void test::partGraphRecursiveTest() {
-  // The number of vertices.
-  idx_t nvtxs = 6;
-
-  // Number of balancing constraints, which must be at least 1.
-  idx_t ncon = 1;
-
-  // Pointers to initial entries in adjacency array. size of array is nvtxs + 1
-  idx_t xadj[7] = { 0, 2, 5, 7, 9, 12, 14 };
-
-  // Adjacent vertices in consecutive index order.
-  int nedges = 7;
-  idx_t adjncy[14] = {1,3,0,4,2,1,5,0,4,3,1,5,4,2};
-
-  // The number of parts requested for the partition.
-  idx_t nParts = 3;
-
-  // On return, the edge cut volume of the partitioning solution.
-  idx_t objval;
-
-  // On return, the partition vector for the graph.
-  idx_t part[6];
-
-  printf ( "\n" );
-  printf ( "partGraphRecursiveTest:\n" );
-  printf ( "  METIS_PartGraphRecursive partitions a graph into K parts\n" );
-  printf ( "  using multilevel recursive bisection.\n" );
-
-  int ret = METIS_PartGraphRecursive ( &nvtxs, &ncon, xadj, adjncy, NULL, NULL,
-                                       NULL, &nParts, NULL, NULL, NULL, &objval, part );
-
-  printf ( "\n" );
-  printf ( "  Return code = %d\n", ret );
-  printf ( "  Edge cuts for partition = %d\n", ( int ) objval );
-
-  printf ( "\n" );
-  printf ( "  Partition vector:\n" );
-  printf ( "\n" );
-  printf ( "  Node  Part\n" );
-  printf ( "\n" );
-  for ( unsigned part_i = 0; part_i < nvtxs; part_i++ )
-  {
-    printf ( "     %d     %d\n", part_i, ( int ) part[part_i] );
-  }
-
-  return;
-}
-
-void test::partGraphKwayTest() {
-
-  // The number of vertices.
-  idx_t nvtxs = 6;
-
-  // Number of balancing constraints, which must be at least 1.
-  idx_t ncon = 1;
-
-  // Pointers to initial entries in adjacency array.
-  idx_t xadj[7] = { 0, 2, 5, 7, 9, 12, 14 };
-
-  // Adjacent vertices in consecutive index order.
-  int nedges = 7;
-  idx_t adjncy[14] = {1,3,0,4,2,1,5,0,4,3,1,5,4,2};
-
-  // The number of parts requested for the partition.
-  idx_t nParts = 3;
-
-  // On return, the edge cut volume of the partitioning solution.
-  idx_t objval;
-
-  // On return, the partition vector for the graph.
-  idx_t part[6];
-
-  printf ( "\n" );
-  printf ( "partGraphKwayTest:\n" );
-  printf ( "  METIS_PartGraphKway partitions a graph into K parts\n" );
-  printf ( "  using multilevel K-way partition.\n" );
-
-  int ret = METIS_PartGraphKway ( &nvtxs, &ncon, xadj, adjncy, NULL, NULL,
-                                  NULL, &nParts, NULL, NULL, NULL, &objval, part );
-
-  printf ( "\n" );
-  printf ( "  Return code = %d\n", ret );
-  printf ( "  Edge cuts for partition = %d\n", ( int ) objval );
-
-  printf ( "\n" );
-  printf ( "  Partition vector:\n" );
-  printf ( "\n" );
-  printf ( "  Node  Part\n" );
-  printf ( "\n" );
-  for ( unsigned part_i = 0; part_i < nvtxs; part_i++ )
-  {
-    printf ( "     %d     %d\n", part_i, ( int ) part[part_i] );
-  }
-
-  return;
 }
 
 
@@ -857,15 +763,4 @@ void test::testTetElem(size_t n, std::string filepath) {
   //  else
   //    std::cout << "TEST 2 : FAIL. ";
   std::cout << "\n";
-}
-
-void test::testGraphPartitioning() {
-
-  printf ( "\n" );
-  printf ( "METIS_TEST\n" );
-  printf ( "  C version\n" );
-  printf ( "  Test the METIS library for graph partitioning.\n" );
-
-  test::partGraphKwayTest( );
-  test::partGraphRecursiveTest( );
 }
