@@ -80,6 +80,11 @@ namespace {
     }
 
     std::string readMeshFromFile(fe::Mesh * mesh_p, const std::string &meshFilename) {
+      if (meshFilename.empty()) {
+        std::cerr << "readMeshFromFile(): mesh filename is empty.\n";
+        exit(1);
+      }
+
       // call in-built function of mesh to create data from file
       mesh_p->createData(meshFilename);
 

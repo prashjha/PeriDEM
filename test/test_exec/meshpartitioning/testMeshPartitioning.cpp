@@ -29,8 +29,8 @@ int main(int argc, char *argv[]) {
   }
 
   // read input
-  size_t testOption, nGrid, nPart, mHorizon;
-  std::string meshFilename;
+  size_t testOption, nGrid(0), nPart, mHorizon;
+  std::string meshFilename("");
 
   if (input.cmdOptionExists("-o")) testOption = size_t(std::stoi(input.getCmdOption("-o")));
   else {
@@ -39,16 +39,8 @@ int main(int argc, char *argv[]) {
   }
 
   if (input.cmdOptionExists("-i")) nGrid = size_t(std::stoi(input.getCmdOption("-i")));
-  else {
-    std::cout << "Running test with default grid-size = 10\n";
-    nGrid = 10;
-  }
 
   if (input.cmdOptionExists("-f")) meshFilename = input.getCmdOption("-f");
-  else {
-    std::cout << "Running test on uniform mesh only\n";
-    meshFilename = "null";
-  }
 
   // check if nGrid and meshFilename are compatible
   if ((nGrid > 0 and testOption == 1) or (meshFilename == "null" and testOption == 0)) {

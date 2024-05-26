@@ -35,7 +35,7 @@ add_test(NAME testparallelcomp
 
 # mesh partitioning test
 add_test(NAME testmeshpartitioning
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -i 50 -p 4 -m 3
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 1 -p 4 -m 4 -f mesh.msh
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
 )
 
