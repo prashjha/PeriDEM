@@ -28,13 +28,22 @@ add_test(NAME testnsearch
 )
 
 # parallel computation test
-add_test(NAME testparallelcomp
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -i 1000000
+add_test(NAME testparallelcomp1
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0 -i 1000000
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+)
+add_test(NAME testparallelcomp2
+        COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -n 50 -m 3
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
 # mesh partitioning test
-add_test(NAME testmeshpartitioning
+add_test(NAME testmeshpartitioning1
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 0 -n 50 -m 4
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
+)
+
+add_test(NAME testmeshpartitioning2
         COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 1 -p 4 -m 4 -f mesh.msh
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
 )

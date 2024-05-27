@@ -78,6 +78,9 @@ if (${Enable_CMAKE_Debug_Build})
     message("BASH_PROGRAM = ${BASH_PROGRAM}")
 endif()
 
+# #<<<<<<<<<< MPI >>>>>>>>>>#
+find_package(MPI REQUIRED)
+
 # #<<<<<<<<<< Threads >>>>>>>>>>#
 find_package (Threads REQUIRED)
 
@@ -178,7 +181,7 @@ endif()
 #----------------------------------#
 add_executable(PeriDEM src/main.cpp)
 
-target_link_libraries(PeriDEM PUBLIC Inp Model)
+target_link_libraries(PeriDEM PUBLIC Model)
 
 
 #----------------------------------#

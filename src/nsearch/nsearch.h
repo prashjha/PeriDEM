@@ -12,8 +12,8 @@
 
 #include "util/point.h" // definition of Point
 #include "util/methods.h"
-#include <stdint.h> // uint8_t type
-#include <string.h> // size_t type
+#include <cstdint> // uint8_t type
+#include <string> // size_t type
 #include <vector>
 
 #include "nflannSetup.h"
@@ -65,58 +65,22 @@ public:
   /*!
    * @brief Constructor
    */
-  NFlannSearchKd(const PointCloud &x, size_t debug = 0, double tree_resolution = 1.)
-      : BaseNSearch("nflann_kdtree", debug), d_cloud(x), d_tree(3, d_cloud,
-      nanoflann::KDTreeSingleIndexAdaptorParams(10 /* max leaf */)) {
-    d_params.sorted = false;
-  }
+  explicit NFlannSearchKd(const PointCloud &x, size_t debug = 0, double tree_resolution = 1.);
 
-  double setInputCloud() override {
-    auto t1 = steady_clock::now();
-    d_tree.buildIndex();
-    auto t2 = steady_clock::now();
-    return util::methods::timeDiff(t1, t2);
-  }
+  double setInputCloud() override;
 
   double updatePointCloud(const std::vector<util::Point> &x,
-                          bool parallel = true) override {
-    return 0;
-  }
+                          bool parallel = true) override;
 
   size_t radiusSearch(
       const util::Point &searchPoint, const double &search_r,
       std::vector<size_t> &neighs,
-      std::vector<double> &sqr_dist) override {
-
-    double query_pt[3] = {searchPoint[0], searchPoint[1], searchPoint[2]};
-
-    TreeSearchRes resultSet(search_r * search_r, neighs, sqr_dist);
-    return d_tree.radiusSearchCustomCallback(&query_pt[0], resultSet, d_params);
-  }
+      std::vector<double> &sqr_dist) override;
 
   size_t radiusSearch(
       const util::Point &searchPoint, const double &search_r,
       std::vector<int> &neighs,
-      std::vector<float> &sqr_dist) override {
-
-    // ugly but quick fix
-    // first, get results using int and float and then convert
-    std::vector<size_t> neighs_temp;
-    std::vector<double> sqr_dist_temp;
-    auto N =
-        this->radiusSearch(searchPoint, search_r, neighs_temp, sqr_dist_temp);
-
-    if (N > 0) {
-      neighs.resize(N);
-      sqr_dist.resize(N);
-      for (size_t i=0; i<N; i++) {
-        neighs.push_back(int(neighs_temp[i]));
-        sqr_dist.push_back(float(sqr_dist_temp[i]));
-      }
-    }
-
-    return N;
-  }
+      std::vector<float> &sqr_dist) override;
 
 public:
   /*! @brief coordinates of the points */

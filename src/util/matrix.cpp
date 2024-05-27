@@ -41,7 +41,7 @@ std::vector<double> &v) {
   size_t row_size = m.size();
   size_t col_size = m[0].size();
 
-  assert(("Column size of matrix must match row of vector for dot product", col_size == v.size()));
+  assert((col_size == v.size()) && "Column size of matrix must match row of vector for dot product");
 
   std::vector<double> r(row_size, 0.);
 
@@ -74,8 +74,8 @@ std::vector<std::vector<double>> &m) {
 double util::det(const std::vector<std::vector<double>> &m) {
 
   //checkMatrix(m);
-  assert(("Matrix must be a square matrix", m.size() == m[0].size()));
-  assert(("Square of matrix of size 3 or below", m.size() <= 3));
+  assert((m.size() == m[0].size()) && "Matrix must be a square matrix");
+  assert((m.size() <= 3) && "Square of matrix of size 3 or below");
 
   size_t row_size = m.size();
   if (row_size == 1)
@@ -92,8 +92,8 @@ std::vector<std::vector<double>>
 util::inv(const std::vector<std::vector<double>> &m) {
 
   //checkMatrix(m);
-  assert(("Matrix must be a square matrix", m.size() == m[0].size()));
-  assert(("Square of matrix of size 3 or below", m.size() <= 3));
+  assert((m.size() == m[0].size()) && "Matrix must be a square matrix");
+  assert((m.size() <= 3) && "Square of matrix of size 3 or below");
 
   size_t row_size = m.size();
 

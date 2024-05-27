@@ -20,9 +20,9 @@ int main(int argc, char *argv[]) {
     // print help
     std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
               << MINOR_VERSION << "." << UPDATE_VERSION
-              << ") -o <0 to test on uniform mesh and 1 to test on user mesh> -i <grid-size> -p <number-partitions> -m <horizon-integer-factor> -f <mesh-filename>" << std::endl;
+              << ") -o <0 to test on uniform mesh and 1 to test on user mesh> -n <grid-size> -p <number-partitions> -m <horizon-integer-factor> -f <mesh-filename>" << std::endl;
     std::cout << "To test on uniform mesh" << std::endl;
-    std::cout << argv[0] << " -o 0 -i 10 -p 4 -m 3" << std::endl;
+    std::cout << argv[0] << " -o 0 -n 10 -p 4 -m 3" << std::endl;
     std::cout << "To test on user-provided mesh (filename = filepath/meshfile.vtu)" << std::endl;
     std::cout << argv[0] << " -o 1 -p 4 -m 3 -f filepath/meshfile.vtu" << std::endl;
     exit(EXIT_FAILURE);
@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
 
   if (input.cmdOptionExists("-o")) testOption = size_t(std::stoi(input.getCmdOption("-o")));
   else {
-    std::cerr << "Test requires following arguments -o <option integer> -i <grid-size> -p <number-partition> -m <horizon-integer-factor> -f <mesh-filename>\n";
+    std::cerr << "Test requires following arguments -o <option integer> -n <grid-size> -p <number-partition> -m <horizon-integer-factor> -f <mesh-filename>\n";
     exit(1);
   }
 
-  if (input.cmdOptionExists("-i")) nGrid = size_t(std::stoi(input.getCmdOption("-i")));
+  if (input.cmdOptionExists("-n")) nGrid = size_t(std::stoi(input.getCmdOption("-n")));
 
   if (input.cmdOptionExists("-f")) meshFilename = input.getCmdOption("-f");
 
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
   if ((nGrid > 0 and testOption == 1) or (meshFilename == "null" and testOption == 0)) {
     std::cerr << "Please specify either using uniform mesh (in-built) or user-defined mesh "
                  "to perform the partitioning test. "
-                 "That is, either specify '-o 0 -i <grid-size>' "
+                 "That is, either specify '-o 0 -n <grid-size>' "
                  "or '-o 1 -f <mesh-filename>'.\n";
     exit(1);
   }

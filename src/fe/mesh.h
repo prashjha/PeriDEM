@@ -392,6 +392,30 @@ public:
 
   /** @}*/
 
+  /**
+   * @name Mesh data specific to parallel implementation
+   */
+  /**@{*/
+
+  /*! @brief Number of partitions */
+  size_t d_nPart;
+
+  /*! @brief Partitioning method.
+   * It could be either empty string or "metis_recursive" or "metis_kway".
+   */
+  std::string d_partitionMethod;
+
+  /*! @brief Node partition information.
+   * For each node i, d_nodePartition[i] specifies the partition number, i.e., the processor that owns the node in MPI application.
+   *
+   * For uniform square mesh, the volume is simply \f$ h^2 \f$ in 2-d and \f$
+   * h^3\f$ in 3-d, where \f$ h\f$ is the mesh size. For general mesh, the
+   * volume is computed using the element-node connectivity of the mesh.
+   */
+  std::vector<size_t> d_nodePartition;
+
+  /** @}*/
+
   /*! @brief Dimension of the mesh */
   size_t d_dim;
 

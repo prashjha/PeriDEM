@@ -7,6 +7,8 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Geometry ${SOURCES})
+add_library(Geometry ${SOURCES}
+        geometryUtil.h
+        geometryUtil.cpp)
 
-target_link_libraries(Geometry PUBLIC Threads::Threads)
+target_link_libraries(Geometry PUBLIC NSearch fmt::fmt Threads::Threads)

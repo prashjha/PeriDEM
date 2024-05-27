@@ -82,6 +82,9 @@ std::pair<util::Point, util::Point> &box) {
     data.emplace_back(corner_pts[3], corner_pts[7]);
 
     return data;
+  } else {
+    std::cerr << "getEdges(): Function implemented for dim = 1,2,3 only.\n";
+    exit(EXIT_FAILURE);
   }
 }
 
@@ -149,6 +152,8 @@ bool util::areBoxesNear(const std::pair<util::Point, util::Point>
                                                                         b2);
   if (util::isLess(dxc.length(), dist))
     return true;
+
+  return false;
 }
 
 bool util::isPointInsideBox(util::Point x, size_t dim,
@@ -169,6 +174,10 @@ bool util::isPointInsideBox(util::Point x, size_t dim,
              util::isGreater(x.d_x, box.second.d_x + 1.0E-12) or
              util::isGreater(x.d_y, box.second.d_y + 1.0E-12) or
              util::isGreater(x.d_z, box.second.d_z + 1.0E-12));
+  else {
+    std::cerr << "isPointInsideBox(): Function implemented for dim = 1,2,3 only.\n";
+    exit(EXIT_FAILURE);
+  }
 }
 
 double util::inscribedRadiusInBox(size_t dim,
@@ -190,6 +199,9 @@ double util::inscribedRadiusInBox(size_t dim,
       return 0.5 * std::abs(box.second.d_z - box.first.d_z);
     else
       return r;
+  } else {
+    std::cerr << "inscribedRadiusInBox(): Function implemented for dim = 1,2,3 only.\n";
+    exit(EXIT_FAILURE);
   }
 }
 

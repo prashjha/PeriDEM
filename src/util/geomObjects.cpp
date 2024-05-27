@@ -483,11 +483,14 @@ double util::geometry::Hexagon::boundingRadius() const {
 
 bool util::geometry::Hexagon::isInside(const util::Point &x) const {
 
+  // TODO this function is incomplete as there are some points that require additional checking
   if ((x-d_x).length() > d_r)
     return false;
 
   if ((x-d_x).length() < inscribedRadius())
     return true;
+
+  return false;
 }
 
 bool util::geometry::Hexagon::isOutside(const util::Point &x) const {

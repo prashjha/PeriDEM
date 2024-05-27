@@ -9,4 +9,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestMeshPartitioning ${SOURCES})
 
-target_link_libraries(TestMeshPartitioning PUBLIC Util RW FE NSearch fmt::fmt)
+target_link_libraries(TestMeshPartitioning PUBLIC Geometry FE)

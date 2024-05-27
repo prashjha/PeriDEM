@@ -9,4 +9,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestFE ${SOURCES})
 
-target_link_libraries(TestFE PUBLIC Util RW FE)
+target_link_libraries(TestFE PUBLIC FE)

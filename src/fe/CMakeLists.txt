@@ -9,6 +9,8 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(FE ${SOURCES}
         meshPartitioning.h
-        meshPartitioning.cpp)
+        meshPartitioning.cpp
+        meshUtil.h
+        meshUtil.cpp)
 
 target_link_libraries(FE PUBLIC Util RW ${METIS_LIB})
