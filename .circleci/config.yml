@@ -47,12 +47,6 @@ commands:
           name: Test
           command: |
             cd build 
-            # need to set flags for MPI test
-            env OMPI_ALLOW_RUN_AS_ROOT=1
-            env OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-            # check if two variables are set
-            env
-            # run test
             ctest <<parameters.verb-flag>>
   libdoc:
     steps:
