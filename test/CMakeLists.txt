@@ -33,7 +33,7 @@ add_test(NAME testparallelcomp1
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 add_test(NAME testparallelcomp2
-        COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -n 50 -m 3 --allow-run-as-root
+        COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -n 50 -m 3
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
