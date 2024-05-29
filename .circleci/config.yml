@@ -48,9 +48,11 @@ commands:
           command: |
             cd build 
             # need to set flags for MPI test
-            echo "export OMPI_ALLOW_RUN_AS_ROOT=1" >> $BASH_ENV
-            echo "export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1" >> $BASH_ENV
-            echo $BASH_ENV
+            env OMPI_ALLOW_RUN_AS_ROOT=1
+            env export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+            # check if two variables are set
+            env
+            # run test
             ctest <<parameters.verb-flag>>
   libdoc:
     steps:

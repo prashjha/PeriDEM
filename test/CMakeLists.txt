@@ -29,11 +29,31 @@ add_test(NAME testnsearch
 
 # parallel computation test
 add_test(NAME testparallelcomp1
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0 -i 1000000
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 add_test(NAME testparallelcomp2
-        COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -n 50 -m 3
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -i 1000000
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+)
+# MPI tests are disabled in circleci at the moment
+set(IS_CIRCLECI FALSE CACHE BOOL "Circle-ci variable")
+if ($ENV{CIRCLECI})
+    set(IS_CIRCLECI TRUE)
+endif ()
+
+message("ENV{CIRCLECI} = $ENV{CIRCLECI}")
+message("IS_CIRCLECI = ${IS_CIRCLECI}")
+#if (NOT ${IS_CIRCLECI})
+#    message("Building testparallelcomp3 that used MPI")
+#    add_test(NAME testparallelcomp3
+#            COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -n 50 -m 3
+#            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+#    )
+#endif ()
+
+add_test(NAME testparallelcomp3
+        COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -n 50 -m 3
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
