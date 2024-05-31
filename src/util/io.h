@@ -11,6 +11,7 @@
 #define UTILS_UTIL_IO_H
 
 #include "point.h"
+#include "mpiUtil.h" // to make prints MPI aware
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -20,6 +21,10 @@ namespace util {
 
 /*! @brief Provides geometrical methods such as point inside rectangle */
 namespace io {
+
+const int print_default_tab = 0;
+const int print_default_mpi_rank = 0;
+const int logger_default_debug_lvl = 5;
 
 /*!
  * @brief Returns tab spaces of given size
@@ -36,13 +41,24 @@ inline std::string getTabS(int nt) {
 
 /*!
  * @brief Returns formatted string for output
+ * @param nt Number of tabs to prefix
+ * @return string Formatted string
+ */
+template <class T> inline std::string printStr(const T &msg, int nt = print_default_tab) {
+
+  std::ostringstream oss;
+  oss << getTabS(nt) << msg;
+  return oss.str();
+};
+
+/*!
+ * @brief Returns formatted string for output
  * @param list List of object
  * @param nt Number of tabs to prefix
  * @return string Formatted string
  */
 template <class T> inline std::string printStr(const std::vector<T> &list,
-    int nt =
-    0) {
+    int nt = print_default_tab) {
 
   auto tabS = getTabS(nt);
   std::ostringstream oss;
@@ -78,10 +94,23 @@ template <> inline std::string printStr(const std::vector<util::Point> &list,
 /*!
  * @brief Prints formatted information
  * @param nt Number of tabs
+ * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
  */
-template <class T> inline void print(const std::vector<T> &list, int nt = 0) {
+template <class T> inline void print(const T &msg, int nt = print_default_tab,
+        int printMpiRank = print_default_mpi_rank) {
+  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+    std::cout << printStr(msg, nt);
+};
 
-  std::cout << printStr(list, nt);
+/*!
+ * @brief Prints formatted information
+ * @param nt Number of tabs
+ * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
+ */
+template <class T> inline void print(const std::vector<T> &list, int nt = print_default_tab,
+        int printMpiRank = print_default_mpi_rank) {
+  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+      std::cout << printStr(list, nt);
 };
 
 template <class T>
@@ -109,9 +138,12 @@ inline std::string printStr(const std::vector<std::vector<T>> &list,
   return oss.str();
 }
 
-template <class T> inline void print(const std::vector<std::vector<T>> &list, int nt = 0) {
+template <class T> inline void print(const std::vector<std::vector<T>> &list,
+        int nt = print_default_tab,
+        int printMpiRank = print_default_mpi_rank) {
 
-  std::cout << printStr(list, nt);
+  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+    std::cout << printStr(list, nt);
 };
 
 /*!
@@ -121,8 +153,7 @@ template <class T> inline void print(const std::vector<std::vector<T>> &list, in
  * @return string Formatted string
  */
 inline std::string printBoxStr(const std::pair<util::Point, util::Point>
-    &box, int nt =
-0) {
+    &box, int nt = print_default_tab) {
   auto tabS = getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "Corner point 1 = " << box.first.printStr(nt, 0) << std::endl;
@@ -135,15 +166,17 @@ inline std::string printBoxStr(const std::pair<util::Point, util::Point>
  * @brief Prints formatted string for output
  * @param box Pair of corner points of box
  * @param nt Number of tabs to prefix
+ * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
  */
-inline void printBox(const std::pair<util::Point, util::Point> &box, int nt
-= 0) {
-  std::cout << printBoxStr(box, nt);
+inline void printBox(const std::pair<util::Point, util::Point> &box,
+                     int nt = print_default_tab,
+                     int printMpiRank = print_default_mpi_rank) {
+    if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+      std::cout << printBoxStr(box, nt);
 };
 
-inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<double>>
-                               &box, int nt =
-0) {
+inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<double>> &box,
+                               int nt = print_default_tab) {
   auto tabS = getTabS(nt);
   std::ostringstream oss;
   oss << tabS << "Corner point 1 = (" << printStr<double>(box.first, 0)
@@ -154,9 +187,10 @@ inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<
   return oss.str();
 };
 
-inline void printBox(const std::pair<std::vector<double>, std::vector<double>> &box, int nt
-= 0) {
-  std::cout << printBoxStr(box, nt);
+inline void printBox(const std::pair<std::vector<double>, std::vector<double>> &box,
+                     int nt = print_default_tab, int printMpiRank = print_default_mpi_rank) {
+  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+    std::cout << printBoxStr(box, nt);
 };
 
 /*!
@@ -225,10 +259,12 @@ public:
    *
    * @param oss Message
    * @param screen_out Specify if it goes to std::cout as well
+   * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
    */
-  void log(std::ostringstream &oss, bool screen_out = false) {
+  void log(std::ostringstream &oss, bool screen_out = false,
+           int printMpiRank = print_default_mpi_rank) {
 
-    log(oss.str(), screen_out);
+    log(oss.str(), screen_out, printMpiRank);
 
     // reset oss
     oss.str("");
@@ -238,19 +274,23 @@ public:
   /*!
    * @brief Log the message
    *
-   * @param oss Message
+   * @param str Message
    * @param screen_out Specify if it goes to std::cout as well
+   * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
    */
-  void log(const std::string &str, bool screen_out = false) {
+  void log(const std::string &str, bool screen_out = false,
+           int printMpiRank = print_default_mpi_rank) {
 
-    if (d_deck_p->d_printScreen || screen_out)
-      std::cout << str << std::flush;
+    if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank) {
+      if (d_deck_p->d_printScreen || screen_out)
+        std::cout << str << std::flush;
 
-    // log
-    if (d_deck_p->d_printFile) {
-      d_logFile.open(d_deck_p->d_filename, std::ios_base::app);
-      d_logFile << str;
-      d_logFile.close();
+      // log
+      if (d_deck_p->d_printFile) {
+        d_logFile.open(d_deck_p->d_filename, std::ios_base::app);
+        d_logFile << str;
+        d_logFile.close();
+      }
     }
   };
 
@@ -266,23 +306,27 @@ public:
  * @param debug_level Specify debug level/verbosity
  * @param filename Specify filename for logs
  */
-void initLogger(int debug_level = 5, std::string filename = "");
+void initLogger(int debug_level = logger_default_debug_lvl, std::string filename = "");
 
 /*!
  * @brief Global method to log the message
  *
  * @param oss Message
  * @param screen_out Specify if it goes to std::cout as well
+ * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
  */
-void log(std::ostringstream &oss, bool screen_out = false);
+void log(std::ostringstream &oss, bool screen_out = false,
+         int printMpiRank = print_default_mpi_rank);
 
 /*!
  * @brief Global method to log the message
  *
- * @param oss Message
+ * @param str Message
  * @param screen_out Specify if it goes to std::cout as well
+ * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
  */
-void log(const std::string &str, bool screen_out = false);
+void log(const std::string &str, bool screen_out = false,
+         int printMpiRank = print_default_mpi_rank);
 
 /*!
  * @brief Input command line argument parser

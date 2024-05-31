@@ -7,6 +7,8 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Util ${SOURCES})
+add_library(Util ${SOURCES}
+        mpiUtil.h
+        mpiUtil.cpp)
 
-target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt Threads::Threads)
+target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt Threads::Threads MPI::MPI_CXX)

@@ -149,7 +149,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
   // create mesh
   std::string outMeshFilename = "";
-  if (testOption == 0) {
+  if (testOption == 1) {
     // set geometry details
     std::pair<std::vector<double>, std::vector<double>> box;
     std::vector<size_t> nGridVec;
@@ -167,7 +167,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
                                                box.second[0], box.second[1],
                                                nGridVec[0], nGridVec[1]);
   }
-  else if (testOption == 1) {
+  else if (testOption == 2) {
     if (meshFilename.empty()) {
       std::cerr << "testGraphPartitioning(): mesh filename is empty.\n";
       exit(1);

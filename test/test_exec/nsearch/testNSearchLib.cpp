@@ -13,6 +13,7 @@
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
+#include "util/randomDist.h"
 #include <fmt/format.h>
 #include <bitset>
 #include <fstream>
@@ -23,22 +24,7 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-typedef std::mt19937 RandGenerator;
-typedef std::uniform_real_distribution<> UniformDistribution;
-
 namespace {
-
-RandGenerator get_rd_gen(int seed) {
-
-  // return RandGenerator();
-
-  if (seed < 0) {
-    std::random_device rd;
-    seed = rd();
-  }
-
-  return RandGenerator(seed);
-}
 
 bool isInList(const std::vector<size_t> *list, size_t i) {
   for (auto j : *list)
@@ -66,7 +52,7 @@ void stats(const std::vector<double> &x, double &mean, double &std) {
 void lattice(double L, size_t Nx, size_t Ny, size_t Nz, double dL, int seed,
              std::vector<util::Point> &x) {
 
-  RandGenerator gen(get_rd_gen(seed));
+  RandGenerator gen(util::get_rd_gen(seed));
   UniformDistribution dist(-dL, dL);
 
   x.resize(Nx * Ny * Nz);

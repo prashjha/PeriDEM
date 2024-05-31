@@ -34,36 +34,40 @@ add_test(NAME testnsearch
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
-# parallel computation test
-add_test(NAME testparallelcomp1
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
-)
-add_test(NAME testparallelcomp2
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -i 1000000
+# mesh partitioning test
+add_test(NAME testmeshpartitioning_simple
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 0
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
+add_test(NAME testmeshpartitioning_builtinmesh
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 1 -p 4 -m 4 -n 50
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
+)
+
+add_test(NAME testmeshpartitioning_usermesh
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 2 -p 4 -m 4 -f mesh.msh
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
+)
+
+# parallel computation test
+add_test(NAME testparallelcomp_taskflow
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0 -i 100000
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+)
 
 if (${IS_CIRCLECI})
-    message("We are not running MPI tests in circle-ci at the moment")
+    message("Tests testparallelcomp_builtinmesh_mpi and testparallelcomp_usermesh_mpi: we are not running MPI tests in circle-ci at the moment")
 else ()
-    add_test(NAME testparallelcomp3
-            COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -n 50 -m 3
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+    add_test(NAME testparallelcomp_builtinmesh_mpi
+            COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -m 4 -n 50
+            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/testparallelcomp
+    )
+    add_test(NAME testparallelcomp_usermesh_mpi
+            COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -m 4 -f mesh.msh
+            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/testparallelcomp
     )
 endif ()
-
-# mesh partitioning test
-add_test(NAME testmeshpartitioning1
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 0 -n 50 -m 4
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
-)
-
-add_test(NAME testmeshpartitioning2
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 1 -p 4 -m 4 -f mesh.msh
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
-)
 
 #----------------------------------#
 #<<<<<<<<<< PeriDEM tests >>>>>>>>>>#
