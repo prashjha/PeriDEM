@@ -35,7 +35,7 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
 # -----------------------
 # build peridem
 # -----------------------
-COPY build_and_test_peridem.sh ./build_and_test_peridem.sh
+COPY compile_peridem.sh ./compile_peridem.sh
 
-RUN /bin/bash ./build_and_test_peridem.sh
+RUN /bin/bash ./compile_peridem.sh
 

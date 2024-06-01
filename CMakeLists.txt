@@ -107,13 +107,13 @@ if (${Enable_CMAKE_Debug_Build})
     message(STATUS "VTK_MAJOR_VERSION = ${VTK_MAJOR_VERSION}")
     message(STATUS "VTK_DIR = ${VTK_DIR}")
     message(STATUS "VTK_LIBRARIES = ${VTK_LIBRARIES}")
-    message(STATUS "VTK_INCLUDE_DIRS = ${VTK_INCLUDE_DIRS}")
 endif()
 
 #<<<<<<<<<< BLAS+LAPACK >>>>>>>>>>#
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
+#<<<<<<<<<< Metis >>>>>>>>>>#
 find_package(Metis REQUIRED)
 
 #----------------------------------#

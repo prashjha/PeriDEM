@@ -9,7 +9,7 @@ BUILDTHREADS="12"
 INSTALLATGLOBAL="0" # if 1, then libraries will be installed in /usr/local <-- for containers
 
 cmake_build="0" # set to 1 to install
-hpx_build="1"
+vtk_build="1"
 
 # some preliminary setup
 if [ ! -d "$SOURCEDIR" ]; then
@@ -58,9 +58,9 @@ BUILD_TYPE=$BUILD_TYPE
 echo "<<<<<<<<<<< >>>>>>>>>>>
 CMAKE
 <<<<<<<<<<< >>>>>>>>>>>"
-CMAKE_VER="3.19.4"
-CMAKE_TAR_FILE="cmake-$CMAKE_VER.tar.gz"
-CMAKE_INSTALL_PATH=$SCRIPTPATH/local/cmake/$CMAKE_VER/$BUILD_TYPE
+CMAKE_VERSION="3.19.4"
+CMAKE_TAR_FILE="cmake-$CMAKE_VERSION.tar.gz"
+CMAKE_INSTALL_PATH=$SCRIPTPATH/local/cmake/$CMAKE_VERSION/$BUILD_TYPE
 if [[ "$INSTALLATGLOBAL" -eq "1" ]]; then
   CMAKE_INSTALL_PATH="/usr/local"
 fi
@@ -80,7 +80,7 @@ if [[ $cmake_build -eq "1" ]]; then
   # download library
   cd $SOURCEDIR
   if [ ! -f "$CMAKE_TAR_FILE" ]; then
-    wget "https://github.com/Kitware/CMake/releases/download/v$CMAKE_VER/$CMAKE_TAR_FILE"
+    wget "https://github.com/Kitware/CMake/releases/download/v$CMAKE_VERSION/$CMAKE_TAR_FILE"
   fi
 
   if [ ! -d $CMAKE_SOURCE_DIR ]; then
@@ -111,24 +111,10 @@ mac: brew install gmsh
 "
 
 echo "<<<<<<<<<<< >>>>>>>>>>>
-BOOST
-<<<<<<<<<<< >>>>>>>>>>>
-ubuntu: sudo apt install libboost-all-dev
-mac: brew install boost
-"
-
-echo "<<<<<<<<<<< >>>>>>>>>>>
 YAML
 <<<<<<<<<<< >>>>>>>>>>>
 ubuntu: sudo apt install libyaml-cpp-dev
 mac: brew install yaml-cpp
-"
-
-echo "<<<<<<<<<<< >>>>>>>>>>>
-VTK
-<<<<<<<<<<< >>>>>>>>>>>
-ubuntu: sudo apt install libvtk7-dev
-mac: brew install vtk
 "
 
 echo "<<<<<<<<<<< >>>>>>>>>>>
@@ -146,74 +132,75 @@ mac: brew install jemalloc
 "
 
 echo "<<<<<<<<<<< >>>>>>>>>>>
-HPX
+VTK
 <<<<<<<<<<< >>>>>>>>>>>
 "
-HPX_VER="1.3.0"
-HPX_TAR_FILE="${HPX_VER}.tar.gz"
-HPX_INSTALL_PATH=$SCRIPTPATH/local/hpx/$HPX_VER/$BUILD_TYPE
+VTK_MAJOR_VERSION=9
+VTK_MINOR_VERSION=3
+VTK_PATCH_VERSION=0
+VTK_VERSION=$VTK_MAJOR_VERSION.$VTK_MINOR_VERSION.$VTK_PATCH_VERSION
+VTK_INSTALL_PATH=$SCRIPTPATH/local/vtk/$VTK_VERSION/Release
 if [[ "$INSTALLATGLOBAL" -eq "1" ]]; then
-  HPX_INSTALL_PATH="/usr/local"
+  VTK_INSTALL_PATH="/usr/local"
 fi
-HPX_BUILD_PATH=$BUILDDIR/hpx/$HPX_VER/$BUILD_TYPE/
-HPX_SOURCE_DIR=$SOURCEDIR/hpx/$HPX_VER
+VTK_BUILD_PATH=$BUILDDIR/vtk/$VTK_VERSION/Release/
+VTK_SOURCE_RELATIVE_DIR=vtk/$VTK_VERSION
+VTK_SOURCE_DIR=$SOURCEDIR/$VTK_SOURCE_RELATIVE_DIR
 
-if [[ $hpx_build -eq "1" ]]; then
-  # download library
+if [[ $vtk_build -eq "1" ]]; then
+  # download repository
   cd $SOURCEDIR
-  if [ ! -f "$HPX_TAR_FILE" ]; then
-    wget "https://github.com/STEllAR-GROUP/hpx/archive/${HPX_VER}.tar.gz"
-  fi
-
-  if [ ! -d "$HPX_TAR_FILE" ]; then
-    mkdir -p $HPX_SOURCE_DIR
-    tar -zxf $HPX_TAR_FILE -C $HPX_SOURCE_DIR --strip-components=1
-  fi
+  git clone --recursive https://gitlab.kitware.com/vtk/vtk.git ${VTK_SOURCE_RELATIVE_DIR}
+  cd ${VTK_SOURCE_RELATIVE_DIR}
+  git checkout v${VTK_VERSION} 
 
   # build library
   cd $BUILDDIR
 
-  if [ ! -d "$HPX_BUILD_PATH" ]; then
-    mkdir -p "$HPX_BUILD_PATH"
+  if [ ! -d "$VTK_BUILD_PATH" ]; then
+    mkdir -p "$VTK_BUILD_PATH"
   else 
-    rm -rf $HPX_BUILD_PATH
-    mkdir -p $HPX_BUILD_PATH
+    rm -rf $VTK_BUILD_PATH
+    mkdir -p $VTK_BUILD_PATH
   fi
 
-  cd "$HPX_BUILD_PATH"
+  cd "$VTK_BUILD_PATH"
 
-  $CMAKE_EXE -DCMAKE_BUILD_TYPE=$BUILD_TYPE   \
-        -DCMAKE_CXX_COMPILER=g++ \
-        -DCMAKE_C_COMPILER=gcc \
-        -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-        -DHPX_WITH_THREAD_IDLE_RATES=ON \
-        -DHPX_WITH_DISABLED_SIGNAL_EXCEPTION_HANDLERS=ON \
-        -DHPX_WITH_MALLOC=jemalloc \
-        -DHPX_WITH_EXAMPLES=OFF \
-        -DHPX_WITH_NETWORKING=OFF \
-        -DCMAKE_INSTALL_PREFIX=$HPX_INSTALL_PATH \
-        $HPX_SOURCE_DIR
-        
-        # -DBOOST_ROOT=$BOOST_INSTALL_PATH \
-        # -DHWLOC_ROOT=$HWLOC_INSTALL_PATH \
-        # -DJEMALLOC_ROOT=$JEMALLOC_INSTALL_PATH \
+  $CMAKE_EXE -D CMAKE_BUILD_TYPE:STRING=Release \
+        -D CMAKE_INSTALL_PREFIX:STRING=${VTK_INSTALL_PATH} \
+        -D BUILD_SHARED_LIBS=ON \
+        -D BUILD_TESTING=OFF \
+        -D VTK_REQUIRED_OBJCXX_FLAGS='' \
+        -D HDF5_BUILD_FRAMEWORKS=OFF \
+        -D VTK_BUILD_DOCUMENTATION=OFF \
+        -D VTK_BUILD_EXAMPLES=OFF \
+        -D VTK_BUILD_SCALED_SOA_ARRAYS=OFF \
+        -D VTK_BUILD_SPHINX_DOCUMENTATION=OFF \
+        -D VTK_GROUP_ENABLE_MPI=NO \
+        -D VTK_GROUP_ENABLE_Qt=DONT_WANT \
+        -D VTK_GROUP_ENABLE_Rendering=NO \
+        -D VTK_GROUP_ENABLE_Views=NO \
+        -D VTK_GROUP_ENABLE_Web=NO \
+        -D VTK_Group_MPI=ON \
+        -D VTK_USE_MPI=OFF \
+        -D VTK_WRAP_PYTHON=OFF \
+        ${VTK_SOURCE_DIR}
 
-
-  cd "$HPX_BUILD_PATH"
+  cd "$VTK_BUILD_PATH"
   make -j -l$BUILDTHREADS
   make install
 fi
 
 echolog "
 ##
-HPX_INSTALL_PATH=\"$HPX_INSTALL_PATH\""
+VTK_INSTALL_PATH=\"$VTK_INSTALL_PATH\""
 
 ## provide summary
 echo " 
 
 >> Dependencies are installed!!
 
->> Here is summary of various paths (particularly note the HPX path that is needed to install PeriDEM)
+>> Here is summary of various paths (particularly note the VTK path that is needed to install PeriDEM)
 
 "
 

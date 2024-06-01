@@ -61,21 +61,23 @@ CMAKE_EXE="cmake"
 CMAKE_INSTALL_PATH="/usr/bin"
 
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
-# echo "HPX"
+# echo "METIS"
 # echo "<<<<<<<<<<< >>>>>>>>>>>"
-HPX_INSTALL_PATH="/home/prashant/work/peridem_works/test_PeriDEM_install_scripts/ubuntu-18.04/local/hpx/1.3.0/Release"
-if [[ $HPX_INSTALL_PATH -eq "0" ]]; then
-  echo "Please provide path where HPX is installed in HPX_INSTALL_PATH variable and then rerun the script again."
-  exit
-fi
+METIS_DIR="/usr/lib"
 
+# echo "<<<<<<<<<<< >>>>>>>>>>>"
+# echo "VTK"
+# echo "<<<<<<<<<<< >>>>>>>>>>>"
+VTK_VERSION=9.3.0
+VTK_INSTALL_PATH=$SCRIPTPATH/local/vtk/$VTK_VERSION/Release 
+VTK_DIR=$VTK_INSTALL_PATH/lib/cmake/vtk-9.3 # or /usr/local ?
 
 echo "<<<<<<<<<<< >>>>>>>>>>>
 PERIDEM
 <<<<<<<<<<< >>>>>>>>>>>"
-PERIDEM_VER="0.1.0"
+PERIDEM_VERSION="0.1.0"
 PERIDEM_BUILD_PATH=$SCRIPTPATH/peridem/$1/
-PERIDEM_SOURCE_DIR=$SOURCEDIR/peridem/$PERIDEM_VER
+PERIDEM_SOURCE_DIR=$SOURCEDIR/peridem/$PERIDEM_VERSION
 
 if [[ $peridem_build -eq "1" ]]; then
   # download library
@@ -101,11 +103,13 @@ if [[ $peridem_build -eq "1" ]]; then
 
   # add when building in mac
   # -DYAML_CPP_DIR="/usr/local" \
-  $CMAKE_EXE -DCMAKE_BUILD_TYPE=$BUILD_TYPE   \
-        -DHPX_DIR="$HPX_INSTALL_PATH/lib/cmake/HPX" \
-        -DEnable_Documentation=ON \
-        -DEnable_Tests=ON \
-        $PERIDEM_SOURCE_DIR
+  $CMAKE_EXE \
+    -DCMAKE_BUILD_TYPE=$BUILD_TYPE \
+    -DEnable_Tests=ON \
+    -DDisable_Docker_MPI_Tests=OFF \
+    -DVTK_DIR="${VTK_DIR}" \
+    -DMETIS_DIR="${METIS_DIR}" \
+    $PERIDEM_SOURCE_DIR
 
   cd "$PERIDEM_BUILD_PATH"
   echo "
@@ -146,8 +150,12 @@ echolog "
 ## cmake
 CMAKE_INSTALL_PATH=\"$CMAKE_INSTALL_PATH\"
 
-## HPX
-HPX_INSTALL_PATH=\"$HPX_INSTALL_PATH\"
+## METIS
+METIS_DIR=\"$METIS_DIR\"
+
+## VTK
+VTK_INSTALL_PATH=\"$VTK_INSTALL_PATH\"
+VTK_DIR=\"$VTK_DIR\"
 
 ## PeriDEM
 PERIDEM_SOURCE_DIR=\"$PERIDEM_SOURCE_DIR\"
