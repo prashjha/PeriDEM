@@ -14,7 +14,7 @@ set(IS_CIRCLECI FALSE CACHE BOOL "Circle-ci variable")
 if ($ENV{CIRCLECI})
     set(IS_CIRCLECI TRUE CACHE BOOL "Variable indicating we are running in circle-ci")
 endif ()
-message(STATUS "IS_CIRCLECI = ${IS_CIRCLECI}")
+message(STATUS "IS_CIRCLECI = '${IS_CIRCLECI}'")
 
 # find if we are inside docker container
 execute_process (
@@ -77,7 +77,7 @@ add_test(NAME testparallelcomp_taskflow
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
-if (${INSIDE_CONTAINER})
+if (${INSIDE_CONTAINER} AND ${Disable_Docker_MPI_Tests})
     message(STATUS "Not building MPI tests testparallelcomp_builtinmesh_mpi and testparallelcomp_usermesh_mpi inside containers")
 else ()
     message(STATUS "Building MPI tests testparallelcomp_builtinmesh_mpi and testparallelcomp_usermesh_mpi")

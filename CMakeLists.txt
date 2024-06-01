@@ -67,6 +67,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #----------------------------------#
 set(Enable_Tests FALSE CACHE BOOL "Build test executibles and perform tests")
 set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests")
+set(Disable_Docker_MPI_Tests True CACHE BOOL "Disable/enable MPI tests inside docker")
 enable_testing()
 
 #----------------------------------#
