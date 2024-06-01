@@ -28,7 +28,7 @@ namespace util {
             std::string printStr(int nt = 0, int lvl = 0) const;
         };
 
-        void initMpi(int argc, char *argv[]);
+        void initMpi(int argc = 0, char *argv[] = nullptr);
 
         void initMpiStatus();
 

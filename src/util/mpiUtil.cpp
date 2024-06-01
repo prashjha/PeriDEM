@@ -64,7 +64,7 @@ bool util::mpi::isMpiEnabled() {
   */
   //assert(mpiInitialized && "mpiInitialized is false indicating MPI_Init() or util::mpi::initMpi() has not been called.\n");
   if (mpistatus_p == nullptr)
-    mpistatus_p = new util::mpi::MpiStatus();
+    util::mpi::initMpi();
 
   return mpistatus_p->d_mpiEnabled;
 }
@@ -72,7 +72,7 @@ bool util::mpi::isMpiEnabled() {
 int util::mpi::mpiSize() {
   //assert(mpiInitialized && "mpiInitialized is false indicating MPI_Init() or util::mpi::initMpi() has not been called.\n");
   if (mpistatus_p == nullptr)
-    mpistatus_p = new util::mpi::MpiStatus();
+    util::mpi::initMpi();
 
   return mpistatus_p->d_mpiSize;
 }
@@ -80,7 +80,7 @@ int util::mpi::mpiSize() {
 int util::mpi::mpiRank() {
   //assert(mpiInitialized && "mpiInitialized is false indicating MPI_Init() or util::mpi::initMpi() has not been called.\n");
   if (mpistatus_p == nullptr)
-    mpistatus_p = new util::mpi::MpiStatus();
+    util::mpi::initMpi();
 
   return mpistatus_p->d_mpiRank;
 }
@@ -88,7 +88,7 @@ int util::mpi::mpiRank() {
 MPI_Comm util::mpi::mpiComm() {
   //assert(mpiInitialized && "mpiInitialized is false indicating MPI_Init() or util::mpi::initMpi() has not been called.\n");
   if (mpistatus_p == nullptr)
-    mpistatus_p = new util::mpi::MpiStatus();
+    util::mpi::initMpi();
 
   return mpistatus_p->d_comm;
 }
@@ -96,7 +96,7 @@ MPI_Comm util::mpi::mpiComm() {
 const util::mpi::MpiStatus *util::mpi::getMpiStatus() {
   //assert(mpiInitialized && "mpiInitialized is false indicating MPI_Init() or util::mpi::initMpi() has not been called.\n");
   if (mpistatus_p == nullptr)
-    mpistatus_p = new util::mpi::MpiStatus();
+    util::mpi::initMpi();
 
   return mpistatus_p;
 }

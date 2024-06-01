@@ -11,9 +11,16 @@
 #include <PeriDEMConfig.h>
 #include <iostream>
 #include "util/io.h"                            // InputParser class
-#include "util/methods.h"
+#include "util/mpiUtil.h"                       // MPI-related functions
+#include <fmt/format.h>
 
 int main(int argc, char *argv[]) {
+
+  // init mpi
+  util::mpi::initMpi(argc, argv);
+  int mpiSize = util::mpi::mpiSize(), mpiRank = util::mpi::mpiRank();
+  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(util::mpi::getMpiStatus()->printStr());
 
   util::io::InputParser input(argc, argv);
 
