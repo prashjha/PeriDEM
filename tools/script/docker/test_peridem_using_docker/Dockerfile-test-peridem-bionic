@@ -1,0 +1,40 @@
+# ----------------------------------
+# Copyright (c) 2021 Prashant K. Jha
+# ----------------------------------
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+FROM prashjha/peridem-base-bionic:latest
+
+## build command
+## docker build --network=host --no-cache  -t test-peridem-bionic -f Dockerfile-test-peridem-bionic . 2>&1 | tee log-test-peridem-bionic.txt
+
+# Set metadata
+LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
+LABEL description="Test peridem using docker"
+
+# -----------------------
+# setup user (for mpi tests)
+# username - user
+# password - password
+# add only if the user does not exist
+# -----------------------
+RUN if id user >/dev/null 2>&1; then echo "User 'user' already exists"; else echo "User 'user' does not exist so creating user 'user'" && useradd -m user && yes password | passwd user && usermod -s /bin/bash user; fi
+
+# change user
+USER user
+WORKDIR /home/user
+
+# -----------------------
+# setup git pull method
+# -----------------------
+RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
+    git config --global url."https://".insteadOf git://
+
+# -----------------------
+# build peridem
+# -----------------------
+COPY build_and_test_peridem.sh ./build_and_test_peridem.sh
+
+RUN /bin/bash ./build_and_test_peridem.sh

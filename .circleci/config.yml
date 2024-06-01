@@ -22,7 +22,7 @@ commands:
     parameters:
       cmake-args:
         type: string
-        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DVTK_DIR=/usr/local/lib/cmake/vtk-9.2
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DVTK_DIR=/usr/local/lib/cmake/vtk-9.2 -DDisable_Docker_MPI_Tests=OFF
     steps:
       - run: 
           name: Configure
@@ -41,7 +41,7 @@ commands:
     parameters:
       verb-flag:
         type: string
-        default: --verbose
+        default: --extra-verbose
     steps:
       - run: 
           name: Test
@@ -60,20 +60,22 @@ jobs:
     build:
         docker:
           - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+            user: user
         steps:
-            - checkout
-            - postcheckout
-            - libcmake
-            - libmake
-            - libtest
+          - checkout
+          - postcheckout
+          - libcmake
+          - libmake
+          - libtest
     documentation:
       docker:
         - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+          user: user
       steps:
         - checkout
         - postcheckout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DVTK_DIR=/usr/local/lib/cmake/vtk-9.2
         - libdoc
     deploy:
       machine:
@@ -107,11 +109,12 @@ jobs:
     codecoverage:
       docker:
         - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+          user: user
       steps:
         - checkout
         - postcheckout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" -DVTK_DIR=/usr/local/lib/cmake/vtk-9.2
         - libmake
         - libtest:
             verb-flag: ""
