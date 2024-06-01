@@ -80,6 +80,7 @@ endif()
 
 # #<<<<<<<<<< MPI >>>>>>>>>>#
 find_package(MPI REQUIRED)
+message("MPI_INCLUDE_PATH = ${MPI_INCLUDE_PATH}")
 
 # #<<<<<<<<<< Threads >>>>>>>>>>#
 find_package (Threads REQUIRED)
@@ -136,6 +137,7 @@ endif()
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
 include_directories(SYSTEM external)
+include_directories(${MPI_INCLUDE_PATH})
 include_directories(src)
 
 #----------------------------------#

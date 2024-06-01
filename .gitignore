@@ -41,6 +41,8 @@
 build
 build_2
 build2
+build*
+cmake-build*
 
 # ide directory
 .idea
