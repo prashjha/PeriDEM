@@ -75,12 +75,14 @@ enable_testing()
 find_program (BASH_PROGRAM bash REQUIRED)
 
 if (${Enable_CMAKE_Debug_Build})
-    message("BASH_PROGRAM = ${BASH_PROGRAM}")
+    message(STATUS "BASH_PROGRAM = ${BASH_PROGRAM}")
 endif()
 
 # #<<<<<<<<<< MPI >>>>>>>>>>#
 find_package(MPI REQUIRED)
-message("MPI_INCLUDE_PATH = ${MPI_INCLUDE_PATH}")
+if (${Enable_CMAKE_Debug_Build})
+    message(STATUS "MPI_INCLUDE_PATH = ${MPI_INCLUDE_PATH}")
+endif()
 
 # #<<<<<<<<<< Threads >>>>>>>>>>#
 find_package (Threads REQUIRED)
@@ -96,10 +98,10 @@ if (VTK_VERSION VERSION_LESS "6")
 endif ()
 
 if (${Enable_CMAKE_Debug_Build})
-    message("VTK_MAJOR_VERSION = ${VTK_MAJOR_VERSION}")
-    message("VTK_DIR = ${VTK_DIR}")
-    message("VTK_LIBRARIES = ${VTK_LIBRARIES}")
-    message("VTK_INCLUDE_DIRS = ${VTK_INCLUDE_DIRS}")
+    message(STATUS "VTK_MAJOR_VERSION = ${VTK_MAJOR_VERSION}")
+    message(STATUS "VTK_DIR = ${VTK_DIR}")
+    message(STATUS "VTK_LIBRARIES = ${VTK_LIBRARIES}")
+    message(STATUS "VTK_INCLUDE_DIRS = ${VTK_INCLUDE_DIRS}")
 endif()
 
 #<<<<<<<<<< BLAS+LAPACK >>>>>>>>>>#
@@ -127,10 +129,10 @@ else ()
 endif ()
 
 if (${Enable_CMAKE_Debug_Build})
-    message("CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
-    message("CMAKE_EXE_LINKER_FLAGS = ${CMAKE_EXE_LINKER_FLAGS}")
-    message("CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
-    message("CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
+    message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
+    message(STATUS "CMAKE_EXE_LINKER_FLAGS = ${CMAKE_EXE_LINKER_FLAGS}")
+    message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
+    message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
 endif()
 
 #----------------------------------#
