@@ -24,6 +24,7 @@
 #include "util/geom.h"
 #include "util/methods.h"
 #include "util/randomDist.h"
+#include "util/parallelUtil.h"
 #include "inp/decks/materialDeck.h"
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
@@ -344,7 +345,7 @@ void model::DEMModel::integrateCD() {
   const auto dt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(
@@ -384,7 +385,7 @@ void model::DEMModel::integrateVerlet() {
   const auto dim = d_modelDeck_p->d_dim;
 
   {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -418,7 +419,7 @@ void model::DEMModel::integrateVerlet() {
   computeForces();
 
   {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -456,7 +457,7 @@ void model::DEMModel::computeForces() {
 
   // reset force
   auto t1 = steady_clock::now();
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(
@@ -501,7 +502,7 @@ void model::DEMModel::computePeridynamicForces() {
   // compute state-based helper quantities
   if (is_state) {
 
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -571,7 +572,7 @@ void model::DEMModel::computePeridynamicForces() {
   }
 
   // compute the internal forces
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(
@@ -688,7 +689,7 @@ void model::DEMModel::computeExternalForces() {
   auto gravity = d_pDeck_p->d_gravity;
 
   if (gravity.length() > 1.0E-8) {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t)1, [this, gravity](std::size_t i) {
@@ -719,7 +720,7 @@ void model::DEMModel::computeContactForces() {
   // 2. Normal damping is applied between particle centers
   // 3. Normal damping is applied between nodes of particle and wall pairs
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, d_fContCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
@@ -880,7 +881,7 @@ void model::DEMModel::computeContactForces() {
     std::vector<std::vector<size_t>> wall_nodes(pi->getNumNodes());
 
     {
-      tf::Executor executor;
+      tf::Executor executor(util::parallel::getNThreads());
       tf::Taskflow taskflow;
 
       taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, &wall_nodes](std::size_t i) {
@@ -953,7 +954,7 @@ void model::DEMModel::computeContactForces() {
 
     // distribute force_i to all nodes of particle pi
     {
-      tf::Executor executor;
+      tf::Executor executor(util::parallel::getNThreads());
       tf::Taskflow taskflow;
 
       taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, force_i](std::size_t i) {
@@ -977,7 +978,7 @@ void model::DEMModel::applyInitialCondition() {
   const auto ic_p_list = d_pDeck_p->d_icDeck.d_pList;
 
   // add specified velocity to particle
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, ic_p_list.size(), (std::size_t) 1, [this, ic_v, ic_p_list](std::size_t i) {
@@ -1337,7 +1338,7 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
   // d_neighPdSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
@@ -1367,7 +1368,7 @@ void model::DEMModel::updateContactNeighborlist() {
   // d_neighCSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
@@ -1399,7 +1400,7 @@ void model::DEMModel::updateNeighborlistCombine() {
   // d_neighPdSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {

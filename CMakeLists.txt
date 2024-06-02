@@ -54,7 +54,7 @@ endif()
 # cmake policy <-- check if it is still needed
 #cmake_policy(SET CMP0023 OLD)
 
-set(Enable_CMAKE_Debug_Build TRUE CACHE BOOL "Output important information during cmake for isolating build issues")
+set(Enable_CMAKE_Debug_Build TRUE CACHE BOOL "Output important information during cmake")
 
 #----------------------------------#
 #<<<<<<<<<< Rpath setting >>>>>>>>>>#
@@ -65,9 +65,9 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #----------------------------------#
 #<<<<<<<<<< Testing >>>>>>>>>>#
 #----------------------------------#
-set(Enable_Tests FALSE CACHE BOOL "Build test executibles and perform tests")
-set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests")
-set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable/enable MPI tests inside docker")
+set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if ON")
+set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
+set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Enable_Tests = ${Enable_Tests}")
     message(STATUS "Enable_High_Load_Tests = ${Enable_High_Load_Tests}")
@@ -79,7 +79,6 @@ enable_testing()
 #<<<<<<<<<< Dependencies >>>>>>>>>>#
 #----------------------------------#
 find_program (BASH_PROGRAM bash REQUIRED)
-
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "BASH_PROGRAM = ${BASH_PROGRAM}")
 endif()
@@ -91,13 +90,14 @@ if (${Enable_CMAKE_Debug_Build})
 endif()
 
 # #<<<<<<<<<< Threads >>>>>>>>>>#
-find_package (Threads REQUIRED)
+find_package(Threads REQUIRED)
 
-#<<<<<<<<<< YAML >>>>>>>>>>#
+# #<<<<<<<<<< YAML >>>>>>>>>>#
 find_package(YamlCpp REQUIRED)
 
-#<<<<<<<<<< VTK >>>>>>>>>>#
-find_package(VTK REQUIRED)
+# #<<<<<<<<<< VTK >>>>>>>>>>#
+#find_package(VTK REQUIRED)
+find_package(VTK COMPONENTS CommonCore CommonDataModel IOXML)
 
 if (VTK_VERSION VERSION_LESS "6")
     message(FATAL_ERROR "ERROR: Requires VTK above version 6")
@@ -109,11 +109,11 @@ if (${Enable_CMAKE_Debug_Build})
     message(STATUS "VTK_LIBRARIES = ${VTK_LIBRARIES}")
 endif()
 
-#<<<<<<<<<< BLAS+LAPACK >>>>>>>>>>#
+# #<<<<<<<<<< BLAS+LAPACK >>>>>>>>>>#
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 
-#<<<<<<<<<< Metis >>>>>>>>>>#
+# #<<<<<<<<<< Metis >>>>>>>>>>#
 find_package(Metis REQUIRED)
 
 #----------------------------------#
@@ -144,6 +144,9 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
+if (${Enable_CMAKE_Debug_Build})
+    message(STATUS "Including key directories")
+endif()
 include_directories(SYSTEM external)
 include_directories(${MPI_INCLUDE_PATH})
 include_directories(src)
@@ -168,21 +171,30 @@ add_subdirectory(src/model)
 
 # test directory
 if(${Enable_Tests})
+    if (${Enable_CMAKE_Debug_Build})
+        message(STATUS "Building test")
+    endif()
     add_subdirectory(test/test_exec)
     add_subdirectory(test)
 endif()
 
 # documentation
-set(Enable_Documentation FALSE CACHE BOOL "Generate documentation")
+set(Enable_Documentation FALSE CACHE BOOL "Generate documentation if ON")
 if(${Enable_Documentation})
+    if (${Enable_CMAKE_Debug_Build})
+        message(STATUS "Building documentation")
+    endif()
     add_subdirectory(docs)
 endif()
 
 #----------------------------------#
 #<<<<<<<<<< Applications >>>>>>>>>>#
 #----------------------------------#
-set(Enable_Apps FALSE CACHE BOOL "Build applications")
+set(Enable_Apps FALSE CACHE BOOL "Build applications if ON")
 if(${Enable_Apps})
+    if (${Enable_CMAKE_Debug_Build})
+        message(STATUS "Building apps")
+    endif()
     add_subdirectory(apps/twop)
 endif()
 
@@ -193,12 +205,14 @@ add_executable(PeriDEM src/main.cpp)
 
 target_link_libraries(PeriDEM PUBLIC Model)
 
-
 #----------------------------------#
 #<<<<<<<<<< Post build operations >>>>>>>>>>#
 #----------------------------------#
 # test directory
 if(${Enable_Tests})
+    if (${Enable_CMAKE_Debug_Build})
+        message(STATUS "Copying test directory to build directory")
+    endif()
     add_custom_command(
             TARGET ${PROJECT_NAME} POST_BUILD
             COMMAND ${CMAKE_COMMAND} -E copy_directory

@@ -5,17 +5,17 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-FROM prashjha/peridem-base-bionic:latest
+FROM prashjha/peridem-base-focal:latest
 
 ## build command
-## docker build --network=host --no-cache  -t test-peridem-bionic -f Dockerfile-test-peridem-bionic . 2>&1 | tee log-test-peridem-bionic.txt
+## docker build --network=host --no-cache  -t test-peridem-focal -f Dockerfile-test-peridem-focal . 2>&1 | tee log-test-peridem-focal.txt
 
 # Set metadata
 LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
 LABEL description="Test peridem using docker"
 
 # -----------------------
-# setup user (for mpi tests)
+# setup user (for parallel tests)
 # username - user
 # password - password
 # add only if the user does not exist
@@ -38,3 +38,4 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
 COPY compile_peridem.sh ./compile_peridem.sh
 
 RUN /bin/bash ./compile_peridem.sh
+

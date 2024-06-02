@@ -199,7 +199,7 @@ Core dependencies are:
   - [boost](https://www.boost.org/) (1.65.1)
     * recommend to install using `apt-get`
     * required for building YAML and HPX
-  - [hwloc](https://github.com/open-mpi/hwloc) (1.11.9)
+  - [hwloc](https://github.com/open-parallel/hwloc) (1.11.9)
     * recommend to install using `apt-get`
     * required to build HPX library
   - [jemalloc](https://github.com/jemalloc/jemalloc) (3.6.0)

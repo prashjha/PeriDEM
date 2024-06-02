@@ -10,17 +10,17 @@
 #include <PeriDEMConfig.h>
 #include "testParallelCompLib.h"
 #include "util/io.h"
-#include "util/mpiUtil.h"
+#include "util/parallelUtil.h"
 #include <fmt/format.h>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
 
-  // init mpi
-  util::mpi::initMpi(argc, argv);
-  int mpiSize = util::mpi::mpiSize(), mpiRank = util::mpi::mpiRank();
+  // init parallel
+  util::parallel::initMpi(argc, argv);
+  int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
   util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
-  util::io::print(util::mpi::getMpiStatus()->printStr());
+  util::io::print(util::parallel::getMpiStatus()->printStr());
 
   // init logger
   util::io::initLogger();
@@ -32,12 +32,16 @@ int main(int argc, char *argv[]) {
     // print help
     std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
               << MINOR_VERSION << "." << UPDATE_VERSION
-              << ") -o <test-option; 0 - taskflow, 1 - mpi on in-built mesh, 2 - user-defined mesh> -i <vector-size> -n <grid-size> -m <horizon-integer-factor>" << std::endl;
+              << ") -o <test-option; 0 - taskflow, 1 - parallel on in-built mesh, 2 - user-defined mesh>"
+                  " -i <vector-size> -n <grid-size>"
+                  " -m <horizon-integer-factor>"
+                  " -nThreads <number of threads to be used in taskflow>" << std::endl;
     std::cout << "To test taskflow, run\n";
-    std::cout << argv[0] << " -o 0 -i 10000\n";
-    std::cout << "To test mpi using in-built mesh, run\n";
+    std::cout << argv[0] << " -o 0 -i 10000"
+                            " -nThreads <number of threads to be used in taskflow>\n";
+    std::cout << "To test parallel using in-built mesh, run\n";
     std::cout << argv[0] << " -o 1 -m 4 -n 50\n";
-    std::cout << "To test mpi on user-provided mesh (filename = filepath/meshfile.vtu)" << std::endl;
+    std::cout << "To test parallel on user-provided mesh (filename = filepath/meshfile.vtu)" << std::endl;
     std::cout << argv[0] << " -o 2 -m 4 -f filepath/meshfile.vtu" << std::endl;
     exit(EXIT_FAILURE);
   }
@@ -57,6 +61,16 @@ int main(int argc, char *argv[]) {
       nTaskflow = 100000;
       util::io::print(fmt::format("Running test with default vector-size = {}\n", nTaskflow));
     }
+
+    unsigned int nThreads;
+    if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
+    else {
+      nThreads = std::thread::hardware_concurrency();
+      util::io::print(fmt::format("Running test with default number of threads = {}\n", nThreads));
+    }
+    // set number of threads
+    util::parallel::initNThreads(nThreads);
+    util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
 
     std::vector<size_t> N_test = {size_t(nTaskflow/100), size_t(nTaskflow/10), nTaskflow, 10*nTaskflow, 100*nTaskflow};
     int seed = 0;

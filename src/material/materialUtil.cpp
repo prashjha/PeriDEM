@@ -10,6 +10,7 @@
 #include "materialUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
+#include "util/parallelUtil.h"
 #include <iostream>
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
@@ -220,7 +221,7 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
     }
   } else {
 
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -262,7 +263,7 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
 
   } else {
 
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -306,7 +307,7 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
     }
   } else {
 
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -346,7 +347,7 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
     }
   } else {
 
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(

@@ -4,7 +4,9 @@ FROM prashjha/peridem-base-focal:latest
 ## 1. pull latest docker image
 ## docker pull prashjha/peridem-base-focal:latest
 ## 2. build command
-## docker build --no-cache -t peridem-clion-focal -f Dockerfile-peridem-clion-focal .
+## docker build --no-cache -t peridem-clion-focal -f Dockerfile-peridem-clion-focal . 2>&1 | tee log-peridem-clion-focal.txt
+## OR
+## docker build -t peridem-clion-focal -f Dockerfile-peridem-clion-focal . 2>&1 | tee log-peridem-clion-focal.txt
 ## 3. run
 ## docker run -d --cap-add sys_ptrace -p127.0.0.1:2222:22 --name peridem-clion-focal-remote peridem-clion-focal
 ## 4. set ssh
@@ -19,16 +21,16 @@ LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
 LABEL description="Docker image for clion remote development"
 
 # -----------------------
-# setup user (for mpi tests)
+# setup user (for parallel tests)
 # username - user
 # password - password
 # add only if the user does not exist
 # -----------------------
 RUN if id user >/dev/null 2>&1; then echo "User 'user' already exists"; else echo "User 'user' does not exist so creating user 'user'" && useradd -m user && yes password | passwd user && usermod -s /bin/bash user; fi
 
-# change user
-USER user
-WORKDIR /home/user
+## to change user
+## USER user
+## WORKDIR /home/user
 
 # -----------------------
 # clion essentials

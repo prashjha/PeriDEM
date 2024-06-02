@@ -11,7 +11,7 @@
 #define UTILS_UTIL_IO_H
 
 #include "point.h"
-#include "mpiUtil.h" // to make prints MPI aware
+#include "parallelUtil.h" // to make prints MPI aware
 #include <fstream>
 #include <iostream>
 #include <vector>
@@ -98,7 +98,7 @@ template <> inline std::string printStr(const std::vector<util::Point> &list,
  */
 template <class T> inline void print(const T &msg, int nt = print_default_tab,
         int printMpiRank = print_default_mpi_rank) {
-  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+  if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank)
     std::cout << printStr(msg, nt);
 };
 
@@ -109,7 +109,7 @@ template <class T> inline void print(const T &msg, int nt = print_default_tab,
  */
 template <class T> inline void print(const std::vector<T> &list, int nt = print_default_tab,
         int printMpiRank = print_default_mpi_rank) {
-  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+  if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank)
       std::cout << printStr(list, nt);
 };
 
@@ -142,7 +142,7 @@ template <class T> inline void print(const std::vector<std::vector<T>> &list,
         int nt = print_default_tab,
         int printMpiRank = print_default_mpi_rank) {
 
-  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+  if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank)
     std::cout << printStr(list, nt);
 };
 
@@ -171,7 +171,7 @@ inline std::string printBoxStr(const std::pair<util::Point, util::Point>
 inline void printBox(const std::pair<util::Point, util::Point> &box,
                      int nt = print_default_tab,
                      int printMpiRank = print_default_mpi_rank) {
-    if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+    if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank)
       std::cout << printBoxStr(box, nt);
 };
 
@@ -189,7 +189,7 @@ inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<
 
 inline void printBox(const std::pair<std::vector<double>, std::vector<double>> &box,
                      int nt = print_default_tab, int printMpiRank = print_default_mpi_rank) {
-  if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank)
+  if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank)
     std::cout << printBoxStr(box, nt);
 };
 
@@ -281,7 +281,7 @@ public:
   void log(const std::string &str, bool screen_out = false,
            int printMpiRank = print_default_mpi_rank) {
 
-    if (printMpiRank < 0 or util::mpi::mpiRank() == printMpiRank) {
+    if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank) {
       if (d_deck_p->d_printScreen || screen_out)
         std::cout << str << std::flush;
 

@@ -175,7 +175,7 @@ void loading::ParticleULoading::applyParticle(const double &time,
     auto box = bc.d_region_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -273,7 +273,7 @@ void loading::ParticleULoading::applyWall(const double &time,
     auto box = bc.d_region_p->box();
 
     // for (size_t i = 0; i < wall->getNumNodes(); i++) {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(

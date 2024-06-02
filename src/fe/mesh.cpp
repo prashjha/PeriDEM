@@ -16,6 +16,7 @@
 #include "util/feElementDefs.h"
 #include "util/function.h"
 #include "util/geom.h"
+#include "util/parallelUtil.h"
 #include <cstdint>
 #include <iostream>
 #include <taskflow/taskflow/taskflow.hpp>
@@ -217,7 +218,7 @@ void fe::Mesh::computeVol() {
   //
   d_vol.resize(d_numNodes);
   
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(

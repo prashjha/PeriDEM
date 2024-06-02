@@ -10,17 +10,17 @@
 #include <PeriDEMConfig.h>
 #include "testPeriDEMLib.h"
 #include "util/io.h"
-#include "util/mpiUtil.h"                       // MPI-related functions
+#include "util/parallelUtil.h"                       // MPI-related functions
 #include <fmt/format.h>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
 
-  // init mpi
-  util::mpi::initMpi(argc, argv);
-  int mpiSize = util::mpi::mpiSize(), mpiRank = util::mpi::mpiRank();
+  // init parallel
+  util::parallel::initMpi(argc, argv);
+  int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
   util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
-  util::io::print(util::mpi::getMpiStatus()->printStr());
+  util::io::print(util::parallel::getMpiStatus()->printStr());
 
   util::io::InputParser input(argc, argv);
 
@@ -28,12 +28,22 @@ int main(int argc, char *argv[]) {
     // print help
     std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
               << MINOR_VERSION << "." << UPDATE_VERSION
-              << ") -i <data-filepath>" << std::endl;
+              << ") -i <data-filepath> -nThreads <number of threads to be used in taskflow>" << std::endl;
     exit(EXIT_FAILURE);
   }
 
   // read input file
   std::string filepath = input.getCmdOption("-i");
+
+  unsigned int nThreads;
+  if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
+  else {
+    nThreads = std::thread::hardware_concurrency();
+    util::io::print(fmt::format("Running test with default number of threads = {}\n", nThreads));
+  }
+  // set number of threads
+  util::parallel::initNThreads(nThreads);
+  util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
 
   // run test
   auto msg = test::testPeriDEM(filepath);

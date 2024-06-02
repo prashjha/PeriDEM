@@ -73,7 +73,7 @@ add_test(NAME testmeshpartitioning_usermesh
 
 # parallel computation test
 add_test(NAME testparallelcomp_taskflow
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0 -i 100000
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 0 -i 100000 -nThreads 4
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 

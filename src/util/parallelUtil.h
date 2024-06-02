@@ -12,11 +12,12 @@
 #include <mpi.h>
 #include <string>
 #include <vector>
+#include <thread>
 
 namespace util {
 
     /*! @brief Implements some key functions and classes regularly used in the code when running with MPI */
-    namespace mpi {
+    namespace parallel {
         struct MpiStatus {
             bool d_mpiEnabled;
             int d_mpiSize;
@@ -41,5 +42,9 @@ namespace util {
         MPI_Comm mpiComm();
 
         const MpiStatus * getMpiStatus();
-    } // namespace mpi
+
+        void initNThreads(unsigned int nThreads = std::thread::hardware_concurrency());
+
+        unsigned int getNThreads();
+    } // namespace parallel
 } // namespace util

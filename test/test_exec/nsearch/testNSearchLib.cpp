@@ -14,6 +14,7 @@
 #include "util/methods.h"
 #include "util/point.h"
 #include "util/randomDist.h"
+#include "util/parallelUtil.h"
 #include <fmt/format.h>
 #include <bitset>
 #include <fstream>
@@ -80,7 +81,7 @@ double neighSearchTree(const std::vector<util::Point> &x,
   neigh_sq_dist.resize(x.size());
   auto t1 = steady_clock::now();
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x, &neigh, &neigh_sq_dist, &nsearch, r](std::size_t i) {
@@ -113,7 +114,7 @@ double neighSearchTreeSizet(const std::vector<util::Point> &x,
   neigh_sq_dist.resize(x.size());
   auto t1 = steady_clock::now();
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x, &neigh, &neigh_sq_dist, &nsearch, r](std::size_t i) {
@@ -145,7 +146,7 @@ double neighSearchBrute(const std::vector<util::Point> &x, const double &r,
 
   auto t1 = steady_clock::now();
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x, &neigh, &neigh_sq_dist, r](std::size_t i) {

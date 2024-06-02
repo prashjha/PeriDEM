@@ -220,6 +220,9 @@ namespace {
 
 std::string test::testTaskflow(size_t N, int seed) {
 
+  auto nThreads = util::parallel::getNThreads();
+  util::io::print(fmt::format("\n\ntestTaskflow(): Number of threads = {}\n\n", nThreads));
+
   // task: perform N computations in serial and using taskflow for_each
 
   // generate vector of random numbers
@@ -243,7 +246,7 @@ std::string test::testTaskflow(size_t N, int seed) {
   auto dt12 = util::methods::timeDiff(t1, t2, "microseconds");
 
   // now do parallel calculation using taskflow
-  tf::Executor executor;
+  tf::Executor executor(nThreads);
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0, N, (std::size_t) 1, [&x, &y2](std::size_t i) {

@@ -8,8 +8,8 @@
  */
 
 #include "fracture.h"
-#include "util/geom.h"
 #include "util/io.h"
+#include "util/parallelUtil.h"
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
@@ -22,7 +22,7 @@ geometry::Fracture::Fracture(const std::vector<util::Point> *nodes,
   std::size_t n = nodes->size();
   d_fracture.resize(n);
 
-  tf::Executor executor;
+  tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(

@@ -8,11 +8,10 @@
  */
 
 #include "particleFLoading.h"
-#include "fe/mesh.h"
 #include "inp/pdecks/particleDeck.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
-#include "util/geom.h"
+#include "util/parallelUtil.h"
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
@@ -63,7 +62,7 @@ void loading::ParticleFLoading::applyParticle(const double &time,
     auto box = bc.d_region_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
@@ -167,7 +166,7 @@ void loading::ParticleFLoading::applyWall(const double &time,
     auto box = bc.d_region_p->box();
 
     // for (size_t i = 0; i < wall->getNumNodes(); i++) {
-    tf::Executor executor;
+    tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
