@@ -1,4 +1,5 @@
 <map id="nsearch::PointCloudAdaptor::kdtree_get_pt" name="nsearch::PointCloudAdaptor::kdtree_get_pt">
-<area shape="rect" id="node1" title="Get specific coordinate of a point." alt="" coords="5,5,191,47"/>
-<area shape="rect" id="node2" href="$structnsearch_1_1PointCloudAdaptor.html#a255ccabd142ce410f6977d358a227038" title="Get vector of points." alt="" coords="239,5,424,47"/>
+<area shape="rect" id="Node000001" title="Get specific coordinate of a point." alt="" coords="5,5,190,48"/>
+<area shape="rect" id="Node000002" href="$structnsearch_1_1PointCloudAdaptor.html#abefdbc325588758c35ba240c2806559d" title="Get vector of points." alt="" coords="238,5,422,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="190,24,222,24,222,29,190,29"/>
 </map>

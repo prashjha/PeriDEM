@@ -1,15 +1,27 @@
 <map id="util::isPointInsideBox" name="util::isPointInsideBox">
-<area shape="rect" id="node1" title="Returns true if point is inside box." alt="" coords="437,334,583,361"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd" title="Checks if given two boxes are within given distance from each other." alt="" coords="240,177,371,203"/>
-<area shape="rect" id="node9" href="$classutil_1_1geometry_1_1Triangle.html#aabf62b4005848ff687ed90e55835b1cc" title="Checks if point is within given distance of this object." alt="" coords="228,228,383,269"/>
-<area shape="rect" id="node10" href="$classutil_1_1geometry_1_1Rectangle.html#a02f0fadb10ff4ec0d68fa29d4644370f" title="Checks if point is within given distance of this object." alt="" coords="221,293,389,335"/>
-<area shape="rect" id="node11" href="$classutil_1_1geometry_1_1Hexagon.html#a2f7a97f1d019fe56f11e268206a242a5" title="Checks if point is within given distance of this object." alt="" coords="225,359,386,400"/>
-<area shape="rect" id="node12" href="$classutil_1_1geometry_1_1Drum2D.html#afc1ecad6f440986b987c3c6ce99196d8" title="Checks if point is within given distance of this object." alt="" coords="226,424,385,465"/>
-<area shape="rect" id="node13" href="$classutil_1_1geometry_1_1Cuboid.html#a464c548fd7b0683cfd5a114022ce9f68" title="Checks if point is within given distance of this object." alt="" coords="230,489,381,531"/>
-<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d" title="Checks if box is within given distance of this object." alt="" coords="12,5,167,47"/>
-<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac" title="Checks if box is within given distance of this object." alt="" coords="5,71,173,112"/>
-<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f" title="Checks if box is within given distance of this object." alt="" coords="9,136,170,177"/>
-<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9" title="Checks if box is within given distance of this object." alt="" coords="10,201,169,243"/>
-<area shape="rect" id="node7" href="$classutil_1_1geometry_1_1Cuboid.html#ac88433cc43e94f4f1a399ba8776e4986" title="Checks if box is within given distance of this object." alt="" coords="14,267,165,308"/>
-<area shape="rect" id="node8" href="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc" title="Checks if box is within given distance of this object." alt="" coords="11,332,168,373"/>
+<area shape="rect" id="Node000001" title="Returns true if point is inside box." alt="" coords="436,339,580,365"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd" title="Checks if given two boxes are within given distance from each other." alt="" coords="240,180,369,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="488,327,446,273,418,245,387,221,364,210,366,205,389,216,421,241,450,269,492,324"/>
+<area shape="rect" id="Node000009" href="$classutil_1_1geometry_1_1Cuboid.html#a464c548fd7b0683cfd5a114022ce9f68" title="Checks if point is within given distance of this object." alt="" coords="230,231,379,273"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="470,333,387,288,361,276,363,271,389,283,473,328"/>
+<area shape="rect" id="Node000010" href="$classutil_1_1geometry_1_1Drum2D.html#afc1ecad6f440986b987c3c6ce99196d8" title="Checks if point is within given distance of this object." alt="" coords="226,297,383,340"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="420,340,383,334,384,329,421,335"/>
+<area shape="rect" id="Node000011" href="$classutil_1_1geometry_1_1Hexagon.html#a2f7a97f1d019fe56f11e268206a242a5" title="Checks if point is within given distance of this object." alt="" coords="224,364,385,407"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="421,369,386,375,385,370,420,364"/>
+<area shape="rect" id="Node000012" href="$classutil_1_1geometry_1_1Rectangle.html#a02f0fadb10ff4ec0d68fa29d4644370f" title="Checks if point is within given distance of this object." alt="" coords="221,431,388,473"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="473,376,389,421,363,433,361,428,387,416,470,371"/>
+<area shape="rect" id="Node000013" href="$classutil_1_1geometry_1_1Triangle.html#aabf62b4005848ff687ed90e55835b1cc" title="Checks if point is within given distance of this object." alt="" coords="227,497,382,540"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="491,380,448,434,420,462,390,488,370,499,367,495,386,483,417,458,444,430,487,377"/>
+<area shape="rect" id="Node000003" href="$classutil_1_1geometry_1_1Cuboid.html#ac88433cc43e94f4f1a399ba8776e4986" title="Checks if box is within given distance of this object." alt="" coords="14,5,164,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="281,169,234,116,204,88,171,62,151,51,154,46,174,58,207,83,238,112,285,166"/>
+<area shape="rect" id="Node000004" href="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc" title="Checks if box is within given distance of this object." alt="" coords="11,72,167,115"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="263,175,172,129,145,118,147,113,174,124,265,170"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9" title="Checks if box is within given distance of this object." alt="" coords="10,139,168,181"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="224,184,168,175,168,170,225,178"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f" title="Checks if box is within given distance of this object." alt="" coords="9,205,169,248"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="225,208,170,217,169,212,224,203"/>
+<area shape="rect" id="Node000007" href="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac" title="Checks if box is within given distance of this object." alt="" coords="5,272,173,315"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="234,215,222,221,208,231,198,241,174,262,152,274,150,269,171,258,195,237,204,227,219,216,231,210"/>
+<area shape="rect" id="Node000008" href="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d" title="Checks if box is within given distance of this object." alt="" coords="12,339,166,381"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="228,216,222,221,211,233,204,246,199,273,193,300,186,314,175,329,159,340,156,336,171,325,182,312,188,298,193,271,199,244,207,230,219,217,224,212"/>
 </map>

@@ -1,6 +1,9 @@
 <map id="rw::writer::Writer" name="rw::writer::Writer">
-<area shape="rect" id="node1" title="A interface class writing data." alt="" coords="219,629,361,1176"/>
-<area shape="rect" id="node2" href="$classrw_1_1writer_1_1LegacyVtkWriter.html" title="A vtk writer for simple point data and complex fem mesh data." alt="" coords="5,5,185,567"/>
-<area shape="rect" id="node3" href="$classrw_1_1writer_1_1MshWriter.html" title="A .msh writer for simple point data and complex fem mesh data." alt="" coords="209,13,371,559"/>
-<area shape="rect" id="node4" href="$classrw_1_1writer_1_1VtkWriter.html" title="A vtk writer for simple point data and complex fem mesh data." alt="" coords="395,20,537,552"/>
+<area shape="rect" id="Node000001" title="A interface class writing data." alt="" coords="181,843,313,1595"/>
+<area shape="rect" id="Node000002" href="$classrw_1_1writer_1_1VtkWriter.html" title="A vtk writer for simple point data and complex fem mesh data." alt="" coords="5,27,137,757"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,738,157,818,180,925,175,926,151,819,135,739"/>
+<area shape="rect" id="Node000003" href="$classrw_1_1writer_1_1LegacyVtkWriter.html" title="A vtk writer for simple point data and complex fem mesh data." alt="" coords="162,5,333,779"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="250,778,250,826,245,826,245,778"/>
+<area shape="rect" id="Node000004" href="$classrw_1_1writer_1_1MshWriter.html" title="A .msh writer for simple point data and complex fem mesh data." alt="" coords="357,16,511,768"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="394,768,383,819,355,926,321,1030,316,1028,350,925,378,818,389,767"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="fe::LineElem::init" name="fe::LineElem::init">
-<area shape="rect" id="node1" title="Compute the quadrature points for line element." alt="" coords="211,5,331,32"/>
-<area shape="rect" id="node2" href="$classfe_1_1LineElem.html#a65bf57d352821ff81f7f41959bb8cd8b" title="Constructor for line element." alt="" coords="5,5,163,32"/>
+<area shape="rect" id="Node000001" title="Compute the quadrature points for line element." alt="" coords="210,5,329,32"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1LineElem.html#a65bf57d352821ff81f7f41959bb8cd8b" title="Constructor for line element." alt="" coords="5,5,162,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,21,162,21,162,16,194,16"/>
 </map>

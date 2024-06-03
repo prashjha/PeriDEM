@@ -1,7 +1,0 @@
-<map id="util::methods::max" name="util::methods::max">
-<area shape="rect" id="node1" title="Returns the maximum from list of data." alt="" coords="501,71,632,98"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1PdElastic.html#a742cf645789390fb6b1f232d8933f9c4" title="Returns critical bond strain." alt="" coords="300,5,432,47"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#a3652826a385051497907774640ed2044" title="Output the snapshot of data at current time step." alt="" coords="279,71,453,98"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a663b495a76c7875a51986e259e93f63f" title="Transform sample from U(0,1) to U(a,b)" alt="" coords="306,123,426,164"/>
-<area shape="rect" id="node5" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement." alt="" coords="5,123,231,164"/>
-</map>

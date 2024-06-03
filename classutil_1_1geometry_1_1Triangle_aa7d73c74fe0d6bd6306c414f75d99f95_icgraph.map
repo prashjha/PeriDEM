@@ -1,4 +1,5 @@
 <map id="util::geometry::Triangle::printStr" name="util::geometry::Triangle::printStr">
-<area shape="rect" id="node1" title="Prints the information." alt="" coords="208,5,363,47"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Triangle.html#acef9a84664b8c6910c53759e742cef18" title="Prints the information about the object." alt="" coords="5,5,160,47"/>
+<area shape="rect" id="Node000001" title="Prints the information." alt="" coords="208,5,362,48"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1Triangle.html#acef9a84664b8c6910c53759e742cef18" title="Prints the information about the object." alt="" coords="5,5,160,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,29,160,29,160,24,192,24"/>
 </map>

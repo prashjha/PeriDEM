@@ -1,7 +1,14 @@
 <map id="util::rotateCW2D" name="util::rotateCW2D">
-<area shape="rect" id="node1" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="507,71,627,98"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#aa8815570c0c72e1618f998abef7eef4e" title="Checks if point is inside an angled rectangle." alt="" coords="296,5,459,47"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#ab949e9f056cf2566e19c8214a6282c64" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="313,71,442,98"/>
-<area shape="rect" id="node4" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="104,97,248,123"/>
-<area shape="rect" id="node5" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,97,56,123"/>
+<area shape="rect" id="Node000001" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="503,97,623,124"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#aa8815570c0c72e1618f998abef7eef4e" title="Checks if point is inside an angled rectangle." alt="" coords="294,5,455,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="519,93,454,62,428,51,430,46,456,58,521,88"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#ab949e9f056cf2566e19c8214a6282c64" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="311,72,439,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="487,103,438,97,439,91,488,98"/>
+<area shape="rect" id="Node000004" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="103,97,246,124"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="488,113,246,113,246,108,488,108"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#aa34d16047f3c3e76ad994191083d1cf0" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="311,173,439,200"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="515,133,456,157,412,175,410,170,454,152,513,128"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="295,98,247,104,246,99,295,93"/>
+<area shape="rect" id="Node000005" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,97,55,124"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="87,113,55,113,55,108,87,108"/>
 </map>

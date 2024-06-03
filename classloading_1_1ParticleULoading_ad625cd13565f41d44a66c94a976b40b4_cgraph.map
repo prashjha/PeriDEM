@@ -1,8 +1,11 @@
 <map id="loading::ParticleULoading::setFixityWall" name="loading::ParticleULoading::setFixityWall">
-<area shape="rect" id="node1" title="Sets fixity mask." alt="" coords="5,136,176,177"/>
-<area shape="rect" id="node2" href="$classparticle_1_1BaseParticle.html#a40cf9f658ae9988d90acbc6dcda9bda0" title="Get the number of nodes." alt="" coords="232,5,379,47"/>
-<area shape="rect" id="node3" href="$classparticle_1_1BaseParticle.html#aa369eb38bfda094cdb3243a97b8075bc" title="Get id among the group of object in the same type as this." alt="" coords="232,71,379,112"/>
-<area shape="rect" id="node4" href="$classparticle_1_1BaseParticle.html#a8cb99a2e2ea56e1d723481b43e050d7b" title="Get reference coordinate of the node given node&#39;s local id." alt="" coords="232,136,379,177"/>
-<area shape="rect" id="node5" href="$namespaceanonymous__namespace_02particleULoading_8cpp_03.html#a638f68614523165276ec3add96f3de37" title=" " alt="" coords="224,202,387,258"/>
-<area shape="rect" id="node6" href="$classparticle_1_1BaseParticle.html#a09909c66edc69bc6455d854576fa99db" title="Set fixity of the node given node&#39;s local id." alt="" coords="232,283,379,324"/>
+<area shape="rect" id="Node000001" title="Sets fixity mask." alt="" coords="5,105,175,148"/>
+<area shape="rect" id="Node000002" href="$classparticle_1_1BaseParticle.html#a40cf9f658ae9988d90acbc6dcda9bda0" title="Get the number of nodes." alt="" coords="223,5,368,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="133,102,221,58,232,53,234,57,224,62,135,107"/>
+<area shape="rect" id="Node000003" href="$classparticle_1_1BaseParticle.html#aa369eb38bfda094cdb3243a97b8075bc" title="Get id among the group of object in the same type as this." alt="" coords="223,72,368,115"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="175,110,207,105,208,110,175,116"/>
+<area shape="rect" id="Node000004" href="$classparticle_1_1BaseParticle.html#ad6c1132f2740903ea55728eacf802730" title="Get reference coordinate of the node given node&#39;s local id." alt="" coords="223,139,368,181"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="175,138,208,143,207,148,175,143"/>
+<area shape="rect" id="Node000005" href="$classparticle_1_1BaseParticle.html#a09909c66edc69bc6455d854576fa99db" title="Set fixity of the node given node&#39;s local id." alt="" coords="223,205,368,248"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="135,146,224,191,234,196,232,201,221,196,133,151"/>
 </map>

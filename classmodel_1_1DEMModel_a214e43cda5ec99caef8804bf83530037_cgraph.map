@@ -1,7 +1,7 @@
 <map id="model::DEMModel::setupContact" name="model::DEMModel::setupContact">
-<area shape="rect" id="node1" title="Creates particles in a given container." alt="" coords="5,56,221,83"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a61b8040019c885bc15525802079bd9e1" title="Compute harmonic mean of m1 and m2." alt="" coords="269,5,408,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="289,56,389,83"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="297,107,380,133"/>
-<area shape="rect" id="node5" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="456,107,585,133"/>
+<area shape="rect" id="Node000001" title="Creates particles in a given container." alt="" coords="5,31,221,57"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a61b8040019c885bc15525802079bd9e1" title="Compute harmonic mean of m1 and m2." alt="" coords="269,5,406,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,29,253,25,253,31,222,34"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="288,56,387,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,54,273,59,272,65,221,59"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="util::geometry::Hexagon::doesIntersect" name="util::geometry::Hexagon::doesIntersect">
-<area shape="rect" id="node1" title="Checks if box intersects this object." alt="" coords="5,5,167,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="215,13,356,39"/>
+<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,5,166,48"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="214,13,354,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,24,198,24,198,29,166,29"/>
 </map>

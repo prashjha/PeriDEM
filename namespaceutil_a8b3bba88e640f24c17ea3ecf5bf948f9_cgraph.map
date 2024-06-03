@@ -1,4 +1,5 @@
 <map id="util::computeBBox" name="util::computeBBox">
-<area shape="rect" id="node1" title="Computes bounding box for vector nodes." alt="" coords="5,5,135,32"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="183,5,268,32"/>
+<area shape="rect" id="Node000001" title="Computes bounding box for vector nodes." alt="" coords="5,5,134,32"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="182,5,266,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,16,166,16,166,21,134,21"/>
 </map>

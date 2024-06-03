@@ -1,4 +1,5 @@
 <map id="util::geometry::Sphere::printStr" name="util::geometry::Sphere::printStr">
-<area shape="rect" id="node1" title="Prints the information." alt="" coords="204,5,355,47"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Sphere.html#a2d92710d60e3fa6a175f1d951fe03f72" title="Prints the information about the object." alt="" coords="5,5,156,47"/>
+<area shape="rect" id="Node000001" title="Prints the information." alt="" coords="203,5,352,48"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1Sphere.html#a2d92710d60e3fa6a175f1d951fe03f72" title="Prints the information about the object." alt="" coords="5,5,155,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,29,155,29,155,24,187,24"/>
 </map>

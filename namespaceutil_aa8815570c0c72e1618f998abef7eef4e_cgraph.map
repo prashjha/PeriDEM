@@ -1,6 +1,9 @@
 <map id="util::isPointInsideAngledRectangle" name="util::isPointInsideAngledRectangle">
-<area shape="rect" id="node1" title="Checks if point is inside an angled rectangle." alt="" coords="5,49,168,90"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="226,5,326,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="233,56,319,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#ac37c77bce2370e83008c6436dcec26c0" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="216,107,336,133"/>
+<area shape="rect" id="Node000001" title="Checks if point is inside an angled rectangle." alt="" coords="5,48,167,91"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="225,5,324,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,45,209,33,211,38,168,50"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="232,56,317,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,67,217,67,217,72,167,72"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#ac37c77bce2370e83008c6436dcec26c0" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="215,107,334,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="168,89,209,100,207,105,166,94"/>
 </map>

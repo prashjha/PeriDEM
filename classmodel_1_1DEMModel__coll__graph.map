@@ -1,5 +1,7 @@
 <map id="model::DEMModel" name="model::DEMModel">
-<area shape="rect" id="node1" title="A class for discrete element particle simulation with peridynamic model" alt="" coords="5,2707,244,3503"/>
-<area shape="rect" id="node2" href="$classmodel_1_1ModelData.html" title="A class to store model data." alt="" coords="57,952,192,2657"/>
-<area shape="rect" id="node3" href="$classinp_1_1Input.html" title="A class to read input file." alt="" coords="43,5,206,889"/>
+<area shape="rect" id="Node000001" title="A class for discrete element particle simulation with peridynamic model" alt="" coords="5,3797,233,4912"/>
+<area shape="rect" id="Node000002" href="$classmodel_1_1ModelData.html" title="A class to store model data." alt="" coords="57,1312,181,3749"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="122,3764,122,3798,117,3798,117,3764"/>
+<area shape="rect" id="Node000003" href="$classinp_1_1Input.html" title="A class to read input file." alt="" coords="41,5,197,1248"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="122,1248,122,1295,117,1295,117,1248"/>
 </map>

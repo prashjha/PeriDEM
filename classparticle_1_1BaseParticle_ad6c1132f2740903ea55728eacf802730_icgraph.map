@@ -1,0 +1,5 @@
+<map id="particle::BaseParticle::getXRefLocal" name="particle::BaseParticle::getXRefLocal">
+<area shape="rect" id="Node000001" title="Get reference coordinate of the node given node&#39;s local id." alt="" coords="223,5,368,48"/>
+<area shape="rect" id="Node000002" href="$classloading_1_1ParticleULoading.html#ad625cd13565f41d44a66c94a976b40b4" title="Sets fixity mask." alt="" coords="5,5,175,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="207,29,175,29,175,24,207,24"/>
+</map>

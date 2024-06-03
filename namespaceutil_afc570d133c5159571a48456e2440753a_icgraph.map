@@ -1,11 +1,19 @@
 <map id="util::rotate" name="util::rotate">
-<area shape="rect" id="node1" title="Returns the vector after rotating by desired angle." alt="" coords="392,177,472,203"/>
-<area shape="rect" id="node2" href="$structparticle_1_1ParticleTransform.html#ac84e7ec4803c9231dfb15bc181a2dc4f" title="Returns the transformed vector. We assume that the passed vector passes through origin." alt="" coords="169,5,344,47"/>
-<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Drum2D.html#ad9b0c988bf94ffb127b48e78d87d8cc6" title="Constructor." alt="" coords="177,71,336,112"/>
-<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Hexagon.html#a863ab95e2b0aa910ef6133e821341abe" title="Constructor." alt="" coords="176,136,337,177"/>
-<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Drum2D.html#a3e79daf6f2dd929bf236004a72ad5b70" title="Checks if point is inside this object." alt="" coords="177,201,336,243"/>
-<area shape="rect" id="node7" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="185,267,329,294"/>
-<area shape="rect" id="node9" href="$classutil_1_1geometry_1_1Triangle.html#ad1e951f93e9d6422a967363c9199fa6b" title="Constructor." alt="" coords="179,319,334,360"/>
-<area shape="rect" id="node3" href="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1" title="Constructor." alt="" coords="5,5,121,47"/>
-<area shape="rect" id="node8" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="38,267,89,294"/>
+<area shape="rect" id="Node000001" title="Returns the vector after rotating by desired angle." alt="" coords="391,180,470,207"/>
+<area shape="rect" id="Node000002" href="$structparticle_1_1ParticleTransform.html#ac84e7ec4803c9231dfb15bc181a2dc4f" title="Returns the transformed vector. We assume that the passed vector passes through origin." alt="" coords="169,5,343,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="415,167,386,114,366,86,341,62,324,51,327,46,345,58,370,83,391,111,420,164"/>
+<area shape="rect" id="Node000004" href="$classutil_1_1geometry_1_1Drum2D.html#ad9b0c988bf94ffb127b48e78d87d8cc6" title="Constructor." alt="" coords="177,72,335,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="401,172,373,150,342,129,319,118,321,113,344,124,376,145,405,168"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1geometry_1_1Hexagon.html#a863ab95e2b0aa910ef6133e821341abe" title="Constructor." alt="" coords="176,139,336,181"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="375,186,336,178,337,173,376,180"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1geometry_1_1Drum2D.html#a3e79daf6f2dd929bf236004a72ad5b70" title="Checks if point is inside this object." alt="" coords="177,205,335,248"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="376,206,336,214,335,209,375,201"/>
+<area shape="rect" id="Node000007" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="184,272,328,299"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="406,219,377,242,344,262,316,274,314,269,342,258,374,237,402,215"/>
+<area shape="rect" id="Node000009" href="$classutil_1_1geometry_1_1Triangle.html#ad1e951f93e9d6422a967363c9199fa6b" title="Constructor." alt="" coords="179,323,333,365"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="417,222,388,268,368,292,345,313,326,324,323,320,341,309,364,288,383,265,413,219"/>
+<area shape="rect" id="Node000003" href="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1" title="Constructor." alt="" coords="5,5,121,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="153,29,121,29,121,24,153,24"/>
+<area shape="rect" id="Node000008" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="38,272,88,299"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="169,288,88,288,88,283,169,283"/>
 </map>

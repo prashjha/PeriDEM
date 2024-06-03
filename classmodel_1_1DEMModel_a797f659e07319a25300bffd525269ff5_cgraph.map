@@ -1,4 +1,5 @@
 <map id="model::DEMModel::updateNeighborlistCombine" name="model::DEMModel::updateNeighborlistCombine">
-<area shape="rect" id="node1" title="Update neighborlist for contact and peridynamics force." alt="" coords="5,5,252,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="300,13,471,39"/>
+<area shape="rect" id="Node000001" title="Update neighborlist for contact and peridynamics force." alt="" coords="5,5,251,48"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="299,13,469,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="251,24,283,24,283,29,251,29"/>
 </map>

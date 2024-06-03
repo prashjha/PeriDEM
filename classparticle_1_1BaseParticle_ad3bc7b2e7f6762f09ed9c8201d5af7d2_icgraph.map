@@ -1,5 +1,7 @@
 <map id="particle::BaseParticle::getDimension" name="particle::BaseParticle::getDimension">
-<area shape="rect" id="node1" title="Get the dimension of the domain." alt="" coords="184,35,331,76"/>
-<area shape="rect" id="node2" href="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1" title="Constructor." alt="" coords="13,5,129,47"/>
-<area shape="rect" id="node3" href="$classparticle_1_1Wall.html#a1d0908cfc608631b976a77554aa21d45" title="Constructor." alt="" coords="5,71,136,98"/>
+<area shape="rect" id="Node000001" title="Get the dimension of the domain." alt="" coords="183,35,328,77"/>
+<area shape="rect" id="Node000002" href="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1" title="Constructor." alt="" coords="12,5,128,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="167,45,128,38,129,33,168,39"/>
+<area shape="rect" id="Node000003" href="$classparticle_1_1Wall.html#a1d0908cfc608631b976a77554aa21d45" title="Constructor." alt="" coords="5,72,135,99"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,73,136,78,135,72,167,67"/>
 </map>

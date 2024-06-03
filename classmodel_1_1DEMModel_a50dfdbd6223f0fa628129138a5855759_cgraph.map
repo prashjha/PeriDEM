@@ -1,6 +1,5 @@
 <map id="model::DEMModel::createWalls" name="model::DEMModel::createWalls">
-<area shape="rect" id="node1" title="Creates walls." alt="" coords="5,31,212,57"/>
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#a068ec3921531230930e56ab97bf840b7" title="Get the mesh size." alt="" coords="260,5,417,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="297,56,380,83"/>
-<area shape="rect" id="node4" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="465,56,595,83"/>
+<area shape="rect" id="Node000001" title="Creates walls." alt="" coords="5,5,211,32"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1Mesh.html#a068ec3921531230930e56ab97bf840b7" title="Get the mesh size." alt="" coords="259,5,415,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,16,243,16,243,21,211,21"/>
 </map>

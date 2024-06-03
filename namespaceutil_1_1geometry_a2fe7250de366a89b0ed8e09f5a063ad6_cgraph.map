@@ -1,9 +1,18 @@
 <map id="util::geometry::createGeomObject" name="util::geometry::createGeomObject">
-<area shape="rect" id="node1" title="Create geometrical object from the given data." alt="" coords="5,123,185,164"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1geometry.html#aa14cdef2f73ea184ca66f88de5d079dd" title="Check parameter data for validity." alt="" coords="233,5,416,47"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1geometry.html#a423eb6ea7aec79183939c81e522057ca" title="Get num params required for creation of object." alt="" coords="464,64,664,105"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1geometry.html#a2f43f1f68c3073656dcb3af84de93192" title="Check parameter data for validity." alt="" coords="233,123,416,164"/>
-<area shape="rect" id="node5" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="241,189,409,215"/>
-<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="271,239,378,266"/>
-<area shape="rect" id="node7" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="507,239,621,266"/>
+<area shape="rect" id="Node000001" title="Create geometrical object from the given data." alt="" coords="5,123,185,165"/>
+<area shape="poly" id="edge5_Node000001_Node000001" title=" " alt="" coords="52,123,50,113,57,104,72,98,95,96,119,98,134,105,132,110,118,104,95,101,73,103,60,108,55,114,57,122"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1geometry.html#aa14cdef2f73ea184ca66f88de5d079dd" title="Check parameter data for validity." alt="" coords="233,5,414,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="132,120,231,64,256,52,258,57,234,69,134,124"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1geometry.html#a423eb6ea7aec79183939c81e522057ca" title="Get num params required for creation of object." alt="" coords="462,64,661,107"/>
+<area shape="poly" id="edge6_Node000001_Node000003" title=" " alt="" coords="176,119,232,108,342,95,446,87,447,92,342,100,233,113,177,125"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1geometry.html#a2f43f1f68c3073656dcb3af84de93192" title="Check parameter data for validity." alt="" coords="233,123,414,165"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="185,141,217,141,217,147,185,147"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="240,189,407,216"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="181,163,254,182,253,187,180,168"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="270,240,377,267"/>
+<area shape="poly" id="edge8_Node000001_Node000006" title=" " alt="" coords="128,164,176,195,234,226,256,234,254,239,232,230,174,200,125,168"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,46,458,57,457,62,412,51"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="412,119,457,108,458,114,413,125"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="506,240,618,267"/>
+<area shape="poly" id="edge9_Node000006_Node000007" title=" " alt="" coords="377,251,490,251,490,256,377,256"/>
 </map>

@@ -1,8 +1,14 @@
 <map id="test::getNChooseR" name="test::getNChooseR">
-<area shape="rect" id="node1" title="Computes &#160;&quot;n choose r&quot;." alt="" coords="488,46,623,73"/>
-<area shape="rect" id="node2" href="$namespacetest.html#af43e065c49520ee624134a11bdfe3643" title="Computes integration of polynomial exactly over reference tetrahedral." alt="" coords="275,5,440,47"/>
-<area shape="rect" id="node5" href="$namespacetest.html#a437c18b50b59ae2f9cd10e1cb51fba64" title="Computes integration of polynomial exactly over reference triangle." alt="" coords="275,71,440,112"/>
-<area shape="rect" id="node3" href="$namespacetest.html#aa7c71a77ba3a1a442ebad77cbb0bc242" title="Perform test on quadrature points on tetrahedral elements." alt="" coords="104,17,227,43"/>
-<area shape="rect" id="node4" href="$testFe_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,46,56,73"/>
-<area shape="rect" id="node6" href="$namespacetest.html#af81978a4250caac290f7d52c1e571f04" title="Perform test on quadrature points on triangle elements." alt="" coords="106,71,225,98"/>
+<area shape="rect" id="Node000001" title="Computes &#160;&quot;n choose r&quot;." alt="" coords="484,47,619,73"/>
+<area shape="rect" id="Node000002" href="$namespacetest.html#af43e065c49520ee624134a11bdfe3643" title="Computes integration of polynomial exactly over reference tetrahedral." alt="" coords="272,5,436,48"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="468,49,436,43,437,38,469,43"/>
+<area shape="rect" id="Node000005" href="$namespacetest.html#a437c18b50b59ae2f9cd10e1cb51fba64" title="Computes integration of polynomial exactly over reference triangle." alt="" coords="272,72,436,115"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="469,77,437,82,436,77,468,71"/>
+<area shape="rect" id="Node000003" href="$namespacetest.html#aa7c71a77ba3a1a442ebad77cbb0bc242" title="Perform test on quadrature points on tetrahedral elements." alt="" coords="103,17,224,44"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="256,31,224,32,224,27,256,26"/>
+<area shape="rect" id="Node000004" href="$testFe_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,47,55,73"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="88,50,56,57,54,52,87,45"/>
+<area shape="rect" id="Node000006" href="$namespacetest.html#af81978a4250caac290f7d52c1e571f04" title="Perform test on quadrature points on triangle elements." alt="" coords="104,72,223,99"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="256,92,223,90,223,85,257,87"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="88,74,55,67,56,62,89,68"/>
 </map>

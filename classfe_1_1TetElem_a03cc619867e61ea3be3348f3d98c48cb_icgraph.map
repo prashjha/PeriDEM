@@ -1,4 +1,5 @@
 <map id="fe::TetElem::init" name="fe::TetElem::init">
-<area shape="rect" id="node1" title="Compute the quadrature points for triangle element." alt="" coords="199,5,313,32"/>
-<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#a0d05ee124f9baf81909cc5c15da54466" title="Constructor." alt="" coords="5,5,151,32"/>
+<area shape="rect" id="Node000001" title="Compute the quadrature points for triangle element." alt="" coords="198,5,311,32"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1TetElem.html#a0d05ee124f9baf81909cc5c15da54466" title="Constructor." alt="" coords="5,5,150,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,21,150,21,150,16,182,16"/>
 </map>

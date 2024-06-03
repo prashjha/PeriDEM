@@ -1,5 +1,7 @@
 <map id="util::distanceBetweenPlanes" name="util::distanceBetweenPlanes">
-<area shape="rect" id="node1" title="Compute distance between planes." alt="" coords="5,5,192,32"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors." alt="" coords="240,5,319,32"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="367,5,487,32"/>
+<area shape="rect" id="Node000001" title="Compute distance between planes." alt="" coords="5,5,192,32"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors." alt="" coords="240,5,317,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,16,224,16,224,21,192,21"/>
+<area shape="rect" id="Node000003" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="365,5,484,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="317,16,350,16,350,21,317,21"/>
 </map>

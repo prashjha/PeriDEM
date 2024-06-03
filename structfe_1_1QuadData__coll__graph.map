@@ -1,4 +1,5 @@
 <map id="fe::QuadData" name="fe::QuadData">
-<area shape="rect" id="node1" title="A struct to store the quadrature data. List of data are." alt="" coords="11,527,122,692"/>
-<area shape="rect" id="node2" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="5,5,128,464"/>
+<area shape="rect" id="Node000001" title="A struct to store the quadrature data. List of data are." alt="" coords="11,693,111,891"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="5,5,117,629"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="64,629,64,676,59,676,59,629"/>
 </map>

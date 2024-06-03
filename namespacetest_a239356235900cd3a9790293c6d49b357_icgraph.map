@@ -1,4 +1,5 @@
 <map id="test::testTriElemTime" name="test::testTriElemTime">
-<area shape="rect" id="node1" title="Computes the time needed when quad data for elements are stored and when they are computed as and whe..." alt="" coords="104,5,252,32"/>
-<area shape="rect" id="node2" href="$testFe_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,56,32"/>
+<area shape="rect" id="Node000001" title="Computes the time needed when quad data for elements are stored and when they are computed as and whe..." alt="" coords="103,5,250,32"/>
+<area shape="rect" id="Node000002" href="$testFe_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
 </map>

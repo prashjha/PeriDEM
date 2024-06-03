@@ -1,4 +1,5 @@
 <map id="fe::QuadElem" name="fe::QuadElem">
-<area shape="rect" id="node1" title="A class for mapping and quadrature related operations for bi&#45;linear quadrangle element." alt="" coords="22,365,150,545"/>
-<area shape="rect" id="node2" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,5,167,317"/>
+<area shape="rect" id="Node000001" title="A class for mapping and quadrature related operations for bi&#45;linear quadrangle element." alt="" coords="23,464,140,683"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,5,157,416"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="84,431,84,464,79,464,79,431"/>
 </map>

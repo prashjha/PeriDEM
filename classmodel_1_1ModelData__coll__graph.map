@@ -1,4 +1,5 @@
 <map id="model::ModelData" name="model::ModelData">
-<area shape="rect" id="node1" title="A class to store model data." alt="" coords="19,952,154,2657"/>
-<area shape="rect" id="node2" href="$classinp_1_1Input.html" title="A class to read input file." alt="" coords="5,5,168,889"/>
+<area shape="rect" id="Node000001" title="A class to store model data." alt="" coords="21,1312,145,3749"/>
+<area shape="rect" id="Node000002" href="$classinp_1_1Input.html" title="A class to read input file." alt="" coords="5,5,161,1248"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,1248,86,1295,81,1295,81,1248"/>
 </map>
