@@ -151,7 +151,7 @@ workflows:
             branches:
               only: main
           requires:
-            - build
+            - build_work
   deploy_work:
     jobs:
       - deploy:
@@ -159,7 +159,7 @@ workflows:
             branches:
               only: main
           requires:
-            - build
+            - build_work
   codecov_work:
     jobs:
       - codecoverage:
@@ -167,4 +167,4 @@ workflows:
             branches:
               only: main
           requires:
-            - build
+            - build_work
