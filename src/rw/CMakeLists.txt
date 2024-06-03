@@ -7,7 +7,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_hpx_library(RW SOURCES ${SOURCES})
+add_library(RW ${SOURCES})
 
-target_include_directories(RW PUBLIC ${VTK_INCLUDE_DIRS} ${PROJECT_SOURCE_DIR}/src/external/ ${PCL_INCLUDE_DIRS})
 target_link_libraries(RW PUBLIC ${VTK_LIBRARIES})

@@ -146,6 +146,8 @@ struct Matrix3 {
   Point operator()(size_t i) {
     return Point(d_data[i]);
   }
+
+  /*! @copydoc operator()(size_t i) */
   Point operator()(size_t i) const {
     return Point(d_data[i]);
   }
@@ -158,6 +160,8 @@ struct Matrix3 {
    * @return Element Element of matrix
    */
   float &operator()(size_t i, size_t j) { return d_data[i][j]; }
+
+  /*! @copydoc operator()(size_t i, size_t j) */
   const float &operator()(size_t i, size_t j) const { return d_data[i][j]; }
 
   /*!
@@ -166,6 +170,12 @@ struct Matrix3 {
  * @param v vector
  * @return vector Dot product
  */
+  util::Point dot(const util::Point &v) {
+
+    return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
+  }
+
+  /*! @copydoc dot(const util::Point &v) */
   std::vector<double> dot(const std::vector<double> &v) const {
 
     auto r = std::vector<double>(3,0.);
@@ -174,10 +184,6 @@ struct Matrix3 {
         r[i] += (*this)(i,j) * v[j];
 
     return r;
-  }
-  util::Point dot(const util::Point &v) {
-
-    return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
   }
 
   /*!
@@ -301,15 +307,6 @@ struct SymMatrix3 {
    *
    * @param m Matrix in vector template
    */
-  SymMatrix3(const std::vector<std::vector<double>> &m) {
-
-    d_data[0] = m[0][0];
-    d_data[1] = m[1][1];
-    d_data[2] = m[2][2];
-    d_data[3] = 0.5 * (m[1][2] + m[2][1]);
-    d_data[4] = 0.5 * (m[0][2] + m[2][0]);
-    d_data[5] = 0.5 * (m[0][1] + m[1][0]);
-  }
   SymMatrix3(const std::vector<double> &m) {
 
     d_data[0] = m[0];
@@ -323,7 +320,22 @@ struct SymMatrix3 {
   /*!
    * @brief Constructor
    *
-   * @param m Matrix in vector template
+   * @param m Matrix
+   */
+  SymMatrix3(const std::vector<std::vector<double>> &m) {
+
+    d_data[0] = m[0][0];
+    d_data[1] = m[1][1];
+    d_data[2] = m[2][2];
+    d_data[3] = 0.5 * (m[1][2] + m[2][1]);
+    d_data[4] = 0.5 * (m[0][2] + m[2][0]);
+    d_data[5] = 0.5 * (m[0][1] + m[1][0]);
+  }
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix
    */
   SymMatrix3(const Matrix3 &m) {
 
@@ -334,6 +346,12 @@ struct SymMatrix3 {
     d_data[4] = 0.5 * (m(0,2) + m(2,0));
     d_data[5] = 0.5 * (m(0,1) + m(1,0));
   }
+
+  /*!
+   * @brief Constructor
+   *
+   * @param m Matrix
+   */
   SymMatrix3(const SymMatrix3 &m) {
 
     for (size_t i=0; i<6; i++)
@@ -341,11 +359,11 @@ struct SymMatrix3 {
   }
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
-   * @return string Formatted string
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -363,11 +381,10 @@ struct SymMatrix3 {
   }
 
   /*!
-   * @brief Prints the information
+   * @brief Prints the information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
-   * @return string Formatted string
    */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
@@ -380,6 +397,8 @@ struct SymMatrix3 {
   Point operator()(size_t i) {
       return {(*this)(i, 0), (*this)(i, 1), (*this)(i, 2)};
   }
+
+  /*! @copydoc operator()(size_t i) */
   Point operator()(size_t i) const {
     return {(*this)(i, 0), (*this)(i, 1), (*this)(i, 2)};
   }
@@ -394,6 +413,8 @@ struct SymMatrix3 {
   float &operator()(size_t i, size_t j) {
     return d_data[i == j ? i : 6 - i - j];
   }
+
+  /*! @copydoc operator()(size_t i, size_t j) */
   const float &operator()(size_t i, size_t j) const {
     return d_data[i == j ? i : 6 - i - j];
   }
@@ -404,10 +425,12 @@ struct SymMatrix3 {
    * @param i Row id
    * @return Row Row
    */
-  const float &get(size_t i) const {
+  float &get(size_t i) {
     return d_data[i];
   }
-  float &get(size_t i) {
+
+  /*! @copydoc get(size_t i) */
+  const float &get(size_t i) const {
     return d_data[i];
   }
 
@@ -427,6 +450,12 @@ struct SymMatrix3 {
    * @param v A vector
    * @return Vector Resulting vector
    */
+  util::Point dot(const util::Point &v) {
+
+    return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
+  }
+
+  /*! @copydoc dot(const util::Point &v) */
   std::vector<double> dot(const std::vector<double> &v) const {
 
     auto r = std::vector<double>(3,0.);
@@ -436,25 +465,21 @@ struct SymMatrix3 {
 
     return r;
   }
-  util::Point dot(const util::Point &v) {
-
-    return {(*this)(0) * v, (*this)(1) * v, (*this)(2) * v};
-  }
 
   /*!
- * @brief Computes the tranpose of matrix
- * @return Matrix Transpose of m
- */
+   * @brief Computes the tranpose of matrix
+   * @return Matrix Transpose of m
+   */
   SymMatrix3 transpose() const {
 
     return (*this);
   }
 
   /*!
- * @brief Computes the determinant of matrix
- *
- * @return det Determinant
- */
+   * @brief Computes the determinant of matrix
+   *
+   * @return det Determinant
+   */
   double det() const {
     return (*this)(0,0) * ((*this)(1,1) * (*this)(2,2) - (*this)(2,1) * (*this)(1,2)) -
            (*this)(0,1) * ((*this)(1,0) * (*this)(2,2) - (*this)(2,0) * (*this)(1,2)) +
@@ -462,10 +487,10 @@ struct SymMatrix3 {
   }
 
   /*!
- * @brief Computes the determinant of matrix
- *
- * @return inv Inverse of m
- */
+   * @brief Computes the determinant of matrix
+   *
+   * @return inv Inverse of m
+   */
   SymMatrix3 inv() const {
 
     SymMatrix3 m = SymMatrix3();

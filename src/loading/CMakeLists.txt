@@ -7,5 +7,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_hpx_library(Loading SOURCES ${SOURCES})
-target_include_directories(Loading PUBLIC ${PCL_INCLUDE_DIRS})
+add_library(Loading ${SOURCES})
+
+target_link_libraries(Loading PUBLIC Threads::Threads)

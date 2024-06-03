@@ -92,11 +92,13 @@ struct ModelDeck {
   ModelDeck()
       : d_dim(0), d_isRestartActive(false), d_tFinal(0.), d_dt(0.), d_Nt(0),
         d_horizon(0.), d_rh(0), d_h(0.), d_isPeriDEM(false), d_seed(1) {};
+
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -123,6 +125,12 @@ struct ModelDeck {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

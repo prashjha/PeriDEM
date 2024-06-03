@@ -22,15 +22,18 @@
 #include <vtkUnsignedIntArray.h>
 
 #include "util/feElementDefs.h"
+#include "util/io.h"
 
 size_t rw::reader::VtkReader::d_count = 0;
 
 rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_count++;
 
+  auto f = util::io::checkAndCreateNewFilename(filename, "vtu");
+
   // Append the extension vtu to file_name
   d_reader_p = vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
-  d_reader_p->SetFileName(const_cast<char *>(filename.c_str()));
+  d_reader_p->SetFileName(const_cast<char *>(f.c_str()));
   d_reader_p->Update();
 }
 
@@ -130,7 +133,7 @@ void rw::reader::VtkReader::readMesh(size_t dim,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+    vtkIdType const *nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 
@@ -206,7 +209,7 @@ void rw::reader::VtkReader::readCells(size_t dim, size_t &element_type,
   for (size_t i = 0; i < num_elems; i++) {
     vtkIdType id = i;
     vtkIdType num_ids;
-    vtkIdType *nodes_ids;
+    vtkIdType const *nodes_ids;
 
     d_grid_p->GetCellPoints(id, num_ids, nodes_ids);
 

@@ -17,7 +17,7 @@
 
 namespace {
 
-bool checkPoint(const std::vector<double> &p, const std::vector<util::Point> &nodes) {
+void checkPoint(const std::vector<double> &p, const std::vector<util::Point> &nodes) {
 
   // check to see if p is in reference tet element
   bool check = false;

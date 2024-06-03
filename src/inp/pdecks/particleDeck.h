@@ -30,6 +30,8 @@ struct ParticleDeck {
 
   /*! @brief All zones */
   std::vector<inp::Zone> d_zoneVec;
+
+  /*! @brief Maps particle/wall to corresponding zone */
   std::vector<std::pair<std::string, size_t>> d_zoneToPorWDeck;
 
   /*! @brief Particle in zones */
@@ -67,9 +69,9 @@ struct ParticleDeck {
 
   /*! @brief if it is a compressive test, specify wall id and direction */
   size_t d_wallIdCompressiveTest;
+
+  /*! @brief if it is a compressive test, specify force direction on wall */
   size_t d_wallForceDirectionCompressiveTest;
-
-
 
   /*!
    * @brief Constructor
@@ -80,6 +82,13 @@ struct ParticleDeck {
         d_testName(""), d_wallIdCompressiveTest(0),
         d_wallForceDirectionCompressiveTest(0) {};
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -126,6 +135,12 @@ struct ParticleDeck {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

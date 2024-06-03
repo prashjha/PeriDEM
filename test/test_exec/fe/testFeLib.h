@@ -10,15 +10,16 @@
 #ifndef TESTFELIB_H
 #define TESTFELIB_H
 
-#include <hpx/config.hpp>
 #include <string>
 #include <vector>
 
 /*! @brief Namespace to group the methods used in testing of the library */
 namespace test {
 
+/**@{*/
+
 /*!
- * @brief Perform test on quadrature points on line elements
+ * @brief Perform test on quadrature points on line elements (NOT IMPLEMENTED)
  *
  * This function performs accuracy test of the quadrature points for
  * integration over reference line with vertices at {-1, 1}. List of tests
@@ -58,6 +59,7 @@ namespace test {
  * order of approximation we are testing.
  *
  * @param n Order of quadrature point approximation
+ * @param filepath Path where mesh data for test can be found (expects files 'triMesh_nodes.csv' and 'triMesh_elements.csv' inside the filepath)
  */
 void testLineElem(size_t n, std::string filepath);
 
@@ -102,6 +104,7 @@ void testLineElem(size_t n, std::string filepath);
  * order of approximation we are testing.
  *
  * @param n Order of quadrature point approximation
+ * @param filepath Path where mesh data for test can be found (expects files 'triMesh_nodes.csv' and 'triMesh_elements.csv' inside the filepath)
  */
 void testTriElem(size_t n, std::string filepath);
 
@@ -146,6 +149,7 @@ void testTriElem(size_t n, std::string filepath);
  * order of approximation we are testing.
  *
  * @param n Order of quadrature point approximation
+ * @param filepath Path where mesh data for test can be found (expects files 'quadMesh_nodes.csv' and 'quadMesh_elements.csv' inside the filepath)
  */
 void testQuadElem(size_t n, std::string filepath);
 
@@ -153,6 +157,7 @@ void testQuadElem(size_t n, std::string filepath);
  * @brief Perform test on quadrature points on tetrahedral elements
  *
  * @param n Order of quadrature point approximation
+ * @param filepath Path where mesh data for test can be found (expects files 'tetMesh_nodes.csv' and 'tetMesh_elements.csv' inside the filepath)
  */
 void testTetElem(size_t n, std::string filepath);
 

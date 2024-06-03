@@ -9,48 +9,56 @@
 
 #include <PeriDEMConfig.h>
 
-// HPX includes
-#include <hpx/hpx_init.hpp>                     // Need main source file
-#include <hpx/util/high_resolution_clock.hpp>
-
 // std includes
-#include <boost/program_options.hpp>            // program options
 #include <iostream>
+#include <algorithm>
+#include <ctime>
 
 // PeriDEM includes
 #include "inp/input.h"                          // Input class
 #include "model/dem/demModel.h"                 // Model class
+#include "util/io.h"                            // InputParser class
+#include "util/parallelUtil.h"                       // MPI-related functions
+#include "util/methods.h"
+#include <fmt/format.h>
 
-int hpx_main(boost::program_options::variables_map& vm)
-{
-  // display Help
-  if (vm.count("help")) {
-    std::cout << "To run the simulation: \n"
-              << "PeriDEM -i input.yaml --hpx:threads=n" << "\n";
-    return hpx::finalize();
+int main(int argc, char *argv[]) {
+
+  // init parallel
+  util::parallel::initMpi(argc, argv);
+  int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
+  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(util::parallel::getMpiStatus()->printStr());
+
+  util::io::InputParser input(argc, argv);
+
+  if (input.cmdOptionExists("-h") or !input.cmdOptionExists("-i")) {
+    // print help
+    std::cout << "Syntax to run PeriDEM: PeriDEM -i <input file> -nThreads <number of threads>" << std::endl;
+    std::cout << "Example: PeriDEM -i input.yaml -nThreads 4" << std::endl;
+    exit(EXIT_FAILURE);
   }
 
-  // read input file
-  std::string filename;
-  if (vm.count("input-file"))
-    filename = vm["input-file"].as<std::string>();
-
-  if (filename.empty()) {
-    std::cerr << "PeriDEM" << " (Version " << MAJOR_VERSION <<
-    		"." << MINOR_VERSION << "." << UPDATE_VERSION <<
-			") -i input.yaml --hpx:threads=n" << std::endl;
-    return hpx::finalize();
+  unsigned int nThreads;
+  if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
+  else {
+    nThreads = std::thread::hardware_concurrency();
+    util::io::print(fmt::format("Running test with default number of threads = {}\n", nThreads));
   }
-
+  // set number of threads
+  util::parallel::initNThreads(nThreads);
+  util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
+  
   // print program version
   std::cout << "PeriDEM"
             << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION << "."
             << UPDATE_VERSION << ")" << std::endl;
 
   // current time
-  std::uint64_t begin = hpx::util::high_resolution_clock::now();
+  auto begin = steady_clock::now();
 
   // read input data
+  std::string filename = input.getCmdOption("-i");
   auto *deck = new inp::Input(filename);
 
   // check which model to run
@@ -62,20 +70,9 @@ int hpx_main(boost::program_options::variables_map& vm)
   }
 
   // get time elapsed
-  std::uint64_t end = hpx::util::high_resolution_clock::now();
-  double elapsed_secs = double(end - begin) / 1.0e9;
+  auto end = steady_clock::now();
 
-  std::cout << "Total simulation time (s) = " << elapsed_secs
+  std::cout << "Total simulation time (s) = " 
+            << util::methods::timeDiff(begin, end, "seconds") 
             << std::endl;
-  return hpx::finalize();
-}
-
-int main(int argc, char *argv[]) {
-
-  boost::program_options::options_description desc("Allowed options");
-  desc.add_options()("help", "produce help message")(
-      "input-file,i", boost::program_options::value<std::string>(),
-      "Configuration file");
-
-  return hpx::init(desc, argc, argv);
 }

@@ -36,35 +36,54 @@ class ParticleULoading : public ParticleLoading {
 public:
   /*!
    * @brief Constructor
-   * @param deck Input deck which contains user-specified information
-   * @param mesh Mesh object
+   * @param bc_data Boundary condition data
    */
   ParticleULoading(std::vector<inp::PBCData> &bc_data);
 
   /*!
-   * @brief Applies displacement boundary condition
-   * @param time Current time
-   * @param u Vector nodal displacements
-   * @param v Vector nodal velocities
-   * @param mesh Mesh object
+   * @brief Sets fixity mask
+   * @param particle Particle object pointer
    */
   void setFixityParticle(particle::BaseParticle *particle);
+
+  /*!
+   * @brief Sets fixity mask
+   * @param wall Wall object pointer
+   */
   void setFixityWall(particle::BaseParticle *wall);
+
+  /*!
+   * @brief Sets fixity mask
+   * @param wall Wall object pointer
+   */
   void setFixity(particle::BaseParticle *wall);
 
 
   /*!
    * @brief Applies displacement boundary condition
    * @param time Current time
-   * @param u Vector nodal displacements
-   * @param v Vector nodal velocities
-   * @param mesh Mesh object
+   * @param particle Particle object pointer
    */
   void applyParticle(const double &time, particle::BaseParticle *particle);
+
+  /*!
+   * @brief Applies displacement boundary condition
+   * @param time Current time
+   * @param wall Wall object pointer
+   */
   void applyWall(const double &time, particle::BaseParticle *wall);
+
+  /*!
+   * @brief Applies displacement boundary condition
+   * @param time Current time
+   * @param wall Wall object pointer
+   */
   void apply(const double &time, particle::BaseParticle *wall);
 
+  /*! @brief Flag to indicate whether particles are fixed */
   std::vector<bool> d_pZeroDisplacementApplied;
+
+  /*! @brief Flag to indicate whether particles are fixed */
   std::vector<bool> d_wZeroDisplacementApplied;
 };
 

@@ -10,3 +10,8 @@ add_subdirectory(fe)
 add_subdirectory(particle)
 add_subdirectory(nsearch)
 add_subdirectory(peridem)
+add_subdirectory(parallelcomp)
+add_subdirectory(meshpartitioning)
+
+
+

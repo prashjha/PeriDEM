@@ -8,7 +8,18 @@
  */
 
 #include "vtkParticleReader.h"
-#include <util/feElementDefs.h>
+#include "util/feElementDefs.h"
+#include "util/io.h"
+#include "fe/mesh.h"
+#include "util/methods.h"
+#include "model/modelData.h"
+#include "particle/baseParticle.h"
+#include "particle/particle.h"
+#include "particle/wall.h"
+#include "particle/refParticle.h"
+
+#include <cstdint>
+
 #include <vtkAbstractArray.h>
 #include <vtkCellArray.h>
 #include <vtkCellData.h>
@@ -20,19 +31,9 @@
 #include <vtkUnsignedCharArray.h>
 #include <vtkUnsignedIntArray.h>
 
-#include "fe/mesh.h"
-#include <cstdint>
-#include "model/modelData.h"
-#include "particle/baseParticle.h"
-#include "particle/particle.h"
-#include "particle/wall.h"
-#include "particle/refParticle.h"
-
-#include "util/methods.h"
-
 rw::reader::VtkParticleReader::VtkParticleReader(const std::string &filename) {
 
-  std::string f = filename + ".vtu";
+  auto f = util::io::checkAndCreateNewFilename(filename, "vtu");
 
   d_reader_p = vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
   d_reader_p->SetFileName(const_cast<char *>(f.c_str()));

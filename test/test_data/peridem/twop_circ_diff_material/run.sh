@@ -34,9 +34,9 @@ gmsh "$f_p_2_mesh.geo" -2 -o "$f_p_2_mesh.vtk"  &> /dev/null
 
 echo "Running PeriDEM ... "
 f_inp="input$f_suf.yaml"
-"$execsrc" -i "$f_inp" --hpx:threads=$nts
+"$execsrc" -i "$f_inp" -nThreads $nts
 
-) |& tee output.log
+) 2>&1 |  tee output.log
 
 
 # check if we have produced 'output_10.vtu' file

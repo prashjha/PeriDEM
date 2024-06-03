@@ -10,6 +10,7 @@
 #ifndef INP_OUTPUTDECK_H
 #define INP_OUTPUTDECK_H
 
+#include "util/io.h"
 #include <string>
 #include <vector>
 
@@ -61,7 +62,7 @@ struct OutputDeck {
   /*! @brief Specify output criteria to change output frequency
    *
    * Choices are:
-   * - <none>
+   * - '' (none/null)
    * - max_Z
    * - max_Z_stop
    *
@@ -95,6 +96,46 @@ struct OutputDeck {
       : d_outFormat("vtu"), d_path("./"), d_dtOut(0), d_dtOutOld(0), d_debug(0),
         d_performFEOut(true), d_dtOutCriteria(0), d_performOut(true),
         d_dtTestOut(0), d_tagPPFile("0") {};
+
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- OutputDeck --------" << std::endl << std::endl;
+    oss << tabS << "Output format = " << d_outFormat << std::endl;
+    oss << tabS << "Output path = " << d_path
+        << std::endl;
+    oss << tabS << "Output tags = " << util::io::printStr<std::string>(d_outTags, 0) << std::endl;
+    oss << tabS << "Output time step = " << d_dtOut << std::endl;
+    oss << tabS << "Output time step old = " << d_dtOutOld << std::endl;
+    oss << tabS << "Debug level = " << d_debug << std::endl;
+    oss << tabS << "Perform FE output = " << d_performFEOut << std::endl;
+    oss << tabS << "Output file compression type = " << d_compressType << std::endl;
+    oss << tabS << "Output criteria = " << d_outCriteria << std::endl;
+    oss << tabS << "Output dt criteria = " << d_dtOutCriteria << std::endl;
+    oss << tabS << "Output criteria parameters = " << util::io::printStr<double>(d_outCriteriaParams, 0) << std::endl;
+    oss << tabS << "Perform output = " << d_performOut << std::endl;
+    oss << tabS << "Output time step when test = " << d_dtTestOut << std::endl;
+    oss << tabS << "Tag for postprocessing file = " << d_tagPPFile << std::endl;
+    oss << tabS << std::endl;
+
+    return oss.str();
+  }
+
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   /*!
    * @brief Searches list of tags and returns true if the asked tag is in the

@@ -31,8 +31,8 @@ namespace rw {
 namespace reader {
 
 /**
-   * @name CSV specific functions
-   */
+  * @name CSV specific functions
+  */
 /**@{*/
 
 /*!
@@ -71,6 +71,16 @@ void readParticleCsvFile(const std::string &filename, size_t dim,
                          std::vector<util::Point> *nodes,
                          std::vector<double> *rads,
                          const size_t &zone);
+
+/*!
+ * @brief Reads particles center location, radius, and zone id. In this case, file also provides initial orientation of particles.
+ * @param filename Name of mesh file
+ * @param dim Dimension
+ * @param nodes Vector of center locations
+ * @param rads Vector of radius
+ * @param orients Vector of orientation of particles
+ * @param zone Only reads particle with this zone
+ */
 void readParticleWithOrientCsvFile(const std::string &filename, size_t dim,
                          std::vector<util::Point> *nodes,
                          std::vector<double> *rads,
@@ -117,11 +127,11 @@ void readVtuFileNodes(const std::string &filename, size_t dim,
                      ref_config = false);
 
 /*!
- * @brief Reads cell data, i.e. element-node connectivity and node-element
- * connectivity
+ * @brief Reads cell data, i.e. element-node connectivity and node-element connectivity
  * @param filename Name of mesh file
  * @param dim Dimension
  * @param element_type Type of element
+ * @param num_elem Number of elements
  * @param enc Element-node connectivity
  * @param nec Node-element connectivity
  */

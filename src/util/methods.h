@@ -13,6 +13,7 @@
 #include "point.h"           // definition of Point
 #include <vector>
 #include <chrono>
+
 using namespace std::chrono;
 
 namespace util {
@@ -33,18 +34,16 @@ double add(const std::vector<double> &data);
 /*!
  * @brief Returns the maximum from list of data
  * @param data List of real numbers
- * @param i Pointer to store the id where maximum occurs
  * @return max Maximum value
  */
-double max(const std::vector<double> &data, size_t *i = nullptr);
+double max(const std::vector<double> &data);
 
 /*!
  * @brief Returns the minimum from list of data
  * @param data List of real numbers
- * @param i Pointer to store the id where minimum occurs
  * @return min Minimum value
  */
-double min(const std::vector<double> &data, size_t *i = nullptr);
+double min(const std::vector<double> &data);
 
 /*!
  * @brief Returns the sum of data
@@ -56,18 +55,16 @@ float add(const std::vector<float> &data);
 /*!
  * @brief Returns the maximum from list of data
  * @param data List of real numbers
- * @param i Pointer to store the id where maximum occurs
  * @return max Maximum value
  */
-float max(const std::vector<float> &data, size_t *i = nullptr);
+float max(const std::vector<float> &data);
 
 /*!
  * @brief Returns the minimum from list of data
  * @param data List of real numbers
- * @param i Pointer to store the id where minimum occurs
  * @return min Minimum value
  */
-float min(const std::vector<float> &data, size_t *i = nullptr);
+float min(const std::vector<float> &data);
 
 /*!
  * @brief Returns the maximum length of point from list of points
@@ -83,6 +80,8 @@ util::Point maxLength(const std::vector<util::Point> &data);
  * @return True True if dof is free
  */
 bool isFree(const int &i, const unsigned int &dof);
+
+/*! @copydoc isFree(const int &i, const unsigned int &dof) */
 bool isFree(const uint8_t &i, const unsigned int &dof);
 
 /*!
@@ -97,10 +96,11 @@ bool isTagInList(const std::string &tag, const std::vector<std::string> &tags);
  * @brief Returns difference between two times
  * @param begin Beginning time
  * @param end Ending time
+ * @param unit Unit in which time difference is to be returned
  * @return time Time difference
  */
 float timeDiff(std::chrono::steady_clock::time_point begin,
-                std::chrono::steady_clock::time_point end);
+                std::chrono::steady_clock::time_point end, std::string unit = "microseconds");
 
 } // namespace methods
 

@@ -8,43 +8,46 @@
  */
 
 #include "fracture.h"
-#include "util/geom.h"
 #include "util/io.h"
-#include <hpx/include/parallel_algorithm.hpp>
+#include "util/parallelUtil.h"
+#include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 
 geometry::Fracture::Fracture() {}
 
 geometry::Fracture::Fracture(const std::vector<util::Point> *nodes,
-    const std::vector<std::vector<size_t>> *neighbor_list) {
+    const std::vector<std::vector<std::size_t>> *neighbor_list) {
 
-  auto n = nodes->size();
+  std::size_t n = nodes->size();
   d_fracture.resize(n);
 
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      n, [this, &nodes, &neighbor_list, n](boost::uint64_t i) {
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
 
-        // get neighborlist of node i if neighborlist is provided
-        std::vector<size_t> neighs;
-        if (neighbor_list != nullptr)
-          neighs = (*neighbor_list)[i];
+  taskflow.for_each_index(
+    (std::size_t) 0, n, (std::size_t) 1, [this, &nodes, &neighbor_list, n](std::size_t i) {
+      // get neighborlist of node i if neighborlist is provided
+      std::vector<size_t> neighs;
+      if (neighbor_list != nullptr)
+        neighs = (*neighbor_list)[i];
 
-        // compute number of neighbors
-        auto ns = n;
-        if (!neighs.empty())
-          ns = neighs.size();
+      // compute number of neighbors
+      size_t ns = n;
+      if (!neighs.empty())
+        ns = neighs.size();
 
-        size_t s = ns / 8;
-        if (s * 8 < ns)
-          s++;
-        d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
-      }); // end of parallel for loop
+      size_t s = ns / 8;
+      if (s * 8 < ns)
+        s++;
+      d_fracture[i] = std::vector<uint8_t>(s, uint8_t(0));
+    }
+  ); // for_each
 
-  f.get();
+  executor.run(taskflow).get();
 }
 
-void geometry::Fracture::setBondState(const size_t &i, const size_t &j,
+void geometry::Fracture::setBondState(const std::size_t &i, const std::size_t &j,
                                       const bool &state) {
 
   // to set i^th bit as true of integer a,
@@ -63,11 +66,11 @@ bool geometry::Fracture::getBondState(const size_t &i, const size_t &j) const {
   return bond >> (j % 8) & 1UL;
 }
 
-const std::vector<uint8_t> &geometry::Fracture::getBonds(const size_t &i)
+const std::vector<uint8_t> &geometry::Fracture::getBonds(const std::size_t &i)
 const {
   return d_fracture[i];
 }
-std::vector<uint8_t> &geometry::Fracture::getBonds(const size_t &i) {
+std::vector<uint8_t> &geometry::Fracture::getBonds(const std::size_t &i) {
   return d_fracture[i];
 }
 

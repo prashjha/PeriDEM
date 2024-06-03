@@ -9,9 +9,9 @@
 
 #include "methods.h"
 #include "function.h"
-#include <hpx/include/parallel_algorithm.hpp>
-#include <hpx/include/parallel_minmax.hpp>
-#include <hpx/include/parallel_reduce.hpp>
+// #include <execution>
+// #include <algorithm>
+#include <taskflow/taskflow/taskflow.hpp>
 
 static bool compare_point(const util::Point &a, const util::Point &b) {
 
@@ -20,62 +20,127 @@ static bool compare_point(const util::Point &a, const util::Point &b) {
 
 double util::methods::add(const std::vector<double> &data) {
 
-  return hpx::parallel::reduce(hpx::parallel::execution::par, data.begin(),
-                               data.end());
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // auto red = std::numeric_limits<double>::max();
+  // taskflow.reduce(data.begin(), data.end(), red, [] (double& a, double& b) {  
+  //     return a + b; 
+  //   }
+  // );
+  // executor.run(taskflow).get();
+
+  // return red;
+
+  // return std::reduce(std::execution::par, data.begin(), data.end());
+  std::cerr << "util::methods::add() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
-double util::methods::max(const std::vector<double> &data, size_t *i) {
+double util::methods::max(const std::vector<double> &data) {
 
-  auto max_i = hpx::parallel::max_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // double red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (double a, double b) {  
+  //     return std::max(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), max_i);
-  return data[std::distance(data.begin(), max_i)];
+  // return red;
+  // auto red = std::max_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::max() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
-double util::methods::min(const std::vector<double> &data, size_t *i) {
+double util::methods::min(const std::vector<double> &data) {
 
-  auto min_i = hpx::parallel::min_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // double red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (double a, double b) {  
+  //     return std::min(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), min_i);
-  return data[std::distance(data.begin(), min_i)];
+  // return red;
+  // auto red = std::min_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::min() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 float util::methods::add(const std::vector<float> &data) {
 
-  return hpx::parallel::reduce(hpx::parallel::execution::par, data.begin(),
-                               data.end());
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // float red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (float a, float b) {  
+  //     return a + b; 
+  //   }
+  // );
+  // executor.run(taskflow).get();
+
+  // return red;
+
+  // return std::reduce(std::execution::par, data.begin(), data.end());
+  std::cerr << "util::methods::add() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
-float util::methods::max(const std::vector<float> &data, size_t *i) {
+float util::methods::max(const std::vector<float> &data) {
 
-  auto max_i = hpx::parallel::max_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // float red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (float a, float b) {  
+  //     return std::max(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), max_i);
-  return data[std::distance(data.begin(), max_i)];
+  // return red;
+  // auto red = std::max_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::max() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
-float util::methods::min(const std::vector<float> &data, size_t *i) {
+float util::methods::min(const std::vector<float> &data) {
 
-  auto min_i = hpx::parallel::min_element(hpx::parallel::execution::par,
-                                          data.begin(), data.end());
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // float red = 0.;
+  // taskflow.reduce(data.begin(), data.end(), red, [] (float a, float b) {  
+  //     return std::min(a, b);
+  //   }
+  // );
+  // executor.run(taskflow).get();
 
-  if (i != nullptr)
-    *i = std::distance(data.begin(), min_i);
-  return data[std::distance(data.begin(), min_i)];
+  // return red;
+  // auto red = std::min_element(std::execution::par, data.begin(), data.end());
+  // return *red;
+  std::cerr << "util::methods::min() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 util::Point util::methods::maxLength(const std::vector<util::Point> &data) {
 
-  auto max_i = hpx::parallel::max_element(
-      hpx::parallel::execution::par, data.begin(), data.end(), &compare_point);
 
-  return data[std::distance(data.begin(), max_i)];
+  // tf::Taskflow taskflow;
+  // tf::Executor executor;
+  // util::Point red = util::Point();
+  // taskflow.reduce(data.begin(), data.end(), red, &compare_point);
+  // executor.run(taskflow).get();
+
+  // return red;
+
+  // auto red = std::max_element(std::execution::par, data.begin(), data.end(), &compare_point);
+  // return *red;
+  std::cerr << "util::methods::maxLength() function not implemented" << std::endl;
+  exit(EXIT_FAILURE);
 }
 
 bool util::methods::isFree(const int &i, const unsigned int &dof) {
@@ -95,9 +160,16 @@ bool util::methods::isTagInList(const std::string &tag,
   return false;
 }
 
-float util::methods::timeDiff(std::chrono::steady_clock::time_point begin,
-                std::chrono::steady_clock::time_point end) {
+float util::methods::timeDiff(std::chrono::steady_clock::time_point begin, std::chrono::steady_clock::time_point end, std::string unit) {
 
-  return std::chrono::duration_cast<std::chrono::microseconds>(end -
-                                                               begin).count();
+  if (unit == "microseconds")
+    return std::chrono::duration_cast<std::chrono::microseconds>(end - begin).count();
+  else if (unit == "milliseconds")
+    return std::chrono::duration_cast<std::chrono::milliseconds>(end - begin).count();
+  else if (unit == "seconds")
+    return std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
+  else {
+    std::cerr << "Unit = " << unit << " not valid.\n";
+    exit(EXIT_FAILURE);
+  }
 }

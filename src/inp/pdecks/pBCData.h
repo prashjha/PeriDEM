@@ -93,6 +93,13 @@ struct PBCData {
    */
   PBCData() : d_region_p(nullptr), d_isDisplacementZero(false){};
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -121,6 +128,12 @@ struct PBCData {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

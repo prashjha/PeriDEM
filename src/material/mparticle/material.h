@@ -77,9 +77,7 @@ class Material {
 public:
   /*!
    * @brief Constructor
-   * @param deck Input deck which contains user-specified information
-   * @param dim Dimension
-   * @param horizon Horizon
+   * @param name Name of material model
    */
   explicit Material(std::string name = "") : d_name(name) {}
 
@@ -120,6 +118,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
+   * @param break_bonds Flag to specify whether bonds are allowed to break or not
    * @return value Pair of energy and force
    */
   virtual std::pair<double, double>
@@ -140,6 +139,13 @@ public:
   getBondEF(const double &r, const double &s, bool &fs, const double
   &mx, const double &thetax) const = 0;
 
+  /*!
+   * @brief Returns the unit vector along which bond-force acts
+   *
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return vector Unit vector
+   */
   virtual util::Point getBondForceDirection(const util::Point &dx,
                                              const util::Point &du) const = 0;
 
@@ -200,6 +206,13 @@ public:
    */
   virtual inp::MatData computeMaterialProperties(const size_t &dim) const = 0;
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   virtual std::string printStr(int nt, int lvl) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -213,7 +226,16 @@ public:
 
     return oss.str();
   }
+
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   virtual void print(int nt, int lvl) const { std::cout << printStr(nt, lvl); }
+
+  /*! @brief Prints the information about the object */
   virtual void print() const { print(0, 0); }
 
 private:
@@ -287,10 +309,7 @@ public:
     }
   };
 
-  /*!
-   * @brief Returns true if state-based potential is active
-   * @return bool True/false
-   */
+  /*! @copydoc Material::isStateActive() const */
   bool isStateActive() const override { return false; };
 
   /*!
@@ -316,6 +335,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
+   * @param break_bonds Flag to specify whether bonds are allowed to break or not
    * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
@@ -363,6 +383,13 @@ public:
     return this->getBondEF(r, s, fs, true);
   };
 
+  /*!
+   * @brief Returns the unit vector along which bond-force acts
+   *
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return vector Unit vector
+   */
   util::Point getBondForceDirection(const util::Point &dx,
                                      const util::Point &du) const override {
     return dx / dx.length();
@@ -419,7 +446,6 @@ public:
 
   /*!
    * @brief Returns horizon
-   *
    * @return horizon Horizon
    */
   double getHorizon() const override { return d_horizon; };
@@ -462,7 +488,11 @@ public:
   };
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -487,12 +517,26 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); }
 
 private:
+  /*!
+   * @brief Compute material model parameters
+   *
+   * @param deck MaterialDeck
+   * @param dim Dimension of the domain
+   */
   void computeParameters(inp::MaterialDeck &deck, const size_t &dim) {
     //
     // Need following elastic and fracture properties
@@ -681,6 +725,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
+   * @param break_bonds Flag to specify whether bonds are allowed to break or not
    * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
@@ -724,6 +769,13 @@ public:
     return this->getBondEF(r, s, fs, true);
   };
 
+  /*!
+   * @brief Returns the unit vector along which bond-force acts
+   *
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return vector Unit vector
+   */
   util::Point getBondForceDirection(const util::Point &dx,
                                      const util::Point &du) const override {
     return (dx + du) / (dx + du).length();
@@ -788,7 +840,7 @@ public:
    * data
    *
    * @param dim Dimension of the problem
-   * @return Data Material data
+   * @return inp::MatData Material data
    */
   inp::MatData computeMaterialProperties(const size_t &dim) const override {
 
@@ -818,7 +870,11 @@ public:
   };
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -839,12 +895,26 @@ public:
     return oss.str();
   };
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   };
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); };
 
 private:
+  /*!
+   * @brief Compute material model parameters
+   *
+   * @param deck MaterialDeck
+   * @param dim Dimension of the domain
+   */
   void computeParameters(inp::MaterialDeck &deck, const size_t &dim) {
     //
     // Need following elastic and fracture properties
@@ -1013,6 +1083,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
+   * @param break_bonds Flag to specify whether bonds are allowed to break or not
    * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
@@ -1041,6 +1112,13 @@ public:
     return this->getBondEF(r, s, fs, true);
   };
 
+  /*!
+   * @brief Returns the unit vector along which bond-force acts
+   *
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return vector Unit vector
+   */
   util::Point getBondForceDirection(const util::Point &dx,
                                      const util::Point &du) const override {
     return (dx + du) / (dx + du).length();
@@ -1131,7 +1209,11 @@ public:
   };
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -1151,12 +1233,26 @@ public:
     return oss.str();
   };
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   };
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); };
 
 private:
+  /*!
+   * @brief Compute material model parameters
+   *
+   * @param deck MaterialDeck
+   * @param dim Dimension of the domain
+   */
   void computeParameters(inp::MaterialDeck &deck, const size_t &dim) {
     //
     // Need following elastic and fracture properties
@@ -1295,6 +1391,7 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
+   * @param break_bonds Flag to specify whether bonds are allowed to break or not
    * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
@@ -1330,6 +1427,13 @@ public:
     return {0., J * (r * thetax * factor + change_length * alpha)};
   };
 
+  /*!
+   * @brief Returns the unit vector along which bond-force acts
+   *
+   * @param dx Reference bond vector
+   * @param du Difference of displacement
+   * @return vector Unit vector
+   */
   util::Point getBondForceDirection(const util::Point &dx,
                                      const util::Point &du) const override {
     return (dx + du) / (dx + du).length();
@@ -1425,7 +1529,11 @@ public:
   };
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -1447,12 +1555,26 @@ public:
     return oss.str();
   };
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   };
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); };
 
 private:
+  /*!
+   * @brief Compute material model parameters
+   *
+   * @param deck MaterialDeck
+   * @param dim Dimension of the domain
+   */
   void computeParameters(inp::MaterialDeck &deck, const size_t &dim) {
     //
     // Need following elastic and fracture properties

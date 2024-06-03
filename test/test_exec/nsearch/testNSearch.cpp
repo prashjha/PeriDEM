@@ -9,36 +9,35 @@
 
 #include <PeriDEMConfig.h>
 #include "testNSearchLib.h"
-#include <hpx/hpx_main.hpp>
+#include "util/io.h"
+#include "util/parallelUtil.h"                       // MPI-related functions
+#include <fmt/format.h>
 #include <iostream>
-#include <boost/program_options.hpp>            // program options
 
 
 int main(int argc, char *argv[]) {
 
-  boost::program_options::options_description desc("Allowed options");
-  desc.add_options()("help", "produce help message")(
-      "num-points,i", boost::program_options::value<int>(),
-      "Configuration file");
+  // init parallel
+  util::parallel::initMpi(argc, argv);
+  int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
+  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(util::parallel::getMpiStatus()->printStr());
 
-  boost::program_options::variables_map vm;
-  boost::program_options::store(
-      boost::program_options::parse_command_line(argc, argv, desc), vm);
-  boost::program_options::notify(vm);
+  util::io::InputParser input(argc, argv);
 
-  if (vm.count("help")) {
-    std::cout << desc << "\n";
-    return 1;
+  if (input.cmdOptionExists("-h") or !input.cmdOptionExists("-i")) {
+    // print help
+    std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
+              << MINOR_VERSION << "." << UPDATE_VERSION
+              << ") -i <num-points>" << std::endl;
+    //exit(EXIT_FAILURE);
   }
 
   // read input file
   int N;
-  if (vm.count("num-points")) N = vm["num-points"].as<int>();
+  if (input.cmdOptionExists("-i")) N = std::stoi(input.getCmdOption("-i"));
   else {
-    std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
-              << MINOR_VERSION << "." << UPDATE_VERSION
-              << ") -i <num-points>" << std::endl;
-    std::cout << "Running test with num-points = 20\n";
+    std::cout << "Running test with default num-points = 20\n";
     N = 20;
   }
 

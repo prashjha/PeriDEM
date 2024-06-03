@@ -6,33 +6,45 @@
 // ////////////////////////////////////////////////////////////////////////////////
 
 #include "io.h"
+#include <cassert>
 
 namespace {
-
-  static util::io::Logger *logger = nullptr;
+    util::io::Logger *logger_p = nullptr;
 }
 
 void util::io::initLogger(int debug_level, std::string filename) {
 
-  if (logger != nullptr)
+  if (logger_p != nullptr)
     return;
 
   auto deck = new LoggerDeck(debug_level, filename);
-  logger = new Logger(deck);
+  logger_p = new Logger(deck);
 }
 
-void util::io::log(const std::string & str, bool screen_out) {
+void util::io::log(const std::string & str, bool screen_out, int printMpiRank) {
 
-  if (logger == nullptr)
-    logger = new Logger();
+  // for now, we do not call assert and rather create a logger if it does not exist
+  /*
+  //assert((logger_p != nullptr) && "logger_p "
+  //                                   "(pointer of type util::io::Logger) is not initialized. "
+  //                                   "Call util::io::initLogger(debug_level, log_filename) once at the beginning.");
+  */
+  if (logger_p == nullptr)
+    logger_p = new Logger();
 
-  logger->log(str, screen_out);
+  logger_p->log(str, screen_out, printMpiRank);
 }
 
-void util::io::log(std::ostringstream &oss, bool screen_out) {
+void util::io::log(std::ostringstream &oss, bool screen_out, int printMpiRank) {
 
-  if (logger == nullptr)
-    logger = new Logger();
+  // for now, we do not call assert and rather create a logger if it does not exist
+  /*
+  //assert((logger_p != nullptr) && "logger_p "
+  //                                   "(pointer of type util::io::Logger) is not initialized. "
+  //                                   "Call util::io::initLogger(debug_level, log_filename) once at the beginning.");
+  */
+  if (logger_p == nullptr)
+    logger_p = new Logger();
 
-  logger->log(oss, screen_out);
+  logger_p->log(oss, screen_out, printMpiRank);
 }

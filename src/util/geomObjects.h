@@ -73,6 +73,7 @@ class GeomObject {
 public:
   /*!
    * @brief Constructor
+   * @param name Name of the geometric object
    */
   explicit GeomObject(std::string name = "") : d_name(std::move(name)){};
 
@@ -95,6 +96,12 @@ public:
   virtual std::pair<util::Point, util::Point> box() const {
     return {util::Point(), util::Point()};
   };
+
+  /*!
+   * @brief Computes the bounding box of object
+   * @param tol Tolerance/padding used in creating bounding box
+   * @return Pair Left-bottom-back and right-top-front corner points of box
+   */
   virtual std::pair<util::Point, util::Point> box(const double &tol) const {
     return {util::Point(), util::Point()};
   };
@@ -115,18 +122,22 @@ public:
 
   /*!
    * @brief Checks if point is inside this object
+   * @param x Point
    * @return True If point lies inside
    */
   virtual bool isInside(const util::Point &x) const { return false; };
 
   /*!
    * @brief Checks if point is outside of this object
+   * @param x Point
    * @return True If point lies outside
    */
   virtual bool isOutside(const util::Point &x) const { return false; };
 
   /*!
    * @brief Checks if point is within given distance of this object
+   * @param x Point
+   * @param tol Tolerance used in checking the nearness
    * @return True True if within the tol distance
    */
   virtual bool isNear(const util::Point &x, const double &tol) const {
@@ -135,6 +146,9 @@ public:
 
   /*!
    * @brief Checks if point is within given distance of this object
+   * @param x Point
+   * @param tol Tolerance used in checking the nearness
+   * @param within Check if the point is within (inside) the object
    * @return True True if it is near within tol distance
    */
   virtual bool isNearBoundary(const util::Point &x, const double &tol,
@@ -144,12 +158,14 @@ public:
 
   /*!
    * @brief Checks if point lies exactly on the boundary
+   * @param x Point
    * @return True True if it lies on the boundary
    */
   virtual bool doesIntersect(const util::Point &x) const { return false; };
 
   /*!
    * @brief Checks if box is completely inside
+   * @param box Box
    * @return True True if box lies inside
    */
   virtual bool
@@ -159,6 +175,7 @@ public:
 
   /*!
    * @brief Checks if box is outside of the object
+   * @param box Box
    * @return True True if box lies outside
    */
   virtual bool
@@ -168,6 +185,8 @@ public:
 
   /*!
    * @brief Checks if box is within given distance of this object
+   * @param box Box
+   * @param tol Tolerance used in checking the nearness
    * @return True True if box is inside within the tol distance
    */
   virtual bool isNear(const std::pair<util::Point, util::Point> &box,
@@ -177,6 +196,7 @@ public:
 
   /*!
    * @brief Checks if box intersects this object
+   * @param box Box
    * @return True True if intersects
    */
   virtual bool
@@ -185,10 +205,11 @@ public:
   };
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   virtual std::string printStr(int nt, int lvl) const {
 
@@ -202,7 +223,15 @@ public:
     return oss.str();
   };
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   virtual void print(int nt, int lvl) const { std::cout << printStr(nt, lvl); };
+
+  /*! @brief Prints the information about the object */
   virtual void print() const { print(0, 0); };
 
 public:

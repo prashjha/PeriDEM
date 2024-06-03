@@ -8,12 +8,12 @@
  */
 
 #include "particleFLoading.h"
-#include "fe/mesh.h"
 #include "inp/pdecks/particleDeck.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
-#include "util/geom.h"
-#include <hpx/include/parallel_algorithm.hpp>
+#include "util/parallelUtil.h"
+#include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 namespace {
 
@@ -62,84 +62,86 @@ void loading::ParticleFLoading::applyParticle(const double &time,
     auto box = bc.d_region_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        particle->getNumNodes(),
-        [time, &particle, bc, box, this](boost::uint64_t i) {
-          const auto x = particle->getXRefLocal(i);
-          double fmax = 1.0;
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
 
-          bool compute_force_i = false;
-          if (bc.d_selectionType == "region" && bc.d_region_p->isInside(x))
-            compute_force_i = true;
-          else if (bc.d_selectionType == "region_particle" &&
-                   bc.d_region_p->isInside(x) &&
-                   isInList(particle->getTypeId(), bc.d_pList))
-            compute_force_i = true;
-          else if (bc.d_selectionType == "particle" &&
-                   isInList(particle->getTypeId(), bc.d_pList))
-            compute_force_i = true;
+    taskflow.for_each_index(
+      (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1, [time, &particle, bc, box, this](std::size_t i) {
+        const auto x = particle->getXRefLocal(i);
+        double fmax = 1.0;
 
-          if (compute_force_i) {
+        bool compute_force_i = false;
+        if (bc.d_selectionType == "region" && bc.d_region_p->isInside(x))
+          compute_force_i = true;
+        else if (bc.d_selectionType == "region_particle" &&
+                  bc.d_region_p->isInside(x) &&
+                  isInList(particle->getTypeId(), bc.d_pList))
+          compute_force_i = true;
+        else if (bc.d_selectionType == "particle" &&
+                  isInList(particle->getTypeId(), bc.d_pList))
+          compute_force_i = true;
 
-            // apply spatial function
-            if (bc.d_spatialFnType == "hat_x") {
-              fmax = bc.d_spatialFnParams[0] *
-                     util::hatFunction(x.d_x, box.first.d_x,
-                                                 box.second.d_x);
-            } else if (bc.d_spatialFnType == "hat_y") {
-              fmax = bc.d_spatialFnParams[0] *
-                     util::hatFunction(x.d_y, box.first.d_y,
-                                                 box.second.d_y);
-            } else if (bc.d_spatialFnType == "sin_x") {
-              double a = M_PI * bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_x);
-            } else if (bc.d_spatialFnType == "sin_y") {
-              double a = M_PI * bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_y);
-            } else if (bc.d_spatialFnType == "linear_x") {
-              double a = bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * a * x.d_x;
-            } else if (bc.d_spatialFnType == "linear_y") {
-              double a = bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * a * x.d_y;
-            }
+        if (compute_force_i) {
 
-            // apply time function
-            if (bc.d_timeFnType == "linear")
-              fmax *= time;
-            else if (bc.d_timeFnType == "linear_step")
-              fmax *= util::linearStepFunc(time, bc.d_timeFnParams[1],
-                                                     bc.d_timeFnParams[2]);
-            else if (bc.d_timeFnType == "linear_slow_fast") {
-              if (util::isGreater(time, bc.d_timeFnParams[1]))
-                fmax *= bc.d_timeFnParams[3] * time;
-              else
-                fmax *= bc.d_timeFnParams[2] * time;
-            } else if (bc.d_timeFnType == "sin") {
-              double a = M_PI * bc.d_timeFnParams[1];
-              fmax *= std::sin(a * time);
-            }
+          // apply spatial function
+          if (bc.d_spatialFnType == "hat_x") {
+            fmax = bc.d_spatialFnParams[0] *
+                    util::hatFunction(x.d_x, box.first.d_x,
+                                                box.second.d_x);
+          } else if (bc.d_spatialFnType == "hat_y") {
+            fmax = bc.d_spatialFnParams[0] *
+                    util::hatFunction(x.d_y, box.first.d_y,
+                                                box.second.d_y);
+          } else if (bc.d_spatialFnType == "sin_x") {
+            double a = M_PI * bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_x);
+          } else if (bc.d_spatialFnType == "sin_y") {
+            double a = M_PI * bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_y);
+          } else if (bc.d_spatialFnType == "linear_x") {
+            double a = bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * a * x.d_x;
+          } else if (bc.d_spatialFnType == "linear_y") {
+            double a = bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * a * x.d_y;
+          }
 
-            // multiply by the slope
-            fmax *= bc.d_timeFnParams[0];
+          // apply time function
+          if (bc.d_timeFnType == "linear")
+            fmax *= time;
+          else if (bc.d_timeFnType == "linear_step")
+            fmax *= util::linearStepFunc(time, bc.d_timeFnParams[1],
+                                                    bc.d_timeFnParams[2]);
+          else if (bc.d_timeFnType == "linear_slow_fast") {
+            if (util::isGreater(time, bc.d_timeFnParams[1]))
+              fmax *= bc.d_timeFnParams[3] * time;
+            else
+              fmax *= bc.d_timeFnParams[2] * time;
+          } else if (bc.d_timeFnType == "sin") {
+            double a = M_PI * bc.d_timeFnParams[1];
+            fmax *= std::sin(a * time);
+          }
 
-            auto force_i = util::Point();
-            for (auto d : bc.d_direction) {
-              if (d == 1)
-                force_i.d_x += fmax;
-              else if (d == 2)
-                force_i.d_y += fmax;
-              else if (d == 3)
-                force_i.d_z += fmax;
-            }
+          // multiply by the slope
+          fmax *= bc.d_timeFnParams[0];
 
-            // add force
-            particle->addFLocal(i, force_i);
-          } // if compute force
-        }   // loop over particle nodes
-    );      // end of parallel for loop
-    f.get();
+          auto force_i = util::Point();
+          for (auto d : bc.d_direction) {
+            if (d == 1)
+              force_i.d_x += fmax;
+            else if (d == 2)
+              force_i.d_y += fmax;
+            else if (d == 3)
+              force_i.d_z += fmax;
+          }
+
+          // add force
+          particle->addFLocal(i, force_i);
+        } // if compute force
+      }
+    ); // for_each
+
+    executor.run(taskflow).get();
   } // loop over bc sets
 }
 
@@ -164,83 +166,85 @@ void loading::ParticleFLoading::applyWall(const double &time,
     auto box = bc.d_region_p->box();
 
     // for (size_t i = 0; i < wall->getNumNodes(); i++) {
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        wall->getNumNodes(),
-        [time, &wall, bc, box, this](boost::uint64_t i) {
-          const auto x = wall->getXRefLocal(i);
-          double fmax = 1.0;
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
 
-          bool compute_force_i = false;
-          if (bc.d_selectionType == "region" && bc.d_region_p->isInside(x))
-            compute_force_i = true;
-          else if (bc.d_selectionType == "region_wall" &&
-                   bc.d_region_p->isInside(x) &&
-                   isInList(wall->getTypeId(), bc.d_wList))
-            compute_force_i = true;
-          else if (bc.d_selectionType == "wall" &&
-                   isInList(wall->getTypeId(), bc.d_wList))
-            compute_force_i = true;
+    taskflow.for_each_index(
+      (std::size_t) 0, wall->getNumNodes(), (std::size_t) 1, [time, &wall, bc, box, this] (std::size_t i) {
+        const auto x = wall->getXRefLocal(i);
+        double fmax = 1.0;
 
-          if (compute_force_i) {
+        bool compute_force_i = false;
+        if (bc.d_selectionType == "region" && bc.d_region_p->isInside(x))
+          compute_force_i = true;
+        else if (bc.d_selectionType == "region_wall" &&
+                  bc.d_region_p->isInside(x) &&
+                  isInList(wall->getTypeId(), bc.d_wList))
+          compute_force_i = true;
+        else if (bc.d_selectionType == "wall" &&
+                  isInList(wall->getTypeId(), bc.d_wList))
+          compute_force_i = true;
 
-            // apply spatial function
-            if (bc.d_spatialFnType == "hat_x") {
-              fmax = bc.d_spatialFnParams[0] *
-                     util::hatFunction(x.d_x, box.first.d_x,
-                                                 box.second.d_x);
-            } else if (bc.d_spatialFnType == "hat_y") {
-              fmax = bc.d_spatialFnParams[0] *
-                     util::hatFunction(x.d_y, box.first.d_y,
-                                                 box.second.d_y);
-            } else if (bc.d_spatialFnType == "sin_x") {
-              double a = M_PI * bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_x);
-            } else if (bc.d_spatialFnType == "sin_y") {
-              double a = M_PI * bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_y);
-            } else if (bc.d_spatialFnType == "linear_x") {
-              double a = bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * a * x.d_x;
-            } else if (bc.d_spatialFnType == "linear_y") {
-              double a = bc.d_spatialFnParams[0];
-              fmax = bc.d_spatialFnParams[0] * a * x.d_y;
-            }
+        if (compute_force_i) {
 
-            // apply time function
-            if (bc.d_timeFnType == "linear")
-              fmax *= time;
-            else if (bc.d_timeFnType == "linear_step")
-              fmax *= util::linearStepFunc(time, bc.d_timeFnParams[1],
-                                                     bc.d_timeFnParams[2]);
-            else if (bc.d_timeFnType == "linear_slow_fast") {
-              if (util::isGreater(time, bc.d_timeFnParams[1]))
-                fmax *= bc.d_timeFnParams[3] * time;
-              else
-                fmax *= bc.d_timeFnParams[2] * time;
-            } else if (bc.d_timeFnType == "sin") {
-              double a = M_PI * bc.d_timeFnParams[1];
-              fmax *= std::sin(a * time);
-            }
+          // apply spatial function
+          if (bc.d_spatialFnType == "hat_x") {
+            fmax = bc.d_spatialFnParams[0] *
+                    util::hatFunction(x.d_x, box.first.d_x,
+                                                box.second.d_x);
+          } else if (bc.d_spatialFnType == "hat_y") {
+            fmax = bc.d_spatialFnParams[0] *
+                    util::hatFunction(x.d_y, box.first.d_y,
+                                                box.second.d_y);
+          } else if (bc.d_spatialFnType == "sin_x") {
+            double a = M_PI * bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_x);
+          } else if (bc.d_spatialFnType == "sin_y") {
+            double a = M_PI * bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * std::sin(a * x.d_y);
+          } else if (bc.d_spatialFnType == "linear_x") {
+            double a = bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * a * x.d_x;
+          } else if (bc.d_spatialFnType == "linear_y") {
+            double a = bc.d_spatialFnParams[0];
+            fmax = bc.d_spatialFnParams[0] * a * x.d_y;
+          }
 
-            // multiply by the slope
-            fmax *= bc.d_timeFnParams[0];
+          // apply time function
+          if (bc.d_timeFnType == "linear")
+            fmax *= time;
+          else if (bc.d_timeFnType == "linear_step")
+            fmax *= util::linearStepFunc(time, bc.d_timeFnParams[1],
+                                                    bc.d_timeFnParams[2]);
+          else if (bc.d_timeFnType == "linear_slow_fast") {
+            if (util::isGreater(time, bc.d_timeFnParams[1]))
+              fmax *= bc.d_timeFnParams[3] * time;
+            else
+              fmax *= bc.d_timeFnParams[2] * time;
+          } else if (bc.d_timeFnType == "sin") {
+            double a = M_PI * bc.d_timeFnParams[1];
+            fmax *= std::sin(a * time);
+          }
 
-            auto force_i = util::Point();
-            for (auto d : bc.d_direction) {
-              if (d == 1)
-                force_i.d_x += fmax;
-              else if (d == 2)
-                force_i.d_y += fmax;
-              else if (d == 3)
-                force_i.d_z += fmax;
-            }
+          // multiply by the slope
+          fmax *= bc.d_timeFnParams[0];
 
-            // add force
-            wall->addFLocal(i, force_i);
-          } // if compute force
-        }   // loop over particle nodes
-    );      // end of parallel for loop
-    f.get();
+          auto force_i = util::Point();
+          for (auto d : bc.d_direction) {
+            if (d == 1)
+              force_i.d_x += fmax;
+            else if (d == 2)
+              force_i.d_y += fmax;
+            else if (d == 3)
+              force_i.d_z += fmax;
+          }
+
+          // add force
+          wall->addFLocal(i, force_i);
+        } // if compute force
+      }
+    ); // for_each
+
+    executor.run(taskflow).get();
   } // loop over bc sets
 }

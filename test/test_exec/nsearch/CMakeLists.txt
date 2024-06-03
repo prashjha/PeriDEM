@@ -5,4 +5,8 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-add_hpx_executable(TestNSearch SOURCES testNSearch.cpp testNSearchLib.cpp DEPENDENCIES Util FE Geometry Particle NSearch)
+AUX_SOURCE_DIRECTORY(./ SOURCES)
+
+add_executable(TestNSearch ${SOURCES})
+
+target_link_libraries(TestNSearch PUBLIC Util FE Geometry Particle NSearch fmt::fmt Threads::Threads)

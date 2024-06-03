@@ -5,25 +5,48 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-# base ubuntu image with petsc, libmesh, hpx
+# base ubuntu image with essentials and vtk
 FROM prashjha/peridem-base-focal:latest
 
 # Set metadata
 LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
 LABEL description="PeriDEM docker image"
 
-WORKDIR /
+## build command
+## docker build -t prashjha/peridem-focal:latest -f ./Dockerfile-focal . 2>&1 | tee log-peridem-focal.txt
 
-RUN git clone  https://github.com/prashjha/PeriDEM.git
+# -----------------------
+# setup user (for mpi tests)
+# username - user
+# password - password
+# add only if the user does not exist
+# -----------------------
+RUN if id user >/dev/null 2>&1; then echo "User 'user' already exists"; else echo "User 'user' does not exist so creating user 'user'" && useradd -m user && yes password | passwd user && usermod -s /bin/bash user; fi
 
-RUN cd /PeriDEM && \
-		mkdir build && \
-		cd build && \
-		cmake -DHPX_IGNORE_COMPILER_COMPATIBILITY=ON \
-					-DCMAKE_BUILD_TYPE=Release \
-					-DEnable_Tests=ON \
-					-DHPX_DIR=${HPX_DIR}/lib/cmake/HPX \
-					.. && \
-		make -j 2 && \
-		make install
+# change user
+USER user
+WORKDIR /home/user
+
+# -----------------------
+# setup git pull method
+# -----------------------
+RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
+    git config --global url."https://".insteadOf git://
+
+# -----------------------
+# build peridem
+# -----------------------
+RUN git clone https://github.com/prashjha/PeriDEM.git &&\
+    cd PeriDEM &&\
+    git submodule update --init --recursive && \
+    mkdir -p build && \
+    cd build && \
+    cmake -DCMAKE_BUILD_TYPE=Release \
+          -DEnable_Tests=ON \
+          -DDisable_Docker_MPI_Tests=OFF \
+          -DVTK_DIR=/usr/local/lib/cmake/vtk-9.3 \
+          -DMETIS_DIR=/usr/lib \
+          .. && \
+    make -j 2 && \
+    make install
 

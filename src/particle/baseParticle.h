@@ -356,7 +356,7 @@ public:
    * @param dof Direction or degree of freedom to be modified
    * @param u Displacement to set
    */
-  void setU(size_t i, int dof, double x) { d_modelData_p->setU(i, dof, x); };
+  void setU(size_t i, int dof, double u) { d_modelData_p->setU(i, dof, u); };
 
   /*!
    * @brief Add to displacement of the node
@@ -364,7 +364,7 @@ public:
    * @param dof Direction or degree of freedom to be modified
    * @param u Displacement to add
    */
-  void addU(size_t i, int dof, double x) { d_modelData_p->addU(i, dof, x); };
+  void addU(size_t i, int dof, double u) { d_modelData_p->addU(i, dof, u); };
 
   /*!
    * @brief Get displacement of the node given node's local id
@@ -372,6 +372,8 @@ public:
    * @return u Displacement
    */
   util::Point &getULocal(size_t i) { return d_modelData_p->getU(i+d_globStart); };
+
+  /*! @copydoc getULocal(size_t i) */
   const util::Point &getULocal(size_t i) const { return d_modelData_p->getU(i+d_globStart); };
 
   /*!
@@ -784,6 +786,8 @@ public:
 
   /*! @brief particle type */
   std::string d_type;
+
+  /*! String to integer map for particle type */
   int d_typeIndex; // string - int map
 
   /*! @brief Id of this particle */

@@ -7,6 +7,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_hpx_library(FE SOURCES ${SOURCES} DEPENDENCIES Util RW)
+add_library(FE ${SOURCES})
 
-
+target_link_libraries(FE PUBLIC Util RW ${METIS_LIB})

@@ -162,22 +162,47 @@ private:
 
   /*!
    * @brief Read data into material deck and store its pointer
+   *
+   * @param s_config Config file to read data
+   * @param m_deck Pointer to material deck
+   * @param zone_id Id of zone
    */
   void setZoneMaterialDeck(std::vector<std::string> s_config,
       inp::MaterialDeck *m_deck, size_t zone_id);
 
   /*!
    * @brief Read data into mesh deck and store its pointer
+   *
+   * @param s_config Config file to read data
+   * @param mesh_deck Pointer to mesh deck
    */
   void setZoneMeshDeck(std::vector<std::string> s_config,
                        inp::MeshDeck *mesh_deck);
 
+  /*!
+   * @brief Read zone data
+   *
+   * @param s_config Config file to read data
+   * @param zone_data Pointer to Zone object
+   */
   void setZoneData(std::vector<std::string> s_config,
                                inp::Zone *zone_data);
 
+  /*!
+   * @brief Read particle data
+   *
+   * @param string_zone String associated with zone to get the data from YAML file
+   * @param particle_data Pointer to particle data
+   */
   void setParticleData(std::string string_zone,
                                    inp::ParticleZone *particle_data);
 
+  /*!
+   * @brief Read wall data
+   *
+   * @param string_zone String associated with zone to get the data from YAML file
+   * @param wall_data Pointer to wall data
+   */
   void setWallData(std::string string_zone,
                        inp::WallZone *wall_data);
 

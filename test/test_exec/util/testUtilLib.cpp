@@ -10,10 +10,8 @@
 #include "testUtilLib.h"
 #include "util/geom.h"
 #include "util/transformation.h"
-#include "fmt/format.h"
-
-#include <hpx/util/high_resolution_clock.hpp>
 #include <fstream>
+#include "fmt/format.h"
 #include <string>
 
 namespace {

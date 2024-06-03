@@ -184,18 +184,18 @@ std::vector<double> &radius_vec, unsigned int dim, double &d);
 /**@{*/
 
 /*!
-   * @brief Checks if given two boxes are within given distance from each other
-   * @param b1 Box 1
-   * @param b2 Box 2
-   * @param tol Tolerance for checking
-   * @param dim Dimension of the objects
-   * @return True If within given distance
-   *
-   * @note TODO This is not precise and can be improved.
-   */
-bool areBoxesNear(const std::pair<util::Point, util::Point> &b1,
-                  const std::pair<util::Point, util::Point> &b2,
-                  const double &tol,
+ * @brief Checks if given two boxes are within given distance from each other
+ * @param b1 Box 1
+ * @param b2 Box 2
+ * @param tol Tolerance for checking
+ * @param dim Dimension of the objects
+ * @return True If within given distance
+ *
+ * @note TODO This is not precise and can be improved.
+ */
+bool areBoxesNear(const std::pair<util::Point, util::Point> & b1,
+                  const std::pair<util::Point, util::Point> & b2,
+                  const double & tol,
                   size_t dim);
 
 /*!
@@ -217,8 +217,15 @@ bool doLinesIntersect(const std::pair<util::Point, util::Point> &line_1,
  */
 double distanceBetweenLines(const std::pair<util::Point, util::Point> &line_1,
                               const std::pair<util::Point, util::Point> &line_2);
-double
-distanceBetweenSegments(const std::pair<util::Point, util::Point> &line_1,
+
+/*!
+ * @brief Compute distance between lines
+ *
+ * @param line_1 Line 1
+ * @param line_2 Line 2
+ * @return Value Distance
+ */
+double distanceBetweenSegments(const std::pair<util::Point, util::Point> &line_1,
                         const std::pair<util::Point, util::Point> &line_2);
 
 /*!
@@ -242,6 +249,14 @@ double distanceBetweenPlanes(const std::pair<util::Point, util::Point> &plane_1,
  */
 double pointDistanceLine(const util::Point &p,
                            const std::pair<util::Point, util::Point> &line);
+
+/*!
+ * @brief Compute distance between point and line
+ *
+ * @param p Point
+ * @param line Line
+ * @return Value Distance
+ */
 double pointDistanceSegment(const util::Point &p,
                               const std::pair<util::Point, util::Point> &line);
 
@@ -335,9 +350,8 @@ double triangleArea(const util::Point &x1, const util::Point &x2,
  *
  * @param x1 Vector 1
  * @param x2 Vector 2
- * @retun l2_dist L2 distance
+ * @return l2_dist L2 distance
  */
-
 template <class T>
 inline T l2Dist(const std::vector<T> &x1, const std::vector<T> &x2) {
 

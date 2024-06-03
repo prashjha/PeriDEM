@@ -67,11 +67,20 @@ struct MatData {
 
   /*!
    * @brief Copy constructor
+   *
+   * @param md Another MatData object
    */
   MatData(const MatData &md)
       : d_E(md.d_E), d_G(md.d_G), d_K(md.d_K), d_nu(md.d_nu),
         d_lambda(md.d_lambda), d_mu(md.d_mu), d_KIc(md.d_KIc), d_Gc(md.d_Gc){};
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -90,6 +99,12 @@ struct MatData {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   /**
@@ -286,6 +301,8 @@ struct MaterialDeck {
 
   /*!
    * @brief Copy constructor
+   *
+   * @param md Another MaterialDeck object
    */
   MaterialDeck(const MaterialDeck &md)
       : d_isPlaneStrain(md.d_isPlaneStrain),
@@ -304,10 +321,11 @@ struct MaterialDeck {
         d_horizon(md.d_horizon), d_horizonMeshRatio(md.d_horizonMeshRatio){};
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -348,6 +366,12 @@ struct MaterialDeck {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

@@ -25,7 +25,7 @@ namespace util {
  * @param seed Seed
  * @return Random number generator
  */
-inline RandGenerator get_rd_gen(int &seed) {
+inline RandGenerator get_rd_gen(int seed = -1) {
 
   //return RandGenerator();
 

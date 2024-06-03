@@ -7,5 +7,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_hpx_library(Util SOURCES ${SOURCES}
-        DEPENDENCIES ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt)
+add_library(Util ${SOURCES})
+
+target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt-header-only Threads::Threads MPI::MPI_CXX)

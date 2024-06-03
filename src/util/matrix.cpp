@@ -9,41 +9,44 @@
 
 #include "matrix.h"
 #include "io.h"
+#include <cassert>
 
 bool util::checkMatrix(const std::vector<std::vector<double>> &m) {
 
   size_t row_size = m.size();
-  if (row_size > 3) {
-    std::cerr << "Error: Determinant of matrix above size 3 is not "
-                 "implemented\n";
-    exit(1);
-  }
+  // if (row_size > 3) {
+  //   std::cerr << "Error: Determinant of matrix above size 3 is not "
+  //                "implemented\n";
+  //   exit(1);
+  // }
 
-  size_t col_size = m[0].size();
-  bool check = row_size > 1 and col_size != m[1].size();
-  if (!check)
-    check = row_size > 2 and col_size != m[2].size();
-
-  if (check) {
+  if (m.size() != m[0].size()) {
     std::ostringstream  oss;
-    oss << "Error: Row size and col size do not match.\n Matrix = [";
+    oss << "Error in matrix = [";
     for (auto a : m)
       oss << util::io::printStr(a) << "\n";
     oss << "].\n";
-    std::cerr << oss.str();
-    exit(1);
+    std::cout << oss.str();
+    // exit(1);
+    return false;
   }
+  
+  return true;
 }
 
 std::vector<double> util::dot(const std::vector<std::vector<double>> &m, const
 std::vector<double> &v) {
 
-  checkMatrix(m);
+  //checkMatrix(m);
   size_t row_size = m.size();
+  size_t col_size = m[0].size();
+
+  assert((col_size == v.size()) && "Column size of matrix must match row of vector for dot product");
+
   std::vector<double> r(row_size, 0.);
 
   for (size_t i=0; i<row_size; i++)
-    for (size_t j=0; j<row_size; j++)
+    for (size_t j = 0; j < col_size; j++)
       r[i] += m[i][j] * v[j];
 
   return r;
@@ -52,48 +55,34 @@ std::vector<double> &v) {
 std::vector<std::vector<double>> util::transpose(const
 std::vector<std::vector<double>> &m) {
 
-  checkMatrix(m);
+  //checkMatrix(m);
 
   size_t row_size = m.size();
+  size_t col_size = m[0].size();
 
-  std::vector<std::vector<double>> n = m;
-
-  if (row_size == 1)
-    return n;
-  else if (row_size == 2) {
-
-    n[0][1] = m[1][0];
-    n[1][0] = m[0][1];
-    return n;
+  std::vector<std::vector<double>> n(col_size);
+  
+  for (size_t i=0; i<row_size; i++) {
+    n[i].resize(row_size);
+    for (size_t j=0; j<=col_size; j++)
+      n[j][i] = m[i][j];
   }
-  else if (row_size == 3) {
 
-    n[0][1] = m[1][0];
-    n[0][2] = m[2][0];
-
-    n[1][0] = m[0][1];
-    n[1][2] = m[2][1];
-
-    n[2][0] = m[0][2];
-    n[2][1] = m[1][2];
-    return n;
-  }
+  return n;
 }
 
 double util::det(const std::vector<std::vector<double>> &m) {
 
-  //  std::cout << "Matrix = " << util::io::printStr(m, 0) << "\n";
-
-  checkMatrix(m);
-
-
+  //checkMatrix(m);
+  assert((m.size() == m[0].size()) && "Matrix must be a square matrix");
+  assert((m.size() <= 3) && "Square of matrix of size 3 or below");
 
   size_t row_size = m.size();
   if (row_size == 1)
     return m[0][0];
   else if (row_size == 2)
     return m[0][0] * m[1][1] - m[0][1] * m[1][0];
-  else if (row_size == 3)
+  else 
     return m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) -
            m[0][1] * (m[1][0] * m[2][2] - m[2][0] * m[1][2]) +
            m[0][2] * (m[1][0] * m[2][1] - m[2][0] * m[1][1]);
@@ -102,7 +91,9 @@ double util::det(const std::vector<std::vector<double>> &m) {
 std::vector<std::vector<double>>
 util::inv(const std::vector<std::vector<double>> &m) {
 
-  checkMatrix(m);
+  //checkMatrix(m);
+  assert((m.size() == m[0].size()) && "Matrix must be a square matrix");
+  assert((m.size() <= 3) && "Square of matrix of size 3 or below");
 
   size_t row_size = m.size();
 
@@ -125,7 +116,7 @@ util::inv(const std::vector<std::vector<double>> &m) {
     n[1][0] = -det_inv * m[1][0];
 
     return n;
-  } else if (row_size == 3) {
+  } else {
 
     auto det_inv = 1. / det(m);
 

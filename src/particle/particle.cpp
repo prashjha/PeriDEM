@@ -9,17 +9,14 @@
 
 #include "particle.h"
 #include "util/methods.h"
-#include <fe/baseElem.h>
-#include <fe/quadElem.h>
-#include <fe/tetElem.h>
-#include <fe/triElem.h>
+#include "fe/baseElem.h"
+#include "fe/quadElem.h"
+#include "fe/tetElem.h"
+#include "fe/triElem.h"
+#include "material/materialUtil.h"
+#include "util/feElementDefs.h"
+#include "util/geom.h"
 #include <iostream>
-#include <material/materialUtil.h>
-#include <util/feElementDefs.h>
-#include <util/geom.h>
-
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
 
 // Particle class
 particle::Particle::Particle(

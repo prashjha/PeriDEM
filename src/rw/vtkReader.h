@@ -31,9 +31,7 @@ class VtkReader {
 public:
   /*!
    * @brief Constructor
-   * @param filename Name of mesh file
-   *
-   * @note filename is expected to have .vtu extension
+   * @param filename Name of mesh file (with/without .vtu extension)
    */
   explicit VtkReader(const std::string &filename);
 
@@ -62,11 +60,10 @@ public:
   void readNodes(std::vector<util::Point> *nodes);
 
   /*!
-   * @brief Reads cell data, i.e. element-node connectivity and node-element
-   * connectivity
-   * @param filename Name of mesh file
+   * @brief Reads cell data, i.e. element-node connectivity and node-element connectivity
    * @param dim Dimension
    * @param element_type Type of element
+   * @param num_elem Number of elements
    * @param enc Element-node connectivity
    * @param nec Node-element connectivity
    */
@@ -82,60 +79,25 @@ public:
    */
   bool readPointData(const std::string &name, std::vector<uint8_t> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name, std::vector<size_t> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name, std::vector<int> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name, std::vector<float> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name, std::vector<double> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name, std::vector<util::Point> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name, std::vector<util::SymMatrix3> *data);
 
-  /*!
-   * @brief reads point data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readPointData(const std::string &name, std::vector<uint8_t> *data) */
   bool readPointData(const std::string &name,
                      std::vector<util::Matrix3> *data);
 
@@ -147,36 +109,16 @@ public:
    */
   bool readCellData(const std::string &name, std::vector<float> *data);
 
-  /*!
-   * @brief reads cell data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readCellData(const std::string &name, std::vector<float> *data) */
   bool readCellData(const std::string &name, std::vector<double> *data);
 
-  /*!
-   * @brief reads cell data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readCellData(const std::string &name, std::vector<float> *data) */
   bool readCellData(const std::string &name, std::vector<util::Point> *data);
 
-  /*!
-   * @brief reads cell data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readCellData(const std::string &name, std::vector<float> *data) */
   bool readCellData(const std::string &name, std::vector<util::SymMatrix3> *data);
 
-  /*!
-   * @brief reads cell data from .vtu file
-   * @param name Name of data
-   * @param data Pointer to the vector of data
-   * @return status True if data is found otherwise false
-   */
+  /*! @copydoc readCellData(const std::string &name, std::vector<float> *data) */
   bool readCellData(const std::string &name, std::vector<util::Matrix3> *data);
 
   /*! @brief Close the file */

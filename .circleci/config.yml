@@ -9,14 +9,23 @@ version: 2.1
 parameters:
   docker-img-os:
     type: string
-    default: bionic
-    
+    default: focal
+  cmake-include-dirs:
+    type: string
+    default: -DVTK_DIR=/usr/local/lib/cmake/vtk-9.3 -DMETIS_DIR=/usr/lib
+
 commands:
+  postcheckout:
+    steps:
+      - run:
+          name: "Pull submodules"
+          command: |
+            git submodule update --init --recursive
   libcmake:
     parameters:
       cmake-args:
         type: string
-        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=OFF -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
     steps:
       - run: 
           name: Configure
@@ -35,7 +44,7 @@ commands:
     parameters:
       verb-flag:
         type: string
-        default: --verbose
+        default: --extra-verbose
     steps:
       - run: 
           name: Test
@@ -54,18 +63,22 @@ jobs:
     build:
         docker:
           - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+            user: user
         steps:
-            - checkout
-            - libcmake
-            - libmake
-            - libtest
+          - checkout
+          - postcheckout
+          - libcmake
+          - libmake
+          - libtest
     documentation:
       docker:
         - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+          user: user
       steps:
         - checkout
+        - postcheckout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Documentation=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=ON <<pipeline.parameters.cmake-include-dirs>>
         - libdoc
     deploy:
       machine:
@@ -75,6 +88,7 @@ jobs:
         IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
       steps:
         - checkout
+        - postcheckout
         - run:
             name: Build docker
             command: |
@@ -98,10 +112,12 @@ jobs:
     codecoverage:
       docker:
         - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+          user: user
       steps:
         - checkout
+        - postcheckout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DHPX_DIR=${HPX_DIR}/lib/cmake/HPX -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic"
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" <<pipeline.parameters.cmake-include-dirs>>
         - libmake
         - libtest:
             verb-flag: ""
@@ -122,27 +138,29 @@ jobs:
               fi
 workflows:
   version: 2
-  build_doc_deploy_cov:
+  build_doc_deploy_codecov:
     jobs:
       - build:
           filters:
             branches:
               ignore: gh-pages
-      # - documentation:
-      #     filters:
-      #       branches:
-      #         ignore: gh-pages
-      #     requires:
-      #       - build
+      - documentation:
+         filters:
+           branches:
+             only: main
+         requires:
+           - build
       - deploy:
           filters:
             branches:
-              ignore: gh-pages
+              only: main
           requires:
+            - documentation
             - build
       - codecoverage:
           filters:
             branches:
-              ignore: gh-pages
+              only: main
           requires:
+            - documentation
             - build

@@ -18,29 +18,27 @@
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
-
-// include high level class declarations
+#include "inp/pdecks/contactDeck.h"
+#include "rw/reader.h"
+#include "util/function.h"
+#include "util/geom.h"
+#include "util/methods.h"
+#include "util/randomDist.h"
+#include "util/parallelUtil.h"
 #include "inp/decks/materialDeck.h"
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
+#include "rw/vtkParticleReader.h"
 
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
-
-// standard lib
-#include "fmt/format.h"
+#include <fmt/format.h>
 #include <fstream>
-#include <inp/pdecks/contactDeck.h>
 #include <iostream>
 #include <random>
-#include <rw/reader.h>
-#include <rw/vtkParticleReader.h>
-#include <util/function.h>
-#include <util/geom.h>
-#include <util/methods.h>
-#include <util/randomDist.h>
+
+#include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 namespace {
 
@@ -347,10 +345,12 @@ void model::DEMModel::integrateCD() {
   const auto dt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(),
-      [this, dt, dim](boost::uint64_t II) {
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
+
+  taskflow.for_each_index(
+    (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
+      [this, dt, dim](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -364,8 +364,9 @@ void model::DEMModel::integrateCD() {
           }
         }
       } // loop over nodes
-  );    // end of parallel for loop
-  f.get();
+  ); // for_each
+
+  executor.run(taskflow).get();
 
   d_n++;
   d_time += dt;
@@ -383,25 +384,30 @@ void model::DEMModel::integrateVerlet() {
   const auto dt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(),
-      [this, dt, dim](boost::uint64_t II) {
-        auto i = this->d_fPdCompNodes[II];
+  {
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
 
-        const auto rho = this->getDensity(i);
-        const auto &fix = this->d_fix[i];
+    taskflow.for_each_index(
+      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
+        [this, dt, dim](std::size_t II) {
+          auto i = this->d_fPdCompNodes[II];
 
-        for (int dof = 0; dof < dim; dof++) {
-          if (util::methods::isFree(fix, dof)) {
-            this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
-            this->d_u[i][dof] += dt * this->d_v[i][dof];
-            this->d_x[i][dof] += dt * this->d_v[i][dof];
+          const auto rho = this->getDensity(i);
+          const auto &fix = this->d_fix[i];
+
+          for (int dof = 0; dof < dim; dof++) {
+            if (util::methods::isFree(fix, dof)) {
+              this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
+              this->d_u[i][dof] += dt * this->d_v[i][dof];
+              this->d_x[i][dof] += dt * this->d_v[i][dof];
+            }
           }
-        }
-      } // loop over nodes
-  );    // end of parallel for loop
-  f.get();
+        } // loop over nodes
+    ); // for_each
+
+    executor.run(taskflow).get();
+  }
 
   d_n++;
   d_time += dt;
@@ -412,10 +418,13 @@ void model::DEMModel::integrateVerlet() {
   // compute force
   computeForces();
 
-  f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(),
-      [this, dt, dim](boost::uint64_t II) {
+  {
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
+
+    taskflow.for_each_index(
+      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
+      [this, dt, dim](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -426,8 +435,10 @@ void model::DEMModel::integrateVerlet() {
           }
         }
       } // loop over nodes
-  );    // end of parallel for loop
-  f.get();
+    ); // for_each
+
+    executor.run(taskflow).get();
+  }
 }
 
 void model::DEMModel::computeForces() {
@@ -436,8 +447,7 @@ void model::DEMModel::computeForces() {
 
   log("  Compute forces \n", 2, dbg_condition, 3);
 
-  // update the point cloud (make sure that d_x is updated along with
-  // displacment)
+  // update the point cloud (make sure that d_x is updated along with displacment)
   auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
   pt_cloud_update_time += d_nsearch_p->setInputCloud();
   tree_compute_time += pt_cloud_update_time;
@@ -446,9 +456,16 @@ void model::DEMModel::computeForces() {
 
   // reset force
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_x.size(),
-      [this](boost::uint64_t i) { this->d_f[i] = util::Point(); });
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
+
+  taskflow.for_each_index(
+    (std::size_t) 0, d_x.size(), (std::size_t) 1, 
+      [this](std::size_t i) { this->d_f[i] = util::Point(); }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   log(fmt::format("    Force reset time (ms) = {} \n",
                     util::methods::timeDiff(t1, steady_clock::now())), 2, dbg_condition, 3);
 
@@ -483,178 +500,185 @@ void model::DEMModel::computePeridynamicForces() {
 
   // compute state-based helper quantities
   if (is_state) {
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_fPdCompNodes.size(),
-        [this](boost::uint64_t II) {
-          auto i = this->d_fPdCompNodes[II];
 
-          const auto rho = this->getDensity(i);
-          const auto &fix = this->d_fix[i];
-          const auto &ptId = this->getPtId(i);
-          auto &pi = this->getBaseParticle(ptId);
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
 
-          if (pi->d_material_p->isStateActive()) {
-
-            const double horizon = pi->getHorizon();
-            const double mesh_size = pi->getMeshSize();
-            const auto &xi = this->d_xRef[i];
-            const auto &ui = this->d_u[i];
-
-            // update bond state and compute thetax
-            const auto &m = this->d_mX[i];
-            double theta = 0.;
-
-            // upper and lower bound for volume correction
-            auto check_up = horizon + 0.5 * mesh_size;
-            auto check_low = horizon - 0.5 * mesh_size;
-
-            size_t k = 0;
-            for (size_t j : this->d_neighPd[i]) {
-
-              const auto &xj = this->d_xRef[j];
-              const auto &uj = this->d_u[j];
-              double rji = (xj - xi).length();
-              // double rji = std::sqrt(this->d_neighPdSqdDist[i][k]);
-              double change_length = (xj - xi + uj - ui).length() - rji;
-
-              // step 1: update the bond state
-              double s = change_length / rji;
-              double sc = pi->d_material_p->getSc(rji);
-
-              // get fracture state, modify, and set
-              auto fs = this->d_fracture_p->getBondState(i, k);
-              if (!fs && util::isGreater(std::abs(s), sc + 1.0e-10))
-                fs = true;
-              this->d_fracture_p->setBondState(i, k, fs);
-
-              if (!fs) {
-
-                // get corrected volume of node j
-                auto volj = this->d_vol[j];
-
-                if (util::isGreater(rji, check_low))
-                  volj *= (check_up - rji) / mesh_size;
-
-                theta += rji * change_length * pi->d_material_p->getInfFn(rji) *
-                         volj;
-              } // if bond is not broken
-
-              k += 1;
-            } // loop over neighbors
-
-            this->d_thetaX[i] = 3. * theta / m;
-          } // if it is state-based
-        }   // loop over nodes
-    );      // end of parallel for loop
-    f.get();
-  }
-
-  // compute the internal forces
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      d_fPdCompNodes.size(), [this](boost::uint64_t II) {
+    taskflow.for_each_index(
+      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
-        // local variable to hold force
-        util::Point force_i = util::Point();
-        double scalar_f = 0.;
+        const auto rho = this->getDensity(i);
+        const auto &fix = this->d_fix[i];
+        const auto &ptId = this->getPtId(i);
+        auto &pi = this->getBaseParticle(ptId);
 
-        // for damage
-        float Zi = 0.;
+        if (pi->d_material_p->isStateActive()) {
 
-        const auto rhoi = this->getDensity(i);
-        const auto &ptIdi = this->getPtId(i);
-        auto &pi = this->getBaseParticle(ptIdi);
+          const double horizon = pi->getHorizon();
+          const double mesh_size = pi->getMeshSize();
+          const auto &xi = this->d_xRef[i];
+          const auto &ui = this->d_u[i];
 
-        const double horizon = pi->getHorizon();
-        const double mesh_size = pi->getMeshSize();
-        const auto &xi = this->d_xRef[i];
-        const auto &ui = this->d_u[i];
-        const auto &mi = this->d_mX[i];
-        const auto &thetai = this->d_thetaX[i];
+          // update bond state and compute thetax
+          const auto &m = this->d_mX[i];
+          double theta = 0.;
 
-        // upper and lower bound for volume correction
-        auto check_up = horizon + 0.5 * mesh_size;
-        auto check_low = horizon - 0.5 * mesh_size;
+          // upper and lower bound for volume correction
+          auto check_up = horizon + 0.5 * mesh_size;
+          auto check_low = horizon - 0.5 * mesh_size;
 
-        // loop over neighbors
-        {
           size_t k = 0;
           for (size_t j : this->d_neighPd[i]) {
-            auto fs = this->d_fracture_p->getBondState(i, k);
+
             const auto &xj = this->d_xRef[j];
             const auto &uj = this->d_u[j];
-            auto volj = this->d_vol[j];
             double rji = (xj - xi).length();
-            double Sji = pi->d_material_p->getS(xj - xi, uj - ui);
+            // double rji = std::sqrt(this->d_neighPdSqdDist[i][k]);
+            double change_length = (xj - xi + uj - ui).length() - rji;
+
+            // step 1: update the bond state
+            double s = change_length / rji;
+            double sc = pi->d_material_p->getSc(rji);
+
+            // get fracture state, modify, and set
+            auto fs = this->d_fracture_p->getBondState(i, k);
+            if (!fs && util::isGreater(std::abs(s), sc + 1.0e-10))
+              fs = true;
+            this->d_fracture_p->setBondState(i, k, fs);
 
             if (!fs) {
-              const auto &mj = this->d_mX[j];
-              const auto &thetaj = this->d_thetaX[j];
 
               // get corrected volume of node j
+              auto volj = this->d_vol[j];
+
               if (util::isGreater(rji, check_low))
                 volj *= (check_up - rji) / mesh_size;
 
-              // handle two cases differently
-              if (pi->d_material_p->isStateActive()) {
+              theta += rji * change_length * pi->d_material_p->getInfFn(rji) *
+                        volj;
+            } // if bond is not broken
 
-                auto ef_i =
-                    pi->d_material_p->getBondEF(rji, Sji, fs, mi, thetai);
-                auto ef_j =
-                    pi->d_material_p->getBondEF(rji, Sji, fs, mj, thetaj);
-
-                // compute the contribution of bond force to force at i
-                scalar_f = (ef_i.second + ef_j.second) * volj;
-
-                force_i += scalar_f * pi->d_material_p->getBondForceDirection(
-                                          xj - xi, uj - ui);
-              } // if state-based
-              else {
-
-                // Debug
-                bool break_bonds = true;
-
-                auto ef =
-                    pi->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
-                this->d_fracture_p->setBondState(i, k, fs);
-
-                // compute the contribution of bond force to force at i
-                scalar_f = ef.second * volj;
-
-                force_i += scalar_f * pi->d_material_p->getBondForceDirection(
-                                          xj - xi, uj - ui);
-              } // if bond-based
-            }   // if bond not broken
-            else {
-              // add normal contact force
-              auto yji = xj + uj - (xi + ui);
-              auto Rji = yji.length();
-              scalar_f = pi->d_Kn * volj * (Rji - pi->d_Rc) / Rji;
-              if (scalar_f > 0.)
-                scalar_f = 0.;
-              force_i += scalar_f * yji;
-            } // if bond is broken
-
-            // calculate damage
-            auto Sc = pi->d_material_p->getSc(rji);
-            if (util::isGreater(std::abs(Sji / Sc), Zi))
-              Zi = std::abs(Sji / Sc);
-
-            k++;
+            k += 1;
           } // loop over neighbors
 
-        } // peridynamic force
+          this->d_thetaX[i] = 3. * theta / m;
+        } // if it is state-based
+      } // loop over nodes
+    ); // for_each
 
-        // update force (combines clearing of previous force and addition of
-        // internal force if compute force loop over nodes end of parallel
-        // for loop)
-        this->d_f[i] = force_i;
+    executor.run(taskflow).get();
+  }
 
-        this->d_Z[i] = Zi;
-      });
-  f.get();
+  // compute the internal forces
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
+
+  taskflow.for_each_index(
+    (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
+      auto i = this->d_fPdCompNodes[II];
+
+      // local variable to hold force
+      util::Point force_i = util::Point();
+      double scalar_f = 0.;
+
+      // for damage
+      float Zi = 0.;
+
+      const auto rhoi = this->getDensity(i);
+      const auto &ptIdi = this->getPtId(i);
+      auto &pi = this->getBaseParticle(ptIdi);
+
+      const double horizon = pi->getHorizon();
+      const double mesh_size = pi->getMeshSize();
+      const auto &xi = this->d_xRef[i];
+      const auto &ui = this->d_u[i];
+      const auto &mi = this->d_mX[i];
+      const auto &thetai = this->d_thetaX[i];
+
+      // upper and lower bound for volume correction
+      auto check_up = horizon + 0.5 * mesh_size;
+      auto check_low = horizon - 0.5 * mesh_size;
+
+      // loop over neighbors
+      {
+        size_t k = 0;
+        for (size_t j : this->d_neighPd[i]) {
+          auto fs = this->d_fracture_p->getBondState(i, k);
+          const auto &xj = this->d_xRef[j];
+          const auto &uj = this->d_u[j];
+          auto volj = this->d_vol[j];
+          double rji = (xj - xi).length();
+          double Sji = pi->d_material_p->getS(xj - xi, uj - ui);
+
+          if (!fs) {
+            const auto &mj = this->d_mX[j];
+            const auto &thetaj = this->d_thetaX[j];
+
+            // get corrected volume of node j
+            if (util::isGreater(rji, check_low))
+              volj *= (check_up - rji) / mesh_size;
+
+            // handle two cases differently
+            if (pi->d_material_p->isStateActive()) {
+
+              auto ef_i =
+                  pi->d_material_p->getBondEF(rji, Sji, fs, mi, thetai);
+              auto ef_j =
+                  pi->d_material_p->getBondEF(rji, Sji, fs, mj, thetaj);
+
+              // compute the contribution of bond force to force at i
+              scalar_f = (ef_i.second + ef_j.second) * volj;
+
+              force_i += scalar_f * pi->d_material_p->getBondForceDirection(
+                                        xj - xi, uj - ui);
+            } // if state-based
+            else {
+
+              // Debug
+              bool break_bonds = true;
+
+              auto ef =
+                  pi->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
+              this->d_fracture_p->setBondState(i, k, fs);
+
+              // compute the contribution of bond force to force at i
+              scalar_f = ef.second * volj;
+
+              force_i += scalar_f * pi->d_material_p->getBondForceDirection(
+                                        xj - xi, uj - ui);
+            } // if bond-based
+          }   // if bond not broken
+          else {
+            // add normal contact force
+            auto yji = xj + uj - (xi + ui);
+            auto Rji = yji.length();
+            scalar_f = pi->d_Kn * volj * (Rji - pi->d_Rc) / Rji;
+            if (scalar_f > 0.)
+              scalar_f = 0.;
+            force_i += scalar_f * yji;
+          } // if bond is broken
+
+          // calculate damage
+          auto Sc = pi->d_material_p->getSc(rji);
+          if (util::isGreater(std::abs(Sji / Sc), Zi))
+            Zi = std::abs(Sji / Sc);
+
+          k++;
+        } // loop over neighbors
+
+      } // peridynamic force
+
+      // update force (combines clearing of previous force and addition of
+      // internal force if compute force loop over nodes end of parallel
+      // for loop)
+      this->d_f[i] = force_i;
+
+      this->d_Z[i] = Zi;
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
 }
 
 void model::DEMModel::computeExternalForces() {
@@ -664,14 +688,15 @@ void model::DEMModel::computeExternalForces() {
   auto gravity = d_pDeck_p->d_gravity;
 
   if (gravity.length() > 1.0E-8) {
-    auto f = hpx::parallel::for_loop(
-        hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-        d_x.size(),
-        [this, gravity](boost::uint64_t i) {
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
+
+    taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t)1, [this, gravity](std::size_t i) {
           this->d_f[i] += this->getDensity(i) * gravity;
-        } // loop over particles
-    );    // end of parallel for loop
-    f.get();
+      } // loop over particles
+    ); // for_each
+
+    executor.run(taskflow).get();
   }
 
   //
@@ -694,106 +719,111 @@ void model::DEMModel::computeContactForces() {
   // 2. Normal damping is applied between particle centers
   // 3. Normal damping is applied between nodes of particle and wall pairs
 
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_fContCompNodes.size(),
-      [this](boost::uint64_t II) {
-        auto i = this->d_fContCompNodes[II];
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
 
-        // local variable to hold force
-        util::Point force_i = util::Point();
-        double scalar_f = 0.;
+  taskflow.for_each_index((std::size_t) 0, d_fContCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
+      auto i = this->d_fContCompNodes[II];
 
-        const auto &ptIdi = this->getPtId(i);
-        auto &pi = this->getBaseParticle(ptIdi);
-        double horizon = pi->d_material_p->getHorizon();
-        double search_r = this->d_maxContactR;
+      // local variable to hold force
+      util::Point force_i = util::Point();
+      double scalar_f = 0.;
 
-        // particle data
-        double rhoi = pi->getDensity();
+      const auto &ptIdi = this->getPtId(i);
+      auto &pi = this->getBaseParticle(ptIdi);
+      double horizon = pi->d_material_p->getHorizon();
+      double search_r = this->d_maxContactR;
 
-        const auto &yi = this->d_x[i]; // current coordinates
-        const auto &ui = this->d_u[i];
-        const auto &vi = this->d_v[i];
-        const auto &voli = this->d_vol[i];
+      // particle data
+      double rhoi = pi->getDensity();
 
-        std::vector<size_t> neighs;
-        std::vector<double> sqr_dist;
-        auto search_status =
-            this->d_nsearch_p->radiusSearch(yi, search_r, neighs, sqr_dist);
+      const auto &yi = this->d_x[i]; // current coordinates
+      const auto &ui = this->d_u[i];
+      const auto &vi = this->d_v[i];
+      const auto &voli = this->d_vol[i];
 
-        if (search_status > 0) {
-          for (std::size_t j = 0; j < neighs.size(); ++j) {
+      std::vector<size_t> neighs;
+      std::vector<double> sqr_dist;
+      auto search_status =
+          this->d_nsearch_p->radiusSearch(yi, search_r, neighs, sqr_dist);
 
-            auto &j_id = neighs[j];
-            auto &rij_sqr = sqr_dist[j];
-            auto &ptIdj = this->d_ptId[j_id];
-            auto &pj = this->getBaseParticle(ptIdj);
-            double rhoj = pj->getDensity();
-            // double Rji = std::sqrt(rij_sqr);
-            double Rji = (this->d_x[j_id] - yi).length();
+      if (search_status > 0) {
+        for (std::size_t j = 0; j < neighs.size(); ++j) {
 
-            bool both_walls =
-                (pi->getTypeIndex() == 1 and pj->getTypeIndex() == 1);
+          auto &j_id = neighs[j];
+          auto &rij_sqr = sqr_dist[j];
+          auto &ptIdj = this->d_ptId[j_id];
+          auto &pj = this->getBaseParticle(ptIdj);
+          double rhoj = pj->getDensity();
+          // double Rji = std::sqrt(rij_sqr);
+          double Rji = (this->d_x[j_id] - yi).length();
 
-            if (j_id != i) {
-              if (ptIdj != ptIdi && !both_walls) {
-                // apply particle-particle or particle-wall contact here
-                const auto &contact =
-                    d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
-                if (util::isLess(Rji, contact.d_contactR)) {
+          bool both_walls =
+              (pi->getTypeIndex() == 1 and pj->getTypeIndex() == 1);
 
-                  auto yji = this->d_x[j_id] - yi;
-                  auto volj = this->d_vol[j_id];
-                  auto vji = this->d_v[j_id] - vi;
+          if (j_id != i) {
+            if (ptIdj != ptIdi && !both_walls) {
+              // apply particle-particle or particle-wall contact here
+              const auto &contact =
+                  d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+              if (util::isLess(Rji, contact.d_contactR)) {
 
-                  // resolve velocity vector in normal and tangential components
-                  auto en = yji / Rji;
-                  auto vn_mag = (vji * en);
-                  auto et = vji - vn_mag * en;
-                  if (util::isGreater(et.length(), 0.))
-                    et = et / et.length();
-                  else
-                    et = util::Point();
+                auto yji = this->d_x[j_id] - yi;
+                auto volj = this->d_vol[j_id];
+                auto vji = this->d_v[j_id] - vi;
 
-                  // Formula using bulk modulus and horizon
-                  scalar_f = contact.d_Kn * (Rji - contact.d_contactR) *
-                             volj; // divided by voli
-                  if (scalar_f > 0.)
-                    scalar_f = 0.;
-                  force_i += scalar_f * en;
+                // resolve velocity vector in normal and tangential components
+                auto en = yji / Rji;
+                auto vn_mag = (vji * en);
+                auto et = vji - vn_mag * en;
+                if (util::isGreater(et.length(), 0.))
+                  et = et / et.length();
+                else
+                  et = util::Point();
 
-                  // compute friction force (since f < 0, |f| = -f)
-                  force_i += contact.d_mu * scalar_f * et;
+                // Formula using bulk modulus and horizon
+                scalar_f = contact.d_Kn * (Rji - contact.d_contactR) *
+                            volj; // divided by voli
+                if (scalar_f > 0.)
+                  scalar_f = 0.;
+                force_i += scalar_f * en;
 
-                  // if particle-wall pair, apply damping contact here <--
-                  // doesnt seem to work
-                  bool node_lvl_damp = false;
-                  // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
-                  //   node_lvl_damp = true;
+                // compute friction force (since f < 0, |f| = -f)
+                force_i += contact.d_mu * scalar_f * et;
 
-                  if (node_lvl_damp) {
-                    // apply damping at the node level
-                    auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
-                    auto beta_n =
-                        contact.d_betan *
-                        std::sqrt(contact.d_kappa * contact.d_contactR * meq);
+                // if particle-wall pair, apply damping contact here <--
+                // doesnt seem to work
+                bool node_lvl_damp = false;
+                // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
+                //   node_lvl_damp = true;
 
-                    auto &pii = this->d_particles[pi->getTypeId()];
-                    vji = this->d_v[j_id] - pii->getVCenter();
-                    vn_mag = (vji * en);
-                    if (vn_mag > 0.)
-                      vn_mag = 0.;
-                    force_i += beta_n * vn_mag * en / voli;
-                  }
-                } // within contact radius
-              }   // particle-particle contact
-            }     // if j_id is not i
-          }       // loop over neighbors
-        }         // contact neighbor
+                if (node_lvl_damp) {
+                  // apply damping at the node level
+                  auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
+                  auto beta_n =
+                      contact.d_betan *
+                      std::sqrt(contact.d_kappa * contact.d_contactR * meq);
 
-        this->d_f[i] += force_i;
-      });
+                  auto &pii = this->d_particles[pi->getTypeId()];
+                  vji = this->d_v[j_id] - pii->getVCenter();
+                  vn_mag = (vji * en);
+                  if (vn_mag > 0.)
+                    vn_mag = 0.;
+                  force_i += beta_n * vn_mag * en / voli;
+                }
+              } // within contact radius
+            }   // particle-particle contact
+          }     // if j_id is not i
+        }       // loop over neighbors
+      }         // contact neighbor
 
+      this->d_f[i] += force_i;
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
+  
   // damping force
   log("    Computing normal damping force \n", 3);
   for (auto &pi : d_particles) {
@@ -848,9 +878,12 @@ void model::DEMModel::computeContactForces() {
     // Step 1: Create list of wall nodes that are within the Rc distance
     // of at least one of the particle
     std::vector<std::vector<size_t>> wall_nodes(pi->getNumNodes());
-    hpx::parallel::for_loop(
-        hpx::parallel::execution::par, 0, pi->getNumNodes(),
-        [this, pi, &wall_nodes](boost::uint64_t i) {
+
+    {
+      tf::Executor executor(util::parallel::getNThreads());
+      tf::Taskflow taskflow;
+
+      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, &wall_nodes](std::size_t i) {
           auto yi = this->d_x[pi->getNodeId(i)];
           double search_r = this->d_maxContactR;
           std::vector<size_t> neighs;
@@ -874,7 +907,11 @@ void model::DEMModel::computeContactForces() {
               }
             }
           }
-        });
+        }
+      ); // for_each
+
+      executor.run(taskflow).get();
+    }
 
     // condense wall nodes into single vector
     std::vector<size_t> wall_nodes_condense;
@@ -915,12 +952,18 @@ void model::DEMModel::computeContactForces() {
     }
 
     // distribute force_i to all nodes of particle pi
-    hpx::parallel::for_loop(
-        hpx::parallel::execution::par, 0, pi->getNumNodes(),
-        [this, pi, force_i](boost::uint64_t i) {
+    {
+      tf::Executor executor(util::parallel::getNThreads());
+      tf::Taskflow taskflow;
+
+      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, force_i](std::size_t i) {
           this->d_f[pi->getNodeId(i)] += force_i;
-        });
-  }
+        }
+      ); // for_each
+
+      executor.run(taskflow).get();
+    }
+  } // loop over particle for damping
 }
 
 void model::DEMModel::applyInitialCondition() {
@@ -934,18 +977,19 @@ void model::DEMModel::applyInitialCondition() {
   const auto ic_p_list = d_pDeck_p->d_icDeck.d_pList;
 
   // add specified velocity to particle
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      ic_p_list.size(),
-      [this, ic_v, ic_p_list](boost::uint64_t i) {
-        auto &p = this->d_particles[ic_p_list[i]];
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
 
-        // velocity
-        for (size_t j = 0; j < p->getNumNodes(); j++)
-          p->setVLocal(j, ic_v);
-      } // loop over particles
-  );    // end of parallel for loop
-  f.get();
+  taskflow.for_each_index((std::size_t) 0, ic_p_list.size(), (std::size_t) 1, [this, ic_v, ic_p_list](std::size_t i) {
+      auto &p = this->d_particles[ic_p_list[i]];
+
+      // velocity
+      for (size_t j = 0; j < p->getNumNodes(); j++)
+        p->setVLocal(j, ic_v);
+    } // loop over particles
+  ); // for_each
+
+  executor.run(taskflow).get();
 }
 
 void model::DEMModel::createParticles() {
@@ -1292,49 +1336,59 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
   d_neighPd.resize(d_x.size());
   // d_neighPdSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_x.size(), [this](boost::uint64_t i) {
-        const auto &pi = this->d_ptId[i];
-        double search_r = this->d_allParticles[pi]->d_material_p->getHorizon();
 
-        std::vector<size_t> neighs;
-        std::vector<double> sqr_dist;
-        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs,
-                                            sqr_dist) > 0) {
-          for (std::size_t j = 0; j < neighs.size(); ++j)
-            if (neighs[j] != i && this->d_ptId[neighs[j]] == pi) {
-              this->d_neighPd[i].push_back(size_t(neighs[j]));
-              // this->d_neighPdSqdDist[i].push_back(sqr_dist[j]);
-            }
-        }
-      });
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
+
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
+      const auto &pi = this->d_ptId[i];
+      double search_r = this->d_allParticles[pi]->d_material_p->getHorizon();
+
+      std::vector<size_t> neighs;
+      std::vector<double> sqr_dist;
+      if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs, sqr_dist) > 0) {
+        for (std::size_t j = 0; j < neighs.size(); ++j)
+          if (neighs[j] != i && this->d_ptId[neighs[j]] == pi) {
+            this->d_neighPd[i].push_back(size_t(neighs[j]));
+            // this->d_neighPdSqdDist[i].push_back(sqr_dist[j]);
+          }
+      }
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Peridynamics neighbor update time = {}\n",
-                  util::methods::timeDiff(t1, t2)), 2);
+  log(fmt::format("DEMModel: Peridynamics neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::updateContactNeighborlist() {
   d_neighC.resize(d_x.size());
   // d_neighCSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_x.size(), [this](boost::uint64_t i) {
-        const auto &pi = this->d_ptId[i];
+
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
+
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
+      const auto &pi = this->d_ptId[i];
         double search_r = this->d_maxContactR;
         std::vector<size_t> neighs;
         std::vector<double> sqr_dist;
-        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs,
-                                            sqr_dist) > 0) {
+        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs, sqr_dist) > 0) {
           for (std::size_t j = 0; j < neighs.size(); ++j)
             if (neighs[j] != i && this->d_ptId[neighs[j]] != pi) {
               this->d_neighC[i].push_back(size_t(neighs[j]));
               // this->d_neighCSqdDist[i].push_back(sqr_dist[j]);
             }
         }
-      });
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Contact neighbor update time = {}\n",
-                  util::methods::timeDiff(t1, t2)), 2);
+  log(fmt::format("DEMModel: Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::updateNeighborlistCombine() {
@@ -1344,40 +1398,45 @@ void model::DEMModel::updateNeighborlistCombine() {
   d_neighPd.resize(d_x.size());
   // d_neighPdSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
-  hpx::parallel::for_loop(
-      hpx::parallel::execution::par, 0, d_x.size(), [this](boost::uint64_t i) {
-        const auto &pi = this->d_ptId[i];
-        double horizon = this->d_allParticles[pi]->d_material_p->getHorizon();
-        double search_r = horizon;
-        if (this->d_maxContactR > search_r)
-          search_r = this->d_maxContactR;
-        std::vector<size_t> neighs;
-        std::vector<double> sqr_dist;
-        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs,
-                                            sqr_dist) > 0) {
-          for (std::size_t j = 0; j < neighs.size(); ++j) {
-            auto &j_id = neighs[j];
-            auto &rij = sqr_dist[j];
 
-            // for contact
-            if (j_id != i && this->d_ptId[j_id] != pi &&
-                rij < this->d_maxContactR * 1.001) {
-              this->d_neighC[i].push_back(size_t(j_id));
-              // this->d_neighCSqdDist[i].push_back(rij);
-            }
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
 
-            // for peridynamic
-            if (j_id != i && this->d_ptId[j_id] == pi &&
-                rij < horizon * 1.001) {
-              this->d_neighPd[i].push_back(size_t(j_id));
-              // this->d_neighPdSqdDist[i].push_back(rij);
-            }
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
+      const auto &pi = this->d_ptId[i];
+      double horizon = this->d_allParticles[pi]->d_material_p->getHorizon();
+      double search_r = horizon;
+      if (this->d_maxContactR > search_r)
+        search_r = this->d_maxContactR;
+      std::vector<size_t> neighs;
+      std::vector<double> sqr_dist;
+      if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs, sqr_dist) > 0) {
+        for (std::size_t j = 0; j < neighs.size(); ++j) {
+          auto &j_id = neighs[j];
+          auto &rij = sqr_dist[j];
+
+          // for contact
+          if (j_id != i && this->d_ptId[j_id] != pi &&
+              rij < this->d_maxContactR * 1.001) {
+            this->d_neighC[i].push_back(size_t(j_id));
+            // this->d_neighCSqdDist[i].push_back(rij);
+          }
+
+          // for peridynamic
+          if (j_id != i && this->d_ptId[j_id] == pi &&
+              rij < horizon * 1.001) {
+            this->d_neighPd[i].push_back(size_t(j_id));
+            // this->d_neighPdSqdDist[i].push_back(rij);
           }
         }
-      });
+      }
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+  
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Peridynamics+Contact neighbor update time = {}\n",
-                  util::methods::timeDiff(t1, t2)), 2);
+  log(fmt::format("DEMModel: Peridynamics+Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::output() {
@@ -1559,27 +1618,35 @@ void model::DEMModel::checkStop() {
       fclose(pp_file);
       exit(1);
     }
-  } else if (d_outputDeck_p->d_outCriteria == "max_node_dist") {
+  } 
+  else if (d_outputDeck_p->d_outCriteria == "max_node_dist") {
 
-    auto max_pt = util::methods::maxLength(d_x);
-
-    // check
-    if (util::isGreater(max_pt.length(),
-                        d_outputDeck_p->d_outCriteriaParams[0])) {
-
-      // close open file
-      if (pp_file)
-        fclose(pp_file);
-
-      log(fmt::format("DEMModel: Terminating simulation as one of the failing"
-                      " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
-                      "distance {:.6f} "
-                      "more than"
-                      " allowed distance {:.6f}\n",
-                      max_pt.d_x, max_pt.d_y, max_pt.d_z, max_pt.length(),
-                      d_outputDeck_p->d_outCriteriaParams[0]));
-      exit(1);
+    static int msg_printed = 0;
+    if (msg_printed == 0) {
+      std::cout << "Check = " << d_outputDeck_p->d_outCriteria
+              << " is no longer supported. In future, this test will be implemented when function util::methods::maxLength() is defined." << std::endl;
+      msg_printed = 1;
     }
+    //exit(EXIT_FAILURE);
+    // auto max_pt = util::methods::maxLength(d_x);
+
+    // // check
+    // if (util::isGreater(max_pt.length(),
+    //                     d_outputDeck_p->d_outCriteriaParams[0])) {
+
+    //   // close open file
+    //   if (pp_file)
+    //     fclose(pp_file);
+
+    //   log(fmt::format("DEMModel: Terminating simulation as one of the failing"
+    //                   " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
+    //                   "distance {:.6f} "
+    //                   "more than"
+    //                   " allowed distance {:.6f}\n",
+    //                   max_pt.d_x, max_pt.d_y, max_pt.d_z, max_pt.length(),
+    //                   d_outputDeck_p->d_outCriteriaParams[0]));
+    //   exit(1);
+    // }
   }
 }
 

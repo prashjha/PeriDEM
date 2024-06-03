@@ -46,15 +46,19 @@ public:
    * @brief Get pointer to mesh object
    * @return mesh Pointer to mesh
    */
-  const fe::Mesh *getMeshP() const { return d_mesh_p.get(); };
   fe::Mesh *getMeshP() { return d_mesh_p.get(); };
+
+  /*! @copydoc getMeshP() */
+  const fe::Mesh *getMeshP() const { return d_mesh_p.get(); };
 
   /*!
    * @brief Get reference to mesh object
    * @return mesh Reference to mesh
    */
-  const fe::Mesh &getMesh() const { return *d_mesh_p; };
   fe::Mesh &getMesh() { return *d_mesh_p; };
+
+  /*! @copydoc getMesh() */
+  const fe::Mesh &getMesh() const { return *d_mesh_p; };
 
   /*!
    * @brief Get id of this wall

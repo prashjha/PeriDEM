@@ -15,10 +15,12 @@
 #include "triElem.h"
 #include "util/feElementDefs.h"
 #include "util/function.h"
+#include "util/geom.h"
+#include "util/parallelUtil.h"
 #include <cstdint>
-#include <hpx/include/parallel_algorithm.hpp>
 #include <iostream>
-#include <util/geom.h>
+#include <taskflow/taskflow/taskflow.hpp>
+#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 fe::Mesh::Mesh(size_t dim)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
@@ -163,7 +165,7 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config) {
 
   // check if we need to compute mesh size
   //if (deck->d_computeMeshSize)
-    computeMeshSize();
+  computeMeshSize();
 
   // check nodal volume
   size_t counter = 0;
@@ -215,49 +217,53 @@ void fe::Mesh::computeVol() {
   // compute nodal volume
   //
   d_vol.resize(d_numNodes);
-  auto f = hpx::parallel::for_loop(
-      hpx::parallel::execution::par(hpx::parallel::execution::task), 0,
-      this->d_numNodes, [this, quads](boost::uint64_t i) {
-        double v = 0.0;
+  
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
 
-        for (auto e : this->d_nec[i]) {
+  taskflow.for_each_index(
+    (std::size_t) 0, this->d_numNodes, (std::size_t) 1, [this, quads](std::size_t i) {
+      double v = 0.0;
 
-          std::vector<size_t> e_ns = this->getElementConnectivity(e);
+      for (auto e : this->d_nec[i]) {
 
-          // locate global node i in local list of element el
-          int loc_i = -1;
-          for (size_t l = 0; l < e_ns.size(); l++)
-            if (e_ns[l] == i)
-              loc_i = l;
+        std::vector<size_t> e_ns = this->getElementConnectivity(e);
 
-          if (loc_i == -1) {
-            std::cerr << "Error: Check node element connectivity.\n";
-            exit(1);
-          }
+        // locate global node i in local list of element el
+        int loc_i = -1;
+        for (size_t l = 0; l < e_ns.size(); l++)
+          if (e_ns[l] == i)
+            loc_i = l;
 
-          // get quad data
-          std::vector<util::Point> e_nodes;
-          for (auto k : e_ns)
-            e_nodes.emplace_back(this->d_nodes[k]);
+        if (loc_i == -1) {
+          std::cerr << "Error: Check node element connectivity.\n";
+          exit(1);
+        }
 
-          // get volume of element
-          double vol = quads->elemSize(e_nodes);
-          double factor = 1.;
-          if (vol < 0.)
-            factor = -1.;
+        // get quad data
+        std::vector<util::Point> e_nodes;
+        for (auto k : e_ns)
+          e_nodes.emplace_back(this->d_nodes[k]);
 
-          std::vector<fe::QuadData> qds = quads->getQuadDatas(e_nodes);
+        // get volume of element
+        double vol = quads->elemSize(e_nodes);
+        double factor = 1.;
+        if (vol < 0.)
+          factor = -1.;
 
-          // compute V_e and add it to volume
-          for (auto qd : qds)
-            v += qd.d_shapes[loc_i] * factor * qd.d_w;
-        } // loop over elements
+        std::vector<fe::QuadData> qds = quads->getQuadDatas(e_nodes);
 
-        // update
-        this->d_vol[i] = v;
-      }); // end of parallel for loop
+        // compute V_e and add it to volume
+        for (auto qd : qds)
+          v += qd.d_shapes[loc_i] * factor * qd.d_w;
+      } // loop over elements
 
-  f.get();
+      // update
+      this->d_vol[i] = v;
+    }
+  ); // for_each
+  
+  executor.run(taskflow).get();
 }
 
 void fe::Mesh::computeBBox() {

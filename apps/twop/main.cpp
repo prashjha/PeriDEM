@@ -7,43 +7,30 @@
  * file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <Config.h>
-#include <hpx/hpx_init.hpp>                     // Need main source file
-#include <hpx/util/high_resolution_clock.hpp>
-#include <iostream>
-#include <boost/program_options.hpp> // program options
+// TODO Update the code
 
-/////////////////////////// includes for model
+#include <PeriDEMConfig.h>
+
 #include "inp/input.h"
 #include "model/dem/demModel.h"
-
-// utils
 #include "util/function.h"
 #include "util/geomObjects.h"
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
-
-// include high level class declarations
 #include "inp/decks/materialDeck.h"
 #include "inp/decks/modelDeck.h"
 #include "inp/decks/outputDeck.h"
 #include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
-
-// hpx lib
-#include <hpx/include/parallel_algorithm.hpp>
-
-// standard lib
 #include "fmt/format.h"
-#include <inp/pdecks/contactDeck.h>
+#include "inp/pdecks/contactDeck.h"
+#include "rw/reader.h"
+#include "util/methods.h"
+#include "util/function.h"
+#include "util/geom.h"
+#include "util/io.h"
 #include <iostream>
-#include <rw/reader.h>
-#include <util/fastMethods.h>
-#include <util/function.h>
-#include <util/geom.h>
-///////////////////////////
-
 
 using namespace std::chrono;
 
@@ -231,24 +218,26 @@ public:
 };
 } // namespace twop
 
-int hpx_main(boost::program_options::variables_map& vm)
-{
-  // display Help
-  if (vm.count("help")) {
-    std::cout << "Run with the following options: \n"
-              << "twop -i input.yaml --hpx:threads=n" << "\n";
-    return hpx::finalize();;
+int main(int argc, char *argv[]) {
+
+  util::io::InputParser input(argc, argv);
+
+  if (input.cmdOptionExists("-h")) {
+    // print help
+    std::cout << "Syntax to run the app: ./twop -i <input file> -n <number of threads>";
+    std::cout << "Example: ./twop -i input.yaml -n 4";
   }
+  
+  // print program version
+  std::cout << "PeriDEM"
+            << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION << "."
+            << UPDATE_VERSION << ")" << std::endl;
 
-  // read input file
-  std::string filename;
-  if (vm.count("input-file"))
-    filename = vm["input-file"].as<std::string>();
-
-   // record current time
-  std::uint64_t begin = hpx::util::high_resolution_clock::now();
+  // current time
+  auto begin = steady_clock::now();
 
   // read input data
+  std::string filename = input.getCmdOption("-f");
   auto *deck = new inp::Input(filename);
 
   // check which model to run
@@ -258,19 +247,9 @@ int hpx_main(boost::program_options::variables_map& vm)
   }
 
   // get time elapsed
-  std::uint64_t end = hpx::util::high_resolution_clock::now();
-  double elapsed_secs = double(end - begin) / 1.0e9;
+  auto end = steady_clock::now();
 
-  std::cout << " Time elapsed = " << elapsed_secs << " sec \n";
-  return hpx::finalize();
-}
-
-int main(int argc, char *argv[]) {
-
-  boost::program_options::options_description desc("Allowed options");
-  desc.add_options()("help", "produce help message")(
-      "input-file,i", boost::program_options::value<std::string>(),
-      "Configuration file");
-
-  return hpx::init(desc, argc, argv);
+  std::cout << "Total simulation time (s) = " 
+            << util::methods::timeDiff(begin, end, "seconds") 
+            << std::endl;
 }

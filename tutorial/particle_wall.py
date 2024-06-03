@@ -389,6 +389,6 @@ if __name__ == "__main__":
 
   ## step 2: run peridem
   print('running peridem')
-  cmd = args.peridem_path + " -i input.yaml --hpx:threads=8"
+  cmd = args.peridem_path + " -i input.yaml -nThreads 8"
   process = subprocess.Popen(cmd.split(), stdout=subprocess.PIPE)
   output, error = process.communicate()

@@ -33,7 +33,7 @@ int main(){
 
 The library only needs a standard conformant C++11 compiler. It has no further dependencies. The library is completely contained inside a single header file and therefore it is sufficient to copy this file to some place on your include path. The library does not have to be explicitly build. 
 
-Note however, that threads are used and some compiler (for example GCC) require you to link against additional librarie to make it work. With GCC it is important to add -lpthread as the last item when linking, i.e. the order in 
+Note however, that threads are used and some compiler (for example GCC) require you to link against additional libraries to make it work. With GCC it is important to add -lpthread as the last item when linking, i.e. the order in 
 
 ```
 g++ -std=c++0x a.o b.o -o prog -lpthread
@@ -45,11 +45,9 @@ Remember that the library makes use of C++11 features and therefore you have to 
 
 The library was developed and tested with GCC 4.6.1
 
-Note that VS2013 is not C++11 compilant and will therefore not work out of the box. See [here](https://code.google.com/p/fast-cpp-csv-parser/issues/detail?id=6) for what needs to be adjusted to make the code work.
-
 ## Documentation
 
-The libary provides two classes: 
+The library provides two classes:
 
   * `LineReader`: A class to efficiently read large files line by line.
   * `CSVReader`: A class that efficiently reads large CSV files.
@@ -71,6 +69,7 @@ public:
   char*next_line();
 
   // File Location
+  // (These only affect the content of the error message)
   void set_file_line(unsigned);
   unsigned get_file_line()const;
   void set_file_name(some_string_type file_name);
@@ -90,7 +89,7 @@ public:
 };
 ```
 
-The read function should fill the provided buffer with at most `size` bytes from the data source. It should return the number of bytes actually written to the buffer. If data source has run out of bytes (because for example an end of file was reached) then the function should return 0. If a fatal error occures then you can throw an exception. Note that the function can be called both from the main and the worker thread. However, it is guarenteed that they do not call the function at the same time. 
+The read function should fill the provided buffer with at most `size` bytes from the data source. It should return the number of bytes actually written to the buffer. If data source has run out of bytes (because for example an end of file was reached) then the function should return 0. If a fatal error occurs then you can throw an exception. Note that the function can be called both from the main and the worker thread. However, it is guaranteed that they do not call the function at the same time.
 
 Lines are read by calling the `next_line` function. It returns a pointer to a null terminated C-string that contains the line. If the end of file is reached a null pointer is returned. The newline character is not included in the string. You may modify the string as long as you do not write past the null terminator. The string stays valid until the destructor is called or until next_line is called again. Windows and `*`nix newlines are handled transparently. UTF-8 BOMs are automatically ignored and missing newlines at the end of the file are no problem.
 
@@ -191,7 +190,7 @@ Examples:
 
 The constructors and the file location functions are exactly the same as for `LineReader`. See its documentation for details.
 
-There are three methods that deal with headers. The `read_header` methods reads a line from the file and rearranges the columns to match that order. It also checks whether all necessary columns are present. The `set_header` method does *not* read any input. Use it if the file does not have any header. Obviously it is impossible to rearrange columns or check for their availability when using it. The order in the file and in the program must match when using `set_header`. The `has_column` method checks whether a column is present in the file. The first argument of `read_header` is a bitfield that determines how the function should react to column mismatches. The default behavior is to throw an `error::extra_column_in_header` exception if the file contains more columns than expected and an `error::missing_column_in_header` when there are not enough. This behavior can be altered using the following flags.
+There are three methods that deal with headers. The `read_header` methods reads a line from the file and rearranges the columns to match that order. It also checks whether all necessary columns are present. The `set_header` method does *not* read any input. Use it if the file does not have any header. Obviously it is impossible to rearrange columns or check for their availability when using it. The order in the file and in the program must match when using `set_header`. The `has_column` method checks whether a column is present in the file. The first argument of `read_header` is a bit field that determines how the function should react to column mismatches. The default behavior is to throw an `error::extra_column_in_header` exception if the file contains more columns than expected and an `error::missing_column_in_header` when there are not enough. This behavior can be altered using the following flags.
 
   * `ignore_no_column`: The default behavior, no flags are set
   * `ignore_extra_column`: If a column with a name is in the file but not in the argument list, then it is silently ignored.
@@ -257,7 +256,7 @@ A: Read a `char*` and parse the string. At first this seems expensive but it is 
 
 Q: I get lots of compiler errors when compiling the header! Please fix it. :(
 
-A: Have you enabled the C++11 mode of your compiler? If you use GCC you have to add -std=c++0x to the commandline. If this does not resolve the problem, then please open a ticket.
+A: Have you enabled the C++11 mode of your compiler? If you use GCC you have to add -std=c++0x to the command line. If this does not resolve the problem, then please open a ticket.
 
 
 Q: The library crashes when parsing large files! Please fix it. :(
@@ -273,3 +272,8 @@ A: The library has basic UTF-8 support, or to be more precise it does not break 
 Q: Does the library support string fields that span multiple lines?
 
 A: No. This feature has been often requested in the past, however, it is difficult to make it work with the current design without breaking something else.
+
+
+Q: Can this library handle a variable number of columns?
+
+A: You can read a compile-time known constant number of columns from a file with a variable number of columns. Which columns will be read depends on the strings in the header line. There is no way to read a variable number of columns. You can think of the provided functionality as a SQL `select col1,col2,col3 from my_file.csv` statement and the CSV file as table. You can change the number of columns in the table without affecting the result of the select as long as the queried columns remain.

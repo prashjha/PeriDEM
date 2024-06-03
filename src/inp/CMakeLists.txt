@@ -14,4 +14,5 @@ AUX_SOURCE_DIRECTORY(./decks SOURCES)
 #target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})
 
 add_library(Inp ${SOURCES})
+
 target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})

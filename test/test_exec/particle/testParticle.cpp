@@ -8,13 +8,18 @@
  */
 
 #include "testParticleLib.h"
-#include <hpx/hpx_main.hpp>
+#include "util/io.h"
+#include "util/parallelUtil.h"                       // MPI-related functions
+#include <fmt/format.h>
 
 int main() {
 
-  //
-  // test transformation
-  //
+  // init parallel
+  util::parallel::initMpi();
+  int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
+  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(util::parallel::getMpiStatus()->printStr());
+
   test::testTransform();
 
   return EXIT_SUCCESS;

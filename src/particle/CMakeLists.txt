@@ -7,5 +7,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_hpx_library(Particle SOURCES ${SOURCES})
+add_library(Particle ${SOURCES})
+
 target_link_libraries(Particle PUBLIC FE Material Geometry)

@@ -46,24 +46,26 @@ public:
 
   /*!
    * @brief Writes the nodes to the file
-   * @param particles Particle data for each particle
-   * @param walls Wall data for each wall
+   * @param model ModelData class object
+   * @param tags Vector of tags (name of data, e.g., 'Displacement', 'Velocity') to append to the file
    */
   void appendNodes(const model::ModelData *model,
                    const std::vector<std::string> &tags);
 
   /*!
    * @brief Writes the nodes to the file
-   * @param particles Particle data for each particle
-   * @param walls Wall data for each wall
+   * @param model ModelData class object
+   * @param tags Vector of tags (name of data, e.g., 'Displacement', 'Velocity') to append to the file
    */
-  void
-  appendMesh(const model::ModelData *model,
+  void appendMesh(const model::ModelData *model,
              const std::vector<std::string> &tags);
 
   /*!
    * @brief Prepares contact data that is set of nodes in contact and
    * line-element connecting two contacting nodes
+   * @param model ModelData class object
+   * @param processed_nodes Nodes in the list for which we are writing contact data
+   * @param processed_elems Number of line elements (two nodes)
    */
   void appendContactData(const model::ModelData *model,
                          const std::vector<size_t> *processed_nodes,
@@ -71,9 +73,8 @@ public:
                              std::pair<size_t, size_t>> *processed_elems);
 
   /*!
-   * @brief Writes the nodes to the file
-   * @param particles Particle data for each particle
-   * @param walls Wall data for each wall
+   * @brief Writes strain/stress
+   * @param model ModelData class object
    */
   void appendStrainStress(const model::ModelData *model) {};
 
