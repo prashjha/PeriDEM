@@ -1,7 +1,0 @@
-<map id="model::DEMModel::computeForces" name="model::DEMModel::computeForces">
-<area shape="rect" id="Node000001" title="Computes peridynamic forces and contact forces." alt="" coords="5,23,193,65"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="241,5,411,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,31,225,27,225,33,193,36"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#aaf9cfac99073d034d41e10d4d17e59a2" title="Returns difference between two times." alt="" coords="251,56,401,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,52,236,57,235,62,193,57"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="anonymous_namespace{testMeshPartitioningLib::cpp}::partGraphRecursiveTestSimple" name="anonymous_namespace{testMeshPartitioningLib::cpp}::partGraphRecursiveTestSimple">
-<area shape="rect" id="Node000001" title=" " alt="" coords="324,5,527,80"/>
-<area shape="rect" id="Node000002" href="$namespacetest.html#a660d2aaf0e814e7872c35d9f24d45420" title="Tests metis partitioning of graph." alt="" coords="103,21,276,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,45,276,45,276,40,308,40"/>
-<area shape="rect" id="Node000003" href="$testMeshPartitioning_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,29,55,56"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,45,55,45,55,40,87,40"/>
-</map>

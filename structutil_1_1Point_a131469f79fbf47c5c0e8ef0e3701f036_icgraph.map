@@ -1,7 +1,0 @@
-<map id="util::Point::dist" name="util::Point::dist">
-<area shape="rect" id="Node000001" title="Computes the distance between a given point from this point." alt="" coords="207,31,312,57"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a58e32fb4508d62369fbccfcc89c425ef" title="Compute sum of two gaussian function in 2&#45;d." alt="" coords="5,5,159,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="191,37,159,32,160,27,192,32"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a88b51abc3e98d9abcee326e275c4bd22" title="Compute gaussian function in 2&#45;d." alt="" coords="26,56,138,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,56,139,64,138,59,191,51"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="util::Matrix3::Matrix3" name="util::Matrix3::Matrix3">
-<area shape="rect" id="Node000001" title="Constructor." alt="" coords="208,31,348,57"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Matrix3.html#abfa66ff013c7129624f2138c82134acb" title="Computes the determinant of matrix." alt="" coords="25,5,140,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,36,140,29,141,23,193,30"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Matrix3.html#a01d19862eca85b4bdd99da6cfc8a033d" title="Computes the tranpose of matrix." alt="" coords="5,56,160,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,58,161,62,160,57,192,52"/>
-</map>

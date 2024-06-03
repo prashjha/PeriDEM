@@ -1,7 +1,0 @@
-<map id="anonymous_namespace{tetElem::cpp}::checkPoint" name="anonymous_namespace{tetElem::cpp}::checkPoint">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,182,65"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="230,5,329,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,29,214,25,214,30,182,35"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="237,56,322,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="182,53,222,59,221,64,182,59"/>
-</map>

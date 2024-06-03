@@ -1,7 +1,0 @@
-<map id="material::BaseInfluenceFn::print" name="material::BaseInfluenceFn::print">
-<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,5,179,48"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1BaseInfluenceFn.html#a71590d10d78881d9fcf6012c8e06fe99" title="Returns the string containing printable information about the object." alt="" coords="227,5,400,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,24,211,24,211,29,179,29"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="448,13,560,40"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="400,24,433,24,433,29,400,29"/>
-</map>

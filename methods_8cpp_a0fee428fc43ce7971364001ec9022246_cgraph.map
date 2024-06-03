@@ -1,7 +1,0 @@
-<map id="compare_point" name="compare_point">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,112,57"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="177,5,262,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,33,161,25,162,30,112,38"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="160,56,279,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="112,50,145,55,144,60,112,55"/>
-</map>

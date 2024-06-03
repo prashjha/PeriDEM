@@ -1,7 +1,0 @@
-<map id="fe::TriElem::mapPointToRefElem" name="fe::TriElem::mapPointToRefElem">
-<area shape="rect" id="Node000001" title="Maps point p in a given element to the reference element." alt="" coords="5,31,219,57"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="267,5,366,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="219,28,251,24,252,29,219,33"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="274,56,359,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="219,55,259,60,258,65,219,60"/>
-</map>

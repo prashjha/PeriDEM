@@ -1,7 +1,0 @@
-<map id="particle::Wall::Wall" name="particle::Wall::Wall">
-<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,47,135,73"/>
-<area shape="rect" id="Node000002" href="$classparticle_1_1BaseParticle.html#ad3bc7b2e7f6762f09ed9c8201d5af7d2" title="Get the dimension of the domain." alt="" coords="183,5,328,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,46,167,40,168,45,136,51"/>
-<area shape="rect" id="Node000003" href="$classparticle_1_1BaseParticle.html#a40cf9f658ae9988d90acbc6dcda9bda0" title="Get the number of nodes." alt="" coords="183,72,328,115"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="136,69,168,75,167,80,135,74"/>
-</map>

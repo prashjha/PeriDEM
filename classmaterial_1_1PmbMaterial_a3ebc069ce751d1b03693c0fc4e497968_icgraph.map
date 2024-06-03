@@ -1,7 +1,0 @@
-<map id="material::PmbMaterial::getInfFn" name="material::PmbMaterial::getInfFn">
-<area shape="rect" id="Node000001" title="Returns the value of influence function." alt="" coords="398,5,546,48"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1PmbMaterial.html#ae478ac81d2d0c4c8ff88377e3d703f1c" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="202,5,350,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,29,350,29,350,24,383,24"/>
-<area shape="rect" id="Node000003" href="$classmaterial_1_1PmbMaterial.html#adff5bec82c3e0b7bf39ad110e9c500ba" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="5,5,154,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="186,29,154,29,154,24,186,24"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="util::geometry::ComplexGeomObject::isOutside" name="util::geometry::ComplexGeomObject::isOutside">
-<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,5,201,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="249,13,389,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,24,233,24,233,29,201,29"/>
-</map>

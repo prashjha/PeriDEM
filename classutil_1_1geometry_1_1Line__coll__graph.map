@@ -1,7 +1,0 @@
-<map id="util::geometry::Line" name="util::geometry::Line">
-<area shape="rect" id="Node000001" title="Defines line in 3d." alt="" coords="113,709,237,992"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,176,179,459"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="119,473,156,709,150,710,113,474"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="203,5,315,629"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,630,202,693,197,692,207,629"/>
-</map>

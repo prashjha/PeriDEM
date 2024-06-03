@@ -1,9 +1,0 @@
-<map id="util::geometry::Hexagon::isNear" name="util::geometry::Hexagon::isNear">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="5,23,166,65"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box." alt="" coords="214,31,358,57"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,41,198,41,198,47,166,47"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="406,5,505,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="358,31,390,26,391,31,359,36"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="414,56,498,83"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="359,52,399,58,398,63,358,57"/>
-</map>

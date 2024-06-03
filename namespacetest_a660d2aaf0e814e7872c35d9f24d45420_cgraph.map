@@ -1,7 +1,0 @@
-<map id="test::testGraphPartitioningSimple" name="test::testGraphPartitioningSimple">
-<area shape="rect" id="Node000001" title="Tests metis partitioning of graph." alt="" coords="5,59,179,101"/>
-<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02testMeshPartitioningLib_8cpp_03.html#a2534f947d874b5c34db52830c1c2b1e5" title=" " alt="" coords="227,5,444,64"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,61,211,55,212,60,180,66"/>
-<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02testMeshPartitioningLib_8cpp_03.html#af1b259bd23e4fa00d3e3dabe7e661207" title=" " alt="" coords="234,88,437,163"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="180,94,219,101,218,106,179,99"/>
-</map>

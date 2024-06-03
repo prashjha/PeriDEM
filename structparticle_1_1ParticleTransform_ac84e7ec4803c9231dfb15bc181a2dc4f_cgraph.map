@@ -1,7 +1,0 @@
-<map id="particle::ParticleTransform::apply" name="particle::ParticleTransform::apply">
-<area shape="rect" id="Node000001" title="Returns the transformed vector. We assume that the passed vector passes through origin." alt="" coords="5,5,180,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="228,13,307,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,24,212,24,212,29,180,29"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="355,13,471,40"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="307,24,340,24,340,29,307,29"/>
-</map>
