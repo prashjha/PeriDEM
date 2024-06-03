@@ -138,24 +138,30 @@ jobs:
               fi
 workflows:
   version: 2
-  build_doc_deploy_cov:
+  build:
     jobs:
       - build:
           filters:
             branches:
               ignore: gh-pages
-      # - documentation:
-      #     filters:
-      #       branches:
-      #         ignore: gh-pages
-      #     requires:
-      #       - build
+  doc:
+    jobs:
+      - documentation:
+          filters:
+            branches:
+              only: main
+          requires:
+            - build
+  deploy:
+    jobs:
       - deploy:
           filters:
             branches:
               only: main
           requires:
             - build
+  codecov:
+    jobs:
       - codecoverage:
           filters:
             branches:
