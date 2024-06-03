@@ -87,13 +87,13 @@ jobs:
               echo "Begin clone and copy. pwd = $(pwd)"
               echo "CIRCLE_BRANCH = $CIRCLE_BRANCH"
               echo "CIRCLE_REPOSITORY_URL = $CIRCLE_REPOSITORY_URL"
-              echo "GH_EMAIL = $GH_EMAIL"
-              echo "GH_NAME = $GH_NAME"
+              echo "G_EMAIL = $G_EMAIL"
+              echo "G_NAME = $G_NAME"
               
               if [ $CIRCLE_BRANCH == "main" ]; then
                 echo "set github config"
-                git config --global user.email $GH_EMAIL
-                git config --global user.name $GH_NAME
+                git config --global user.email $G_EMAIL
+                git config --global user.name $G_NAME
   
                 echo "clone for gh-pages. pwd = $(pwd)"
                 cd ..
@@ -196,20 +196,16 @@ workflows:
       - documentation:
          filters:
            branches:
-             only: main
-         requires:
-           - build
+             ignore: gh-pages
       - deploy:
           filters:
             branches:
               only: main
           requires:
-            - documentation
             - build
       - codecoverage:
           filters:
             branches:
               only: main
           requires:
-            - documentation
             - build
