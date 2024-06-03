@@ -1,8 +1,0 @@
-<map id="util::geometry::AnnulusGeomObject::printStr" name="util::geometry::AnnulusGeomObject::printStr">
-<area shape="rect" id="Node000001" title="Prints the information." alt="" coords="5,5,196,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="421,13,533,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,24,405,24,405,29,196,29"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="244,39,373,65"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="196,36,229,40,228,45,196,41"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="373,40,405,35,406,40,374,45"/>
-</map>

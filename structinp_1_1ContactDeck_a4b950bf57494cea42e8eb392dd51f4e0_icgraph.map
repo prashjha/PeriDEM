@@ -1,7 +1,0 @@
-<map id="inp::ContactDeck::getContact" name="inp::ContactDeck::getContact">
-<area shape="rect" id="Node000001" title="Returns the contact data." alt="" coords="431,5,626,32"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1ContactDeck.html#aa691dc21ae205d91cabd4bd0d6d57dee" title="Returns the string containing printable information about the object." alt="" coords="210,5,383,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="415,21,383,21,383,16,415,16"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1ContactDeck.html#a1cef55fc29cba5accd885ad286a1ffd2" title="Prints the information about the object." alt="" coords="5,5,162,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="194,21,162,21,162,16,194,16"/>
-</map>

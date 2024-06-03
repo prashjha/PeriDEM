@@ -1,5 +1,0 @@
-<map id="util::geometry::Triangle" name="util::geometry::Triangle">
-<area shape="rect" id="Node000001" title="Defines rectangle." alt="" coords="19,336,165,683"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,179,288"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,303,95,337,89,337,89,303"/>
-</map>

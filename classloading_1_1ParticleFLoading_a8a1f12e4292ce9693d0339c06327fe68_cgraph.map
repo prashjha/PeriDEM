@@ -1,9 +1,0 @@
-<map id="loading::ParticleFLoading::applyWall" name="loading::ParticleFLoading::applyWall">
-<area shape="rect" id="Node000001" title="Applies force boundary condition." alt="" coords="5,56,173,99"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="221,5,391,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,53,239,34,240,39,171,58"/>
-<area shape="rect" id="Node000003" href="$classparticle_1_1BaseParticle.html#a40cf9f658ae9988d90acbc6dcda9bda0" title="Get the number of nodes." alt="" coords="233,56,379,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,75,218,75,218,80,173,80"/>
-<area shape="rect" id="Node000004" href="$classparticle_1_1BaseParticle.html#aa369eb38bfda094cdb3243a97b8075bc" title="Get id among the group of object in the same type as this." alt="" coords="233,123,379,165"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="161,97,221,115,219,120,160,102"/>
-</map>

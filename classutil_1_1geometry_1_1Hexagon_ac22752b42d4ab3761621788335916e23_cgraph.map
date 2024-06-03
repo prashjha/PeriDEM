@@ -1,8 +1,0 @@
-<map id="util::geometry::Hexagon::printStr" name="util::geometry::Hexagon::printStr">
-<area shape="rect" id="Node000001" title="Prints the information." alt="" coords="5,5,166,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="368,13,480,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,24,353,24,353,29,166,29"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="214,39,320,65"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="167,35,199,40,198,45,166,41"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="320,41,352,36,353,41,321,46"/>
-</map>

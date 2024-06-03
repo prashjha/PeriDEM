@@ -1,6 +1,0 @@
-<map id="util::io::log" name="util::io::log">
-<area shape="rect" id="Node000001" title="Global method to log the message." alt="" coords="5,29,87,56"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="135,29,263,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="87,40,119,40,119,45,87,45"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="172,30,168,21,171,11,182,5,199,3,217,5,227,12,224,16,216,10,199,8,183,10,175,14,173,20,177,28"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="util::io::printStr" name="util::io::printStr">
-<area shape="rect" id="Node000001" title="Returns formatted string for output." alt="" coords="5,5,112,32"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="160,5,272,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,16,144,16,144,21,112,21"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="model::DEMModel::DEMModel" name="model::DEMModel::DEMModel">
-<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,5,208,32"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a75f6c95023f4a5b3906a8937c811663c" title="Initializes the logger." alt="" coords="256,5,376,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,16,240,16,240,21,208,21"/>
-</map>
