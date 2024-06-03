@@ -87,6 +87,8 @@ jobs:
         IMAGE_FILE_NAME: .circleci/Docker/Dockerfile-<<pipeline.parameters.docker-img-os>>
         IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
       steps:
+        - checkout
+        - postcheckout
         - run:
             name: Build docker image
             command: |
