@@ -16,12 +16,6 @@ parameters:
     default: -DVTK_DIR=/usr/local/lib/cmake/vtk-9.3 -DMETIS_DIR=/usr/lib
 
 commands:
-  postcheckout:
-    steps:
-      - run:
-          name: "Pull submodules"
-          command: |
-            git submodule update --init --recursive
   libcmake:
     parameters:
       cmake-args:
@@ -107,7 +101,8 @@ jobs:
                 git checkout gh-pages || git checkout --orphan gh-pages
               
                 echo "clean the branch"
-                git rm -rf . #1> /dev/null
+                git rm -rf . 1> /dev/null
+                git add . && git commit -m "cleaning" 1> /dev/null
               
                 echo "create .nojekyll file"
                 touch .nojekyll
@@ -118,11 +113,14 @@ jobs:
               
                 echo "begin copying. pwd = $(pwd)"
                 echo "copy repo directory except 'docs' and '.git' directories"
-                rsync -a --stats --progress ../project/ ./ --exclude build --exclude docs --exclude .git 1> /dev/null
-                rsync -a --stats --progress ../project/docs/ ./docs/ --exclude doxy --exclude doxy.log 
+                rsync -a --stats ../project/ ./ --exclude build --exclude docs --exclude .git
+                rsync -a --stats ../project/docs/ ./docs/ --exclude doxy --exclude doxy.log 
               
                 echo "copying docs/doxy/html into ./"
-                rsync -a --stats --progress ../project/docs/doxy/html/ ./ 1> /dev/null
+                rsync -a --stats ../project/docs/doxy/html/ ./
+              
+                echo "removing .gitignore file"
+                rm .gitignore
                 
                 echo "check if files are copied"
                 if [ -f "./index.html" ]; then 
@@ -133,7 +131,7 @@ jobs:
   
                 echo "add changes and commit"
                 git add -A
-                git commit -m "automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty 1> /dev/null
+                git commit -m "automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty 
                 
                 echo "push"
                 git push -q https://${G_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git gh-pages

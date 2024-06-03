@@ -4,9 +4,8 @@ VTK_DIR="/usr/local/lib/cmake/vtk-9.3"
 METIS_DIR="/usr/lib"
 
 ## STEP 1 build PeriDEM documentation
-git clone https://github.com/prashjha/PeriDEM.git 
+git clone git@github.com:prashjha/PeriDEM.git
 cd PeriDEM 
-git checkout remove_hpx 
 cd .. 
 
 mkdir -p peridem_build && cd peridem_build
@@ -31,14 +30,15 @@ make doc
 ## STEP 2 pull gh-pages branch and clean it
 echo "clone for gh-pages. pwd = $(pwd)"
 cd ../
-git clone https://github.com/prashjha/PeriDEM.git build_docs
+git clone git@github.com:prashjha/PeriDEM.git build_docs
 
 cd build_docs
 echo "checkout gh-pages branch"
 git checkout gh-pages || git checkout --orphan gh-pages
 
 echo "clean the branch"
-git rm -rf . #1> /dev/null
+git rm -rf . 1> /dev/null
+git add . && git commit -m "cleaning" 1> /dev/null
 
 ## STEP 3 bring new files to gh-branch
 echo "create .nojekyll file"
@@ -50,11 +50,14 @@ ls -a
 
 echo "begin copying. pwd = $(pwd)"
 echo "copy repo directory except 'docs' and '.git' directories"
-rsync -a --stats --progress ../PeriDEM/ ./ --exclude docs --exclude .git #1> /dev/null
-rsync -a --stats --progress ../PeriDEM/docs/ ./docs/ --exclude doxy --exclude doxy.log 
+rsync -a --stats ../PeriDEM/ ./ --exclude docs --exclude .git --exclude build #1> /dev/null
+rsync -a --stats ../PeriDEM/docs/ ./docs/ --exclude doxy --exclude doxy.log 
 
 echo "copying docs/doxy/html into ./"
-rsync -a --stats --progress ../PeriDEM/docs/doxy/html/ ./
+rsync -a --stats ../PeriDEM/docs/doxy/html/ ./
+
+echo "removing .gitignore file"
+rm .gitignore
 
 echo "check if files are copied"
 if [ -f "./index.html" ]; then 
@@ -66,7 +69,7 @@ fi
 ## STEP 4 add, commit, and push
 echo "add changes and commit"
 git add -A
-git commit -m "automated deployment to GitHub Pages" --allow-empty
+git commit -m "updating github page for the PeriDEM repository" --allow-empty
 
 echo "push"
 git push origin gh-pages

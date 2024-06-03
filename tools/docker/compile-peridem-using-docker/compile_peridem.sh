@@ -9,9 +9,7 @@ echo "<<<<<<<<<<< >>>>>>>>>>>"
 echo "PERIDEM"
 echo "<<<<<<<<<<< >>>>>>>>>>>"
 git clone https://github.com/prashjha/PeriDEM.git 
-cd PeriDEM 
-git checkout remove_hpx 
-git submodule update --init --recursive 
+cd PeriDEM
 cd .. 
 
 build_types=(Debug Release)

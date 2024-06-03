@@ -38,8 +38,7 @@ RUN git config --global url."https://github.com/".insteadOf git@github.com: && \
 # build peridem
 # -----------------------
 RUN git clone https://github.com/prashjha/PeriDEM.git &&\
-    cd PeriDEM &&\
-    git submodule update --init --recursive && \
+    cd PeriDEM && \
     mkdir -p build && \
     cd build && \
     cmake -DCMAKE_BUILD_TYPE=Release \
