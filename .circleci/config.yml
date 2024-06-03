@@ -82,15 +82,13 @@ jobs:
         - libdoc
     deploy:
       machine:
-        image: ubuntu-2004:202008-01
+        image: ubuntu-2004:current
       environment:
         IMAGE_FILE_NAME: .circleci/Docker/Dockerfile-<<pipeline.parameters.docker-img-os>>
         IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
       steps:
-        - checkout
-        - postcheckout
         - run:
-            name: Build docker
+            name: Build docker image
             command: |
               docker build -t prashjha/${IMAGE_NAME} -f ${IMAGE_FILE_NAME} .
               docker images
@@ -105,9 +103,13 @@ jobs:
             name: Deploy to github
             command: |
               if [ "${CIRCLE_BRANCH}" == "main" ]; then
-                 docker login docker.pkg.github.com --username prashjha -p ${G_TOKEN}
-                 docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
-                 docker push docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 ## OLD 
+                 # docker login docker.pkg.github.com -u prashjha -p ${G_TOKEN}
+                 # docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 # docker push docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 ## new github container namespace
+                 docker login ghcr.io -u prashjha -p ${G_TOKEN}
+                 docker push ghcr.io/prashjha/peridem/${IMAGE_NAME}
               fi
     codecoverage:
       docker:
