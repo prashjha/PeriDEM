@@ -102,26 +102,24 @@ jobs:
                 git checkout gh-pages || git checkout --orphan gh-pages
               
                 echo "clean the branch"
-                git rm -rf .
-                git commit -m "cleaning"
-              
-                echo "pull main branch"
-                git pull origin main
+                git rm -rf . #1> /dev/null
               
                 echo "create .nojekyll file"
                 touch .nojekyll
               
                 echo "begin copying. pwd = $(pwd)"
-                rsync -a --stats --progress ../project/docs/doxy/* ./docs/
+                mkdir -p docs
+                cp -av ../project/docs/doxy/html/* ./docs/*
+                
                 echo "check if files are copied"
                 ls ./docs/
   
                 echo "add changes and commit"
-                git add -a
+                git add -A
                 git commit -m "Automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty
                 
                 # Push quietly
-                git push -q https://${G_TOKEN}@github.com/prashjha/prashjha.github.io.git gh-pages
+                git push -q https://${G_TOKEN}@github.com/prashjha/PeriDEM.git gh-pages
               fi
     deploy:
       machine:
