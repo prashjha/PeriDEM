@@ -80,6 +80,41 @@ jobs:
         - libcmake:
             cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=ON <<pipeline.parameters.cmake-include-dirs>>
         - libdoc
+        - push:
+            name: Push html files to gh-pages
+            command: |
+              # source - https://blog.frederikring.com/articles/deploying-github-pages-circle-ci/
+              echo "CIRCLE_BRANCH = $CIRCLE_BRANCH"
+              echo "CIRCLE_REPOSITORY_URL = $CIRCLE_REPOSITORY_URL"
+              echo "pwd = $(pwd)"
+              if [ $CIRCLE_BRANCH == "main" ]; then
+                git config --global user.email $GH_EMAIL
+                git config --global user.name $GH_NAME
+  
+                cd ..
+                echo "clone for gh-pages"
+                echo "pwd = $(pwd)"
+                git clone $CIRCLE_REPOSITORY_URL build_docs
+  
+                cd build_docs
+                git checkout gh-pages || git checkout --orphan gh-pages
+                git rm -rf .
+                git pull origin main
+                touch .nojekyll
+              
+                echo "begin copying"
+                echo "pwd = $(pwd)"
+                
+                # copy
+                rsync -a --stats --progress ../PeriDEM/docs/doxy/* ./docs/
+                echo "check if files are copied"
+                ls ./docs/
+  
+                git add -a
+                git commit -m "Automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty
+  
+                git push origin gh-pages
+              fi
     deploy:
       machine:
         image: ubuntu-2004:current
