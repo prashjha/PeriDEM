@@ -6,6 +6,6 @@
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 # add_subdirectory(csv)
-add_subdirectory(fmt)
+add_subdirectory(fmt EXCLUDE_FROM_ALL)
 # add_subdirectory(nanoflann)
 # add_subdirectory(taskflow)

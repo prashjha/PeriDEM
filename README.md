@@ -255,28 +255,32 @@ Above gives the basic idea of simulation steps. For more thorough understanding 
 Core dependencies are:
   - [cmake](https://cmake.org/) (>= 3.10.2) 
     * recommend to install using `apt-get` or `brew`
-  - [boost](https://www.boost.org/) (>= 1.65.1)
-    * recommend to install using `apt-get` or `brew`
-    * required for building YAML
   - [vtk](https://vtk.org/) (>= 7.1.1)
     * recommend to build using script [install_vtk_alone.sh](tools/build_scripts/ubuntu/install_vtk_alone.sh) or [install_libs.sh](tools/build_scripts/ubuntu/install_libs.sh)
     * required to output simulation results in `.vtu` format
-  - [nanoflann](https://github.com/jlblancoc/nanoflann) (>= 1.3.2)
-    * included as external library in the code
-    * required for neighbor search
   - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (>= 0.5.2)
     * recommend to install using `apt-get` or `brew`
     * required to parse input file
-  - [fmt](https://github.com/fmtlib/fmt) (>= 7.1.3)
-    * included as external library in the code
-    * required to output formatted strings
   - [metis](https://github.com/KarypisLab/METIS) (>= 5.1.0)
     * recommend to install using `apt-get` or `brew`. If using `apt-get`, recommend to create symlink to `libmetis.so` file in `/usr/lib/` directory. See towards end in [install_base.sh](tools/build_scripts/ubuntu/install_base.sh). This helps `cmake` locate metis library. 
     * required to partition the mesh
   - MPI
     * for parallel simulations
 
-Dependencies for running the examples:
+Following dependencies are included in the `PeriDEM` library in `external` folder (see [external/README.md](external/README.md) for more details):
+  - [fast-cpp-csv-parser](https://github.com/ben-strasser/fast-cpp-csv-parser/tree/master) (version included - master)
+    * required to read `.csv` files
+  - [fmt](https://github.com/fmtlib/fmt) (>= 7.1.3, version included - 10.2.1)
+    * included as external library in the code
+    * required to output formatted strings
+  - [nanoflann](https://github.com/jlblancoc/nanoflann) (>= 1.3.2, version included - v1.5.5)
+    * included as external library in the code
+    * required for neighbor search
+  - [taskflow](https://github.com/taskflow/taskflow) (>= 3.7.0)
+    * included as external library in the code
+    * required for asynchronous/parallel for loop
+
+Additional dependencies for running the examples:
   - [gmsh](https://gmsh.info/) (>= 3.0.6)
     * recommend to install using `apt-get` or `brew`
     * required to build the mesh of various objects in the test
