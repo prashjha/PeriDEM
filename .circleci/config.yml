@@ -138,13 +138,13 @@ jobs:
               fi
 workflows:
   version: 2
-  build:
+  build_work:
     jobs:
       - build:
           filters:
             branches:
               ignore: gh-pages
-  doc:
+  doc_work:
     jobs:
       - documentation:
           filters:
@@ -152,7 +152,7 @@ workflows:
               only: main
           requires:
             - build
-  deploy:
+  deploy_work:
     jobs:
       - deploy:
           filters:
@@ -160,7 +160,7 @@ workflows:
               only: main
           requires:
             - build
-  codecov:
+  codecov_work:
     jobs:
       - codecoverage:
           filters:
