@@ -1,0 +1,7 @@
+<map id="util::hatFunction" name="util::hatFunction">
+<area shape="rect" id="Node000001" title="Computes hat function at given point." alt="" coords="5,31,120,57"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="168,5,267,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,32,152,27,153,32,121,37"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="175,56,260,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,51,160,57,160,63,120,56"/>
+</map>

@@ -1,0 +1,11 @@
+<map id="util::Point::lengthSq" name="util::Point::lengthSq">
+<area shape="rect" id="Node000001" title="Computes the Euclidean length of the vector." alt="" coords="223,81,358,108"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a250e0cd1a3e9c62d9ebad16c69e63635" title="Do lines intersect." alt="" coords="19,5,161,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="245,77,174,46,140,35,141,30,176,42,247,72"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#aa9da7b00ec6ff4cee13d07903ca1906b" title="Returns true if point is inside the cylinder." alt="" coords="5,56,175,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="207,87,175,83,175,77,207,81"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#ac6513e9322055bca2696977d294be393" title="Returns true if point is inside the cylinder." alt="" coords="5,107,175,133"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="207,108,175,112,175,107,207,103"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a0e32aa2aadaa1b56f03925865e309006" title="Compute distance between point and line." alt="" coords="15,157,165,184"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="247,117,176,148,141,159,140,154,174,143,245,113"/>
+</map>

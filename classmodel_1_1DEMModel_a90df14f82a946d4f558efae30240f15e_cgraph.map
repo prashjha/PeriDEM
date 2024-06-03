@@ -1,0 +1,27 @@
+<map id="model::DEMModel::createParticlesFromFile" name="model::DEMModel::createParticlesFromFile">
+<area shape="rect" id="Node000001" title="Creates particles in a Hexagonal arrangement." alt="" coords="5,277,230,320"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1geometry.html#a2fe7250de366a89b0ed8e09f5a063ad6" title="Create geometrical object from the given data." alt="" coords="278,148,457,191"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,274,310,196,312,201,162,279"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="543,240,649,267"/>
+<area shape="poly" id="edge11_Node000001_Node000007" title=" " alt="" coords="210,274,277,263,410,252,527,250,527,255,410,258,278,268,211,279"/>
+<area shape="rect" id="Node000009" href="$namespacerw_1_1reader.html#abf10c43da999faa4a3c0c93cb8b09689" title="Reads particles center location, radius, and zone id." alt="" coords="289,277,446,320"/>
+<area shape="poly" id="edge12_Node000001_Node000009" title=" " alt="" coords="230,296,273,296,273,301,230,301"/>
+<area shape="rect" id="Node000010" href="$namespacerw_1_1reader.html#abca6027a07f02b2f2b7068b1765702de" title="Reads particles center location, radius, and zone id. In this case, file also provides initial orient..." alt="" coords="289,344,446,387"/>
+<area shape="poly" id="edge13_Node000001_Node000010" title=" " alt="" coords="201,318,275,338,274,343,199,323"/>
+<area shape="rect" id="Node000011" href="$namespaceutil.html#a663b495a76c7875a51986e259e93f63f" title="Transform sample from U(0,1) to U(a,b)" alt="" coords="308,411,427,453"/>
+<area shape="poly" id="edge14_Node000001_Node000011" title=" " alt="" coords="151,318,209,357,279,396,294,403,292,408,276,401,206,361,148,323"/>
+<area shape="poly" id="edge6_Node000002_Node000002" title=" " alt="" coords="324,148,322,138,330,129,345,123,367,121,392,124,406,130,404,135,390,129,367,127,346,129,333,133,327,139,329,147"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1geometry.html#aa14cdef2f73ea184ca66f88de5d079dd" title="Check parameter data for validity." alt="" coords="505,5,686,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="392,145,442,106,504,64,525,53,528,57,506,69,446,110,396,150"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1geometry.html#a423eb6ea7aec79183939c81e522057ca" title="Get num params required for creation of object." alt="" coords="734,64,934,107"/>
+<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="409,145,454,125,504,108,614,90,719,82,719,88,615,95,506,113,456,130,411,150"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1geometry.html#a2f43f1f68c3073656dcb3af84de93192" title="Check parameter data for validity." alt="" coords="505,123,686,165"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="457,157,489,153,490,158,458,162"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="512,189,679,216"/>
+<area shape="poly" id="edge8_Node000002_Node000006" title=" " alt="" coords="458,180,497,186,496,191,457,185"/>
+<area shape="poly" id="edge9_Node000002_Node000007" title=" " alt="" coords="416,189,506,225,528,233,527,238,504,231,414,194"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="686,46,730,57,729,62,684,51"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="684,119,729,108,730,114,686,125"/>
+<area shape="rect" id="Node000008" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="778,240,890,267"/>
+<area shape="poly" id="edge10_Node000007_Node000008" title=" " alt="" coords="649,251,762,251,762,256,649,256"/>
+</map>

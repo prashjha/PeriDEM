@@ -1,0 +1,11 @@
+<map id="util::io::removeExtensionFromFile" name="util::io::removeExtensionFromFile">
+<area shape="rect" id="Node000001" title="Remove extension from the filename Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="324,23,489,65"/>
+<area shape="rect" id="Node000002" href="$namespacetest.html#a6934db7b63923b70a56ab8e9c7159202" title="Tests metis partitioning of graph from a 2&#45;D mesh with nonlocal interaction." alt="" coords="103,5,276,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,35,276,31,277,26,309,30"/>
+<area shape="rect" id="Node000004" href="$namespacetest.html#af0964e1ea010ded3d98df70e7d5326ca" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="141,56,238,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="309,58,239,66,238,61,308,53"/>
+<area shape="rect" id="Node000003" href="$testMeshPartitioning_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,55,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="87,21,55,21,55,16,87,16"/>
+<area shape="rect" id="Node000005" href="$testParallelComp_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,56,55,83"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="125,72,55,72,55,67,125,67"/>
+</map>

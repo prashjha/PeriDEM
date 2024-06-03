@@ -1,0 +1,7 @@
+<map id="util::geometry::Cylinder::isNearBoundary" name="util::geometry::Cylinder::isNearBoundary">
+<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="5,23,162,65"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="210,5,309,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,30,194,25,195,31,163,35"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="217,56,302,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="163,53,202,58,201,64,162,58"/>
+</map>

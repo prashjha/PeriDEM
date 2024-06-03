@@ -1,0 +1,16 @@
+name: peridem-tut
+channels:
+  - conda-forge
+dependencies:
+  - python=3.9
+  - pip
+  - wheel
+  - packaging
+  - matplotlib
+  - jupyter
+  - jupyterlab
+  - numpy
+  - scipy
+  - seaborn
+  - meshio
+  - pyvista
