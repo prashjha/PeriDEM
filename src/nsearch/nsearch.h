@@ -151,7 +151,7 @@ public:
   NFlannKdTree d_tree;
 
   /*! @brief Tree search parameters */
-  nanoflann::SearchParams d_params;
+  nanoflann::SearchParameters d_params;
 };
 
 } // namespace nsearch

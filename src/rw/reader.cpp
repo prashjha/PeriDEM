@@ -8,9 +8,9 @@
  */
 
 #include "reader.h"
-#include "csv/csv.hpp"
 #include "mshReader.h"
 #include "vtkReader.h"
+#include <csv/csv.h>
 
 void rw::reader::readCsvFile(const std::string &filename, size_t dim,
                              std::vector<util::Point> *nodes,

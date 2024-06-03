@@ -15,7 +15,7 @@
 #include "util/feElementDefs.h"
 #include "util/methods.h"
 #include "nsearch/nsearch.h"
-#include <csv/csv.hpp>
+#include <csv/csv.h>
 #include <algorithm>
 #include <fstream>
 #include <string>
