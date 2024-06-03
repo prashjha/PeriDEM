@@ -1,8 +1,4 @@
 <map id="particle::ParticleTransform::printStr" name="particle::ParticleTransform::printStr">
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement. " alt="" coords="228,5,453,47"/>
-<area shape="rect" id="node6" href="$classparticle_1_1RefParticle.html#adc4972af51dcef2f4ae7f9ea342af5d5" title="Get radius of reference particle. " alt="" coords="272,71,409,112"/>
-<area shape="rect" id="node7" href="$classparticle_1_1RefParticle.html#ab344f3aba80b01ef153e9172e03f2b29" title="Prints information of the object. " alt="" coords="272,136,409,177"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#ae822c44f4719cc125181b9e3b9d60fba" title="Creates particles in a given container. " alt="" coords="501,13,727,39"/>
-<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members. " alt="" coords="775,13,929,39"/>
-<area shape="rect" id="node5" href="$classmodel_1_1DEMModel.html#ae8eba7a12449983fa10d07e3b7374512" title="Main driver to simulate. " alt="" coords="977,13,1133,39"/>
+<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="245,5,437,47"/>
+<area shape="rect" id="node2" href="$structparticle_1_1ParticleTransform.html#a01bc46e06cc4aa99edfb39ee68620820" title="Prints the information about the object." alt="" coords="5,5,197,47"/>
 </map>

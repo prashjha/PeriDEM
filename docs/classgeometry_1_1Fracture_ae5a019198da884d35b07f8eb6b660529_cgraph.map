@@ -1,0 +1,4 @@
+<map id="geometry::Fracture::Fracture" name="geometry::Fracture::Fracture">
+<area shape="rect" id="node1" title="Constructor." alt="" coords="5,5,151,47"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="199,13,389,39"/>
+</map>

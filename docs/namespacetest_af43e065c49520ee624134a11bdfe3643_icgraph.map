@@ -1,3 +1,4 @@
 <map id="test::getExactIntegrationRefTet" name="test::getExactIntegrationRefTet">
-<area shape="rect" id="node2" href="$namespacetest.html#aa7c71a77ba3a1a442ebad77cbb0bc242" title="Perform test on quadrature points on tetrahedral elements. " alt="" coords="219,13,341,39"/>
+<area shape="rect" id="node1" title="Computes integration of polynomial exactly over reference tetrahedral." alt="" coords="185,5,368,47"/>
+<area shape="rect" id="node2" href="$namespacetest.html#aa7c71a77ba3a1a442ebad77cbb0bc242" title="Perform test on quadrature points on tetrahedral elements." alt="" coords="5,13,137,39"/>
 </map>

@@ -1,6 +1,0 @@
-<map id="fe::QuadElem::getDerShapes" name="fe::QuadElem::getDerShapes">
-<area shape="rect" id="node2" href="$classfe_1_1QuadElem.html#aa4d3e4533429959f2270ed710ec5d5f9" title="Computes the Jacobian of map . " alt="" coords="247,31,427,57"/>
-<area shape="rect" id="node5" href="$classfe_1_1QuadElem.html#a81c559a55ceabb662b6ad8f8a2312ec8" title="Compute the quadrature points for quadrangle element. " alt="" coords="273,81,400,108"/>
-<area shape="rect" id="node3" href="$classfe_1_1QuadElem.html#a6bd2f523f384b1e573367af41b9a91b2" title="Get vector of quadrature data. " alt="" coords="475,5,670,32"/>
-<area shape="rect" id="node4" href="$classfe_1_1QuadElem.html#ac8aa7be71686c83a78dc1a00a420445a" title="Get vector of quadrature data. " alt="" coords="475,56,671,83"/>
-</map>

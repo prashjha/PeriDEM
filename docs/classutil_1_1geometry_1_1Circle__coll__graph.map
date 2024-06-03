@@ -1,4 +1,5 @@
 <map id="util::geometry::Circle" name="util::geometry::Circle">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain. " alt="" coords="5,123,188,347"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors. " alt="" coords="213,5,335,464"/>
+<area shape="rect" id="node1" title="Defines rectangle." alt="" coords="125,527,283,751"/>
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,123,208,347"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="233,5,373,464"/>
 </map>

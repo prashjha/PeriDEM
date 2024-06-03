@@ -1,6 +1,0 @@
-digraph "rw::reader::VtkReader"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{rw::reader::VtkReader\n|- d_reader_p\l- d_grid_p\l- d_count\l|+ VtkReader()\l+ readMesh()\l+ readNodes()\l+ readCells()\l+ readPointData()\l+ readPointData()\l+ readPointData()\l+ readPointData()\l+ readPointData()\l+ readPointData()\land 8 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-}

@@ -1,6 +1,4 @@
 <map id="fe::BaseElem::getQuadDatas" name="fe::BaseElem::getQuadDatas">
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#ad8e7d706e7378a729c22842bfbf6af3b" title="Compute the nodal volume. " alt="" coords="265,5,415,32"/>
-<area shape="rect" id="node5" href="$classfe_1_1BaseElem.html#a96fb54d9aca45e987c163e95242ceb8f" title="Get number of quadrature points in the data. " alt="" coords="247,57,433,98"/>
-<area shape="rect" id="node3" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data. " alt="" coords="481,5,627,32"/>
-<area shape="rect" id="node4" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor. " alt="" coords="675,5,788,32"/>
+<area shape="rect" id="node1" title="Get vector of quadrature data." alt="" coords="216,5,425,32"/>
+<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#ad8e7d706e7378a729c22842bfbf6af3b" title="Compute the nodal volume." alt="" coords="5,5,168,32"/>
 </map>

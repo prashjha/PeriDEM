@@ -1,6 +1,6 @@
 <map id="util::geometry::Rectangle::isNear" name="util::geometry::Rectangle::isNear">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Line.html#a0f370769b20dcbd3c46eb738c1bad85f" title="Computes the bounding box of object. " alt="" coords="221,5,384,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box. " alt="" coords="230,56,375,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="439,31,525,57"/>
-<area shape="rect" id="node5" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="432,81,532,108"/>
+<area shape="rect" id="node1" title="Checks if point is within given distance of this object." alt="" coords="5,23,192,65"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box." alt="" coords="240,31,399,57"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="447,5,557,32"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="457,56,547,83"/>
 </map>

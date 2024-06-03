@@ -1,18 +1,12 @@
 <map id="fe::Mesh::Mesh" name="fe::Mesh::Mesh">
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data. " alt="" coords="167,208,312,235"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a1ddf7fcc08ed1ab44a0af2054ddea600" title="Global method to log the message. " alt="" coords="425,5,507,32"/>
-<area shape="rect" id="node4" href="$namespacerw_1_1reader.html#af910f64dc70aa3d0a3af0f9bb370f8cc" title="Reads mesh data into node file and element file. " alt="" coords="387,56,545,83"/>
-<area shape="rect" id="node5" href="$namespacerw_1_1reader.html#a6af50efb480753054bbf6208921733bd" title="Reads mesh data into node file and element file. " alt="" coords="387,107,545,133"/>
-<area shape="rect" id="node6" href="$namespacerw_1_1reader.html#ae9f76b31b63ab4f82fe853a0e158c32f" title="Reads nodal coordinates. " alt="" coords="370,157,562,184"/>
-<area shape="rect" id="node7" href="$namespacerw_1_1reader.html#ae911e20d8494352c2de082b59dc88f11" title="Reads data of specified tag from the vtu file. " alt="" coords="360,208,572,235"/>
-<area shape="rect" id="node8" href="$namespacerw_1_1reader.html#a79098cecf3c77855498e8322ec1bf3a8" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity. " alt="" coords="374,259,558,285"/>
-<area shape="rect" id="node9" href="$classfe_1_1Mesh.html#ad8e7d706e7378a729c22842bfbf6af3b" title="Compute the nodal volume. " alt="" coords="391,309,541,336"/>
-<area shape="rect" id="node15" href="$classfe_1_1Mesh.html#a4515421aaf61c23e104e97f9017967bf" title="Compute the bounding box. " alt="" coords="385,360,547,387"/>
-<area shape="rect" id="node17" href="$classfe_1_1Mesh.html#a63a72abf6d18ebfa92750319c19c10dd" title="Compute the mesh size. " alt="" coords="371,411,561,437"/>
-<area shape="rect" id="node10" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="677,208,783,235"/>
-<area shape="rect" id="node12" href="$classfe_1_1Mesh.html#a1a8e60058a620684d1d7168fbc43c9e3" title="Get the connectivity of element. " alt="" coords="620,259,840,285"/>
-<area shape="rect" id="node13" href="$classfe_1_1BaseElem.html#adef5bda435b10c20e4ac458e2282d111" title="Returns the size of element (length in 1&#45;d, area in 2&#45;d, volume in 3&#45;d element) " alt="" coords="649,309,811,336"/>
-<area shape="rect" id="node14" href="$classfe_1_1BaseElem.html#aed3b89970eaa620ed616212b1811f140" title="Get vector of quadrature data. " alt="" coords="633,360,827,387"/>
-<area shape="rect" id="node11" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size. " alt="" coords="888,208,1003,235"/>
-<area shape="rect" id="node16" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="687,411,773,437"/>
+<area shape="rect" id="node1" title="Constructor." alt="" coords="5,233,127,260"/>
+<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data." alt="" coords="183,157,341,184"/>
+<area shape="rect" id="node9" href="$structinp_1_1MeshDeck.html#adf0249e67b8d4460afbb6235bb7ee55a" title="Returns the string containing printable information about the object." alt="" coords="175,259,349,285"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="469,5,559,32"/>
+<area shape="rect" id="node4" href="$namespacerw_1_1reader.html#af910f64dc70aa3d0a3af0f9bb370f8cc" title="Reads mesh data into node file and element file." alt="" coords="429,56,599,83"/>
+<area shape="rect" id="node5" href="$namespacerw_1_1reader.html#a6af50efb480753054bbf6208921733bd" title="Reads mesh data into node file and element file." alt="" coords="427,107,601,133"/>
+<area shape="rect" id="node6" href="$namespacerw_1_1reader.html#a79098cecf3c77855498e8322ec1bf3a8" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="413,157,615,184"/>
+<area shape="rect" id="node7" href="$namespacerw_1_1reader.html#ae9f76b31b63ab4f82fe853a0e158c32f" title="Reads nodal coordinates." alt="" coords="409,208,619,235"/>
+<area shape="rect" id="node8" href="$namespacerw_1_1reader.html#ae911e20d8494352c2de082b59dc88f11" title="Reads data of specified tag from the vtu file." alt="" coords="397,259,631,285"/>
+<area shape="rect" id="node10" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="453,309,575,336"/>
 </map>

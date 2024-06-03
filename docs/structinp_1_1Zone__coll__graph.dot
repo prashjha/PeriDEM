@@ -1,6 +1,0 @@
-digraph "inp::Zone"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{inp::Zone\n|+ d_type\l+ d_params\l+ d_geom_p\l+ d_zoneId\l|+ Zone()\l+ Zone()\l+ printStr()\l+ print()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-}

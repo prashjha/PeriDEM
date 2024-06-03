@@ -1,3 +1,4 @@
 <map id="fe::TetElem" name="fe::TetElem">
-<area shape="rect" id="node2" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,5,164,317"/>
+<area shape="rect" id="node1" title="A class for mapping and quadrature related operations for linear tetrahedron element." alt="" coords="6,365,178,589"/>
+<area shape="rect" id="node2" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,5,179,317"/>
 </map>

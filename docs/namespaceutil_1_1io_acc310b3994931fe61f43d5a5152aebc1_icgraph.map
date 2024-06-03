@@ -1,0 +1,6 @@
+<map id="util::io::log" name="util::io::log">
+<area shape="rect" id="node1" title="Global method to log the message." alt="" coords="392,31,483,57"/>
+<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data." alt="" coords="180,5,339,32"/>
+<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#a835b225f685b6be572c745809ecd506c" title="Prints message if any of these two conditions are true." alt="" coords="175,56,344,83"/>
+<area shape="rect" id="node3" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor." alt="" coords="5,5,127,32"/>
+</map>

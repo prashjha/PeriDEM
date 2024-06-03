@@ -1,10 +1,4 @@
 <map id="util::geometry::Triangle::isNearBoundary" name="util::geometry::Triangle::isNearBoundary">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Line.html#a7c3409e5d8a1025bdbf72d664ded6d03" title="Checks if point is within given distance of this object. " alt="" coords="208,64,341,105"/>
-<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Line.html#aacb71bc8ad7cc3481c4db221ca8a13bc" title="Computes the area of the rectangle. " alt="" coords="389,5,523,47"/>
-<area shape="rect" id="node9" href="$namespaceutil.html#adaeb9a04adeab62ad0a5ae609d12750c" title="Compute area of triangle. " alt="" coords="217,130,333,157"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector. " alt="" coords="423,71,489,98"/>
-<area shape="rect" id="node7" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="413,122,499,149"/>
-<area shape="rect" id="node8" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="406,173,506,199"/>
-<area shape="rect" id="node5" href="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4" title="Checks matrix. " alt="" coords="571,71,689,98"/>
-<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="737,71,844,98"/>
+<area shape="rect" id="node1" title="Checks if point is within given distance of this object." alt="" coords="5,5,177,47"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#adaeb9a04adeab62ad0a5ae609d12750c" title="Compute area of triangle." alt="" coords="225,13,356,39"/>
 </map>

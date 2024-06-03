@@ -1,3 +1,4 @@
 <map id="util::geometry::Drum2D" name="util::geometry::Drum2D">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain. " alt="" coords="5,5,188,229"/>
+<area shape="rect" id="node1" title="Defines rectangle." alt="" coords="19,277,194,560"/>
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,208,229"/>
 </map>

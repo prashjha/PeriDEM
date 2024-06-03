@@ -1,7 +1,7 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classmaterial_1_1Material.html" title="Collection of methods and database related to peridynamic material. " alt="" coords="5,81,128,108"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1PdElastic.html" title="A class providing methods to compute energy density and force of peridynamic material. " alt="" coords="185,5,317,32"/>
-<area shape="rect" id="node3" href="$classmaterial_1_1PdState.html" title="A class providing methods to compute energy density and force of peridynamic material. " alt="" coords="189,56,312,83"/>
-<area shape="rect" id="node4" href="$classmaterial_1_1PmbMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material. " alt="" coords="176,107,325,133"/>
-<area shape="rect" id="node5" href="$classmaterial_1_1RnpMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material. " alt="" coords="177,157,324,184"/>
+<area shape="rect" id="node1" href="$classmaterial_1_1Material.html" title="Collection of methods and database related to peridynamic material." alt="" coords="5,81,144,108"/>
+<area shape="rect" id="node2" href="$classmaterial_1_1PdElastic.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="204,5,348,32"/>
+<area shape="rect" id="node3" href="$classmaterial_1_1PdState.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="209,56,343,83"/>
+<area shape="rect" id="node4" href="$classmaterial_1_1PmbMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="192,107,360,133"/>
+<area shape="rect" id="node5" href="$classmaterial_1_1RnpMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="194,157,358,184"/>
 </map>

@@ -1,6 +1,5 @@
 <map id="util::geometry::Rectangle::printStr" name="util::geometry::Rectangle::printStr">
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size. " alt="" coords="432,26,547,52"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Prints the information. " alt="" coords="239,26,366,52"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#ac2401e4278f5876b9600d458cfb67722" title="Returns formatted string for output. " alt="" coords="237,76,368,103"/>
-<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Line.html#a0f370769b20dcbd3c46eb738c1bad85f" title="Computes the bounding box of object. " alt="" coords="221,127,384,154"/>
+<area shape="rect" id="node1" title="Prints the information." alt="" coords="5,5,192,47"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="432,13,555,39"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="240,38,384,65"/>
 </map>

@@ -1,6 +1,0 @@
-digraph "inp::PBCData"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{inp::PBCData\n|+ d_selectionType\l+ d_region_p\l+ d_pList\l+ d_wList\l+ d_timeFnType\l+ d_spatialFnType\l+ d_direction\l+ d_timeFnParams\l+ d_spatialFnParams\l+ d_isDisplacementZero\l|+ PBCData()\l+ printStr()\l+ print()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-}

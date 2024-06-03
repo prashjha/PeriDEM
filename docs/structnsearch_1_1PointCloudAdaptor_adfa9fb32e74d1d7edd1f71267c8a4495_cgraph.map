@@ -1,0 +1,4 @@
+<map id="nsearch::PointCloudAdaptor::kdtree_get_point_count" name="nsearch::PointCloudAdaptor::kdtree_get_point_count">
+<area shape="rect" id="node1" title="Get number of points in point cloud." alt="" coords="5,5,208,47"/>
+<area shape="rect" id="node2" href="$structnsearch_1_1PointCloudAdaptor.html#a255ccabd142ce410f6977d358a227038" title="Get vector of points." alt="" coords="256,5,459,47"/>
+</map>

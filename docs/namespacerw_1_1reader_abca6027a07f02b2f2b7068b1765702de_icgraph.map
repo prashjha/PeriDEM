@@ -1,0 +1,4 @@
+<map id="rw::reader::readParticleWithOrientCsvFile" name="rw::reader::readParticleWithOrientCsvFile">
+<area shape="rect" id="node1" title="Reads particles center location, radius, and zone id. In this case, file also provides initial orient..." alt="" coords="299,5,471,47"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement." alt="" coords="5,5,251,47"/>
+</map>

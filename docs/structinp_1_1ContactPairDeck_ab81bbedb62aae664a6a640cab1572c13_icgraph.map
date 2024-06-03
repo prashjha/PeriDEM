@@ -1,3 +1,6 @@
 <map id="inp::ContactPairDeck::printStr" name="inp::ContactPairDeck::printStr">
-<area shape="rect" id="node2" href="$structinp_1_1ContactDeck.html#aa691dc21ae205d91cabd4bd0d6d57dee" title="Prints the information. " alt="" coords="200,13,375,39"/>
+<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="461,35,619,76"/>
+<area shape="rect" id="node2" href="$structinp_1_1ContactPairDeck.html#a4112baa18843b0f2ae89549d68ee2363" title="Prints the information about the object." alt="" coords="240,5,397,47"/>
+<area shape="rect" id="node3" href="$structinp_1_1ContactDeck.html#aa691dc21ae205d91cabd4bd0d6d57dee" title="Returns the string containing printable information about the object." alt="" coords="224,71,413,98"/>
+<area shape="rect" id="node4" href="$structinp_1_1ContactDeck.html#a1cef55fc29cba5accd885ad286a1ffd2" title="Prints the information about the object." alt="" coords="5,71,176,98"/>
 </map>

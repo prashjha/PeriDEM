@@ -1,7 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node0 [label="particle::RefParticle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classparticle_1_1RefParticle.html",tooltip="A class to store reference particle related data. Consider a case of multiple hexagon-shaped particle..."];
-}

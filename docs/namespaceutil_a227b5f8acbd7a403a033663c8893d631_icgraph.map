@@ -1,51 +1,52 @@
 <map id="util::isGreater" name="util::isGreater">
-<area shape="rect" id="node2" href="$classloading_1_1ParticleFLoading.html#a2e8569d614c740abc52d65858d548d1e" title="Applies displacement boundary condition. " alt="" coords="430,23,598,65"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7" title="Computes the radius of smallest circle/sphere which can have the box inside. " alt="" coords="178,174,347,215"/>
-<area shape="rect" id="node7" href="$classmodel_1_1DEMModel.html#a5f63a024b52174fed79847ce0b0f473f" title="Computes peridynamic forces and contact forces. " alt="" coords="169,766,357,807"/>
-<area shape="rect" id="node8" href="$classmodel_1_1DEMModel.html#aa6280fa8bb694b07e3d7867f618660ca" title="Computes peridynamic forces and contact forces. " alt="" coords="420,1203,608,1245"/>
-<area shape="rect" id="node11" href="$classmaterial_1_1RnpMaterial.html#aa36faa8cb0c1be1b0582aebbdb36ed4c" title="Returns energy and force between bond due to pairwise interaction. " alt="" coords="189,883,336,925"/>
-<area shape="rect" id="node12" href="$classmaterial_1_1PmbMaterial.html#ac49caf8d022a3e0a9d6aa01ac7d84c1b" title="Returns energy and force between bond due to pairwise interaction. " alt="" coords="188,949,337,990"/>
-<area shape="rect" id="node13" href="$namespaceutil.html#a51adb530fc272317c3a859af27787b1a" title="Computes hat function at given point. " alt="" coords="205,72,320,99"/>
-<area shape="rect" id="node14" href="$classutil_1_1geometry_1_1Rectangle.html#af2dc5c13d2e8fd193e286e302211e321" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="179,1014,347,1055"/>
-<area shape="rect" id="node15" href="$classutil_1_1geometry_1_1Cuboid.html#a23e713ac9a77180cf746a4eb76c0245e" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="187,1079,338,1121"/>
-<area shape="rect" id="node16" href="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd" title="Computes the radius of biggest circle/sphere completely within the object. " alt="" coords="175,240,350,267"/>
-<area shape="rect" id="node17" href="$classutil_1_1geometry_1_1Line.html#af3222bd1791a4d8fa102f4096dc2ca3c" title="Checks if point is inside this object. " alt="" coords="196,649,329,690"/>
-<area shape="rect" id="node32" href="$classutil_1_1geometry_1_1Cylinder.html#ad0793273c951cdcb8fc6250defecf941" title="Checks if point is inside this object. " alt="" coords="184,1145,341,1186"/>
-<area shape="rect" id="node33" href="$classutil_1_1geometry_1_1Line.html#a7c3409e5d8a1025bdbf72d664ded6d03" title="Checks if point is within given distance of this object. " alt="" coords="196,1262,329,1303"/>
-<area shape="rect" id="node34" href="$classutil_1_1geometry_1_1Line.html#a3eca2640ef36978ada44a3bb2926a56d" title="Checks if point is within given distance of this object. " alt="" coords="447,1321,581,1362"/>
-<area shape="rect" id="node35" href="$classutil_1_1geometry_1_1Cylinder.html#a18b7ea1e8fb230ce399ebef6241f1eb9" title="Checks if point is within given distance of this object. " alt="" coords="184,1327,341,1369"/>
-<area shape="rect" id="node36" href="$classutil_1_1geometry_1_1Cylinder.html#a938406b02ff9bcccdfae3a462cb52f80" title="Checks if point is within given distance of this object. " alt="" coords="184,1393,341,1434"/>
-<area shape="rect" id="node37" href="$namespaceutil.html#aa8815570c0c72e1618f998abef7eef4e" title="Checks if point is inside an angled rectangle. " alt="" coords="181,1458,344,1499"/>
-<area shape="rect" id="node38" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box. " alt="" coords="190,123,335,149"/>
-<area shape="rect" id="node39" href="$namespaceutil.html#a42dd772fb8717bc7596aa3c45b6cbed0" title="Checks if point is inside a cuboid. " alt="" coords="181,1524,344,1551"/>
-<area shape="rect" id="node40" href="$namespaceutil.html#ae95a03ba8a9adb6aac7260048c38b9db" title="Checks if point is inside a rectangle. " alt="" coords="172,1575,353,1601"/>
-<area shape="rect" id="node41" href="$classfe_1_1LineElem.html#a76af017ccbafdf5e8d65f1df9cd9bee0" title="Maps point p in a given element to the reference element. " alt="" coords="176,1626,349,1667"/>
-<area shape="rect" id="node42" href="$classfe_1_1TriElem.html#a9e3380f82b208f8980631e4751330e61" title="Maps point p in a given element to the reference element. " alt="" coords="155,1692,370,1719"/>
-<area shape="rect" id="node43" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element. " alt="" coords="153,1743,372,1769"/>
-<area shape="rect" id="node44" href="$classmodel_1_1DEMModel.html#a3652826a385051497907774640ed2044" title="Output the snapshot of data at current time step. " alt="" coords="427,1269,601,1296"/>
-<area shape="rect" id="node45" href="$classmaterial_1_1RnpMaterial.html#a7484f6eaffa46bd4b3826ca6c912af08" title="Print information about this object. " alt="" coords="189,1794,336,1835"/>
-<area shape="rect" id="node46" href="$classmaterial_1_1PmbMaterial.html#af39e090af2473a0fb21388b988e00bdd" title="Print information about this object. " alt="" coords="188,1859,337,1901"/>
-<area shape="rect" id="node47" href="$classmaterial_1_1PdElastic.html#a4b695b8541b850c9c79a02c390bf8e31" title="Print information about this object. " alt="" coords="197,1925,329,1966"/>
-<area shape="rect" id="node48" href="$classmaterial_1_1PdState.html#a336d7bfb1cf2a4f547afc2ad509a855c" title="Print information about this object. " alt="" coords="197,1990,328,2031"/>
-<area shape="rect" id="node49" href="$classinp_1_1Input.html#a5689d155dc964e648dc91dd9e5c8ade6" title="Read data into particle deck and store its pointer. " alt="" coords="174,2056,351,2083"/>
-<area shape="rect" id="node50" href="$classmodel_1_1DEMModel.html#a214e43cda5ec99caef8804bf83530037" title="Creates particles in a given container. " alt="" coords="155,2107,371,2133"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd" title="Checks if given two boxes are within given distance from each other. " alt="" coords="449,107,579,133"/>
-<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Circle.html#a26974c271cfd557a362709cfadca18a4" title="Checks if box is within given distance of this object. " alt="" coords="443,223,585,265"/>
-<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Sphere.html#af568776ec54d2ef7c99af31851ce0107" title="Checks if box is within given distance of this object. " alt="" coords="439,158,589,199"/>
-<area shape="rect" id="node9" href="$classmodel_1_1DEMModel.html#a209921f6ad32b4f193c25d7923c7e25c" title="Perform time integration. " alt="" coords="666,1265,854,1292"/>
-<area shape="rect" id="node10" href="$classmodel_1_1DEMModel.html#abd7dd108a6c28579f46f4782e95d2ff6" title="Perform time integration using central&#45;difference scheme. " alt="" coords="656,1211,864,1237"/>
-<area shape="rect" id="node18" href="$classutil_1_1geometry_1_1Line.html#a7fb9c5048a16cae3195048b32eb182d6" title="Checks if point is outside of this object. " alt="" coords="447,746,581,787"/>
-<area shape="rect" id="node19" href="$classutil_1_1geometry_1_1Triangle.html#a36c6c6bee6c0f5d7ba5e8db839fdeae6" title="Checks if point is outside of this object. " alt="" coords="437,811,591,853"/>
-<area shape="rect" id="node20" href="$classutil_1_1geometry_1_1Triangle.html#a657a6acda31803b615f7cbe8c9dbca75" title="Checks if box is completely inside. " alt="" coords="437,877,591,918"/>
-<area shape="rect" id="node21" href="$classutil_1_1geometry_1_1Triangle.html#ab336b566e145a206185bf467ceb6ee4b" title="Checks if box intersects this object. " alt="" coords="437,942,591,983"/>
-<area shape="rect" id="node22" href="$classutil_1_1geometry_1_1Rectangle.html#a8954847c9b4525d75a3e46c9e4688b5f" title="Checks if point is outside of this object. " alt="" coords="430,1007,598,1049"/>
-<area shape="rect" id="node23" href="$classutil_1_1geometry_1_1Rectangle.html#a75c59ae79702a69b68bb9a77a6c3d228" title="Checks if box is completely inside. " alt="" coords="430,1073,598,1114"/>
-<area shape="rect" id="node24" href="$classutil_1_1geometry_1_1Rectangle.html#a724fa34b45f8754fde600ab3d9df8e0e" title="Checks if box intersects this object. " alt="" coords="430,1138,598,1179"/>
-<area shape="rect" id="node25" href="$classutil_1_1geometry_1_1Hexagon.html#ad423a7602aaac6b4bcd5b0dbb79bc5a6" title="Checks if point is outside of this object. " alt="" coords="433,289,595,330"/>
-<area shape="rect" id="node26" href="$classutil_1_1geometry_1_1Hexagon.html#a090774f7ef43cd9cad2d70008aa0882f" title="Checks if box is completely inside. " alt="" coords="433,354,595,395"/>
-<area shape="rect" id="node27" href="$classutil_1_1geometry_1_1Hexagon.html#a2f1cf0bef5883401f5b63a517168ffa6" title="Checks if box intersects this object. " alt="" coords="433,419,595,461"/>
-<area shape="rect" id="node28" href="$classutil_1_1geometry_1_1Drum2D.html#a754a3f573359e988272e65109393f5bf" title="Checks if point is outside of this object. " alt="" coords="435,485,593,526"/>
-<area shape="rect" id="node29" href="$classutil_1_1geometry_1_1Drum2D.html#aa093f77301f351236427249fab32a4d5" title="Checks if box is completely inside. " alt="" coords="435,550,593,591"/>
-<area shape="rect" id="node30" href="$classutil_1_1geometry_1_1Drum2D.html#a2a0fe6b9a648b051ddadb3dc4dd82cef" title="Checks if box intersects this object. " alt="" coords="435,615,593,657"/>
-<area shape="rect" id="node31" href="$classutil_1_1geometry_1_1Cuboid.html#a08ee69ee9debe2e60ea2b0bf33015a21" title="Checks if point is outside of this object. " alt="" coords="439,681,589,722"/>
+<area shape="rect" id="node1" title="Returns true if a &gt; b." alt="" coords="787,1130,897,1157"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#aab949bf42c6adca878ebfe1210870f55" title="Checks if simulation should be stopped due to abnormal state of system." alt="" coords="499,19,715,46"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="513,71,700,112"/>
+<area shape="rect" id="node11" href="$classmaterial_1_1RnpMaterial.html#a4b7201eea1901e36474d7d42e8f3ab08" title="Compute material model parameters." alt="" coords="525,515,689,556"/>
+<area shape="rect" id="node13" href="$classmaterial_1_1PmbMaterial.html#a0ff6d71e84685ddfaba18d49308249c1" title="Compute material model parameters." alt="" coords="523,580,691,621"/>
+<area shape="rect" id="node15" href="$classmaterial_1_1PdElastic.html#afedd5901a3cad4863f69fcdb86744147" title="Compute material model parameters." alt="" coords="526,645,687,687"/>
+<area shape="rect" id="node17" href="$classmaterial_1_1PdState.html#a59b68a1d3b1e1f316569ac2ea005d6c2" title="Compute material model parameters." alt="" coords="530,711,683,752"/>
+<area shape="rect" id="node19" href="$classmaterial_1_1RnpMaterial.html#aa36faa8cb0c1be1b0582aebbdb36ed4c" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="525,776,689,817"/>
+<area shape="rect" id="node21" href="$classmaterial_1_1PmbMaterial.html#ac49caf8d022a3e0a9d6aa01ac7d84c1b" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="523,841,691,883"/>
+<area shape="rect" id="node23" href="$namespaceutil.html#a51adb530fc272317c3a859af27787b1a" title="Computes hat function at given point." alt="" coords="543,907,670,934"/>
+<area shape="rect" id="node24" href="$classutil_1_1geometry_1_1Rectangle.html#af2dc5c13d2e8fd193e286e302211e321" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="513,959,700,1000"/>
+<area shape="rect" id="node25" href="$classutil_1_1geometry_1_1Cuboid.html#a23e713ac9a77180cf746a4eb76c0245e" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="523,1024,690,1065"/>
+<area shape="rect" id="node26" href="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="511,137,702,163"/>
+<area shape="rect" id="node27" href="$classutil_1_1geometry_1_1Line.html#af3222bd1791a4d8fa102f4096dc2ca3c" title="Checks if point is inside this object." alt="" coords="533,1089,681,1131"/>
+<area shape="rect" id="node28" href="$classutil_1_1geometry_1_1Cylinder.html#ad0793273c951cdcb8fc6250defecf941" title="Checks if point is inside this object." alt="" coords="519,1155,694,1196"/>
+<area shape="rect" id="node29" href="$classutil_1_1geometry_1_1Line.html#a7c3409e5d8a1025bdbf72d664ded6d03" title="Checks if point is within given distance of this object." alt="" coords="533,1220,681,1261"/>
+<area shape="rect" id="node30" href="$classutil_1_1geometry_1_1Cylinder.html#a18b7ea1e8fb230ce399ebef6241f1eb9" title="Checks if point is within given distance of this object." alt="" coords="519,1285,694,1327"/>
+<area shape="rect" id="node31" href="$classutil_1_1geometry_1_1Line.html#a3eca2640ef36978ada44a3bb2926a56d" title="Checks if point is within given distance of this object." alt="" coords="533,1351,681,1392"/>
+<area shape="rect" id="node32" href="$classutil_1_1geometry_1_1Cylinder.html#a938406b02ff9bcccdfae3a462cb52f80" title="Checks if point is within given distance of this object." alt="" coords="519,1416,694,1457"/>
+<area shape="rect" id="node33" href="$namespaceutil.html#aa8815570c0c72e1618f998abef7eef4e" title="Checks if point is inside an angled rectangle." alt="" coords="517,1481,696,1523"/>
+<area shape="rect" id="node34" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box." alt="" coords="527,326,686,353"/>
+<area shape="rect" id="node40" href="$namespaceutil.html#a42dd772fb8717bc7596aa3c45b6cbed0" title="Checks if point is inside a cuboid." alt="" coords="517,1547,696,1574"/>
+<area shape="rect" id="node42" href="$namespaceutil.html#ae95a03ba8a9adb6aac7260048c38b9db" title="Checks if point is inside a rectangle." alt="" coords="507,1598,706,1625"/>
+<area shape="rect" id="node44" href="$classfe_1_1LineElem.html#a76af017ccbafdf5e8d65f1df9cd9bee0" title="Maps point p in a given element to the reference element." alt="" coords="513,1649,700,1691"/>
+<area shape="rect" id="node45" href="$classfe_1_1TriElem.html#a9e3380f82b208f8980631e4751330e61" title="Maps point p in a given element to the reference element." alt="" coords="491,1715,722,1742"/>
+<area shape="rect" id="node46" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element." alt="" coords="489,1766,724,1793"/>
+<area shape="rect" id="node47" href="$classmodel_1_1DEMModel.html#a7f469fc5e2fc80f07b218dac799ceeee" title="Function that handles post&#45;processing for two particle collision test and returns maximum vertical di..." alt="" coords="475,1817,739,1843"/>
+<area shape="rect" id="node48" href="$classinp_1_1Input.html#a5689d155dc964e648dc91dd9e5c8ade6" title="Read data into particle deck and store its pointer." alt="" coords="511,1867,703,1894"/>
+<area shape="rect" id="node50" href="$classmodel_1_1DEMModel.html#a214e43cda5ec99caef8804bf83530037" title="Creates particles in a given container." alt="" coords="489,1918,724,1945"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd" title="Checks if given two boxes are within given distance from each other." alt="" coords="262,137,405,163"/>
+<area shape="rect" id="node9" href="$classutil_1_1geometry_1_1Circle.html#a26974c271cfd557a362709cfadca18a4" title="Checks if box is within given distance of this object." alt="" coords="254,71,413,112"/>
+<area shape="rect" id="node10" href="$classutil_1_1geometry_1_1Sphere.html#af568776ec54d2ef7c99af31851ce0107" title="Checks if box is within given distance of this object." alt="" coords="250,5,417,47"/>
+<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d" title="Checks if box is within given distance of this object." alt="" coords="13,32,185,73"/>
+<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac" title="Checks if box is within given distance of this object." alt="" coords="5,97,192,139"/>
+<area shape="rect" id="node7" href="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f" title="Checks if box is within given distance of this object." alt="" coords="9,163,188,204"/>
+<area shape="rect" id="node8" href="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9" title="Checks if box is within given distance of this object." alt="" coords="11,228,186,269"/>
+<area shape="rect" id="node12" href="$classmaterial_1_1RnpMaterial.html#a321ba1364a77aade859d616a87b38583" title="Constructor." alt="" coords="251,515,415,556"/>
+<area shape="rect" id="node14" href="$classmaterial_1_1PmbMaterial.html#a68a22787744fee0d6320f99425ff9fb5" title="Constructor." alt="" coords="249,580,417,621"/>
+<area shape="rect" id="node16" href="$classmaterial_1_1PdElastic.html#a65eaeae920af4ecfde2b7ac6aeef6555" title="Constructor." alt="" coords="261,645,405,687"/>
+<area shape="rect" id="node18" href="$classmaterial_1_1PdState.html#ada28f28c6544a0050fb242e4d5086703" title="Constructor." alt="" coords="262,711,405,752"/>
+<area shape="rect" id="node20" href="$classmaterial_1_1RnpMaterial.html#af127fe6c4780372ecc1456b3c1bd2bd9" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="251,776,415,817"/>
+<area shape="rect" id="node22" href="$classmaterial_1_1PmbMaterial.html#ae37e0861b7c7053cc3a6d7e7916e15ea" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="249,841,417,883"/>
+<area shape="rect" id="node35" href="$classutil_1_1geometry_1_1Triangle.html#aabf62b4005848ff687ed90e55835b1cc" title="Checks if point is within given distance of this object." alt="" coords="247,253,419,295"/>
+<area shape="rect" id="node36" href="$classutil_1_1geometry_1_1Rectangle.html#a02f0fadb10ff4ec0d68fa29d4644370f" title="Checks if point is within given distance of this object." alt="" coords="240,319,427,360"/>
+<area shape="rect" id="node37" href="$classutil_1_1geometry_1_1Hexagon.html#a2f7a97f1d019fe56f11e268206a242a5" title="Checks if point is within given distance of this object." alt="" coords="244,384,423,425"/>
+<area shape="rect" id="node38" href="$classutil_1_1geometry_1_1Drum2D.html#afc1ecad6f440986b987c3c6ce99196d8" title="Checks if point is within given distance of this object." alt="" coords="246,449,421,491"/>
+<area shape="rect" id="node39" href="$classutil_1_1geometry_1_1Cuboid.html#a464c548fd7b0683cfd5a114022ce9f68" title="Checks if point is within given distance of this object." alt="" coords="250,188,417,229"/>
+<area shape="rect" id="node41" href="$classutil_1_1geometry_1_1Cuboid.html#afe82e005aa19087609908975812bf6d6" title="Checks if point is inside this object." alt="" coords="250,1533,417,1575"/>
+<area shape="rect" id="node43" href="$classutil_1_1geometry_1_1Rectangle.html#a8ee9f28ae13d637b5aaacb1809bfb1aa" title="Checks if point is inside this object." alt="" coords="240,1599,427,1640"/>
+<area shape="rect" id="node49" href="$classinp_1_1Input.html#a1ab2b8acc12782bd57ae1a107eafa32d" title="Constructor." alt="" coords="271,1867,395,1894"/>
 </map>

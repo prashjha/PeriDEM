@@ -1,3 +1,4 @@
 <map id="test::testQuadElem" name="test::testQuadElem">
-<area shape="rect" id="node2" href="$namespacetest.html#a56b3ad312ab9aaa185b9b1507fbb1a43" title="Computes integration of polynomial exactly over reference quadrangle. " alt="" coords="188,5,353,47"/>
+<area shape="rect" id="node1" title="Perform test on quadrature points on quadrangle elements." alt="" coords="5,13,152,39"/>
+<area shape="rect" id="node2" href="$namespacetest.html#a56b3ad312ab9aaa185b9b1507fbb1a43" title="Computes integration of polynomial exactly over reference quadrangle." alt="" coords="200,5,383,47"/>
 </map>

@@ -1,4 +1,5 @@
 <map id="util::geometry::Hexagon::Hexagon" name="util::geometry::Hexagon::Hexagon">
-<area shape="rect" id="node2" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle. " alt="" coords="215,13,295,39"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector. " alt="" coords="343,13,460,39"/>
+<area shape="rect" id="node1" title="Constructor." alt="" coords="5,5,184,47"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="232,13,323,39"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="371,13,497,39"/>
 </map>

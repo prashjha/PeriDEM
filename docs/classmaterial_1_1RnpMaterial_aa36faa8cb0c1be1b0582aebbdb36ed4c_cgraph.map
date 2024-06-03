@@ -1,5 +1,6 @@
 <map id="material::RnpMaterial::getBondEF" name="material::RnpMaterial::getBondEF">
-<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="211,5,311,32"/>
-<area shape="rect" id="node3" href="$classmaterial_1_1Material.html#afad2e74bcc7a1c81fa82b4bb1b184f3c" title="Returns critical bond strain. " alt="" coords="200,57,323,98"/>
-<area shape="rect" id="node4" href="$classmaterial_1_1Material.html#aed952cc1e6d9571deab9810277a1ca50" title="Returns the value of influence function. " alt="" coords="200,122,323,163"/>
+<area shape="rect" id="node1" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="5,71,169,112"/>
+<area shape="rect" id="node2" href="$classmaterial_1_1RnpMaterial.html#a03fb743257e41d8ee750ac0443f04141" title="Returns the value of influence function." alt="" coords="217,5,381,47"/>
+<area shape="rect" id="node3" href="$classmaterial_1_1RnpMaterial.html#ad1426851306d274b3f230e207f7447f1" title="Returns critical bond strain." alt="" coords="217,71,381,112"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="244,137,355,163"/>
 </map>

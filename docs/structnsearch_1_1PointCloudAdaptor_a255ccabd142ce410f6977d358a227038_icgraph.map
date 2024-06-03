@@ -1,0 +1,5 @@
+<map id="nsearch::PointCloudAdaptor::pointCloud" name="nsearch::PointCloudAdaptor::pointCloud">
+<area shape="rect" id="node1" title="Get vector of points." alt="" coords="256,39,459,80"/>
+<area shape="rect" id="node2" href="$structnsearch_1_1PointCloudAdaptor.html#adfa9fb32e74d1d7edd1f71267c8a4495" title="Get number of points in point cloud." alt="" coords="5,5,208,47"/>
+<area shape="rect" id="node3" href="$structnsearch_1_1PointCloudAdaptor.html#a93ffe8cc382aa8e6c0f20cdba933a28e" title="Get specific coordinate of a point." alt="" coords="5,71,208,112"/>
+</map>

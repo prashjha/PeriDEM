@@ -1,5 +1,0 @@
-<map id="util::geometry::ComplexGeomObject::center" name="util::geometry::ComplexGeomObject::center">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Line.html#aa9499bad438be962118689cdf58491b2" title="Computes the center of object. " alt="" coords="281,5,414,47"/>
-<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#ab5adb6c241e33d9952bded9ee4ce5cf8" title="Computes the bounding box of object. " alt="" coords="249,71,445,112"/>
-<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Line.html#a0f370769b20dcbd3c46eb738c1bad85f" title="Computes the bounding box of object. " alt="" coords="493,78,656,105"/>
-</map>

@@ -1,6 +1,0 @@
-digraph "util::Point"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{util::Point\n|+ d_x\l+ d_y\l+ d_z\l|+ Point()\l+ Point()\l+ Point()\l+ Point()\l+ Point()\l+ printStr()\l+ print()\l+ length()\l+ lengthSq()\l+ dot()\l+ dist()\l+ cross()\l+ project()\l+ projectNormal()\l* operator+=()\l* operator-=()\l* operator*=()\l* operator+=()\l* operator-=()\l* operator*=()\l* operator/=()\l* operator[]()\l* operator[]()\l* operator+\land 9 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-}

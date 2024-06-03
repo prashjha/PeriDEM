@@ -1,0 +1,6 @@
+<map id="util::io::checkAndCreateNewFilename" name="util::io::checkAndCreateNewFilename">
+<area shape="rect" id="node1" title="Check for extension and if possible create new filename from a given filename and a given extension." alt="" coords="264,71,441,112"/>
+<area shape="rect" id="node2" href="$classrw_1_1writer_1_1MshWriter.html#a4adb871247d273260dd6be70e2ca7aed" title="Constructor." alt="" coords="31,5,190,47"/>
+<area shape="rect" id="node3" href="$classrw_1_1reader_1_1VtkParticleReader.html#a5362ff880839792d2e59868589ebe18c" title="Constructor." alt="" coords="5,71,216,112"/>
+<area shape="rect" id="node4" href="$classrw_1_1reader_1_1VtkReader.html#ab368c92bebcab3859293eee1d3d6f8ce" title="Constructor." alt="" coords="29,136,192,177"/>
+</map>

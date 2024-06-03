@@ -1,5 +1,6 @@
 <map id="util::angle" name="util::angle">
-<area shape="rect" id="node2" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector. " alt="" coords="297,23,417,49"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector. " alt="" coords="132,23,249,49"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors. " alt="" coords="151,73,230,100"/>
+<area shape="rect" id="node1" title="Computes angle between two vectors." alt="" coords="5,56,92,83"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors." alt="" coords="160,5,247,32"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="315,31,448,57"/>
+<area shape="rect" id="node4" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="140,107,267,133"/>
 </map>

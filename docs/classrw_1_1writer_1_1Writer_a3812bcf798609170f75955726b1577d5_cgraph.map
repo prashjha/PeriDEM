@@ -1,5 +1,0 @@
-<map id="rw::writer::Writer::appendNodes" name="rw::writer::Writer::appendNodes">
-<area shape="rect" id="node2" href="$classrw_1_1writer_1_1VtkWriter.html#abd079eee2cd7dd7ec20128201625342b" title="Writes the nodes to the file. " alt="" coords="193,5,332,47"/>
-<area shape="rect" id="node3" href="$classrw_1_1writer_1_1MshWriter.html#a57c9d8f7a79da6517a4889a78a067e82" title="Writes the nodes to the file. " alt="" coords="191,71,335,112"/>
-<area shape="rect" id="node4" href="$classrw_1_1writer_1_1LegacyVtkWriter.html#abbe3458a0695b31944d1e4e0fd4493a0" title="Writes the nodes to the file. " alt="" coords="172,136,353,177"/>
-</map>

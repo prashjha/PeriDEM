@@ -12,8 +12,7 @@ var hierarchy =
       [ "material::LinearInfluenceFn", "classmaterial_1_1LinearInfluenceFn.html", null ]
     ] ],
     [ "nsearch::BaseNSearch", "classnsearch_1_1BaseNSearch.html", [
-      [ "nsearch::NSearchKd", "classnsearch_1_1NSearchKd.html", null ],
-      [ "nsearch::NSearchOct", "classnsearch_1_1NSearchOct.html", null ]
+      [ "nsearch::NFlannSearchKd", "classnsearch_1_1NFlannSearchKd.html", null ]
     ] ],
     [ "particle::BaseParticle", "classparticle_1_1BaseParticle.html", [
       [ "particle::Particle", "classparticle_1_1Particle.html", null ],
@@ -38,6 +37,7 @@ var hierarchy =
       [ "util::geometry::Triangle", "classutil_1_1geometry_1_1Triangle.html", null ]
     ] ],
     [ "inp::Input", "classinp_1_1Input.html", null ],
+    [ "util::io::InputParser", "classutil_1_1io_1_1InputParser.html", null ],
     [ "rw::writer::LegacyVtkWriter", "classrw_1_1writer_1_1LegacyVtkWriter.html", null ],
     [ "util::io::Logger", "classutil_1_1io_1_1Logger.html", null ],
     [ "util::io::LoggerDeck", "structutil_1_1io_1_1LoggerDeck.html", null ],
@@ -57,6 +57,7 @@ var hierarchy =
       [ "model::DEMModel", "classmodel_1_1DEMModel.html", null ]
     ] ],
     [ "inp::ModelDeck", "structinp_1_1ModelDeck.html", null ],
+    [ "util::parallel::MpiStatus", "structutil_1_1parallel_1_1MpiStatus.html", null ],
     [ "rw::reader::MshReader", "classrw_1_1reader_1_1MshReader.html", null ],
     [ "rw::writer::MshWriter", "classrw_1_1writer_1_1MshWriter.html", null ],
     [ "inp::OutputDeck", "structinp_1_1OutputDeck.html", null ],
@@ -71,10 +72,12 @@ var hierarchy =
     [ "inp::PICDeck", "structinp_1_1PICDeck.html", null ],
     [ "inp::PNeighborDeck", "structinp_1_1PNeighborDeck.html", null ],
     [ "util::Point", "structutil_1_1Point.html", null ],
+    [ "nsearch::PointCloudAdaptor", "structnsearch_1_1PointCloudAdaptor.html", null ],
     [ "fe::QuadData", "structfe_1_1QuadData.html", null ],
     [ "particle::RefParticle", "classparticle_1_1RefParticle.html", null ],
     [ "inp::RestartDeck", "structinp_1_1RestartDeck.html", null ],
     [ "util::SymMatrix3", "structutil_1_1SymMatrix3.html", null ],
+    [ "nsearch::TreeSearchResult< _DistanceType, _IndexType >", "classnsearch_1_1TreeSearchResult.html", null ],
     [ "rw::reader::VtkParticleReader", "classrw_1_1reader_1_1VtkParticleReader.html", null ],
     [ "rw::writer::VtkParticleWriter", "classrw_1_1writer_1_1VtkParticleWriter.html", null ],
     [ "rw::reader::VtkReader", "classrw_1_1reader_1_1VtkReader.html", null ],

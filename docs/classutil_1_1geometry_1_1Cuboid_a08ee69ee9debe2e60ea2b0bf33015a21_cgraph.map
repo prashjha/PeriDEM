@@ -1,9 +1,0 @@
-<map id="util::geometry::Cuboid::isOutside" name="util::geometry::Cuboid::isOutside">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Line.html#af3222bd1791a4d8fa102f4096dc2ca3c" title="Checks if point is inside this object. " alt="" coords="204,89,337,131"/>
-<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Line.html#aacb71bc8ad7cc3481c4db221ca8a13bc" title="Computes the area of the rectangle. " alt="" coords="385,5,519,47"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector. " alt="" coords="419,71,485,98"/>
-<area shape="rect" id="node7" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="409,122,495,149"/>
-<area shape="rect" id="node8" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="402,173,502,199"/>
-<area shape="rect" id="node5" href="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4" title="Checks matrix. " alt="" coords="567,71,685,98"/>
-<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="733,71,840,98"/>
-</map>

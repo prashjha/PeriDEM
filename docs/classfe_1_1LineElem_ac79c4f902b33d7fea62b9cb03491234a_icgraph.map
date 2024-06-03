@@ -1,6 +1,0 @@
-<map id="fe::LineElem::getJacobian" name="fe::LineElem::getJacobian">
-<area shape="rect" id="node2" href="$classfe_1_1LineElem.html#aa41e8c7269aa5b2115c4dcaa67ce12b2" title="Returns the values of derivative of shape function at point p. " alt="" coords="228,5,415,32"/>
-<area shape="rect" id="node4" href="$classfe_1_1LineElem.html#a4a6d1587011b0809a44720c126fcf141" title="Get vector of quadrature data. " alt="" coords="228,56,415,83"/>
-<area shape="rect" id="node5" href="$classfe_1_1LineElem.html#a1e34b26899152b49e76128e766f345b5" title="Get vector of quadrature data. " alt="" coords="227,107,416,133"/>
-<area shape="rect" id="node3" href="$classfe_1_1LineElem.html#a849300a5a8f015c25f64c62098948682" title="Compute the quadrature points for line element. " alt="" coords="464,5,584,32"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="fe::LineElem::getShapes" name="fe::LineElem::getShapes">
-<area shape="rect" id="node2" href="$classfe_1_1LineElem.html#a76af017ccbafdf5e8d65f1df9cd9bee0" title="Maps point p in a given element to the reference element. " alt="" coords="219,23,392,65"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="447,5,533,32"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="440,56,540,83"/>
-</map>

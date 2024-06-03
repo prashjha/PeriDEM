@@ -1,8 +1,0 @@
-digraph "loading::ParticleULoading"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node0 [label="{loading::ParticleULoading\n|+ d_pZeroDisplacementApplied\l+ d_wZeroDisplacementApplied\l|+ ParticleULoading()\l+ setFixityParticle()\l+ setFixityWall()\l+ setFixity()\l+ applyParticle()\l+ applyWall()\l+ apply()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node1 -> Node0 [dir="back",color="midnightblue",fontsize="10",style="solid",arrowtail="onormal",fontname="Helvetica"];
-  Node1 [label="{loading::ParticleLoading\n|- d_bcData\l|+ ParticleLoading()\l}",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classloading_1_1ParticleLoading.html",tooltip="A base class to apply displacement and force boundary condition. "];
-}

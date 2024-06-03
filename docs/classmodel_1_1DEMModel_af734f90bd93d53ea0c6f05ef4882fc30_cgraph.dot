@@ -1,9 +1,0 @@
-digraph "model::DEMModel::log"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node59 [label="model::DEMModel::log",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-  Node59 -> Node60 [color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
-  Node60 [label="util::io::log",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$namespaceutil_1_1io.html#a1ddf7fcc08ed1ab44a0af2054ddea600",tooltip="Global method to log the message. "];
-}

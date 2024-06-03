@@ -1,6 +1,0 @@
-digraph "inp::ModelDeck"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{inp::ModelDeck\n|+ d_simType\l+ d_isRestartActive\l+ d_spatialDiscretization\l+ d_timeDiscretization\l+ d_isPeriDEM\l+ d_dim\l+ d_tFinal\l+ d_dt\l+ d_Nt\l+ d_horizon\l+ d_rh\l+ d_h\l+ d_seed\l|+ ModelDeck()\l+ printStr()\l+ print()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-}

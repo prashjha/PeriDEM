@@ -1,6 +1,0 @@
-<map id="fe::TriElem::elemSize" name="fe::TriElem::elemSize">
-<area shape="rect" id="node2" href="$classfe_1_1TriElem.html#a9e3380f82b208f8980631e4751330e61" title="Maps point p in a given element to the reference element. " alt="" coords="201,31,416,57"/>
-<area shape="rect" id="node3" href="$classfe_1_1TriElem.html#a937683aa8b53867fc5ef0205ed3932de" title="Returns the values of shape function at point p. " alt="" coords="475,5,631,32"/>
-<area shape="rect" id="node5" href="$classfe_1_1TriElem.html#a8fabf5a4f4cd6399f35a17a9f9f4ca67" title="Returns the values of derivative of shape function at point p. " alt="" coords="464,56,641,83"/>
-<area shape="rect" id="node4" href="$classfe_1_1TriElem.html#ababf2fd56dbfa0d40e8808ee6526c5f2" title="Compute the quadrature points for triangle element. " alt="" coords="689,31,800,57"/>
-</map>

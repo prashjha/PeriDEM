@@ -1,8 +1,0 @@
-<map id="fe::TetElem::getJacobian" name="fe::TetElem::getJacobian">
-<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#a093bba69d7db17b0e5dcc7a8f00fb268" title="Returns the values of derivative of shape function at point p. " alt="" coords="488,84,669,111"/>
-<area shape="rect" id="node4" href="$classfe_1_1TetElem.html#a1e53cb40204c661265b6780d4c9c688a" title="Get vector of quadrature data. " alt="" coords="239,33,422,60"/>
-<area shape="rect" id="node5" href="$classfe_1_1TetElem.html#a1e6e08825b0293d9a48e89c189b7c882" title="Get vector of quadrature data. " alt="" coords="239,84,423,111"/>
-<area shape="rect" id="node6" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element. " alt="" coords="221,135,440,161"/>
-<area shape="rect" id="node3" href="$classfe_1_1TetElem.html#a03cc619867e61ea3be3348f3d98c48cb" title="Compute the quadrature points for triangle element. " alt="" coords="717,109,832,136"/>
-<area shape="rect" id="node7" href="$classfe_1_1TetElem.html#abb74d10a4d98759a4c60a2755ed6b4b7" title="Returns the values of shape function at point p. " alt="" coords="499,135,659,161"/>
-</map>

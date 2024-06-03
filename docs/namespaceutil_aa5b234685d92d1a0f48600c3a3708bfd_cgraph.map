@@ -1,3 +1,4 @@
 <map id="util::inscribedRadiusInBox" name="util::inscribedRadiusInBox">
-<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="228,5,328,32"/>
+<area shape="rect" id="node1" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="5,5,196,32"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="244,5,355,32"/>
 </map>

@@ -1,0 +1,4 @@
+<map id="inp::ModelDeck::printStr" name="inp::ModelDeck::printStr">
+<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="215,5,393,32"/>
+<area shape="rect" id="node2" href="$structinp_1_1ModelDeck.html#ac92cd683ad905159fa9ac96d94cdf35d" title="Prints the information about the object." alt="" coords="5,5,167,32"/>
+</map>

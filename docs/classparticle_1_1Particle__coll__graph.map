@@ -1,5 +1,6 @@
 <map id="particle::Particle" name="particle::Particle">
-<area shape="rect" id="node2" href="$classparticle_1_1BaseParticle.html" title="A class to store particle geometry, nodal discretization, and methods. " alt="" coords="5,541,152,3772"/>
-<area shape="rect" id="node3" href="$structparticle_1_1ParticleTransform.html" title="A struct that stores transformation parameters and provides method to transform the particle..." alt="" coords="177,2074,351,2239"/>
-<area shape="rect" id="node4" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors. " alt="" coords="203,5,325,464"/>
+<area shape="rect" id="node1" title="A class to store particle geometry, nodal discretization, and methods." alt="" coords="43,3835,169,4015"/>
+<area shape="rect" id="node2" href="$classparticle_1_1BaseParticle.html" title="A class to store particle geometry, nodal discretization, and methods." alt="" coords="5,541,164,3772"/>
+<area shape="rect" id="node3" href="$structparticle_1_1ParticleTransform.html" title="A struct that stores transformation parameters and provides method to transform the particle...." alt="" coords="189,2074,381,2239"/>
+<area shape="rect" id="node4" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="215,5,355,464"/>
 </map>

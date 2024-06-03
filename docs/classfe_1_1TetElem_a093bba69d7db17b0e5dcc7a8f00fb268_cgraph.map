@@ -1,11 +1,6 @@
 <map id="fe::TetElem::getDerShapes" name="fe::TetElem::getDerShapes">
-<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element. " alt="" coords="235,107,453,133"/>
-<area shape="rect" id="node3" href="$classfe_1_1TetElem.html#aaccca8f8bfaa22c6c69906bf4499ce58" title="Computes the Jacobian of map . " alt="" coords="501,5,669,32"/>
-<area shape="rect" id="node7" href="$namespaceutil.html#ad4f18aba6f461c113b723df12cdaf685" title="Computes the determinant of matrix. " alt="" coords="553,56,617,83"/>
-<area shape="rect" id="node8" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector. " alt="" coords="553,259,618,285"/>
-<area shape="rect" id="node6" href="$namespaceutil.html#a3ea982d234156e852f2333a3c4e2931e" title="Computes the tranpose of matrix. " alt="" coords="717,107,821,133"/>
-<area shape="rect" id="node9" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="543,157,628,184"/>
-<area shape="rect" id="node10" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="535,208,635,235"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#aa3d6d22d633e7042dfbdf97782f2cf4e" title="Computes the determinant of matrix. " alt="" coords="737,5,802,32"/>
-<area shape="rect" id="node5" href="$namespaceutil.html#ae4a8ddcdd832032df5a6dfc33cd95db4" title="Checks matrix. " alt="" coords="869,81,988,108"/>
+<area shape="rect" id="node1" title="Returns the values of derivative of shape function at point p." alt="" coords="5,31,200,57"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector." alt="" coords="248,5,320,32"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#ad4f18aba6f461c113b723df12cdaf685" title="Computes the determinant of matrix." alt="" coords="249,56,319,83"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#aa3d6d22d633e7042dfbdf97782f2cf4e" title="Computes the determinant of matrix." alt="" coords="368,56,440,83"/>
 </map>

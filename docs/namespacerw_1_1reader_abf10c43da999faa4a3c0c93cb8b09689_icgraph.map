@@ -1,6 +1,4 @@
 <map id="rw::reader::readParticleCsvFile" name="rw::reader::readParticleCsvFile">
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement. " alt="" coords="211,5,436,47"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#ae822c44f4719cc125181b9e3b9d60fba" title="Creates particles in a given container. " alt="" coords="484,13,709,39"/>
-<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members. " alt="" coords="757,13,912,39"/>
-<area shape="rect" id="node5" href="$classmodel_1_1DEMModel.html#ae8eba7a12449983fa10d07e3b7374512" title="Main driver to simulate. " alt="" coords="960,13,1116,39"/>
+<area shape="rect" id="node1" title="Reads particles center location, radius, and zone id." alt="" coords="299,5,471,47"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement." alt="" coords="5,5,251,47"/>
 </map>

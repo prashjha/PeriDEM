@@ -1,6 +1,4 @@
 <map id="util::transform_to_uniform_dist" name="util::transform_to_uniform_dist">
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement. " alt="" coords="173,5,399,47"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#ae822c44f4719cc125181b9e3b9d60fba" title="Creates particles in a given container. " alt="" coords="447,13,672,39"/>
-<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members. " alt="" coords="720,13,875,39"/>
-<area shape="rect" id="node5" href="$classmodel_1_1DEMModel.html#ae8eba7a12449983fa10d07e3b7374512" title="Main driver to simulate. " alt="" coords="923,13,1079,39"/>
+<area shape="rect" id="node1" title="Transform sample from U(0,1) to U(a,b)" alt="" coords="299,5,433,47"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement." alt="" coords="5,5,251,47"/>
 </map>

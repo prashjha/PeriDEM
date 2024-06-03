@@ -1,8 +1,9 @@
 <map id="util::areBoxesNear" name="util::areBoxesNear">
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d" title="Checks if box is within given distance of this object. " alt="" coords="191,5,345,47"/>
-<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac" title="Checks if box is within given distance of this object. " alt="" coords="184,71,352,112"/>
-<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f" title="Checks if box is within given distance of this object. " alt="" coords="187,136,349,177"/>
-<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9" title="Checks if box is within given distance of this object. " alt="" coords="189,201,347,243"/>
-<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Cuboid.html#ac88433cc43e94f4f1a399ba8776e4986" title="Checks if box is within given distance of this object. " alt="" coords="193,267,343,308"/>
-<area shape="rect" id="node7" href="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc" title="Checks if box is within given distance of this object. " alt="" coords="189,332,347,373"/>
+<area shape="rect" id="node1" title="Checks if given two boxes are within given distance from each other." alt="" coords="240,177,383,203"/>
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d" title="Checks if box is within given distance of this object." alt="" coords="13,5,185,47"/>
+<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac" title="Checks if box is within given distance of this object." alt="" coords="5,71,192,112"/>
+<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f" title="Checks if box is within given distance of this object." alt="" coords="9,136,188,177"/>
+<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9" title="Checks if box is within given distance of this object." alt="" coords="11,201,186,243"/>
+<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Cuboid.html#ac88433cc43e94f4f1a399ba8776e4986" title="Checks if box is within given distance of this object." alt="" coords="15,267,182,308"/>
+<area shape="rect" id="node7" href="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc" title="Checks if box is within given distance of this object." alt="" coords="11,332,186,373"/>
 </map>

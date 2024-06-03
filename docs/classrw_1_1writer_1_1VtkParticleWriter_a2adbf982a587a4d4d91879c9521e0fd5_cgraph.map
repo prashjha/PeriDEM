@@ -1,6 +1,4 @@
 <map id="rw::writer::VtkParticleWriter::appendNodes" name="rw::writer::VtkParticleWriter::appendNodes">
-<area shape="rect" id="node2" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags. " alt="" coords="243,5,413,32"/>
-<area shape="rect" id="node3" href="$classmodel_1_1ModelData.html#a5d4371ed532e829b82c926852505760e" title="Get particle id given the location in particle list. " alt="" coords="239,56,417,83"/>
-<area shape="rect" id="node4" href="$classmodel_1_1ModelData.html#a4a055297b6e83e461e941c495e665e4c" title="Get pointer to base particle. " alt="" coords="236,107,420,149"/>
-<area shape="rect" id="node5" href="$classparticle_1_1BaseParticle.html#aa369eb38bfda094cdb3243a97b8075bc" title="Get id among the group of object in the same type as this. " alt="" coords="255,173,401,214"/>
+<area shape="rect" id="node1" title="Writes the nodes to the file." alt="" coords="5,5,207,47"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="255,13,439,39"/>
 </map>

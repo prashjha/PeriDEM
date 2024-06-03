@@ -1,4 +1,0 @@
-<map id="util::Matrix3::dot" name="util::Matrix3::dot">
-<area shape="rect" id="node2" href="$structutil_1_1SymMatrix3.html#a6d7db1800065c93e01ddb080ec3e263c" title="Computes the dot product of this matrix with another vector. " alt="" coords="169,5,312,32"/>
-<area shape="rect" id="node3" href="$structutil_1_1SymMatrix3.html#af55a79360a6f9e94444c84976d4ad27a" title="Computes the determinant of matrix. " alt="" coords="169,56,312,83"/>
-</map>

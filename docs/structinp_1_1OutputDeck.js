@@ -2,6 +2,8 @@ var structinp_1_1OutputDeck =
 [
     [ "OutputDeck", "structinp_1_1OutputDeck.html#a3b1cac5638616c7a3e77d6a013d54fd6", null ],
     [ "isTagInOutput", "structinp_1_1OutputDeck.html#ae4efd03aefc808dd16785ee063f626a4", null ],
+    [ "print", "structinp_1_1OutputDeck.html#a11b532510d9386aa169774372fe70616", null ],
+    [ "printStr", "structinp_1_1OutputDeck.html#a35abbfd9ffd6954697144da07289b844", null ],
     [ "d_compressType", "structinp_1_1OutputDeck.html#a13ed614e4c02bb866a1180453aa538e4", null ],
     [ "d_debug", "structinp_1_1OutputDeck.html#aaf60bfb83b9d8d87bb773468d0c0463c", null ],
     [ "d_dtOut", "structinp_1_1OutputDeck.html#a5372aab3b8a77202568ff7a55aa24a7f", null ],

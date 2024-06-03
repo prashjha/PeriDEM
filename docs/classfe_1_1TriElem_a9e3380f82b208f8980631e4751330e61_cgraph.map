@@ -1,5 +1,5 @@
 <map id="fe::TriElem::mapPointToRefElem" name="fe::TriElem::mapPointToRefElem">
-<area shape="rect" id="node2" href="$classfe_1_1TriElem.html#a048133272a5c1866e69bac7af423ebc4" title="Returns the area of element. " alt="" coords="268,5,416,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b. " alt="" coords="299,56,385,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b. " alt="" coords="292,107,392,133"/>
+<area shape="rect" id="node1" title="Maps point p in a given element to the reference element." alt="" coords="5,31,236,57"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="284,5,395,32"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="294,56,385,83"/>
 </map>

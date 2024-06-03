@@ -1,7 +1,8 @@
 <map id="fe::Mesh::computeVol" name="fe::Mesh::computeVol">
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="261,5,367,32"/>
-<area shape="rect" id="node4" href="$classfe_1_1Mesh.html#a1a8e60058a620684d1d7168fbc43c9e3" title="Get the connectivity of element. " alt="" coords="204,56,424,83"/>
-<area shape="rect" id="node5" href="$classfe_1_1BaseElem.html#adef5bda435b10c20e4ac458e2282d111" title="Returns the size of element (length in 1&#45;d, area in 2&#45;d, volume in 3&#45;d element) " alt="" coords="233,107,395,133"/>
-<area shape="rect" id="node6" href="$classfe_1_1BaseElem.html#aed3b89970eaa620ed616212b1811f140" title="Get vector of quadrature data. " alt="" coords="217,157,411,184"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size. " alt="" coords="472,5,587,32"/>
+<area shape="rect" id="node1" title="Compute the nodal volume." alt="" coords="5,81,168,108"/>
+<area shape="rect" id="node2" href="$classfe_1_1BaseElem.html#adef5bda435b10c20e4ac458e2282d111" title="Returns the size of element (length in 1&#45;d, area in 2&#45;d, volume in 3&#45;d element)" alt="" coords="233,5,409,32"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="225,56,416,83"/>
+<area shape="rect" id="node4" href="$classfe_1_1BaseElem.html#aed3b89970eaa620ed616212b1811f140" title="Get vector of quadrature data." alt="" coords="216,107,425,133"/>
+<area shape="rect" id="node5" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="261,157,380,184"/>
+<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="473,157,596,184"/>
 </map>

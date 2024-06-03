@@ -1,5 +1,4 @@
 <map id="fe::Mesh::getMeshSize" name="fe::Mesh::getMeshSize">
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a50dfdbd6223f0fa628129138a5855759" title="Creates walls. " alt="" coords="211,5,417,32"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members. " alt="" coords="465,5,620,32"/>
-<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#ae8eba7a12449983fa10d07e3b7374512" title="Main driver to simulate. " alt="" coords="668,5,824,32"/>
+<area shape="rect" id="node1" title="Get the mesh size." alt="" coords="279,5,448,32"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a50dfdbd6223f0fa628129138a5855759" title="Creates walls." alt="" coords="5,5,231,32"/>
 </map>

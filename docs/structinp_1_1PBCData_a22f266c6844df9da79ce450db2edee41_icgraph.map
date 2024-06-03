@@ -1,0 +1,4 @@
+<map id="inp::PBCData::printStr" name="inp::PBCData::printStr">
+<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="199,5,361,32"/>
+<area shape="rect" id="node2" href="$structinp_1_1PBCData.html#a9ea2acc89b05ecd9fcc7eab46ca944fa" title="Prints the information about the object." alt="" coords="5,5,151,32"/>
+</map>

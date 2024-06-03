@@ -1,6 +1,4 @@
 <map id="util::transpose" name="util::transpose">
-<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element. " alt="" coords="157,31,376,57"/>
-<area shape="rect" id="node3" href="$classfe_1_1TetElem.html#a093bba69d7db17b0e5dcc7a8f00fb268" title="Returns the values of derivative of shape function at point p. " alt="" coords="424,5,605,32"/>
-<area shape="rect" id="node5" href="$classfe_1_1TetElem.html#abb74d10a4d98759a4c60a2755ed6b4b7" title="Returns the values of shape function at point p. " alt="" coords="435,56,595,83"/>
-<area shape="rect" id="node4" href="$classfe_1_1TetElem.html#a03cc619867e61ea3be3348f3d98c48cb" title="Compute the quadrature points for triangle element. " alt="" coords="653,31,768,57"/>
+<area shape="rect" id="node1" title="Computes the tranpose of matrix." alt="" coords="288,5,403,32"/>
+<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element." alt="" coords="5,5,240,32"/>
 </map>

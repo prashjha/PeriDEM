@@ -1,3 +1,4 @@
 <map id="material::PmbMaterial::getS" name="material::PmbMaterial::getS">
-<area shape="rect" id="node2" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector. " alt="" coords="203,13,323,39"/>
+<area shape="rect" id="node1" title="Returns the bond strain." alt="" coords="5,5,173,47"/>
+<area shape="rect" id="node2" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="221,13,355,39"/>
 </map>

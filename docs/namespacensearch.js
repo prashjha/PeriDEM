@@ -1,6 +1,7 @@
 var namespacensearch =
 [
     [ "BaseNSearch", "classnsearch_1_1BaseNSearch.html", "classnsearch_1_1BaseNSearch" ],
-    [ "NSearchKd", "classnsearch_1_1NSearchKd.html", "classnsearch_1_1NSearchKd" ],
-    [ "NSearchOct", "classnsearch_1_1NSearchOct.html", "classnsearch_1_1NSearchOct" ]
+    [ "NFlannSearchKd", "classnsearch_1_1NFlannSearchKd.html", "classnsearch_1_1NFlannSearchKd" ],
+    [ "PointCloudAdaptor", "structnsearch_1_1PointCloudAdaptor.html", "structnsearch_1_1PointCloudAdaptor" ],
+    [ "TreeSearchResult", "classnsearch_1_1TreeSearchResult.html", "classnsearch_1_1TreeSearchResult" ]
 ];

@@ -1,7 +1,4 @@
 <map id="util::methods::isFree" name="util::methods::isFree">
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members. " alt="" coords="481,5,635,32"/>
-<area shape="rect" id="node4" href="$classmodel_1_1DEMModel.html#abd7dd108a6c28579f46f4782e95d2ff6" title="Perform time integration using central&#45;difference scheme. " alt="" coords="195,56,403,83"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#ae8eba7a12449983fa10d07e3b7374512" title="Main driver to simulate. " alt="" coords="949,31,1105,57"/>
-<area shape="rect" id="node5" href="$classmodel_1_1DEMModel.html#a482cc830bfc95a67f6c3c9e22999a115" title="Performs one time step. " alt="" coords="451,56,665,83"/>
-<area shape="rect" id="node6" href="$classmodel_1_1DEMModel.html#a209921f6ad32b4f193c25d7923c7e25c" title="Perform time integration. " alt="" coords="713,56,901,83"/>
+<area shape="rect" id="node1" title="Returns true if degree of freedom is free." alt="" coords="224,5,379,32"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members." alt="" coords="5,5,176,32"/>
 </map>

@@ -1,3 +1,4 @@
 <map id="particle::Wall::getWallId" name="particle::Wall::getWallId">
-<area shape="rect" id="node2" href="$classparticle_1_1BaseParticle.html#aa369eb38bfda094cdb3243a97b8075bc" title="Get id among the group of object in the same type as this. " alt="" coords="215,5,361,47"/>
+<area shape="rect" id="node1" title="Get id of this wall." alt="" coords="5,13,181,39"/>
+<area shape="rect" id="node2" href="$classparticle_1_1BaseParticle.html#aa369eb38bfda094cdb3243a97b8075bc" title="Get id among the group of object in the same type as this." alt="" coords="229,5,388,47"/>
 </map>

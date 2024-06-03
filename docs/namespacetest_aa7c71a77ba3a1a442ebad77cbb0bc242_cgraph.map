@@ -1,6 +1,7 @@
 <map id="test::testTetElem" name="test::testTetElem">
-<area shape="rect" id="node2" href="$namespacetest.html#af43e065c49520ee624134a11bdfe3643" title="Computes integration of polynomial exactly over reference tetrahedral. " alt="" coords="176,5,341,47"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a1c93ac0c8a7bf4145a5358e205fa2d33" title="Returns formatted string for output. " alt="" coords="205,71,312,98"/>
-<area shape="rect" id="node3" href="$namespacetest.html#a44d761477bf0e6293198849c53cb8abc" title="Computes &#160;&quot;n choose r&quot;. " alt="" coords="389,13,524,39"/>
-<area shape="rect" id="node5" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size. " alt="" coords="399,71,514,98"/>
+<area shape="rect" id="node1" title="Perform test on quadrature points on tetrahedral elements." alt="" coords="5,42,137,69"/>
+<area shape="rect" id="node2" href="$namespacetest.html#af43e065c49520ee624134a11bdfe3643" title="Computes integration of polynomial exactly over reference tetrahedral." alt="" coords="185,5,368,47"/>
+<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="217,71,336,98"/>
+<area shape="rect" id="node3" href="$namespacetest.html#a44d761477bf0e6293198849c53cb8abc" title="Computes &#160;&quot;n choose r&quot;." alt="" coords="416,13,559,39"/>
+<area shape="rect" id="node5" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="426,71,549,98"/>
 </map>

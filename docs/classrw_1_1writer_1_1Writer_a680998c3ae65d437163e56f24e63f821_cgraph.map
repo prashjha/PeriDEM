@@ -1,6 +1,0 @@
-<map id="rw::writer::Writer::appendPointData" name="rw::writer::Writer::appendPointData">
-<area shape="rect" id="node2" href="$classrw_1_1writer_1_1VtkWriter.html#af48ff2a0518ddb9b99d18e3a175e778e" title="Writes the scalar point data to the file. " alt="" coords="205,5,344,47"/>
-<area shape="rect" id="node3" href="$classrw_1_1writer_1_1MshWriter.html#a6b948b4ca15845406aaabd102eb462bb" title="Writes the scalar point data to the file. " alt="" coords="203,71,347,112"/>
-<area shape="rect" id="node5" href="$classrw_1_1writer_1_1LegacyVtkWriter.html#a449cabcfd270ffdd25e44b0f891f48c8" title="Writes the scalar point data to the file. " alt="" coords="184,136,365,177"/>
-<area shape="rect" id="node4" href="$classrw_1_1writer_1_1MshWriter.html#a2962314c02a4d959b99bed83c39350db" title="utility function " alt="" coords="413,71,567,112"/>
-</map>

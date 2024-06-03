@@ -1,6 +1,0 @@
-digraph "model::Model"
-{
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  Node1 [label="{model::Model\n|- d_n\l- d_time\l- d_e\l- d_w\l- d_phi\l- d_Z\l- d_eF\l- d_eFB\l- d_strain\l- d_stress\l- d_te\l- d_tw\l- d_tk\l- d_teF\l- d_teFB\l|+ Model()\l+ currentStep()\l+ getEnergy()\l* d_n\l* d_time\l* d_e\l* d_w\l* d_phi\l* d_Z\l* d_eF\l* d_eFB\l* d_strain\l* d_stress\l* d_te\l* d_tw\l* d_tk\l* d_teF\l* d_teFB\l* currentStep()\l* getEnergy()\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
-}
