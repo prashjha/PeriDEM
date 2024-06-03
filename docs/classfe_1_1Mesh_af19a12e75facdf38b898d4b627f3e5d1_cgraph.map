@@ -1,9 +1,0 @@
-<map id="fe::Mesh::createData" name="fe::Mesh::createData">
-<area shape="rect" id="node1" title="Reads mesh data from the file and populates other data." alt="" coords="5,132,164,159"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="283,5,374,32"/>
-<area shape="rect" id="node3" href="$namespacerw_1_1reader.html#af910f64dc70aa3d0a3af0f9bb370f8cc" title="Reads mesh data into node file and element file." alt="" coords="243,56,414,83"/>
-<area shape="rect" id="node4" href="$namespacerw_1_1reader.html#a6af50efb480753054bbf6208921733bd" title="Reads mesh data into node file and element file." alt="" coords="241,107,416,133"/>
-<area shape="rect" id="node5" href="$namespacerw_1_1reader.html#a79098cecf3c77855498e8322ec1bf3a8" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="228,157,429,184"/>
-<area shape="rect" id="node6" href="$namespacerw_1_1reader.html#ae9f76b31b63ab4f82fe853a0e158c32f" title="Reads nodal coordinates." alt="" coords="223,208,434,235"/>
-<area shape="rect" id="node7" href="$namespacerw_1_1reader.html#ae911e20d8494352c2de082b59dc88f11" title="Reads data of specified tag from the vtu file." alt="" coords="212,259,445,285"/>
-</map>

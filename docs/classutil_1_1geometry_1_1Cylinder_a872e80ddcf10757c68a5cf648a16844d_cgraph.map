@@ -1,6 +1,0 @@
-<map id="util::geometry::Cylinder::print" name="util::geometry::Cylinder::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,180,47"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Cylinder.html#abc55f824e8219f7db494379af8a45708" title="Prints the information." alt="" coords="228,5,403,47"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="643,13,765,39"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="451,38,595,65"/>
-</map>

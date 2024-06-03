@@ -1,0 +1,4 @@
+<map id="fe::TriElem" name="fe::TriElem">
+<area shape="rect" id="node1" title="A class for mapping and quadrature related operations for linear triangle element." alt="" coords="7,365,165,589"/>
+<area shape="rect" id="node2" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,5,167,317"/>
+</map>

@@ -1,7 +1,0 @@
-<map id="fe::BaseElem" name="fe::BaseElem">
-<area shape="rect" id="node1" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="277,5,450,317"/>
-<area shape="rect" id="node2" href="$classfe_1_1LineElem.html" title="A class for mapping and quadrature related operations for linear 2&#45;node line element." alt="" coords="5,365,177,589"/>
-<area shape="rect" id="node3" href="$classfe_1_1QuadElem.html" title="A class for mapping and quadrature related operations for bi&#45;linear quadrangle element." alt="" coords="201,387,344,567"/>
-<area shape="rect" id="node4" href="$classfe_1_1TetElem.html" title="A class for mapping and quadrature related operations for linear tetrahedron element." alt="" coords="368,365,540,589"/>
-<area shape="rect" id="node5" href="$classfe_1_1TriElem.html" title="A class for mapping and quadrature related operations for linear triangle element." alt="" coords="564,365,736,589"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="fe::QuadData::printStr" name="fe::QuadData::printStr">
-<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="5,31,169,57"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="405,5,528,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="228,31,347,57"/>
-<area shape="rect" id="node4" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Returns the string containing printable information about the object." alt="" coords="217,81,357,108"/>
-</map>

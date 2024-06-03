@@ -1,6 +1,0 @@
-<map id="util::triangleArea" name="util::triangleArea">
-<area shape="rect" id="node1" title="Compute area of triangle." alt="" coords="225,78,356,105"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Triangle.html#a1d830012b376f6535d13d2940c89d90b" title="Checks if point is inside this object." alt="" coords="5,5,177,47"/>
-<area shape="rect" id="node3" href="$classutil_1_1geometry_1_1Triangle.html#acb456b295759ed55756a75b3530b21ee" title="Checks if point is within given distance of this object." alt="" coords="5,71,177,112"/>
-<area shape="rect" id="node4" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="12,137,171,163"/>
-</map>

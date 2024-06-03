@@ -1,4 +1,0 @@
-<map id="util::isPointInsideCuboid" name="util::isPointInsideCuboid">
-<area shape="rect" id="node1" title="Checks if point is inside a cuboid." alt="" coords="220,13,399,39"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Cuboid.html#afe82e005aa19087609908975812bf6d6" title="Checks if point is inside this object." alt="" coords="5,5,172,47"/>
-</map>

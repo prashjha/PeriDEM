@@ -1,0 +1,19 @@
+<map id="util::parallel::initMpi" name="util::parallel::initMpi">
+<area shape="rect" id="node1" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="951,125,1085,152"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#a836a5bd06aa09111f66f69f97c1f093c" title="Returns pointer to MpiStatus struct." alt="" coords="729,49,902,76"/>
+<area shape="rect" id="node3" href="$src_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="349,49,399,76"/>
+<area shape="rect" id="node4" href="$namespaceutil_1_1parallel.html#a4377dccc92c8b2a1896685fc54fd1a0b" title="Function to check if MPI is enabled." alt="" coords="728,100,903,127"/>
+<area shape="rect" id="node5" href="$namespaceutil_1_1parallel.html#af2fa5cf1aed1855e05ae530704c37763" title="Get MPI comm." alt="" coords="737,151,893,177"/>
+<area shape="rect" id="node6" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="741,303,889,329"/>
+<area shape="rect" id="node17" href="$namespaceutil_1_1parallel.html#ad67dcfb56bf70d082e443e849c832c00" title="Get size (number) of processors." alt="" coords="527,201,670,228"/>
+<area shape="rect" id="node7" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#a55d59bfee9bce3b871923ee947a1242b" title=" " alt="" coords="287,252,461,308"/>
+<area shape="rect" id="node8" href="$namespacetest.html#af0964e1ea010ded3d98df70e7d5326ca" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="118,332,217,359"/>
+<area shape="rect" id="node10" href="$classutil_1_1io_1_1Logger.html#ab95e172506a16ded8973ae57cf5bd18c" title="Log the message." alt="" coords="534,404,663,431"/>
+<area shape="rect" id="node11" href="$namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054" title="Prints formatted information." alt="" coords="553,151,644,177"/>
+<area shape="rect" id="node14" href="$namespaceutil_1_1io.html#aafa73b940789a70da4253d44a4ff36d1" title="Prints formatted string for output." alt="" coords="542,252,655,279"/>
+<area shape="rect" id="node15" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#a203213df0b872311cc21e15789f7a924" title=" " alt="" coords="517,455,680,511"/>
+<area shape="rect" id="node16" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#adf1cc5e3fb18d6c4d4bd630c53448476" title=" " alt="" coords="279,383,469,439"/>
+<area shape="rect" id="node9" href="$testParallelComp_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,307,56,333"/>
+<area shape="rect" id="node12" href="$classfe_1_1Mesh.html#ad8e7d706e7378a729c22842bfbf6af3b" title="Compute the nodal volume." alt="" coords="299,151,449,177"/>
+<area shape="rect" id="node13" href="$namespacetest.html#ad42bc7bd3da5dce5ed3624b8fca7585f" title="Perform test on taskflow." alt="" coords="104,191,231,217"/>
+</map>

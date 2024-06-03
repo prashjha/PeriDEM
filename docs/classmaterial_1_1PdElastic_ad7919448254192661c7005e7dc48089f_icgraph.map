@@ -1,4 +1,0 @@
-<map id="material::PdElastic::getBondEF" name="material::PdElastic::getBondEF">
-<area shape="rect" id="node1" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="197,5,341,47"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1PdElastic.html#abfc68d30ea08e4fe54cf8a4bfe668c1b" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="5,5,149,47"/>
-</map>

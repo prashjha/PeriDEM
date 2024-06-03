@@ -1,4 +1,0 @@
-<map id="util::geometry::AnnulusGeomObject::isOutside" name="util::geometry::AnnulusGeomObject::isOutside">
-<area shape="rect" id="node1" title="Checks if box is outside of the object." alt="" coords="5,5,217,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="265,13,420,39"/>
-</map>

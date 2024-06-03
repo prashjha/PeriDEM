@@ -1,5 +1,0 @@
-<map id="util::geometry::Cuboid" name="util::geometry::Cuboid">
-<area shape="rect" id="node1" title="Defines cuboid." alt="" coords="121,541,287,765"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,123,208,347"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="233,5,373,464"/>
-</map>

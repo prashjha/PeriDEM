@@ -1,4 +1,0 @@
-<map id="util::geometry::Triangle::isInside" name="util::geometry::Triangle::isInside">
-<area shape="rect" id="node1" title="Checks if point is inside this object." alt="" coords="5,5,177,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#adaeb9a04adeab62ad0a5ae609d12750c" title="Compute area of triangle." alt="" coords="225,13,356,39"/>
-</map>

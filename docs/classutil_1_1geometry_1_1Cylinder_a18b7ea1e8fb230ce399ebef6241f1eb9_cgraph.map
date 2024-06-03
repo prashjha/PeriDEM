@@ -1,5 +1,0 @@
-<map id="util::geometry::Cylinder::isNear" name="util::geometry::Cylinder::isNear">
-<area shape="rect" id="node1" title="Checks if point is within given distance of this object." alt="" coords="5,23,180,65"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="228,5,339,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="238,56,329,83"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="util::pointDistancePlane" name="util::pointDistancePlane">
-<area shape="rect" id="node1" title="Compute distance between point and plane." alt="" coords="5,5,183,32"/>
-<area shape="rect" id="node2" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="231,5,364,32"/>
-</map>

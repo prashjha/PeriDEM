@@ -1,6 +1,0 @@
-<map id="fe::metisGraphPartition" name="fe::metisGraphPartition">
-<area shape="rect" id="node1" title="Partitions the nodes based on node neighborlist supplied. Function first creates a graph with nodes a..." alt="" coords="247,56,420,83"/>
-<area shape="rect" id="node2" href="$namespacefe.html#a9030a342d57c3529e08c2f76addfcefe" title="Partitions the nodes based on node neighborlist supplied. Function first creates a graph with nodes a..." alt="" coords="15,5,189,32"/>
-<area shape="rect" id="node3" href="$namespacetest.html#a6934db7b63923b70a56ab8e9c7159202" title="Tests metis partitioning of graph from a 2&#45;D mesh with nonlocal interaction." alt="" coords="5,56,199,83"/>
-<area shape="rect" id="node4" href="$namespacetest.html#af0964e1ea010ded3d98df70e7d5326ca" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="50,107,154,133"/>
-</map>

@@ -1,0 +1,5 @@
+<map id="inp::OutputDeck::print" name="inp::OutputDeck::print">
+<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,156,32"/>
+<area shape="rect" id="node2" href="$structinp_1_1OutputDeck.html#a35abbfd9ffd6954697144da07289b844" title="Returns the string containing printable information about the object." alt="" coords="204,5,371,32"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="419,5,532,32"/>
+</map>

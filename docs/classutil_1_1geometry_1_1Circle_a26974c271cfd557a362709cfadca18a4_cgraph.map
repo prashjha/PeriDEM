@@ -1,9 +1,0 @@
-<map id="util::geometry::Circle::isNear" name="util::geometry::Circle::isNear">
-<area shape="rect" id="node1" title="Checks if box is within given distance of this object." alt="" coords="5,93,164,134"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="214,93,401,134"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc" title="Returns center point." alt="" coords="471,5,585,32"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="451,85,605,112"/>
-<area shape="rect" id="node6" href="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="212,159,403,185"/>
-<area shape="rect" id="node7" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="262,209,353,236"/>
-<area shape="rect" id="node5" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="473,140,583,167"/>
-</map>

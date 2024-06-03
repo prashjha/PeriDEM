@@ -1,0 +1,77 @@
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Documentation
+*.html
+*.js
+#*.png
+*.css
+
+# Debugger
+#core.*
+
+# build directory
+build
+build_2
+build2
+build*
+cmake-build*
+
+# ide directory
+.idea
+.idea/workspace.xml
+.vscode
+
+
+# docs directory
+docs/doxy
+docs/doxy.log
+docs/conf.doxy
+
+# src directory
+src/Config.h 
+
+# from mac
+._*
+*/._*
+
+.DS_Store
+*/.DS_Store/*
+
+.ipynb_checkpoints
+*/.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+__pycache__
+*/__pycache__
+*/__pycache__/*
+
+# ignore specific test directory
+test_ignored_dir

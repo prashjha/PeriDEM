@@ -1,4 +1,0 @@
-<map id="util::geometry::Sphere::isInside" name="util::geometry::Sphere::isInside">
-<area shape="rect" id="node1" title="Checks if point is inside this object." alt="" coords="5,5,172,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="220,13,311,39"/>
-</map>

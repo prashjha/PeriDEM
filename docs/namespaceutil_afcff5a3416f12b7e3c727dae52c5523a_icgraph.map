@@ -1,5 +1,0 @@
-<map id="util::get_rd_gen" name="util::get_rd_gen">
-<area shape="rect" id="node1" title="Return random number generator." alt="" coords="229,42,352,69"/>
-<area shape="rect" id="node2" href="$classutil_1_1DistributionSample.html#ac65ff326920140c9725476c93b9d5585" title="Initialize the distribution." alt="" coords="5,5,181,47"/>
-<area shape="rect" id="node3" href="$namespacetest.html#ad42bc7bd3da5dce5ed3624b8fca7585f" title="Perform test on taskflow." alt="" coords="25,71,161,98"/>
-</map>

@@ -1,6 +1,0 @@
-<map id="inp::PNeighborDeck::printStr" name="inp::PNeighborDeck::printStr">
-<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="391,39,541,80"/>
-<area shape="rect" id="node2" href="$structinp_1_1PNeighborDeck.html#a0b9488d2200e12d6eacec304e8205463" title="Prints the information about the object." alt="" coords="192,5,343,47"/>
-<area shape="rect" id="node3" href="$structinp_1_1ParticleDeck.html#a8c108509288e78450218a3e2612bf40e" title="Returns the string containing printable information about the object." alt="" coords="198,71,337,112"/>
-<area shape="rect" id="node4" href="$structinp_1_1ParticleDeck.html#a012adaafebbdc4aee9fd7b32cb2e2f0f" title="Prints the information about the object." alt="" coords="5,71,144,112"/>
-</map>

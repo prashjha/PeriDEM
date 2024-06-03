@@ -1,6 +1,0 @@
-<map id="fe::TetElem::getQuadDatas" name="fe::TetElem::getQuadDatas">
-<area shape="rect" id="node1" title="Get vector of quadrature data." alt="" coords="5,31,201,57"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector." alt="" coords="249,5,321,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#ad4f18aba6f461c113b723df12cdaf685" title="Computes the determinant of matrix." alt="" coords="250,56,321,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#aa3d6d22d633e7042dfbdf97782f2cf4e" title="Computes the determinant of matrix." alt="" coords="369,56,441,83"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classloading_1_1ParticleLoading.html" title="A base class to apply displacement and force boundary condition." alt="" coords="5,31,183,57"/>
-<area shape="rect" id="node2" href="$classloading_1_1ParticleFLoading.html" title="A class to apply force boundary condition." alt="" coords="231,5,417,32"/>
-<area shape="rect" id="node3" href="$classloading_1_1ParticleULoading.html" title="A class to apply displacement boundary condition." alt="" coords="231,56,417,83"/>
-</map>

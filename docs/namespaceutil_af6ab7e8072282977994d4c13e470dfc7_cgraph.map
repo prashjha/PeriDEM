@@ -1,6 +1,0 @@
-<map id="util::circumscribedRadiusInBox" name="util::circumscribedRadiusInBox">
-<area shape="rect" id="node1" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="5,49,192,90"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc" title="Returns center point." alt="" coords="260,5,375,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="240,56,395,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="262,107,373,133"/>
-</map>

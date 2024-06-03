@@ -1,4 +1,0 @@
-<map id="fe::Mesh::createData" name="fe::Mesh::createData">
-<area shape="rect" id="node1" title="Reads mesh data from the file and populates other data." alt="" coords="175,5,333,32"/>
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor." alt="" coords="5,5,127,32"/>
-</map>

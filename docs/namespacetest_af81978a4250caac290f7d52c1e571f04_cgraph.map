@@ -1,5 +1,0 @@
-<map id="test::testTriElem" name="test::testTriElem">
-<area shape="rect" id="node1" title="Perform test on quadrature points on triangle elements." alt="" coords="5,13,133,39"/>
-<area shape="rect" id="node2" href="$namespacetest.html#a437c18b50b59ae2f9cd10e1cb51fba64" title="Computes integration of polynomial exactly over reference triangle." alt="" coords="181,5,364,47"/>
-<area shape="rect" id="node3" href="$namespacetest.html#a44d761477bf0e6293198849c53cb8abc" title="Computes &#160;&quot;n choose r&quot;." alt="" coords="412,13,555,39"/>
-</map>

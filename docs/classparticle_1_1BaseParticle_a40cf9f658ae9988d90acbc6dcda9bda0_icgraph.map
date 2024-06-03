@@ -1,6 +1,0 @@
-<map id="particle::BaseParticle::getNumNodes" name="particle::BaseParticle::getNumNodes">
-<area shape="rect" id="node1" title="Get the number of nodes." alt="" coords="240,71,399,112"/>
-<area shape="rect" id="node2" href="$classloading_1_1ParticleFLoading.html#a8a1f12e4292ce9693d0339c06327fe68" title="Applies force boundary condition." alt="" coords="6,5,191,47"/>
-<area shape="rect" id="node3" href="$classloading_1_1ParticleULoading.html#aee7edb595807fe2516c545d8abe2d75b" title="Applies displacement boundary condition." alt="" coords="5,71,192,112"/>
-<area shape="rect" id="node4" href="$classloading_1_1ParticleULoading.html#ad625cd13565f41d44a66c94a976b40b4" title="Sets fixity mask." alt="" coords="5,136,192,177"/>
-</map>

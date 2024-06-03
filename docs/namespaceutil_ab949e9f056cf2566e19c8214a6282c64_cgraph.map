@@ -1,4 +1,0 @@
-<map id="util::rotateACW2D" name="util::rotateACW2D">
-<area shape="rect" id="node1" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="5,5,144,32"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#ac37c77bce2370e83008c6436dcec26c0" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="192,5,323,32"/>
-</map>

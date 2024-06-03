@@ -1,5 +1,0 @@
-<map id="material::PdElastic::getBondEF" name="material::PdElastic::getBondEF">
-<area shape="rect" id="node1" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="5,5,149,47"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1PdElastic.html#ad7919448254192661c7005e7dc48089f" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="197,5,341,47"/>
-<area shape="rect" id="node3" href="$classmaterial_1_1PdElastic.html#aaa2253f9df64b8e3b795b8337d7a22da" title="Returns the value of influence function." alt="" coords="389,5,533,47"/>
-</map>

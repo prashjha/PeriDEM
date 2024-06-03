@@ -1,4 +1,0 @@
-<map id="util::transpose" name="util::transpose">
-<area shape="rect" id="node1" title="Computes the tranpose of matrix." alt="" coords="288,5,403,32"/>
-<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element." alt="" coords="5,5,240,32"/>
-</map>

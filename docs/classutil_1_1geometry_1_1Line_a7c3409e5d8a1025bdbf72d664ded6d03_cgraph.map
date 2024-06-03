@@ -1,6 +1,0 @@
-<map id="util::geometry::Line::isNear" name="util::geometry::Line::isNear">
-<area shape="rect" id="node1" title="Checks if point is within given distance of this object." alt="" coords="5,49,153,90"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#af081eb7d4934835d9c45b39b025ef5c9" title="Computes the dot product between matrix and vector." alt="" coords="221,5,293,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="201,56,312,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="211,107,302,133"/>
-</map>

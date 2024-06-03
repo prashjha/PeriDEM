@@ -1,6 +1,0 @@
-<map id="rw::writer::Writer" name="rw::writer::Writer">
-<area shape="rect" id="node1" title="A interface class writing data." alt="" coords="239,629,397,1176"/>
-<area shape="rect" id="node2" href="$classrw_1_1writer_1_1LegacyVtkWriter.html" title="A vtk writer for simple point data and complex fem mesh data." alt="" coords="5,5,204,567"/>
-<area shape="rect" id="node3" href="$classrw_1_1writer_1_1MshWriter.html" title="A .msh writer for simple point data and complex fem mesh data." alt="" coords="229,13,407,559"/>
-<area shape="rect" id="node4" href="$classrw_1_1writer_1_1VtkWriter.html" title="A vtk writer for simple point data and complex fem mesh data." alt="" coords="432,20,591,552"/>
-</map>

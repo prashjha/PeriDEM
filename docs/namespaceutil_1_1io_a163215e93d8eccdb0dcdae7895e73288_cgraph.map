@@ -1,8 +1,0 @@
-<map id="util::io::print" name="util::io::print">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,107,57"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="155,5,321,32"/>
-<area shape="rect" id="node5" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="179,56,297,83"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="369,5,523,32"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="571,5,765,32"/>
-<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="385,56,507,83"/>
-</map>

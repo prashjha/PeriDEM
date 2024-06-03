@@ -1,5 +1,0 @@
-<map id="fe::metisGraphPartition" name="fe::metisGraphPartition">
-<area shape="rect" id="node1" title="Partitions the nodes based on node neighborlist supplied. Function first creates a graph with nodes a..." alt="" coords="5,5,179,32"/>
-<area shape="rect" id="node2" href="$namespacefe.html#aa99908633d689711feacee5e2b2a8228" title="Partitions the nodes based on node neighborlist supplied. Function first creates a graph with nodes a..." alt="" coords="227,5,400,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1methods.html#aaf9cfac99073d034d41e10d4d17e59a2" title="Returns difference between two times." alt="" coords="448,5,617,32"/>
-</map>

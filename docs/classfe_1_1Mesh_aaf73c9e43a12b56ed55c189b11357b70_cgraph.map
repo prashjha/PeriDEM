@@ -1,6 +1,0 @@
-<map id="fe::Mesh::print" name="fe::Mesh::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,121,32"/>
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#afab4cadbb9440bd19cd13dbdf236e937" title="Returns the string containing printable information about the object." alt="" coords="169,5,304,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="544,5,667,32"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="352,31,496,57"/>
-</map>

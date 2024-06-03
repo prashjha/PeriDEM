@@ -1,6 +1,0 @@
-<map id="material::PmbMaterial::getBondEF" name="material::PmbMaterial::getBondEF">
-<area shape="rect" id="node1" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="5,35,173,76"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1PmbMaterial.html#ac49caf8d022a3e0a9d6aa01ac7d84c1b" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="221,35,389,76"/>
-<area shape="rect" id="node3" href="$classmaterial_1_1PmbMaterial.html#a3ebc069ce751d1b03693c0fc4e497968" title="Returns the value of influence function." alt="" coords="437,5,605,47"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="466,71,577,98"/>
-</map>

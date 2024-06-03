@@ -1,4 +1,0 @@
-<map id="util::geometry::Cuboid::isOutside" name="util::geometry::Cuboid::isOutside">
-<area shape="rect" id="node1" title="Checks if box is outside of the object." alt="" coords="5,5,172,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="220,13,375,39"/>
-</map>

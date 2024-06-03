@@ -1,6 +1,0 @@
-<map id="util::isPointInsideAngledRectangle" name="util::isPointInsideAngledRectangle">
-<area shape="rect" id="node1" title="Checks if point is inside an angled rectangle." alt="" coords="5,49,184,90"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="242,5,353,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="252,56,343,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#ac37c77bce2370e83008c6436dcec26c0" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="232,107,363,133"/>
-</map>

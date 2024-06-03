@@ -1,4 +1,0 @@
-<map id="material::RnpMaterial::computeMaterialProperties" name="material::RnpMaterial::computeMaterialProperties">
-<area shape="rect" id="node1" title="Computes elastic and fracture material properties and returns the data." alt="" coords="5,5,212,47"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1RnpMaterial.html#a7963ad7a3b63662d9752eb928c99b7cd" title="Returns the moment of influence function." alt="" coords="260,5,424,47"/>
-</map>

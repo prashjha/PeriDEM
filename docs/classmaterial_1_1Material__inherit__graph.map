@@ -1,7 +1,0 @@
-<map id="material::Material" name="material::Material">
-<area shape="rect" id="node1" title="Collection of methods and database related to peridynamic material." alt="" coords="392,5,587,229"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1PdElastic.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="5,321,229,663"/>
-<area shape="rect" id="node3" href="$classmaterial_1_1PdState.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="253,292,477,692"/>
-<area shape="rect" id="node4" href="$classmaterial_1_1PmbMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="501,307,725,677"/>
-<area shape="rect" id="node5" href="$classmaterial_1_1RnpMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="749,277,973,707"/>
-</map>
