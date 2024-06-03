@@ -348,6 +348,7 @@ void model::DEMModel::integrateCD() {
   tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
+  // update current position, displacement, and velocity of nodes
   taskflow.for_each_index(
     (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
       [this, dt, dim](std::size_t II) {
@@ -368,6 +369,7 @@ void model::DEMModel::integrateCD() {
 
   executor.run(taskflow).get();
 
+  // advance time
   d_n++;
   d_time += dt;
 
@@ -384,6 +386,7 @@ void model::DEMModel::integrateVerlet() {
   const auto dt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
+  // update current position, displacement, and velocity of nodes
   {
     tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
@@ -409,6 +412,7 @@ void model::DEMModel::integrateVerlet() {
     executor.run(taskflow).get();
   }
 
+  // advance time
   d_n++;
   d_time += dt;
 
@@ -418,6 +422,7 @@ void model::DEMModel::integrateVerlet() {
   // compute force
   computeForces();
 
+  // update velocity of nodes
   {
     tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;

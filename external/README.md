@@ -5,6 +5,11 @@
 - current version - master branch (commit - a71a87e700b0fb92645c6b124742cbf326e0f7b1)
 - download link (current version) - [https://github.com/ben-strasser/fast-cpp-csv-parser/tree/a71a87e700b0fb92645c6b124742cbf326e0f7b1](https://github.com/ben-strasser/fast-cpp-csv-parser/tree/a71a87e700b0fb92645c6b124742cbf326e0f7b1)
 
+## doxygen-awesome-css
+- project page - [https://github.com/jothepro/doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css)
+- current version - v2.3.3
+- download link (current version) - [https://github.com/jothepro/doxygen-awesome-css/releases/tag/v2.3.3](https://github.com/jothepro/doxygen-awesome-css/releases/tag/v2.3.3)
+
 ## fmt
 - project page - [https://github.com/fmtlib/fmt](https://github.com/fmtlib/fmt)
 - current version - 10.2.1

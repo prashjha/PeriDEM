@@ -54,7 +54,14 @@ endif()
 # cmake policy <-- check if it is still needed
 #cmake_policy(SET CMP0023 OLD)
 
+#----------------------------------#
+#<<<<<<<<<< New CMAKE variables >>>>>>>>>>#
+#----------------------------------#
 set(Enable_CMAKE_Debug_Build TRUE CACHE BOOL "Output important information during cmake")
+set(Enable_Documentation FALSE CACHE BOOL "Generate documentation if ON")
+set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if ON")
+set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
+set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
 
 #----------------------------------#
 #<<<<<<<<<< Rpath setting >>>>>>>>>>#
@@ -65,9 +72,6 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #----------------------------------#
 #<<<<<<<<<< Testing >>>>>>>>>>#
 #----------------------------------#
-set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if ON")
-set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
-set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Enable_Tests = ${Enable_Tests}")
     message(STATUS "Enable_High_Load_Tests = ${Enable_High_Load_Tests}")
@@ -115,6 +119,11 @@ find_package(LAPACK REQUIRED)
 
 # #<<<<<<<<<< Metis >>>>>>>>>>#
 find_package(Metis REQUIRED)
+
+# #<<<<<<<<<< Doxygen >>>>>>>>>>#
+if(${Enable_Documentation})
+    find_package(Doxygen)
+endif()
 
 #----------------------------------#
 #<<<<<<<<<< Compiler flags >>>>>>>>>>#
@@ -179,7 +188,6 @@ if(${Enable_Tests})
 endif()
 
 # documentation
-set(Enable_Documentation FALSE CACHE BOOL "Generate documentation if ON")
 if(${Enable_Documentation})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Building documentation")
