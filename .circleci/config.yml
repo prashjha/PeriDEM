@@ -118,11 +118,11 @@ jobs:
               
                 echo "begin copying. pwd = $(pwd)"
                 echo "copy repo directory except 'docs' and '.git' directories"
-                rsync -a --stats --progress ../project/ ./ --exclude docs --exclude .git #1> /dev/null
+                rsync -a --stats --progress ../project/ ./ --exclude build --exclude docs --exclude .git 1> /dev/null
                 rsync -a --stats --progress ../project/docs/ ./docs/ --exclude doxy --exclude doxy.log 
               
                 echo "copying docs/doxy/html into ./"
-                rsync -a --stats --progress ../project/docs/doxy/html/ ./
+                rsync -a --stats --progress ../project/docs/doxy/html/ ./ 1> /dev/null
                 
                 echo "check if files are copied"
                 if [ -f "./index.html" ]; then 
@@ -133,7 +133,7 @@ jobs:
   
                 echo "add changes and commit"
                 git add -A
-                git commit -m "automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty
+                git commit -m "automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty 1> /dev/null
                 
                 echo "push"
                 git push -q https://${G_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git gh-pages
