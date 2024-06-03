@@ -7,4 +7,4 @@
 
 add_executable(twop main.cpp)
 
-target_link_libraries(PeriDEM PUBLIC Inp Model)
+target_link_libraries(twop PUBLIC Inp Model)
