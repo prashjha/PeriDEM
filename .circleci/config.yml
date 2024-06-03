@@ -103,6 +103,7 @@ jobs:
               
                 echo "clean the branch"
                 git rm -rf .
+                git commit -m "cleaning"
               
                 echo "pull main branch"
                 git pull origin main
@@ -119,8 +120,8 @@ jobs:
                 git add -a
                 git commit -m "Automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty
                 
-                echo "push"
-                git push origin gh-pages
+                # Push quietly
+                git push -q https://${G_TOKEN}@github.com/prashjha/prashjha.github.io.git gh-pages
               fi
     deploy:
       machine:
