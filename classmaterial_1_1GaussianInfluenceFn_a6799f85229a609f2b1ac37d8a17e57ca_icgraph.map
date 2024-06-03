@@ -1,7 +1,0 @@
-<map id="material::GaussianInfluenceFn::getMoment" name="material::GaussianInfluenceFn::getMoment">
-<area shape="rect" id="Node000001" title="Returns the moment of influence function." alt="" coords="468,5,651,48"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1GaussianInfluenceFn.html#ad1f62ca4e269613e6ec67fc9b9148063" title="Returns the string containing printable information about the object." alt="" coords="237,5,420,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="453,29,421,29,421,24,453,24"/>
-<area shape="rect" id="Node000003" href="$classmaterial_1_1GaussianInfluenceFn.html#ad9ff8b02b228fb654254d53a3b3efc6d" title="Prints the information about the object." alt="" coords="5,5,189,48"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="221,29,189,29,189,24,221,24"/>
-</map>

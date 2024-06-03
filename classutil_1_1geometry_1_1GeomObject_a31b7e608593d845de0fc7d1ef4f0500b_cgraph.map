@@ -1,7 +1,0 @@
-<map id="util::geometry::GeomObject::print" name="util::geometry::GeomObject::print">
-<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,5,187,48"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html#a8191fc609de870648db22144fd67f071" title="Returns the string containing printable information about the object." alt="" coords="235,5,416,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,24,219,24,219,29,187,29"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="464,13,576,40"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="417,24,448,24,448,29,417,29"/>
-</map>

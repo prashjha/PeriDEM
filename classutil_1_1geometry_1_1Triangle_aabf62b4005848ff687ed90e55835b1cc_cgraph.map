@@ -1,9 +1,0 @@
-<map id="util::geometry::Triangle::isNear" name="util::geometry::Triangle::isNear">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="5,23,160,65"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box." alt="" coords="208,31,352,57"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,41,192,41,192,47,160,47"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="400,5,499,32"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,31,384,26,385,31,353,36"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="408,56,492,83"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="353,52,393,58,392,63,352,57"/>
-</map>

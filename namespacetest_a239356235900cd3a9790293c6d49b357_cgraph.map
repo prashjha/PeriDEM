@@ -1,5 +1,0 @@
-<map id="test::testTriElemTime" name="test::testTriElemTime">
-<area shape="rect" id="Node000001" title="Computes the time needed when quad data for elements are stored and when they are computed as and whe..." alt="" coords="5,5,153,32"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1methods.html#aaf9cfac99073d034d41e10d4d17e59a2" title="Returns difference between two times." alt="" coords="201,5,350,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,16,185,16,185,21,153,21"/>
-</map>

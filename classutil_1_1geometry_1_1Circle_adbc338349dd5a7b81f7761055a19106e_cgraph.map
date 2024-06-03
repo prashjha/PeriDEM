@@ -1,5 +1,0 @@
-<map id="util::geometry::Circle::doesIntersect" name="util::geometry::Circle::doesIntersect">
-<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,5,148,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="196,13,336,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,24,180,24,180,29,148,29"/>
-</map>

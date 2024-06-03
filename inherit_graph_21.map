@@ -1,9 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classmaterial_1_1BaseInfluenceFn.html" title="A base class for computing influence function." alt="" coords="5,56,179,83"/>
-<area shape="rect" id="Node000001" href="$classmaterial_1_1ConstInfluenceFn.html" title="A class to implement constant influence function." alt="" coords="237,5,415,32"/>
-<area shape="poly" id="edge7_Node000000_Node000001" title=" " alt="" coords="171,50,260,30,261,35,172,55"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1GaussianInfluenceFn.html" title="A class to implement Gaussian influence function." alt="" coords="227,56,425,83"/>
-<area shape="poly" id="edge8_Node000000_Node000002" title=" " alt="" coords="194,67,226,67,226,72,194,72"/>
-<area shape="rect" id="Node000003" href="$classmaterial_1_1LinearInfluenceFn.html" title="A class to implement linear influence function." alt="" coords="237,107,415,133"/>
-<area shape="poly" id="edge9_Node000000_Node000003" title=" " alt="" coords="172,84,261,103,260,109,171,89"/>
-</map>

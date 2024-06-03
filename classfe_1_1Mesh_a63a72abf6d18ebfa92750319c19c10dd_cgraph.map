@@ -1,9 +1,0 @@
-<map id="fe::Mesh::computeMeshSize" name="fe::Mesh::computeMeshSize">
-<area shape="rect" id="Node000001" title="Compute the mesh size." alt="" coords="5,31,194,57"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="253,5,337,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,29,237,23,238,29,194,34"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="242,56,348,83"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,54,227,58,226,63,193,59"/>
-<area shape="rect" id="Node000004" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="396,56,508,83"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="349,67,380,67,380,72,349,72"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="material::PmbMaterial::printStr" name="material::PmbMaterial::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="202,5,350,48"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1PmbMaterial.html#a172fff2b78b4b943322a5031212ce110" title="Prints the information about the object." alt="" coords="5,5,154,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,29,154,29,154,24,186,24"/>
-</map>

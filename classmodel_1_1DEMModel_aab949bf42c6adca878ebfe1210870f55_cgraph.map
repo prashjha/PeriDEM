@@ -1,5 +1,0 @@
-<map id="model::DEMModel::checkStop" name="model::DEMModel::checkStop">
-<area shape="rect" id="Node000001" title="Checks if simulation should be stopped due to abnormal state of system." alt="" coords="5,5,205,32"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="253,5,352,32"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,16,237,16,237,21,205,21"/>
-</map>

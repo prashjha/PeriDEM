@@ -1,7 +1,0 @@
-<map id="rw::reader::VtkReader::VtkReader" name="rw::reader::VtkReader::VtkReader">
-<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,5,155,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a8a38ac2a0437a16aa1c311b6a075dc51" title="Check for extension and if possible create new filename from a given filename and a given extension." alt="" coords="203,5,364,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,24,187,24,187,29,155,29"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a6588c46813adf0cb86b795880f1a2ec7" title="Get extension from the filename." alt="" coords="412,13,603,40"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="364,24,396,24,396,29,364,29"/>
-</map>

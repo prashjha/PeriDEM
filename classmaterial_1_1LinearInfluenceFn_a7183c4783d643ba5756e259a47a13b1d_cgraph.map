@@ -1,7 +1,0 @@
-<map id="material::LinearInfluenceFn::printStr" name="material::LinearInfluenceFn::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="5,35,169,77"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1LinearInfluenceFn.html#aff8d659b3ef4ae0516aca109ec3b5515" title="Returns the moment of influence function." alt="" coords="217,5,380,48"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="169,42,201,38,202,43,169,47"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="242,72,355,99"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,65,227,73,226,78,169,70"/>
-</map>

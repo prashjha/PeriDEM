@@ -1,5 +1,0 @@
-<map id="util::geometry::Circle::isNear" name="util::geometry::Circle::isNear">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="5,5,148,48"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="196,13,280,40"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,24,180,24,180,29,148,29"/>
-</map>
