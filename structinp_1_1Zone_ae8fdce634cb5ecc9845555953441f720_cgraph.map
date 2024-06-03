@@ -1,0 +1,5 @@
+<map id="inp::Zone::print" name="inp::Zone::print">
+<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,115,32"/>
+<area shape="rect" id="node2" href="$structinp_1_1Zone.html#aad051408209401d54a0a186f190d2ac3" title="Returns the string containing printable information about the object." alt="" coords="163,5,289,32"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="337,5,451,32"/>
+</map>

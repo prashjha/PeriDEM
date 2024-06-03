@@ -1,0 +1,25 @@
+var classutil_1_1geometry_1_1Sphere =
+[
+    [ "Sphere", "classutil_1_1geometry_1_1Sphere.html#a9b42cdab8350847cf13a60e1820e1ffc", null ],
+    [ "Sphere", "classutil_1_1geometry_1_1Sphere.html#a91a34bb728cbedb1344a2d515cd979b6", null ],
+    [ "boundingRadius", "classutil_1_1geometry_1_1Sphere.html#ab45b7dd3baefa4ccfdb934f6d2c70043", null ],
+    [ "box", "classutil_1_1geometry_1_1Sphere.html#a8beb6e35c3789b5defb247ef8c59d901", null ],
+    [ "box", "classutil_1_1geometry_1_1Sphere.html#aa0191736a3c96f00e85dfc30ffaf9764", null ],
+    [ "center", "classutil_1_1geometry_1_1Sphere.html#a0cdf232b6a0255860b79a7e973c888e7", null ],
+    [ "doesIntersect", "classutil_1_1geometry_1_1Sphere.html#a9a2f43face7b6ea785ae009527d49a3d", null ],
+    [ "doesIntersect", "classutil_1_1geometry_1_1Sphere.html#aad8e3276b3bcd273ce21cc654a7de424", null ],
+    [ "inscribedRadius", "classutil_1_1geometry_1_1Sphere.html#a7c36060e3a3f2472370fa1a90265a0db", null ],
+    [ "isInside", "classutil_1_1geometry_1_1Sphere.html#a5109af3cdcaa98e879be6e79a51f7278", null ],
+    [ "isInside", "classutil_1_1geometry_1_1Sphere.html#a329bec9edce8c781f28cd3911219a043", null ],
+    [ "isNear", "classutil_1_1geometry_1_1Sphere.html#af568776ec54d2ef7c99af31851ce0107", null ],
+    [ "isNear", "classutil_1_1geometry_1_1Sphere.html#a18db77773edbf537e4b4d36f023c1750", null ],
+    [ "isNearBoundary", "classutil_1_1geometry_1_1Sphere.html#ab883e9db7deee5ace12daf734893de7c", null ],
+    [ "isOutside", "classutil_1_1geometry_1_1Sphere.html#a89c14b81a0f17cf1b5c8231d0f9173e4", null ],
+    [ "isOutside", "classutil_1_1geometry_1_1Sphere.html#a57d9cde6989f49359e6301793c59a1c0", null ],
+    [ "print", "classutil_1_1geometry_1_1Sphere.html#a86c59cb87dad155815ec886b1b659c10", null ],
+    [ "print", "classutil_1_1geometry_1_1Sphere.html#a2d92710d60e3fa6a175f1d951fe03f72", null ],
+    [ "printStr", "classutil_1_1geometry_1_1Sphere.html#a2fdd42a419832bab000c7ddc746b5d93", null ],
+    [ "volume", "classutil_1_1geometry_1_1Sphere.html#a6feddac407da9354c4977d17d071c8b7", null ],
+    [ "d_r", "classutil_1_1geometry_1_1Sphere.html#a5b4a2c8a44ea61ddbeeade396d9502bc", null ],
+    [ "d_xc", "classutil_1_1geometry_1_1Sphere.html#abb0601ea3310fc959ff4ad28bf1fee14", null ]
+];

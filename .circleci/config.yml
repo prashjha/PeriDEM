@@ -1,0 +1,217 @@
+# -------------------------------------------
+# Copyright (c) 2021 - 2024 Prashant K. Jha
+# -------------------------------------------
+# PeriDEM https://github.com/prashjha/PeriDEM
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE)
+
+version: 2.1
+parameters:
+  docker-img-os:
+    type: string
+    default: focal
+  cmake-include-dirs:
+    type: string
+    default: -DVTK_DIR=/usr/local/lib/cmake/vtk-9.3 -DMETIS_DIR=/usr/lib
+
+commands:
+  libcmake:
+    parameters:
+      cmake-args:
+        type: string
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=OFF -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
+    steps:
+      - run: 
+          name: Cmake configure
+          command: |
+            mkdir -p build 
+            cd build 
+            cmake <<parameters.cmake-args>> ..
+  libmake:
+    steps:
+      - run: 
+          name: Make build
+          command: |
+            cd build 
+            make -j 2
+  libtest:
+    parameters:
+      verb-flag:
+        type: string
+        default: --extra-verbose
+    steps:
+      - run: 
+          name: Ctest
+          command: |
+            cd build 
+            ctest <<parameters.verb-flag>>
+  libdoc:
+    steps:
+      - run: 
+          name: Make documentation
+          command: |
+            cd build 
+            make doc        
+
+jobs:
+    build:
+        docker:
+          - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+            user: user
+        steps:
+          - checkout
+          - libcmake
+          - libmake
+          - libtest
+    documentation:
+      docker:
+        - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+          user: user
+      steps:
+        - checkout
+        - libcmake:
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=ON -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
+        - libdoc
+        - run:
+            name: Push doc files to gh-pages
+            command: |
+              # source - https://blog.frederikring.com/articles/deploying-github-pages-circle-ci/
+              echo "list project/docs directory"
+              ls -a ./docs/
+              echo "Begin clone and copy. pwd = $(pwd)"
+              echo "CIRCLE_BRANCH = $CIRCLE_BRANCH"
+              #echo "CIRCLE_REPOSITORY_URL = $CIRCLE_REPOSITORY_URL"
+              #echo "CIRCLE_PROJECT_REPONAME = $CIRCLE_PROJECT_REPONAME"
+              #echo "CIRCLE_PROJECT_USERNAME = $CIRCLE_PROJECT_USERNAME"
+              
+              if [ $CIRCLE_BRANCH == "main" ]; then
+                echo "set github config"
+                git config --global user.email "pjha.sci@gmail.com"
+                git config --global user.name "Prashant K. Jha"
+  
+                echo "clone for gh-pages. pwd = $(pwd)"
+                cd ..
+                git clone $CIRCLE_REPOSITORY_URL build_docs
+  
+                cd build_docs
+                echo "checkout gh-pages branch"
+                git checkout gh-pages || git checkout --orphan gh-pages
+              
+                echo "clean the branch"
+                git rm -rf . 1> /dev/null
+                git add . && git commit -m "cleaning" 1> /dev/null
+              
+                echo "create .nojekyll file"
+                touch .nojekyll
+              
+                echo "create docs directory"
+                mkdir -p docs
+                ls -a
+              
+                echo "begin copying. pwd = $(pwd)"
+                echo "copy repo directory except 'docs' and '.git' directories"
+                rsync -a --stats ../project/ ./ --exclude build --exclude docs --exclude .git
+                rsync -a --stats ../project/docs/ ./docs/ --exclude doxy --exclude doxy.log 
+              
+                echo "copying docs/doxy/html into ./"
+                rsync -a --stats ../project/docs/doxy/html/ ./
+              
+                echo "removing .gitignore file"
+                rm .gitignore
+                
+                echo "check if files are copied"
+                if [ -f "./index.html" ]; then 
+                  echo "files copied successfully."
+                else
+                  echo "index.html file does not exist"
+                fi
+  
+                echo "add changes and commit"
+                git add -A
+                git commit -m "automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty 
+                
+                echo "push"
+                git push -q https://${G_TOKEN}@github.com/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}.git gh-pages
+              fi
+    deploy:
+      machine:
+        image: ubuntu-2004:current
+      environment:
+        IMAGE_FILE_NAME: .circleci/Docker/Dockerfile-<<pipeline.parameters.docker-img-os>>
+        IMAGE_NAME: peridem-<<pipeline.parameters.docker-img-os>>:latest
+      steps:
+        - checkout
+        - run:
+            name: Build docker image
+            command: |
+              docker build -t prashjha/${IMAGE_NAME} -f ${IMAGE_FILE_NAME} .
+              docker images
+        - run:
+            name: Deploy to docker hub
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                 docker login -u $DOCKER_USER -p $DOCKER_PASS
+                 docker push prashjha/${IMAGE_NAME}
+              fi
+        - run:
+            name: Deploy to github
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                 ## OLD 
+                 # docker login docker.pkg.github.com -u prashjha -p ${G_TOKEN}
+                 # docker tag prashjha/${IMAGE_NAME} docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 # docker push docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
+                 ## new github container namespace
+                 docker login ghcr.io -u prashjha -p ${G_TOKEN}
+                 docker tag prashjha/${IMAGE_NAME} ghcr.io/prashjha/peridem/${IMAGE_NAME}
+                 docker push ghcr.io/prashjha/peridem/${IMAGE_NAME}
+              fi
+    codecoverage:
+      docker:
+        - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
+          user: user
+      steps:
+        - checkout
+        - libcmake:
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" <<pipeline.parameters.cmake-include-dirs>>
+        - libmake
+        - libtest:
+            verb-flag: ""
+        - run:
+            name: Report
+            command: |
+              cd build
+              gcovr -e ../build -e ../external -e ../examples -e ../tools --r ..
+        - run:
+            name: Publish 
+            command: |
+              if [ "${CIRCLE_BRANCH}" == "main" ]; then
+                cd build
+                #coveralls --gcov-options '\-lp' -t ${CODECOV_TOKEN}
+                bash <(curl -s https://codecov.io/bash) -t ${CODECOV_TOKEN}
+              fi
+workflows:
+  version: 2
+  build_doc_deploy_codecov:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
+      - documentation:
+          filters:
+            branches:
+              ignore: gh-pages
+      - deploy:
+          filters:
+            branches:
+              only: main
+          requires:
+            - build
+      - codecoverage:
+          filters:
+            branches:
+              only: main
+          requires:
+            - build

@@ -1,0 +1,4 @@
+<map id="util::transform_to_uniform_dist" name="util::transform_to_uniform_dist">
+<area shape="rect" id="node1" title="Transform sample from U(0,1) to U(a,b)" alt="" coords="279,5,399,47"/>
+<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement." alt="" coords="5,5,231,47"/>
+</map>
