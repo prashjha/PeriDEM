@@ -32,19 +32,29 @@ class ParticleFLoading : public ParticleLoading {
 public:
   /*!
    * @brief Constructor
-   * @param deck Input deck which contains user-specified information
-   * @param mesh Mesh object
+   * @param bc_data Boundary condition data
    */
   ParticleFLoading(std::vector<inp::PBCData> &bc_data);
 
   /*!
-   * @brief Applies displacement boundary condition
+   * @brief Applies force boundary condition
    * @param time Current time
-   * @param f Vector nodal forces
-   * @param mesh Mesh object
+   * @param particle Particle object pointer
    */
   void apply(const double &time, particle::BaseParticle *particle);
+
+  /*!
+   * @brief Applies force boundary condition
+   * @param time Current time
+   * @param particle Particle object pointer
+   */
   void applyParticle(const double &time, particle::BaseParticle *particle);
+
+  /*!
+   * @brief Applies force boundary condition
+   * @param time Current time
+   * @param wall Wall object pointer
+   */
   void applyWall(const double &time, particle::BaseParticle *wall);
 };
 

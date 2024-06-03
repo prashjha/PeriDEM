@@ -10,6 +10,9 @@
 #ifndef RW_VTK_PARTICLE_READER_H
 #define RW_VTK_PARTICLE_READER_H
 
+#include <string>
+
+// if clion does not load vtk header files, invalidate cache in File menu following https://stackoverflow.com/a/78215443
 #include <vtkSmartPointer.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkXMLUnstructuredGridReader.h>
@@ -29,6 +32,7 @@ class VtkParticleReader {
 public:
   /*!
    * @brief Constructor
+   * @param filename Name of the vtk file (with/without .vtu extension)
    */
   explicit VtkParticleReader(const std::string &filename);
 
@@ -39,13 +43,11 @@ public:
 
   /*!
    * @brief Writes the nodes to the file
-   * @param particles Particle data for each particle
+   * @param model ModelData class object
    */
   void readNodes(model::ModelData *model);
 
-  /*!
-   * @brief Closes the file and store it to the hard disk
-   */
+  /*! @brief Closes the file and store it to the hard disk */
   void close();
 
 private:

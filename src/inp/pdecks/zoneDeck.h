@@ -45,11 +45,20 @@ struct Zone {
 
   /*!
    * @brief Constructor
+   *
+   * @param z Another zone object
    */
   Zone(const Zone &z)
       : d_type(z.d_type), d_params(z.d_params), d_geom_p(z.d_geom_p),
         d_zoneId(z.d_zoneId){};
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -64,6 +73,12 @@ struct Zone {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 
@@ -107,6 +122,7 @@ struct ParticleZone {
    */
   std::string d_particleFileDataType;
 
+  /*! @brief Read particle from a file */
   std::string d_particleFile;
 
   /*!
@@ -140,6 +156,8 @@ struct ParticleZone {
 
   /*!
    * @brief Copy constructor
+   *
+   * @param pz Another ParticleZone object
    */
   ParticleZone(const ParticleZone &pz)
       : d_zone(pz.d_zone), d_particle_p(pz.d_particle_p), d_params(pz.d_params),
@@ -149,10 +167,11 @@ struct ParticleZone {
         d_meshDeck(pz.d_meshDeck), d_nearBdNodesTol(pz.d_nearBdNodesTol){};
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -178,6 +197,12 @@ struct ParticleZone {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 
@@ -214,12 +239,21 @@ struct WallZone {
 
   /*!
    * @brief Copy constructor
+   *
+   * @param wz Another WallZone object
    */
   WallZone(const WallZone &wz)
       : d_zone(wz.d_zone), d_type(wz.d_type), d_matDeck(wz.d_matDeck),
         d_meshFlag(wz.d_meshFlag), d_meshDeck(wz.d_meshDeck),
         d_allDofsConstrained(wz.d_allDofsConstrained){};
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -237,6 +271,12 @@ struct WallZone {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

@@ -51,6 +51,8 @@ class Mesh {
 public:
   /*!
    * @brief Constructor
+   *
+   * @param dim Dimension of the domain
    */
   explicit Mesh(size_t dim = 0);
 
@@ -126,6 +128,8 @@ public:
    * @return nodes Nodes data
    */
   const std::vector<util::Point> &getNodes() const { return d_nodes; };
+
+  /*! @copydoc getNodes() const */
   std::vector<util::Point> &getNodes() { return d_nodes; };
 
   /*!
@@ -133,13 +137,17 @@ public:
    * @return pointer Pointer to nodes data
    */
   const std::vector<util::Point> *getNodesP() const { return &d_nodes; };
+
+  /*! @copydoc getNodesP() const */
   std::vector<util::Point> *getNodesP() { return &d_nodes; };
 
   /*!
    * @brief Get the pointer to fixity data
    * @return pointer Pointer to fixity data
    */
-   const std::vector<uint8_t> *getFixityP() const { return &d_fix; };
+  const std::vector<uint8_t> *getFixityP() const { return &d_fix; };
+
+  /*! @copydoc getFixityP() const */
   std::vector<uint8_t> *getFixityP() { return &d_fix; };
 
   /*!
@@ -147,6 +155,8 @@ public:
    * @return reference Reference to fixity data
    */
   const std::vector<uint8_t> &getFixity() const { return d_fix; };
+
+  /*! @copydoc getFixity() const */
   std::vector<uint8_t> &getFixity() { return d_fix; };
 
   /*!
@@ -154,6 +164,8 @@ public:
    * @return Vector Vector of nodal volume
    */
   const std::vector<double> &getNodalVolumes() const { return d_vol; };
+
+  /*! @copydoc getNodalVolumes() const */
   std::vector<double> &getNodalVolumes() { return d_vol; };
 
   /*!
@@ -161,6 +173,8 @@ public:
    * @return pointer Pointer to nodal volume data
    */
   const std::vector<double> *getNodalVolumesP() const { return &d_vol; };
+
+  /*! @copydoc getNodalVolumesP() const */
   std::vector<double> *getNodalVolumesP() { return &d_vol; };
 
   /*!
@@ -217,6 +231,8 @@ public:
   const std::vector<size_t> &getElementConnectivities() const {
     return d_enc;
   };
+
+  /*! @copydoc getElementConnectivities() const */
   std::vector<size_t> &getElementConnectivities() {
     return d_enc;
   };
@@ -228,6 +244,8 @@ public:
   const std::vector<size_t> *getElementConnectivitiesP() const {
     return &d_enc;
   };
+
+  /*! @copydoc getElementConnectivitiesP() const */
   std::vector<size_t> *getElementConnectivitiesP() {
     return &d_enc;
   };
@@ -240,6 +258,8 @@ public:
   const {
     return d_bbox;
   };
+
+  /*! @copydoc getBoundingBox() const */
   std::pair<std::vector<double>, std::vector<double>> &getBoundingBox() {
     return d_bbox;
   };
@@ -266,8 +286,21 @@ public:
 
   /** @}*/
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   std::string printStr(int nt = 0, int lvl = 0) const;
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); };
 
 public:

@@ -39,9 +39,10 @@ public:
    *
    * @param id Id of this object in group of all base particles
    * @param z_deck Zone input deck
+   * @param particle_zone Id of zone this particle belongs to
    * @param ref_particle Pointer to reference particle
    * @param geom Geometrical object representing this object
-   * @param trasnform Transform object to be applied to reference particle to
+   * @param transform Transform object to be applied to reference particle to
    * get this particle
    * @param model_data Global model data
    * @param populate_data Modify global model data to add the properties of
@@ -62,6 +63,8 @@ public:
   util::Point &getXCenter() {
     return d_modelData_p->getX(d_globStart + d_rp_p->getCenterNodeId());
   };
+
+  /*! @copydoc getXCenter() */
   const util::Point &getXCenter() const {
     return d_modelData_p->getX(d_globStart + d_rp_p->getCenterNodeId());
   };
@@ -73,6 +76,8 @@ public:
   util::Point &getUCenter() {
     return d_modelData_p->getU(d_globStart + d_rp_p->getCenterNodeId());
   };
+
+  /*! @copydoc getUCenter() */
   const util::Point &getUCenter() const {
     return d_modelData_p->getU(d_globStart + d_rp_p->getCenterNodeId());
   };
@@ -84,6 +89,8 @@ public:
   util::Point &getVCenter() {
     return d_modelData_p->getV(d_globStart + d_rp_p->getCenterNodeId());
   };
+
+  /*! @copydoc getVCenter() */
   const util::Point &getVCenter() const {
     return d_modelData_p->getV(d_globStart + d_rp_p->getCenterNodeId());
   };

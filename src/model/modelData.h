@@ -35,8 +35,7 @@ namespace model {
  */
 /**@{*/
 
-/*! @brief A class to store model data
- */
+/*! @brief A class to store model data */
 class ModelData {
 
 public:
@@ -60,29 +59,35 @@ public:
    * @param i Location in the particle list
    * @return Pointer Pointer to base particle
    */
+  const particle::BaseParticle* getBaseParticle(size_t i) const { return
+            d_allParticles[i]; };
+
+  /*! @copydoc getBaseParticle(size_t i) const */
   particle::BaseParticle* &getBaseParticle(size_t i) { return
                                                      d_allParticles[i]; };
-  const particle::BaseParticle* getBaseParticle(size_t i) const { return
-        d_allParticles[i]; };
 
   /*!
    * @brief Get pointer to particle (excluding wall)
    * @param i Location in the particle list
    * @return Pointer Pointer to particle
    */
-  particle::Particle* &getParticle(size_t i) { return
-        d_particles[i]; };
   const particle::Particle* getParticle(size_t i) const { return
-        d_particles[i]; };
+            d_particles[i]; };
+
+  /*! @copydoc getParticle(size_t i) const */
+  particle::Particle* &getParticle(size_t i) { return
+            d_particles[i]; };
 
   /*!
    * @brief Get pointer to wall
    * @param i Location in the wall list
    * @return Pointer Pointer to wall
    */
-  particle::Wall* &getWall(size_t i) { return
-        d_walls[i]; };
   const particle::Wall* getWall(size_t i) const { return
+              d_walls[i]; };
+
+  /*! @copydoc getWall(size_t i) const */
+  particle::Wall* &getWall(size_t i) { return
         d_walls[i]; };
 
   /*!
@@ -105,12 +110,14 @@ public:
    * @return Id Particle id
    */
   size_t &getPtId(size_t i) { return d_ptId[i]; };
+
+  /*! @copydoc getPtId(size_t i) */
   const size_t &getPtId(size_t i) const { return d_ptId[i]; };
 
   /*!
    * @brief Set particle id given the location in particle list
    * @param i Location in the particle list
-   * @return Id Particle id to set
+   * @param id Particle id to set
    */
   void setPtId(size_t i, const size_t &id) { d_ptId[i] = id; };
 
@@ -125,6 +132,8 @@ public:
    * @return x Reference coordinate
    */
   util::Point &getXRef(size_t i) { return d_xRef[i]; };
+
+  /*! @copydoc getXRef(size_t i) */
   const util::Point &getXRef(size_t i) const { return d_xRef[i]; };
 
   /*!
@@ -170,6 +179,8 @@ public:
    * @return x Current coordinate
    */
   util::Point &getX(size_t i) { return d_x[i]; };
+
+  /*! @copydoc getX(size_t i) */
   const util::Point &getX(size_t i) const { return d_x[i]; };
 
   /*!
@@ -215,6 +226,8 @@ public:
    * @return u Displacement
    */
   util::Point &getU(size_t i) { return d_u[i]; };
+
+  /*! @copydoc getU(size_t i) */
   const util::Point &getU(size_t i) const { return d_u[i]; };
 
   /*!
@@ -260,6 +273,8 @@ public:
    * @return v Velocity
    */
   util::Point &getV(size_t i) { return d_v[i]; };
+
+  /*! @copydoc getV(size_t i) */
   const util::Point &getV(size_t i) const { return d_v[i]; };
 
   /*!
@@ -305,6 +320,8 @@ public:
    * @return f Force
    */
   util::Point &getF(size_t i) { return d_f[i]; };
+
+  /*! @copydoc getF(size_t i) */
   const util::Point &getF(size_t i) const { return d_f[i]; };
 
   /*!
@@ -350,6 +367,8 @@ public:
   * @return vol Volume
   */
   double &getVol(size_t i) { return d_vol[i]; };
+
+  /*! @copydoc getVol(size_t i) */
   const double &getVol(size_t i) const { return d_vol[i]; };
 
   /*!
@@ -379,6 +398,8 @@ public:
    * @return flag Fixity
    */
   uint8_t &getFix(size_t i) { return d_fix[i]; };
+
+  /*! @copydoc getFix(size_t i) */
   const uint8_t &getFix(size_t i) const { return d_fix[i]; };
 
   /*!
@@ -411,6 +432,8 @@ public:
    * @return mx Weighted-volume
    */
   double &getMx(size_t i) { return d_mX[i]; };
+
+  /*! @copydoc getMx(size_t i) */
   const double &getMx(size_t i) const { return d_mX[i]; };
 
   /*!
@@ -440,6 +463,8 @@ public:
    * @return thetax Volumetric deformation
    */
   double &getThetax(size_t i) { return d_thetaX[i]; };
+
+  /*! @copydoc getThetax(size_t i) */
   const double &getThetax(size_t i) const { return d_thetaX[i]; };
 
   /*!

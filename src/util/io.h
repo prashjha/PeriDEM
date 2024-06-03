@@ -22,8 +22,13 @@ namespace util {
 /*! @brief Provides geometrical methods such as point inside rectangle */
 namespace io {
 
+/*! @brief Default value of tab used in outputting formatted information */
 const int print_default_tab = 0;
+
+/*! @brief Default mpi rank in printing information */
 const int print_default_mpi_rank = 0;
+
+/*! @brief Default debug level for logger */
 const int logger_default_debug_lvl = 5;
 
 /*!
@@ -41,6 +46,7 @@ inline std::string getTabS(int nt) {
 
 /*!
  * @brief Returns formatted string for output
+ * @param msg Message
  * @param nt Number of tabs to prefix
  * @return string Formatted string
  */
@@ -53,7 +59,7 @@ template <class T> inline std::string printStr(const T &msg, int nt = print_defa
 
 /*!
  * @brief Returns formatted string for output
- * @param list List of object
+ * @param list List of objects
  * @param nt Number of tabs to prefix
  * @return string Formatted string
  */
@@ -74,6 +80,7 @@ template <class T> inline std::string printStr(const std::vector<T> &list,
   return oss.str();
 };
 
+/*! @copydoc printStr(const std::vector<T> &list, int nt = print_default_tab) */
 template <> inline std::string printStr(const std::vector<util::Point> &list,
                                                int nt) {
 
@@ -93,6 +100,7 @@ template <> inline std::string printStr(const std::vector<util::Point> &list,
 
 /*!
  * @brief Prints formatted information
+ * @param msg Message
  * @param nt Number of tabs
  * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
  */
@@ -104,6 +112,7 @@ template <class T> inline void print(const T &msg, int nt = print_default_tab,
 
 /*!
  * @brief Prints formatted information
+ * @param list List of objects
  * @param nt Number of tabs
  * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
  */
@@ -113,9 +122,10 @@ template <class T> inline void print(const std::vector<T> &list, int nt = print_
       std::cout << printStr(list, nt);
 };
 
+/*! @copydoc printStr(const std::vector<T> &list, int nt = print_default_tab) */
 template <class T>
 inline std::string printStr(const std::vector<std::vector<T>> &list,
-                            int nt = 0) {
+                            int nt = print_default_tab) {
 
   auto tabS = getTabS(nt);
   std::ostringstream oss;
@@ -138,6 +148,8 @@ inline std::string printStr(const std::vector<std::vector<T>> &list,
   return oss.str();
 }
 
+/*! @copydoc print(const std::vector<T> &list, int nt = print_default_tab,
+        int printMpiRank = print_default_mpi_rank) */
 template <class T> inline void print(const std::vector<std::vector<T>> &list,
         int nt = print_default_tab,
         int printMpiRank = print_default_mpi_rank) {
@@ -175,6 +187,8 @@ inline void printBox(const std::pair<util::Point, util::Point> &box,
       std::cout << printBoxStr(box, nt);
 };
 
+/*! @copydoc printBoxStr(const std::pair<util::Point, util::Point>
+    &box, int nt = print_default_tab) */
 inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<double>> &box,
                                int nt = print_default_tab) {
   auto tabS = getTabS(nt);
@@ -187,6 +201,9 @@ inline std::string printBoxStr(const std::pair<std::vector<double>, std::vector<
   return oss.str();
 };
 
+/*! @copydoc printBox(const std::pair<util::Point, util::Point> &box,
+                     int nt = print_default_tab,
+                     int printMpiRank = print_default_mpi_rank) */
 inline void printBox(const std::pair<std::vector<double>, std::vector<double>> &box,
                      int nt = print_default_tab, int printMpiRank = print_default_mpi_rank) {
   if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank)
@@ -332,33 +349,47 @@ void log(const std::string &str, bool screen_out = false,
  * @brief Input command line argument parser
  *
  * source - https://stackoverflow.com/a/868894
- *
- * @param argc Number of arguments
- * @param argv Strings
+ * @author iain
  */
-class InputParser{
-    public:
-        InputParser (int &argc, char **argv){
-            for (int i=1; i < argc; ++i)
-                this->tokens.push_back(std::string(argv[i]));
-        }
-        /// @author iain
-        const std::string& getCmdOption(const std::string &option) const{
-            std::vector<std::string>::const_iterator itr;
-            itr =  std::find(this->tokens.begin(), this->tokens.end(), option);
-            if (itr != this->tokens.end() && ++itr != this->tokens.end()){
-                return *itr;
-            }
-            static const std::string empty_string("");
-            return empty_string;
-        }
-        /// @author iain
-        bool cmdOptionExists(const std::string &option) const{
-            return std::find(this->tokens.begin(), this->tokens.end(), option)
-                   != this->tokens.end();
-        }
-    private:
-        std::vector <std::string> tokens;
+class InputParser {
+public:
+  /*!
+   * @brief Constructor
+   * @param argc Number of arguments
+   * @param argv Strings
+   */
+  InputParser(int &argc, char **argv) {
+    for (int i = 1; i < argc; ++i)
+    this->tokens.push_back(std::string(argv[i]));
+  }
+
+  /*!
+   * @brief Get value of argument specified by key
+   * @param option Argument name/key
+   * @return string Value of argument
+   */
+  const std::string &getCmdOption(const std::string &option) const {
+    std::vector<std::string>::const_iterator itr;
+    itr = std::find(this->tokens.begin(), this->tokens.end(), option);
+    if (itr != this->tokens.end() && ++itr != this->tokens.end())
+      return *itr;
+
+    static const std::string empty_string("");
+    return empty_string;
+  }
+
+  /*!
+   * @brief Check if argument exists
+   * @param option Argument name/key
+   * @return bool True if argument exists
+   */
+  bool cmdOptionExists(const std::string &option) const {
+    return std::find(this->tokens.begin(), this->tokens.end(), option) != this->tokens.end();
+  }
+
+private:
+  /*! @brief Tokens */
+  std::vector<std::string> tokens;
 };
 
 /*!
@@ -399,6 +430,33 @@ inline std::string getExtensionFromFile(std::string const & filename)
 
   //return filename.substr(p + 1);
   return p > 0 && p != std::string::npos ? filename.substr(p+1) : "";
+}
+
+/*!
+ * @brief Check for extension and if possible create new filename from a given filename and a given extension
+ *
+ * @param filename Filename with/without extension
+ * @param filename_ext Extension to check for and append if needed
+ * @return string New filename if successful
+ */
+inline std::string checkAndCreateNewFilename(std::string const & filename, std::string filename_ext)
+{
+  auto f_ext = util::io::getExtensionFromFile(filename);
+  std::string f = filename;
+  if (f_ext.empty()) {
+    f = f + "." + filename_ext;
+  }
+  else {
+    if (f_ext != filename_ext) {
+      std::cerr << "checkAndCreateNewFilename(): Argument filename = "
+                << filename << " has extension = "
+                << f_ext << " which does not match expected extension = "
+                << filename_ext << std::endl;
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  return f;
 }
 
 } // namespace io

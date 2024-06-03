@@ -23,6 +23,7 @@ typedef std::vector<util::Point> PointCloud;
  * See https://github.com/jlblancoc/nanoflann for more details.
  */
 struct PointCloudAdaptor {
+  /*! @brief Define coordinate type */
   typedef double coord_t;
 
   /*! @brief Const reference to list of points */
@@ -135,7 +136,8 @@ public:
   inline size_t size() const { return d_indices.size(); }
 
   /*!
-  * @brief Check
+  * @brief Check (not implemented)
+   * @return bool Status
   */
   inline bool full() const { return true; }
 

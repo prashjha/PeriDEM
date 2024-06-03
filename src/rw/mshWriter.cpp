@@ -4,8 +4,9 @@
 // (See accompanying file LICENSE.txt)
 
 #include "mshWriter.h"
+#include "util/feElementDefs.h"
+#include "util/io.h"
 #include <iostream>
-#include <util/feElementDefs.h>
 
 static int ntag = 0;
 static int etag = 0;
@@ -14,7 +15,9 @@ static int etag = 0;
 
 rw::writer::MshWriter::MshWriter(const std::string &filename,
                                  const std::string &compress_type)
-    : d_filename(filename), d_compressType(compress_type), d_file(nullptr) {}
+    : d_compressType(compress_type), d_file(nullptr) {
+  d_filename = util::io::checkAndCreateNewFilename(filename, "msh");
+}
 
 void rw::writer::MshWriter::writeMshDataHeader(const std::string &name, int field_type, size_t
 num_data, bool is_node_data) {
@@ -52,12 +55,11 @@ void rw::writer::MshWriter::appendNodes(const std::vector<util::Point> *nodes,
                                         const std::vector<util::Point> *u) {
 
   // open file stream
+  if (!d_file)
+    d_file = fopen(d_filename.c_str(), "w");
+
   if (!d_file) {
-    std::string fname = d_filename + ".msh";
-    d_file = fopen(fname.c_str(), "w");
-  }
-  if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename + ".msh" <<".\n";
+    std::cerr << "Error: Can not open file = " << d_filename  <<".\n";
     exit(1);
   }
 

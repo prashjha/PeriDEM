@@ -15,6 +15,12 @@
 
 namespace test {
 
+/*!
+ * @brief Tests PeriDEM model class
+ *
+ * @param filepath Path where input file can be found (expects file 'input.yaml' in the filepath)
+ * @return string 'pass' if test is successful
+ */
 std::string testPeriDEM(std::string filepath);
 
 } // namespace test

@@ -25,8 +25,7 @@ public:
   /*!
    * @brief Constructor
    *
-   * Creates and opens .vtu file of name given by filename. The file remains
-   * open till the close() function is invoked.
+   * Writes mesh data in .msh format
    *
    * @param filename Name of file which will be created
    * @param compress_type Compression method (optional)
@@ -185,6 +184,11 @@ private:
    * - 2 - vector with 2 component
    * - 3 - vector with 3 component
    * - 6 - symmetric tensor with 6 component
+   *
+   * @param name Name of data
+   * @param field_type Field type (see above)
+   * @param num_data Number of data
+   * @param is_node_data Indicate if this is Node or Element data
    */
   void writeMshDataHeader(const std::string &name, int field_type,
                           size_t num_data, bool is_node_data = true);
@@ -195,7 +199,7 @@ private:
   /*! @brief compression_type Specify the compressor (if any) */
   std::string d_compressType;
 
-  /*! @brief vtk/vtu file */
+  /*! @brief msh file */
   FILE *d_file;
 };
 

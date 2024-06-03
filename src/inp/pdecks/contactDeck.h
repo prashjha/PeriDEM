@@ -21,37 +21,34 @@ namespace inp {
  * data */
 struct ContactPairDeck {
 
-  /*!
-   * @brief contact radius
-   * */
+  /*! @brief contact radius */
   double d_contactR;
+
+  /*! @brief Flag that indicates whether contact radius is to be computed */
   bool d_computeContactR;
 
-  /*!
-   * @brief parameters for normal force
-   */
+  ///@{
+  /*! @brief parameters for normal force */
   double d_vMax;
   double d_deltaMax;
   double d_Kn;
+  ///@}
 
-  /*!
-   * @brief parameters for normal damping force
-   */
+  ///@{
+  /*! @brief parameters for normal damping force */
   double d_eps;
   double d_betan;
+  ///@}
 
-  /*!
-   * @brief parameters for frictional force
-   */
+  ///@{
+  /*! @brief parameters for frictional force */
   double d_mu;
-
   bool d_dampingOn;
   bool d_frictionOn;
-
   double d_KnFactor;
   double d_betanFactor;
-
   double d_kappa;
+  ///@}
 
   /*!
    * @brief Constructor
@@ -63,6 +60,8 @@ struct ContactPairDeck {
 
   /*!
    * @brief Copy constructor
+   *
+   * @param cd Another ContactPairDeck object
    */
   ContactPairDeck(const ContactPairDeck &cd)
       : d_contactR(cd.d_contactR), d_computeContactR(cd.d_computeContactR),
@@ -73,10 +72,11 @@ struct ContactPairDeck {
         d_betanFactor(cd.d_betanFactor), d_kappa(cd.d_kappa){};
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -96,6 +96,12 @@ struct ContactPairDeck {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   /*!
@@ -105,11 +111,13 @@ struct ContactPairDeck {
    * @param v2 volume of node 2
    * @return factor Contact force factor
    */
-  double getKn(const double &v1, const double &v2) {
+  double getKn(const double &v1, const double &v2) const {
 
     return d_Kn * (v1 * v2) / (v1 + v2);
   }
-  double getKn(const double &v1, const double &v2) const {
+
+  /*! @copydoc getKn(const double &v1, const double &v2) const */
+  double getKn(const double &v1, const double &v2) {
 
     return d_Kn * (v1 * v2) / (v1 + v2);
   }
@@ -120,11 +128,13 @@ struct ContactPairDeck {
    * @param v volume of node in particle
    * @return factor Contact force factor
    */
-  double getWKn(const double &v) {
+  double getWKn(const double &v) const {
 
     return d_Kn * v;
   }
-  double getWKn(const double &v) const {
+
+  /*! @copydoc getWKn(const double &v) const */
+  double getWKn(const double &v) {
 
     return d_Kn * v;
   }
@@ -136,11 +146,13 @@ struct ContactPairDeck {
    * @param v2 volume of node 2
    * @return factor Damping force factor
    */
-  double getBetan(const double &v1, const double &v2) {
+  double getBetan(const double &v1, const double &v2) const {
 
     return d_betan * std::sqrt((v1 * v2) / (v1 + v2));
   }
-  double getBetan(const double &v1, const double &v2) const {
+
+  /*! @copydoc getBetan(const double &v1, const double &v2) const */
+  double getBetan(const double &v1, const double &v2) {
 
     return d_betan * std::sqrt((v1 * v2) / (v1 + v2));
   }
@@ -151,11 +163,13 @@ struct ContactPairDeck {
    * @param v volume of node in particle
    * @return factor Damping force factor
    */
-  double getWBetan(const double &v) {
+  double getWBetan(const double &v) const {
 
     return d_betan * std::sqrt(v);
   }
-  double getWBetan(const double &v) const {
+
+  /*! @copydoc getWBetan(const double &v) const */
+  double getWBetan(const double &v) {
 
     return d_betan * std::sqrt(v);
   }
@@ -181,16 +195,19 @@ struct ContactDeck {
     //return d_data[i < j ? i : j][i < j ? j : i];
     return d_data[i][j];
   }
+
+  /*! @copydoc getContact(const size_t &i, const size_t &j) const */
   ContactPairDeck &getContact(const size_t &i, const size_t &j) {
     //return d_data[i < j ? i : j][i < j ? j : i];
     return d_data[i][j];
   }
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -210,6 +227,12 @@ struct ContactDeck {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 

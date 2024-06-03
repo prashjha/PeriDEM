@@ -447,8 +447,7 @@ void model::DEMModel::computeForces() {
 
   log("  Compute forces \n", 2, dbg_condition, 3);
 
-  // update the point cloud (make sure that d_x is updated along with
-  // displacment)
+  // update the point cloud (make sure that d_x is updated along with displacment)
   auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
   pt_cloud_update_time += d_nsearch_p->setInputCloud();
   tree_compute_time += pt_cloud_update_time;

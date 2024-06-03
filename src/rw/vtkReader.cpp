@@ -22,15 +22,18 @@
 #include <vtkUnsignedIntArray.h>
 
 #include "util/feElementDefs.h"
+#include "util/io.h"
 
 size_t rw::reader::VtkReader::d_count = 0;
 
 rw::reader::VtkReader::VtkReader(const std::string &filename) {
   d_count++;
 
+  auto f = util::io::checkAndCreateNewFilename(filename, "vtu");
+
   // Append the extension vtu to file_name
   d_reader_p = vtkSmartPointer<vtkXMLUnstructuredGridReader>::New();
-  d_reader_p->SetFileName(const_cast<char *>(filename.c_str()));
+  d_reader_p->SetFileName(const_cast<char *>(f.c_str()));
   d_reader_p->Update();
 }
 

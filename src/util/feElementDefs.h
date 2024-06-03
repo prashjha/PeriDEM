@@ -38,20 +38,46 @@ namespace util {
 //#define VTK_WEDGE 13                    // 6-node wedge (prism)
 //#define VTK_PYRAMID 14                  // 5-node pyramid
 
-/*! @brief Element type (for vtk)  */
+/*! @brief Integer flag for vertex (point) element */
 static const int vtk_type_vertex = 1;
+
+/*! @brief Integer flag for poly vertex element */
 static const int vtk_type_poly_vertex = 2;
+
+/*! @brief Integer flag for line element */
 static const int vtk_type_line = 3;
+
+/*! @brief Integer flag for poly line element */
 static const int vtk_type_poly_line = 4;
+
+/*! @brief Integer flag for triangle element */
 static const int vtk_type_triangle = 5;
+
+/*! @brief Integer flag for triangle strip element */
 static const int vtk_type_triangle_strip = 6;
+
+/*! @brief Integer flag for polygon element */
 static const int vtk_type_polygon = 7;
+
+/*! @brief Integer flag for pixel element */
 static const int vtk_type_pixel = 8;
+
+/*! @brief Integer flag for quad element */
 static const int vtk_type_quad = 9;
+
+/*! @brief Integer flag for tetrahedron element */
 static const int vtk_type_tetra = 10;
+
+/*! @brief Integer flag for voxel element */
 static const int vtk_type_voxel = 11;
+
+/*! @brief Integer flag for hexahedron element */
 static const int vtk_type_hexahedron = 12;
+
+/*! @brief Integer flag for wedge element */
 static const int vtk_type_wedge = 13;
+
+/*! @brief Integer flag for pyramid element */
 static const int vtk_type_pyramid = 14;
 
 /*! @brief Map from element type to number of nodes (for vtk) */
@@ -61,6 +87,8 @@ static int vtk_map_element_to_num_nodes[16] = {0, 1, -1, 2, -1, 3, -1, -1,
 /*! @brief Map from vtk element type to msh element type */
 static int vtk_to_msh_element_type_map[16] = {-1, 15, -1, 1, -1, 2, -1, -1,
                                                -1, 3, 4, -1, 5, 6, 7, -1};
+
+/** @}*/
 
 /**
  * @name Gmsh Element types
@@ -80,17 +108,37 @@ static int vtk_to_msh_element_type_map[16] = {-1, 15, -1, 1, -1, 2, -1, -1,
 //#define MSH_QUAD_ORDER_TWO 10           // 10-node second order tetrahedron
 //#define MSH_VERTEX 15                   // 1-node vertex
 
-/*! @brief Element type (for gmsh)  */
+/*! @brief Integer flag for line element */
 static const int msh_type_line = 1;
+
+/*! @brief Integer flag for triangle element */
 static const int msh_type_triangle = 2;
+
+/*! @brief Integer flag for quadrangle element */
 static const int msh_type_quadrangle = 3;
+
+/*! @brief Integer flag for tetrahedron element */
 static const int msh_type_tetrahedron = 4;
+
+/*! @brief Integer flag for hexahedron element */
 static const int msh_type_hexahedron = 5;
+
+/*! @brief Integer flag for prism element */
 static const int msh_type_prism = 6;
+
+/*! @brief Integer flag for pyramid element */
 static const int msh_type_pyramid = 7;
+
+/*! @brief Integer flag for line (second order) element */
 static const int msh_type_line_second_order = 8;
+
+/*! @brief Integer flag for traingle (second order) element */
 static const int msh_type_traingle_second_order = 9;
+
+/*! @brief Integer flag for quadrangle (second order) element */
 static const int msh_type_quadrangle_second_order = 10;
+
+/*! @brief Integer flag for vertex (point) element */
 static const int msh_type_vertex = 15;
 
 /*! @brief Map from element type to number of nodes (for msh) */
@@ -104,10 +152,16 @@ static int msh_map_element_to_num_nodes[16] = {0, 2, 3,  4, 4, 8, 6, 5,
  */
 /**@{*/
 
-/*! @brief boundary condition mask  */
+/*! @brief Free mask (none of the coordinates are fixed)  */
 #define FREE_MASK 0x000
+
+/*! @brief X-coordinate is fixed  */
 #define FIX_X_MASK 0x001
+
+/*! @brief Y-coordinate is fixed  */
 #define FIX_Y_MASK 0x002
+
+/*! @brief Z-coordinate is fixed  */
 #define FIX_Z_MASK 0x004
 
 /** @}*/

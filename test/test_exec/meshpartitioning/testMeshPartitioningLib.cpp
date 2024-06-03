@@ -178,15 +178,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
     // find the name of mesh file without path and without extension (i.e., remove .vtu/.msh/.csv extension)
     auto f1 = util::io::getFilenameFromPath(meshFilename);
-    auto f2 = util::io::removeExtensionFromFile(f1);
-    auto f3 = util::io::getExtensionFromFile(f1);
-
-    // for debugging
-    std::cout << fmt::format("Mesh filename = {}\n"
-                             "Filename without path = {}\n"
-                             "Filename without path and extension = {}\n"
-                             "File extension = {}\n", meshFilename, f1, f2, f3);
-    outMeshFilename = f2;
+    outMeshFilename = util::io::removeExtensionFromFile(f1);
   }
   else {
     std::cerr << "testGraphPartitioning() accepts either 0 or 1 for testOption. The value "

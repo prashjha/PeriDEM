@@ -55,7 +55,7 @@ struct ParticleTransform {
    *
    * @param translate Translation vector
    * @param axis Axis of rotation
-   * @param thetaa Angle of rotation
+   * @param theta Angle of rotation
    * @param scale Volumetric scaling
    */
   ParticleTransform(util::Point translate, util::Point axis, double theta,
@@ -65,6 +65,7 @@ struct ParticleTransform {
 
   /*!
    * @brief Copy constructor
+   * @param t Another ParticleTransform object
    */
   ParticleTransform(const ParticleTransform &t)
       : d_translation(t.d_translation), d_axis(t.d_axis),
@@ -107,10 +108,11 @@ struct ParticleTransform {
   };
 
   /*!
-   * @brief Prints the information
+   * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt = 0, int lvl = 0) const {
 
@@ -126,6 +128,12 @@ struct ParticleTransform {
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 };
 
@@ -155,15 +163,19 @@ public:
    * @brief Get pointer to mesh object
    * @return mesh Pointer to mesh
    */
-  const fe::Mesh *getMeshP() const { return d_mesh_p.get(); };
   fe::Mesh *getMeshP() { return d_mesh_p.get(); };
+
+  /*! @copydoc getMeshP() */
+  const fe::Mesh *getMeshP() const { return d_mesh_p.get(); };
 
   /*!
    * @brief Get reference to mesh object
    * @return mesh Reference to mesh
    */
-  const fe::Mesh &getMesh() const { return *d_mesh_p; };
   fe::Mesh &getMesh() { return *d_mesh_p; };
+
+  /*! @copydoc getMesh() */
+  const fe::Mesh &getMesh() const { return *d_mesh_p; };
 
   /*!
    * @brief Get the dimension of the domain
@@ -183,6 +195,7 @@ public:
 
   /*!
    * @brief Get reference coordinate of a node
+   * @param i Index of node
    * @return x Reference coordinate
    */
   util::Point getNode(const size_t &i) const {
@@ -191,6 +204,7 @@ public:
 
   /*!
    * @brief Get nodal volume
+   * @param i Index of node
    * @return volume Nodal volume
    */
   double getNodalVolume(const size_t &i) const {
@@ -212,19 +226,20 @@ public:
   /** @}*/
 
   /*!
-   * @brief Returns the string containing information of the object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the object
    *
    * @param nt Number of tabs to append before printing
    * @param lvl Information level (higher means more information)
    */
-   std::string printStr(int nt = 0, int lvl = 0) const;
-
-  /*!
-  * @brief Prints information of the object
-  *
-  * @param nt Number of tabs to append before printing
-  * @param lvl Information level (higher means more information)
-  */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
 private:

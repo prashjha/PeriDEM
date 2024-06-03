@@ -43,6 +43,13 @@ public:
    */
   virtual double getMoment(const size_t &i) const = 0;
 
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
   virtual std::string printStr(int nt, int lvl) const {
 
     auto tabS = util::io::getTabS(nt);
@@ -54,7 +61,16 @@ public:
 
     return oss.str();
   }
+
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   virtual void print(int nt, int lvl) const { std::cout << printStr(nt, lvl); }
+
+  /*! @brief Prints the information about the object */
   virtual void print() const { print(0, 0); }
 };
 
@@ -64,8 +80,8 @@ class ConstInfluenceFn : public BaseInfluenceFn {
 public:
   /*!
    * @brief Constructor
-   *  @param params List of parameters
-   *  @param dim Dimension
+   * @param params List of parameters
+   * @param dim Dimension
    */
   ConstInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
@@ -89,7 +105,11 @@ public:
   double getMoment(const size_t &i) const override;
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -105,9 +125,17 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); }
 
 private:
@@ -124,8 +152,8 @@ class LinearInfluenceFn : public BaseInfluenceFn {
 public:
   /*!
    * @brief Constructor
-   *  @param params List of parameters
-   *  @param dim Dimension
+   * @param params List of parameters
+   * @param dim Dimension
    */
   LinearInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
@@ -149,7 +177,11 @@ public:
   double getMoment(const size_t &i) const override;
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -166,9 +198,17 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); }
 
 private:
@@ -188,8 +228,8 @@ class GaussianInfluenceFn : public BaseInfluenceFn {
 public:
   /*!
    * @brief Constructor
-   *  @param params List of parameters
-   *  @param dim Dimension
+   * @param params List of parameters
+   * @param dim Dimension
    */
   GaussianInfluenceFn(const std::vector<double> &params, const size_t &dim);
 
@@ -213,7 +253,11 @@ public:
   double getMoment(const size_t &i) const override;
 
   /*!
-   * @brief Print information about this object
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
    */
   std::string printStr(int nt, int lvl) const override {
 
@@ -230,9 +274,17 @@ public:
     return oss.str();
   }
 
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
   void print(int nt, int lvl) const override {
     std::cout << printStr(nt, lvl);
   }
+
+  /*! @brief Prints the information about the object */
   void print() const override { print(0, 0); }
 
 private:
