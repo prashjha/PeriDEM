@@ -1,0 +1,9 @@
+<map id="util::doLinesIntersect" name="util::doLinesIntersect">
+<area shape="rect" id="Node000001" title="Do lines intersect." alt="" coords="5,31,148,57"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors." alt="" coords="225,5,302,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,32,209,23,210,28,148,37"/>
+<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#abc4f3f285687df8b5522fc1b42178d3c" title="Computes the Euclidean length of the vector." alt="" coords="196,56,331,83"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="148,51,180,55,180,61,148,56"/>
+<area shape="rect" id="Node000003" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="379,5,498,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="303,16,363,16,363,21,303,21"/>
+</map>

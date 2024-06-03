@@ -1,0 +1,5 @@
+<map id="util::geometry::Rectangle::isOutside" name="util::geometry::Rectangle::isOutside">
+<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,5,173,48"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="221,13,361,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="173,24,206,24,206,29,173,29"/>
+</map>

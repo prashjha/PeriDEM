@@ -1,0 +1,7 @@
+<map id="util::parallel::isMpiEnabled" name="util::parallel::isMpiEnabled">
+<area shape="rect" id="Node000001" title="Function to check if MPI is enabled." alt="" coords="5,5,179,32"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="227,5,360,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,16,211,16,211,21,179,21"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="408,5,579,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="360,16,392,16,392,21,360,21"/>
+</map>

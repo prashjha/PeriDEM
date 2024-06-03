@@ -1,0 +1,7 @@
+<map id="fe::LineElem::mapPointToRefElem" name="fe::LineElem::mapPointToRefElem">
+<area shape="rect" id="Node000001" title="Maps point p in a given element to the reference element." alt="" coords="5,23,177,65"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="225,5,324,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,30,209,25,210,30,177,35"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="232,56,317,83"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,53,217,59,217,64,176,58"/>
+</map>

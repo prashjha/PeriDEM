@@ -1,0 +1,7 @@
+<map id="util::geometry::Cylinder" name="util::geometry::Cylinder">
+<area shape="rect" id="Node000001" title="Defines rectangle." alt="" coords="101,709,249,1013"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,176,179,459"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="118,473,154,709,149,710,113,474"/>
+<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="203,5,315,629"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="213,630,203,693,198,692,208,629"/>
+</map>

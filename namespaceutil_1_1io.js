@@ -1,0 +1,28 @@
+var namespaceutil_1_1io =
+[
+    [ "InputParser", "classutil_1_1io_1_1InputParser.html", "classutil_1_1io_1_1InputParser" ],
+    [ "Logger", "classutil_1_1io_1_1Logger.html", "classutil_1_1io_1_1Logger" ],
+    [ "LoggerDeck", "structutil_1_1io_1_1LoggerDeck.html", "structutil_1_1io_1_1LoggerDeck" ],
+    [ "checkAndCreateNewFilename", "namespaceutil_1_1io.html#a8a38ac2a0437a16aa1c311b6a075dc51", null ],
+    [ "getExtensionFromFile", "namespaceutil_1_1io.html#a6588c46813adf0cb86b795880f1a2ec7", null ],
+    [ "getFilenameFromPath", "namespaceutil_1_1io.html#af88549ade477a5034a8f720753d9f2f9", null ],
+    [ "getTabS", "namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb", null ],
+    [ "initLogger", "namespaceutil_1_1io.html#a75f6c95023f4a5b3906a8937c811663c", null ],
+    [ "log", "namespaceutil_1_1io.html#a11d33b7b4ed979a48039ee715e5d9b01", null ],
+    [ "log", "namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1", null ],
+    [ "print", "namespaceutil_1_1io.html#ad31db27dc1655d5860f349726f7cc90f", null ],
+    [ "print", "namespaceutil_1_1io.html#af5daf741ebf110f38d4ad05a552ecb39", null ],
+    [ "print", "namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054", null ],
+    [ "printBox", "namespaceutil_1_1io.html#ad1fd573c2dc219e1d7eb039ae184ccdb", null ],
+    [ "printBox", "namespaceutil_1_1io.html#aafa73b940789a70da4253d44a4ff36d1", null ],
+    [ "printBoxStr", "namespaceutil_1_1io.html#a78e355a8bd28f424df9922cdd9d62a24", null ],
+    [ "printBoxStr", "namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269", null ],
+    [ "printStr", "namespaceutil_1_1io.html#aa6b70dcad917f51072f4aa40f72658fb", null ],
+    [ "printStr", "namespaceutil_1_1io.html#ad599172a42149ded8c9b6bf2abc8a81b", null ],
+    [ "printStr", "namespaceutil_1_1io.html#afd528b3606a7d44e03dd6a1c4f5fa155", null ],
+    [ "printStr", "namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a", null ],
+    [ "removeExtensionFromFile", "namespaceutil_1_1io.html#ab41cbd366c1550587cc6d0bf1a088c5a", null ],
+    [ "logger_default_debug_lvl", "namespaceutil_1_1io.html#a6167c0cce3d7448a050f9fecb4d4f3a3", null ],
+    [ "print_default_mpi_rank", "namespaceutil_1_1io.html#ad4664ccb952f2c37bc986ebc2b35917b", null ],
+    [ "print_default_tab", "namespaceutil_1_1io.html#a42df92c2c1577f7daed810257462e982", null ]
+];

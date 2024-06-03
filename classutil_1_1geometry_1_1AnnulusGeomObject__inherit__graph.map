@@ -1,0 +1,5 @@
+<map id="util::geometry::AnnulusGeomObject" name="util::geometry::AnnulusGeomObject">
+<area shape="rect" id="Node000001" title="Defines annulus rectangle." alt="" coords="5,336,187,677"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="9,5,183,288"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,303,99,336,93,336,93,303"/>
+</map>

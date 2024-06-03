@@ -1,0 +1,29 @@
+<map id="test::testUtilMethods" name="test::testUtilMethods">
+<area shape="rect" id="Node000001" title="Test methods" alt="" coords="5,265,149,292"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors." alt="" coords="239,5,317,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,264,91,221,113,161,147,98,169,68,195,42,223,26,226,31,198,46,173,71,151,100,118,164,96,223,84,265"/>
+<area shape="rect" id="Node000004" href="$namespaceanonymous__namespace_02testUtilLib_8cpp_03.html#a4ad943bfa8dfdf2a8981b62076d5efc8" title=" " alt="" coords="197,56,359,115"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="84,263,127,199,158,160,195,125,199,122,202,126,198,129,162,164,131,202,88,266"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc" title="Returns center point." alt="" coords="226,139,330,165"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="91,263,136,224,195,182,220,169,222,174,198,186,139,228,94,267"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="407,215,547,241"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="102,262,145,242,196,225,246,218,297,215,392,217,392,222,297,220,247,223,197,231,147,247,104,267"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a46e3d78e899424dbb8144526b92fecf5" title="Returns all corner points in the box." alt="" coords="227,240,329,267"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="149,267,211,259,212,264,150,272"/>
+<area shape="rect" id="Node000008" href="$namespaceutil.html#a025d239d0891842e9f9f3f25fa11e528" title="Computes l2 distance between two vectors." alt="" coords="238,291,318,317"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="150,285,223,294,222,300,149,290"/>
+<area shape="rect" id="Node000009" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="238,341,318,368"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="110,290,198,327,224,336,222,341,196,332,108,295"/>
+<area shape="rect" id="Node000011" href="$namespaceutil.html#ab949e9f056cf2566e19c8214a6282c64" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="214,392,342,419"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="93,291,137,333,166,357,198,378,210,383,207,388,195,382,163,361,133,337,89,294"/>
+<area shape="rect" id="Node000012" href="$namespaceutil.html#ac37c77bce2370e83008c6436dcec26c0" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="418,417,537,444"/>
+<area shape="poly" id="edge13_Node000001_Node000012" title=" " alt="" coords="86,291,101,322,125,361,157,399,177,415,198,428,249,445,303,452,356,451,404,445,405,450,356,456,303,457,248,451,196,433,173,420,154,403,121,364,97,325,82,294"/>
+<area shape="rect" id="Node000013" href="$namespaceutil.html#adaeb9a04adeab62ad0a5ae609d12750c" title="Compute area of triangle." alt="" coords="220,493,336,520"/>
+<area shape="poly" id="edge14_Node000001_Node000013" title=" " alt="" coords="86,292,100,327,124,376,157,427,198,473,215,484,212,488,195,477,152,431,119,378,95,330,81,294"/>
+<area shape="rect" id="Node000003" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="418,5,537,32"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="317,16,402,16,402,21,317,21"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="328,244,392,236,392,241,329,250"/>
+<area shape="rect" id="Node000010" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="419,341,535,368"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="318,352,403,352,403,357,318,357"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="343,411,403,419,402,424,342,416"/>
+</map>

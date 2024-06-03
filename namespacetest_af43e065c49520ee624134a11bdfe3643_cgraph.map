@@ -1,0 +1,5 @@
+<map id="test::getExactIntegrationRefTet" name="test::getExactIntegrationRefTet">
+<area shape="rect" id="Node000001" title="Computes integration of polynomial exactly over reference tetrahedral." alt="" coords="5,5,170,48"/>
+<area shape="rect" id="Node000002" href="$namespacetest.html#a44d761477bf0e6293198849c53cb8abc" title="Computes &#160;&quot;n choose r&quot;." alt="" coords="218,13,352,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,24,202,24,202,29,170,29"/>
+</map>

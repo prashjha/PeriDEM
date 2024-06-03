@@ -1,0 +1,93 @@
+<map id="util::getCornerPoints" name="util::getCornerPoints">
+<area shape="rect" id="Node000001" title="Returns all corner points in the box." alt="" coords="661,1269,802,1296"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a21a4c0c512c91e3de03f432d304dd4bd" title="Checks if given two boxes are within given distance from each other." alt="" coords="231,180,360,207"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="727,1254,717,1033,696,700,680,532,661,385,638,273,625,237,611,215,583,194,550,179,515,171,478,167,406,171,345,182,344,177,406,165,478,162,516,165,552,174,585,189,615,212,630,234,643,272,666,384,685,532,701,700,722,1033,732,1254"/>
+<area shape="rect" id="Node000009" href="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="432,225,600,268"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="728,1254,727,1063,723,925,715,775,701,624,680,484,666,423,650,368,632,323,611,288,591,271,595,267,615,285,637,321,655,367,671,421,685,483,706,623,720,774,728,925,732,1063,733,1254"/>
+<area shape="rect" id="Node000010" href="$classutil_1_1geometry_1_1Circle.html#a26974c271cfd557a362709cfadca18a4" title="Checks if box is within given distance of this object." alt="" coords="224,236,367,279"/>
+<area shape="poly" id="edge35_Node000001_Node000010" title=" " alt="" coords="728,1254,728,1071,724,939,716,797,702,654,681,524,667,466,651,416,633,374,612,343,579,328,516,309,366,274,367,269,518,304,581,323,615,339,637,372,656,414,672,465,686,523,708,654,722,796,730,939,733,1071,733,1254"/>
+<area shape="rect" id="Node000011" href="$classutil_1_1geometry_1_1Sphere.html#af568776ec54d2ef7c99af31851ce0107" title="Checks if box is within given distance of this object." alt="" coords="221,313,370,356"/>
+<area shape="poly" id="edge36_Node000001_Node000011" title=" " alt="" coords="726,1254,713,1065,689,787,672,647,654,525,633,432,622,401,611,383,596,372,572,363,510,350,439,342,370,338,371,333,439,336,511,344,574,358,598,368,615,380,627,399,639,430,659,524,678,647,694,786,718,1065,731,1254"/>
+<area shape="rect" id="Node000012" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#a28f16ee14996fe9579a2aa05ad62f09d" title="Checks if box intersects this object." alt="" coords="421,393,611,436"/>
+<area shape="poly" id="edge12_Node000001_Node000012" title=" " alt="" coords="727,1254,723,1090,708,849,693,724,673,609,646,514,629,478,611,450,599,438,603,435,615,446,634,475,651,513,678,608,698,723,713,848,729,1089,733,1253"/>
+<area shape="rect" id="Node000013" href="$classutil_1_1geometry_1_1Circle.html#adbc338349dd5a7b81f7761055a19106e" title="Checks if box intersects this object." alt="" coords="445,460,587,503"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="727,1254,721,1101,704,880,689,766,669,662,643,575,628,542,611,517,585,497,589,493,615,513,633,539,648,573,674,660,694,766,709,880,726,1101,732,1253"/>
+<area shape="rect" id="Node000014" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#a98eb3e920ddff46b4913cfcdce1f96e6" title="Checks if box intersects this object." alt="" coords="418,527,613,569"/>
+<area shape="poly" id="edge14_Node000001_Node000014" title=" " alt="" coords="727,1254,719,1113,700,912,685,809,665,714,641,636,627,606,611,583,599,572,603,568,615,580,631,603,646,634,671,713,690,808,705,912,724,1113,732,1254"/>
+<area shape="rect" id="Node000015" href="$classutil_1_1geometry_1_1Cuboid.html#a3c5ba8f887168ff7b4744323ae43f98a" title="Checks if box intersects this object." alt="" coords="441,593,590,636"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="726,1254,717,1126,696,945,681,852,662,767,639,697,625,670,611,650,589,633,592,629,615,646,630,668,644,695,667,766,686,851,701,944,722,1125,731,1254"/>
+<area shape="rect" id="Node000016" href="$classutil_1_1geometry_1_1Cylinder.html#af0d78ed9af0e4513a4e2cf96862ef232" title="Checks if box intersects this object." alt="" coords="438,660,594,703"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="725,1254,714,1138,692,977,677,895,658,820,636,758,611,716,593,702,596,697,615,713,641,756,663,818,682,894,697,976,719,1137,731,1254"/>
+<area shape="rect" id="Node000017" href="$classutil_1_1geometry_1_1Drum2D.html#a2a0fe6b9a648b051ddadb3dc4dd82cef" title="Checks if box intersects this object." alt="" coords="437,727,594,769"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="724,1254,711,1150,688,1009,672,938,654,873,634,819,611,783,593,769,596,764,615,780,639,817,659,871,677,936,693,1008,716,1149,730,1253"/>
+<area shape="rect" id="Node000018" href="$classutil_1_1geometry_1_1Hexagon.html#a2f1cf0bef5883401f5b63a517168ffa6" title="Checks if box intersects this object." alt="" coords="436,793,596,836"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="728,1254,726,1175,711,1067,697,1009,676,952,648,898,611,850,595,837,598,832,615,846,652,895,681,949,702,1007,716,1066,731,1175,734,1254"/>
+<area shape="rect" id="Node000019" href="$classutil_1_1geometry_1_1Rectangle.html#a724fa34b45f8754fde600ab3d9df8e0e" title="Checks if box intersects this object." alt="" coords="432,860,599,903"/>
+<area shape="poly" id="edge19_Node000001_Node000019" title=" " alt="" coords="727,1254,721,1186,703,1096,688,1047,669,1000,643,956,611,917,597,905,600,901,615,913,648,953,673,998,693,1046,708,1094,726,1185,732,1254"/>
+<area shape="rect" id="Node000020" href="$classutil_1_1geometry_1_1Sphere.html#a9a2f43face7b6ea785ae009527d49a3d" title="Checks if box intersects this object." alt="" coords="441,927,590,969"/>
+<area shape="poly" id="edge20_Node000001_Node000020" title=" " alt="" coords="724,1254,714,1198,694,1125,680,1087,661,1049,639,1014,612,983,589,968,592,964,615,979,643,1011,666,1047,685,1084,700,1123,720,1196,730,1253"/>
+<area shape="rect" id="Node000021" href="$classutil_1_1geometry_1_1Triangle.html#ab336b566e145a206185bf467ceb6ee4b" title="Checks if box intersects this object." alt="" coords="439,993,593,1036"/>
+<area shape="poly" id="edge21_Node000001_Node000021" title=" " alt="" coords="720,1255,706,1212,683,1159,652,1104,612,1057,585,1039,588,1034,615,1053,656,1101,688,1157,711,1210,725,1253"/>
+<area shape="rect" id="Node000022" href="$namespaceutil.html#a46e3d78e899424dbb8144526b92fecf5" title="Returns all corner points in the box." alt="" coords="465,1111,566,1137"/>
+<area shape="poly" id="edge22_Node000001_Node000022" title=" " alt="" coords="712,1258,671,1203,643,1175,612,1152,590,1141,566,1134,568,1129,592,1136,615,1147,647,1171,675,1200,716,1254"/>
+<area shape="rect" id="Node000023" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="224,1085,367,1112"/>
+<area shape="poly" id="edge47_Node000001_Node000023" title=" " alt="" coords="720,1256,705,1218,683,1175,652,1133,633,1115,612,1101,579,1087,545,1077,473,1071,404,1077,347,1087,346,1082,404,1071,473,1066,546,1072,581,1082,615,1096,637,1111,656,1129,687,1172,710,1216,725,1254"/>
+<area shape="rect" id="Node000025" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#a49d30c1b21a8f859a44fa72fd7c1efda" title="Checks if box is completely inside." alt="" coords="421,1161,611,1204"/>
+<area shape="poly" id="edge25_Node000001_Node000025" title=" " alt="" coords="695,1264,612,1218,585,1207,587,1202,614,1214,698,1259"/>
+<area shape="rect" id="Node000026" href="$classutil_1_1geometry_1_1Circle.html#aa862c874bf925581bdc810a461b3c50e" title="Checks if box is completely inside." alt="" coords="445,1228,587,1271"/>
+<area shape="poly" id="edge26_Node000001_Node000026" title=" " alt="" coords="646,1272,587,1263,588,1258,647,1267"/>
+<area shape="rect" id="Node000027" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#a571648b966d735daba34f56f772e930d" title="Checks if box is completely inside." alt="" coords="418,1295,613,1337"/>
+<area shape="poly" id="edge27_Node000001_Node000027" title=" " alt="" coords="646,1298,614,1304,613,1298,645,1293"/>
+<area shape="rect" id="Node000028" href="$classutil_1_1geometry_1_1Cuboid.html#aabfb6fb8ce91e729d9d009ebbb6efd18" title="Checks if box is completely inside." alt="" coords="441,1361,590,1404"/>
+<area shape="poly" id="edge28_Node000001_Node000028" title=" " alt="" coords="698,1306,614,1352,587,1363,585,1358,612,1347,695,1302"/>
+<area shape="rect" id="Node000029" href="$classutil_1_1geometry_1_1Cylinder.html#a479419fd2f08bcd66f3a226ae3a050d3" title="Checks if box is completely inside." alt="" coords="438,1428,594,1471"/>
+<area shape="poly" id="edge29_Node000001_Node000029" title=" " alt="" coords="715,1311,674,1365,646,1393,615,1418,594,1430,591,1425,612,1414,642,1389,670,1361,711,1308"/>
+<area shape="rect" id="Node000030" href="$classutil_1_1geometry_1_1Drum2D.html#aa093f77301f351236427249fab32a4d5" title="Checks if box is completely inside." alt="" coords="437,1495,594,1537"/>
+<area shape="poly" id="edge30_Node000001_Node000030" title=" " alt="" coords="723,1312,708,1351,685,1397,654,1444,615,1485,596,1497,593,1492,612,1481,650,1441,680,1394,703,1348,718,1310"/>
+<area shape="rect" id="Node000031" href="$classutil_1_1geometry_1_1Hexagon.html#a090774f7ef43cd9cad2d70008aa0882f" title="Checks if box is completely inside." alt="" coords="436,1561,596,1604"/>
+<area shape="poly" id="edge31_Node000001_Node000031" title=" " alt="" coords="728,1312,716,1363,695,1427,662,1493,640,1524,615,1551,598,1564,595,1559,612,1547,636,1521,657,1491,690,1425,711,1361,723,1311"/>
+<area shape="rect" id="Node000032" href="$classutil_1_1geometry_1_1Rectangle.html#a75c59ae79702a69b68bb9a77a6c3d228" title="Checks if box is completely inside." alt="" coords="432,1628,599,1671"/>
+<area shape="poly" id="edge32_Node000001_Node000032" title=" " alt="" coords="731,1312,723,1375,704,1456,689,1500,669,1542,645,1582,615,1618,600,1630,597,1625,611,1614,641,1579,665,1540,684,1498,699,1455,717,1374,726,1312"/>
+<area shape="rect" id="Node000033" href="$classutil_1_1geometry_1_1Sphere.html#a5109af3cdcaa98e879be6e79a51f7278" title="Checks if box is completely inside." alt="" coords="441,1695,590,1737"/>
+<area shape="poly" id="edge33_Node000001_Node000033" title=" " alt="" coords="733,1312,728,1385,712,1485,697,1538,677,1591,650,1640,615,1685,593,1701,589,1697,611,1681,645,1637,672,1589,692,1536,707,1484,723,1385,728,1311"/>
+<area shape="rect" id="Node000034" href="$classutil_1_1geometry_1_1Triangle.html#a657a6acda31803b615f7cbe8c9dbca75" title="Checks if box is completely inside." alt="" coords="439,1761,593,1804"/>
+<area shape="poly" id="edge34_Node000001_Node000034" title=" " alt="" coords="729,1312,715,1409,691,1540,657,1667,637,1717,615,1751,595,1767,591,1763,611,1748,633,1714,652,1665,685,1539,710,1408,724,1311"/>
+<area shape="rect" id="Node000035" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html#aa2f78ef2978e66ea0b57c3edc3eac6cb" title="Checks if box is outside of the object." alt="" coords="421,1828,611,1871"/>
+<area shape="poly" id="edge37_Node000001_Node000035" title=" " alt="" coords="730,1312,718,1422,695,1573,679,1649,661,1720,640,1778,615,1818,602,1829,598,1825,611,1814,635,1775,656,1718,674,1648,690,1572,713,1421,725,1311"/>
+<area shape="rect" id="Node000036" href="$classutil_1_1geometry_1_1Circle.html#a9661a4efaef65665710a9a41113825ed" title="Checks if box is outside of the object." alt="" coords="445,1895,587,1937"/>
+<area shape="poly" id="edge38_Node000001_Node000036" title=" " alt="" coords="731,1312,720,1434,699,1605,684,1693,665,1772,642,1838,629,1864,615,1885,589,1904,586,1899,611,1881,625,1862,637,1836,660,1771,679,1691,694,1604,715,1434,726,1312"/>
+<area shape="rect" id="Node000037" href="$classutil_1_1geometry_1_1ComplexGeomObject.html#aa4b67349660b2bd4e34cca2f7f433af4" title="Checks if box is outside of the object." alt="" coords="418,1961,613,2004"/>
+<area shape="poly" id="edge39_Node000001_Node000037" title=" " alt="" coords="732,1312,723,1446,703,1637,688,1735,669,1825,645,1899,631,1929,615,1951,603,1963,599,1959,611,1948,626,1926,640,1897,664,1824,683,1734,698,1636,718,1446,726,1311"/>
+<area shape="rect" id="Node000038" href="$classutil_1_1geometry_1_1Cuboid.html#a5803fa107e54872e451ce4dab92d6068" title="Checks if box is outside of the object." alt="" coords="441,2028,590,2071"/>
+<area shape="poly" id="edge40_Node000001_Node000038" title=" " alt="" coords="732,1312,725,1458,707,1669,692,1778,672,1877,647,1960,632,1993,615,2018,592,2036,589,2031,611,2014,627,1990,642,1958,667,1876,687,1777,702,1668,720,1458,727,1312"/>
+<area shape="rect" id="Node000039" href="$classutil_1_1geometry_1_1Cylinder.html#a7bdbce69276f7d9a6db49d115a6d2db2" title="Checks if box is outside of the object." alt="" coords="438,2095,594,2137"/>
+<area shape="poly" id="edge41_Node000001_Node000039" title=" " alt="" coords="733,1312,728,1470,711,1701,696,1820,676,1930,649,2021,633,2057,615,2084,596,2100,592,2096,611,2081,629,2054,644,2019,671,1929,691,1819,706,1700,722,1470,727,1312"/>
+<area shape="rect" id="Node000040" href="$classutil_1_1geometry_1_1Drum2D.html#a5a8beef3ac922cc6c5d4e1ff055ff517" title="Checks if box is outside of the object." alt="" coords="437,2161,594,2204"/>
+<area shape="poly" id="edge42_Node000001_Node000040" title=" " alt="" coords="733,1312,730,1481,715,1732,700,1862,680,1982,652,2082,635,2121,615,2151,596,2167,593,2163,611,2148,630,2118,647,2080,675,1981,695,1862,710,1731,724,1481,728,1312"/>
+<area shape="rect" id="Node000041" href="$classutil_1_1geometry_1_1Hexagon.html#a423ba0124bd5d63fe8649665b797e963" title="Checks if box is outside of the object." alt="" coords="436,2228,596,2271"/>
+<area shape="poly" id="edge43_Node000001_Node000041" title=" " alt="" coords="733,1312,732,1493,727,1622,719,1763,704,1904,684,2035,670,2092,654,2143,636,2185,615,2218,598,2233,594,2229,611,2214,631,2182,649,2141,665,2091,678,2034,699,1904,713,1763,722,1622,726,1492,728,1312"/>
+<area shape="rect" id="Node000042" href="$classutil_1_1geometry_1_1Rectangle.html#a3197df882f6bb720d75f8a04345dea44" title="Checks if box is outside of the object." alt="" coords="432,2295,599,2337"/>
+<area shape="poly" id="edge44_Node000001_Node000042" title=" " alt="" coords="731,1311,718,1518,694,1826,678,1982,659,2120,639,2226,627,2262,615,2284,602,2297,598,2293,611,2281,622,2260,633,2224,654,2119,672,1982,689,1826,713,1517,726,1311"/>
+<area shape="rect" id="Node000043" href="$classutil_1_1geometry_1_1Sphere.html#a89c14b81a0f17cf1b5c8231d0f9173e4" title="Checks if box is outside of the object." alt="" coords="441,2361,590,2404"/>
+<area shape="poly" id="edge45_Node000001_Node000043" title=" " alt="" coords="731,1312,720,1531,696,1860,680,2027,661,2175,640,2288,628,2327,615,2351,592,2369,589,2365,611,2348,623,2325,635,2287,656,2174,674,2027,691,1860,714,1530,726,1311"/>
+<area shape="rect" id="Node000044" href="$classutil_1_1geometry_1_1Triangle.html#a72685ff9c183f7432f28093b6f1b435d" title="Checks if box is outside of the object." alt="" coords="439,2428,593,2471"/>
+<area shape="poly" id="edge46_Node000001_Node000044" title=" " alt="" coords="732,1312,721,1543,698,1894,682,2072,663,2230,641,2350,629,2392,615,2418,595,2435,591,2431,611,2414,624,2390,636,2349,658,2229,677,2072,692,1893,715,1543,726,1312"/>
+<area shape="rect" id="Node000003" href="$classutil_1_1geometry_1_1Cuboid.html#ac88433cc43e94f4f1a399ba8776e4986" title="Checks if box is within given distance of this object." alt="" coords="14,205,164,248"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="216,209,165,217,164,212,215,204"/>
+<area shape="rect" id="Node000004" href="$classutil_1_1geometry_1_1Cylinder.html#a5e2547782e3c159abff3977dd872a8cc" title="Checks if box is within given distance of this object." alt="" coords="11,272,167,315"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="243,216,222,226,198,244,174,262,151,274,148,269,171,258,195,240,219,222,241,211"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1geometry_1_1Drum2D.html#a6b4a0ee14758e9354d6e3566e74edfc9" title="Checks if box is within given distance of this object." alt="" coords="10,339,168,381"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="235,216,223,226,205,251,199,276,193,302,175,329,159,340,156,336,171,325,188,300,194,275,201,249,219,222,232,212"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1geometry_1_1Hexagon.html#a22113f305ef928c9bf09b0817a68ea8f" title="Checks if box is within given distance of this object." alt="" coords="9,5,169,48"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="274,169,230,116,202,87,171,62,152,51,154,46,174,58,206,83,234,112,278,166"/>
+<area shape="rect" id="Node000007" href="$classutil_1_1geometry_1_1Rectangle.html#ab9e5e172e1a2542eb606f211562892ac" title="Checks if box is within given distance of this object." alt="" coords="5,72,173,115"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="256,174,171,129,146,118,148,113,174,124,259,170"/>
+<area shape="rect" id="Node000008" href="$classutil_1_1geometry_1_1Triangle.html#a48ae3ed64cecfc395906a1bf68bf973d" title="Checks if box is within given distance of this object." alt="" coords="12,139,166,181"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="215,183,166,175,167,170,216,178"/>
+<area shape="poly" id="edge9_Node000009_Node000002" title=" " alt="" coords="416,225,353,210,354,205,417,220"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="416,254,367,257,367,251,416,249"/>
+<area shape="poly" id="edge11_Node000009_Node000011" title=" " alt="" coords="447,277,352,315,350,310,445,272"/>
+<area shape="poly" id="edge23_Node000022_Node000023" title=" " alt="" coords="449,1119,367,1110,368,1104,450,1114"/>
+<area shape="rect" id="Node000024" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="64,1085,114,1112"/>
+<area shape="poly" id="edge24_Node000023_Node000024" title=" " alt="" coords="208,1101,114,1101,114,1096,208,1096"/>
+</map>
