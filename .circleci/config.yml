@@ -111,6 +111,7 @@ jobs:
                  # docker push docker.pkg.github.com/prashjha/peridem/${IMAGE_NAME}
                  ## new github container namespace
                  docker login ghcr.io -u prashjha -p ${G_TOKEN}
+                 docker tag prashjha/${IMAGE_NAME} ghcr.io/prashjha/peridem/${IMAGE_NAME}
                  docker push ghcr.io/prashjha/peridem/${IMAGE_NAME}
               fi
     codecoverage:
