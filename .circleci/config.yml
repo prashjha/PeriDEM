@@ -28,7 +28,7 @@ commands:
         default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=OFF -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
     steps:
       - run: 
-          name: Configure
+          name: Cmake configure
           command: |
             mkdir -p build 
             cd build 
@@ -36,7 +36,7 @@ commands:
   libmake:
     steps:
       - run: 
-          name: Build
+          name: Make build
           command: |
             cd build 
             make -j 2
@@ -47,14 +47,14 @@ commands:
         default: --extra-verbose
     steps:
       - run: 
-          name: Test
+          name: Ctest
           command: |
             cd build 
             ctest <<parameters.verb-flag>>
   libdoc:
     steps:
       - run: 
-          name: Documentation
+          name: Make documentation
           command: |
             cd build 
             make doc        
@@ -78,41 +78,50 @@ jobs:
         - checkout
         - postcheckout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=ON <<pipeline.parameters.cmake-include-dirs>>
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Documentation=ON -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
         - libdoc
         - run:
-            name: Push html files to gh-pages
+            name: Push doc files to gh-pages
             command: |
               # source - https://blog.frederikring.com/articles/deploying-github-pages-circle-ci/
+              echo "Begin clone and copy. pwd = $(pwd)"
               echo "CIRCLE_BRANCH = $CIRCLE_BRANCH"
               echo "CIRCLE_REPOSITORY_URL = $CIRCLE_REPOSITORY_URL"
-              echo "pwd = $(pwd)"
+              echo "GH_EMAIL = $GH_EMAIL"
+              echo "GH_NAME = $GH_NAME"
+              
               if [ $CIRCLE_BRANCH == "main" ]; then
+                echo "set github config"
                 git config --global user.email $GH_EMAIL
                 git config --global user.name $GH_NAME
   
+                echo "clone for gh-pages. pwd = $(pwd)"
                 cd ..
-                echo "clone for gh-pages"
-                echo "pwd = $(pwd)"
                 git clone $CIRCLE_REPOSITORY_URL build_docs
   
                 cd build_docs
+                echo "checkout gh-pages branch"
                 git checkout gh-pages || git checkout --orphan gh-pages
+              
+                echo "clean the branch"
                 git rm -rf .
+              
+                echo "pull main branch"
                 git pull origin main
+              
+                echo "create .nojekyll file"
                 touch .nojekyll
               
-                echo "begin copying"
-                echo "pwd = $(pwd)"
-                
-                # copy
-                rsync -a --stats --progress ../PeriDEM/docs/doxy/* ./docs/
+                echo "begin copying. pwd = $(pwd)"
+                rsync -a --stats --progress ../project/docs/doxy/* ./docs/
                 echo "check if files are copied"
                 ls ./docs/
   
+                echo "add changes and commit"
                 git add -a
                 git commit -m "Automated deployment to GitHub Pages: ${CIRCLE_SHA1}" --allow-empty
-  
+                
+                echo "push"
                 git push origin gh-pages
               fi
     deploy:
