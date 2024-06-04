@@ -174,7 +174,7 @@ jobs:
       steps:
         - checkout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" <<pipeline.parameters.cmake-include-dirs>>
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DDisable_Docker_MPI_Tests=OFF -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" <<pipeline.parameters.cmake-include-dirs>>
         - libmake
         - libtest:
             verb-flag: ""

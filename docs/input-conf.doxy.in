@@ -11,7 +11,7 @@
 PROJECT_NAME           = @CMAKE_PROJECT_NAME@
 PROJECT_NUMBER         = @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_UPDATE@
 PROJECT_BRIEF          = @CMAKE_PROJECT_DESCRIPTION@
-PROJECT_LOGO           = ./assets/logo/doxy_logo.jpg
+PROJECT_LOGO           = ../assets/logo/doxy_logo.jpg
 
 OUTPUT_DIRECTORY       = doxy
 WARN_LOGFILE           = doxy.log
@@ -54,7 +54,6 @@ MAN_OUTPUT             = man
 
 GENERATE_DOCBOOK       = NO
 DOCBOOK_OUTPUT         = docbook
-DOCBOOK_PROGRAMLISTING = YES
 
 GENERATE_AUTOGEN_DEF   = YES
 
@@ -113,7 +112,6 @@ TEMPLATE_RELATIONS     = YES
 CALL_GRAPH             = YES
 MAX_DOT_GRAPH_DEPTH    = 4
 CALLER_GRAPH           = YES
-DOT_IMAGE_FORMAT       = png
-MAX_DOT_GRAPH_DEPTH    = 4
+DOT_IMAGE_FORMAT       = svg
 DOT_TRANSPARENT        = YES
 DOT_MULTI_TARGETS      = YES
