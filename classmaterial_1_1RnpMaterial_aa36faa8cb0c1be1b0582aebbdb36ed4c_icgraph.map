@@ -1,4 +1,0 @@
-<map id="material::RnpMaterial::getBondEF" name="material::RnpMaterial::getBondEF">
-<area shape="rect" id="node1" title="Returns energy and force between bond due to pairwise interaction." alt="" coords="200,5,347,47"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1RnpMaterial.html#af127fe6c4780372ecc1456b3c1bd2bd9" title="Returns energy and force between bond due to state&#45;based model." alt="" coords="5,5,152,47"/>
-</map>

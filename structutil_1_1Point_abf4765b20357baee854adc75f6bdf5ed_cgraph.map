@@ -1,6 +1,0 @@
-<map id="util::Point::projectNormal" name="util::Point::projectNormal">
-<area shape="rect" id="node1" title="Computes projection of vector on plane with normal as this vector." alt="" coords="5,56,172,83"/>
-<area shape="rect" id="node2" href="$structutil_1_1Point.html#a6ad3b0b8f16fd06c5452607176af84da" title="Computes the dot product of this vector with another point." alt="" coords="229,5,331,32"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="220,56,340,83"/>
-<area shape="rect" id="node4" href="$structutil_1_1Point.html#aa79c04afdee2351de78b0ea2ed93b829" title="Constructor." alt="" coords="223,107,337,133"/>
-</map>

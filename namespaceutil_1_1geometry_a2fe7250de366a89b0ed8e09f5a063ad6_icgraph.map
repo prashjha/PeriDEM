@@ -1,8 +1,0 @@
-<map id="util::geometry::createGeomObject" name="util::geometry::createGeomObject">
-<area shape="rect" id="node1" title="Create geometrical object from the given data." alt="" coords="440,89,620,131"/>
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html#a90df14f82a946d4f558efae30240f15e" title="Creates particles in a Hexagonal arrangement." alt="" coords="167,5,392,47"/>
-<area shape="rect" id="node3" href="$classinp_1_1Input.html#a0377ad737c8149617579d8bc30776e33" title="Read particle data." alt="" coords="192,71,367,98"/>
-<area shape="rect" id="node4" href="$classinp_1_1Input.html#a5689d155dc964e648dc91dd9e5c8ade6" title="Read data into particle deck and store its pointer." alt="" coords="191,122,368,149"/>
-<area shape="rect" id="node6" href="$classinp_1_1Input.html#a86a17e43ca26f7e1b3e0ac933a4499d1" title="Read zone data." alt="" coords="200,173,359,199"/>
-<area shape="rect" id="node5" href="$classinp_1_1Input.html#a1ab2b8acc12782bd57ae1a107eafa32d" title="Constructor." alt="" coords="5,122,119,149"/>
-</map>

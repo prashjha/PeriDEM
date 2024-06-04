@@ -1,8 +1,0 @@
-<map id="test::testTriElem" name="test::testTriElem">
-<area shape="rect" id="node1" title="Perform test on quadrature points on triangle elements." alt="" coords="5,127,124,153"/>
-<area shape="rect" id="node2" href="$namespaceanonymous__namespace_02testFeLib_8cpp_03.html#aa92ae926fb55e90398f0e9c80eb9ef5a" title=" " alt="" coords="184,5,361,61"/>
-<area shape="rect" id="node3" href="$namespacetest.html#a437c18b50b59ae2f9cd10e1cb51fba64" title="Computes integration of polynomial exactly over reference triangle." alt="" coords="190,86,355,127"/>
-<area shape="rect" id="node5" href="$namespaceanonymous__namespace_02testFeLib_8cpp_03.html#a5a1fb22090fa2e6dceff4f43acc7a015" title=" " alt="" coords="172,151,373,193"/>
-<area shape="rect" id="node6" href="$namespaceanonymous__namespace_02testFeLib_8cpp_03.html#a7d6fdb37153e1d548efc6e79d9c61138" title=" " alt="" coords="181,217,365,258"/>
-<area shape="rect" id="node4" href="$namespacetest.html#a44d761477bf0e6293198849c53cb8abc" title="Computes &#160;&quot;n choose r&quot;." alt="" coords="421,93,556,120"/>
-</map>

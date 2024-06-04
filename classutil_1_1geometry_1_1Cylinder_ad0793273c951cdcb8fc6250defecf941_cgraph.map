@@ -1,5 +1,0 @@
-<map id="util::geometry::Cylinder::isInside" name="util::geometry::Cylinder::isInside">
-<area shape="rect" id="node1" title="Checks if point is inside this object." alt="" coords="5,23,163,65"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="211,5,311,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="218,56,303,83"/>
-</map>
