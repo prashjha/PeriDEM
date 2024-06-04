@@ -1,0 +1,4 @@
+<map id="util::geometry::Cuboid::inscribedRadius" name="util::geometry::Cuboid::inscribedRadius">
+<area shape="rect" id="node1" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="5,5,156,47"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="204,13,304,39"/>
+</map>
