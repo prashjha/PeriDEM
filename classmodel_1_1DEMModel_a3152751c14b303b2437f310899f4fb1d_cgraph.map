@@ -1,4 +1,0 @@
-<map id="model::DEMModel::updatePeridynamicNeighborlist" name="model::DEMModel::updatePeridynamicNeighborlist">
-<area shape="rect" id="node1" title="Update neighborlist for peridynamics force." alt="" coords="5,5,255,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="303,13,473,39"/>
-</map>

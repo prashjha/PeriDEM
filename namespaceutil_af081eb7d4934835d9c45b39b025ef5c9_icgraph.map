@@ -1,9 +1,0 @@
-<map id="util::dot" name="util::dot">
-<area shape="rect" id="node1" title="Computes the dot product between matrix and vector." alt="" coords="271,148,336,175"/>
-<area shape="rect" id="node2" href="$classfe_1_1TetElem.html#a093bba69d7db17b0e5dcc7a8f00fb268" title="Returns the values of derivative of shape function at point p." alt="" coords="24,5,204,32"/>
-<area shape="rect" id="node3" href="$classfe_1_1TetElem.html#a1e53cb40204c661265b6780d4c9c688a" title="Get vector of quadrature data." alt="" coords="23,56,205,83"/>
-<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Line.html#af3222bd1791a4d8fa102f4096dc2ca3c" title="Checks if point is inside this object." alt="" coords="47,107,181,149"/>
-<area shape="rect" id="node5" href="$classutil_1_1geometry_1_1Line.html#a7c3409e5d8a1025bdbf72d664ded6d03" title="Checks if point is within given distance of this object." alt="" coords="47,173,181,214"/>
-<area shape="rect" id="node6" href="$classutil_1_1geometry_1_1Line.html#a3eca2640ef36978ada44a3bb2926a56d" title="Checks if point is within given distance of this object." alt="" coords="47,238,181,279"/>
-<area shape="rect" id="node7" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element." alt="" coords="5,304,223,331"/>
-</map>

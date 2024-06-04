@@ -1,5 +1,0 @@
-<map id="util::parallel::getMpiStatus" name="util::parallel::getMpiStatus">
-<area shape="rect" id="node1" title="Returns pointer to MpiStatus struct." alt="" coords="5,5,179,32"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="227,5,361,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="409,5,581,32"/>
-</map>

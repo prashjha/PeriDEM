@@ -1,4 +1,0 @@
-<map id="nsearch::BaseNSearch" name="nsearch::BaseNSearch">
-<area shape="rect" id="node1" title="A class for nearest neighbor search." alt="" coords="14,5,171,156"/>
-<area shape="rect" id="node2" href="$classnsearch_1_1NFlannSearchKd.html" title="A class for nearest neighbor search using nanoflann library." alt="" coords="5,204,180,369"/>
-</map>
