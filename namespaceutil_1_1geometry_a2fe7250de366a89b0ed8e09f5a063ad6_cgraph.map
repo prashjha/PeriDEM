@@ -1,0 +1,9 @@
+<map id="util::geometry::createGeomObject" name="util::geometry::createGeomObject">
+<area shape="rect" id="node1" title="Create geometrical object from the given data." alt="" coords="5,123,185,164"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1geometry.html#aa14cdef2f73ea184ca66f88de5d079dd" title="Check parameter data for validity." alt="" coords="233,5,416,47"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1geometry.html#a423eb6ea7aec79183939c81e522057ca" title="Get num params required for creation of object." alt="" coords="464,64,664,105"/>
+<area shape="rect" id="node4" href="$namespaceutil_1_1geometry.html#a2f43f1f68c3073656dcb3af84de93192" title="Check parameter data for validity." alt="" coords="233,123,416,164"/>
+<area shape="rect" id="node5" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="241,189,409,215"/>
+<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="271,239,378,266"/>
+<area shape="rect" id="node7" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="507,239,621,266"/>
+</map>

@@ -1,0 +1,16 @@
+<map id="util::rotate" name="util::rotate">
+<area shape="rect" id="node1" title="Returns the vector after rotating by desired angle." alt="" coords="425,246,505,273"/>
+<area shape="rect" id="node2" href="$structparticle_1_1ParticleTransform.html#ac84e7ec4803c9231dfb15bc181a2dc4f" title="Returns the transformed vector. We assume that the passed vector passes through origin." alt="" coords="203,5,377,47"/>
+<area shape="rect" id="node4" href="$classutil_1_1geometry_1_1Drum2D.html#ad9b0c988bf94ffb127b48e78d87d8cc6" title="Constructor." alt="" coords="211,71,369,112"/>
+<area shape="rect" id="node5" href="$namespaceutil.html#a5d24f7c5bb99a1ac5be5e1111660630e" title=" " alt="" coords="209,137,371,163"/>
+<area shape="rect" id="node7" href="$namespaceutil.html#ae01097cd6b997f9618069ecb9a9bd961" title=" " alt="" coords="213,187,367,214"/>
+<area shape="rect" id="node9" href="$classutil_1_1geometry_1_1Hexagon.html#a863ab95e2b0aa910ef6133e821341abe" title="Constructor." alt="" coords="209,239,371,280"/>
+<area shape="rect" id="node10" href="$classutil_1_1geometry_1_1Drum2D.html#a3e79daf6f2dd929bf236004a72ad5b70" title="Checks if point is inside this object." alt="" coords="211,304,369,345"/>
+<area shape="rect" id="node11" href="$namespaceutil.html#a2eb26fb8210f1e876857a6650cc7fbfe" title=" " alt="" coords="252,370,328,397"/>
+<area shape="rect" id="node12" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="218,421,362,447"/>
+<area shape="rect" id="node14" href="$classutil_1_1geometry_1_1Triangle.html#ad1e951f93e9d6422a967363c9199fa6b" title="Constructor." alt="" coords="213,472,367,513"/>
+<area shape="rect" id="node3" href="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1" title="Constructor." alt="" coords="22,5,138,47"/>
+<area shape="rect" id="node6" href="$namespaceutil.html#a7e15bd87271d00aa79d9fd69965cec1f" title=" " alt="" coords="15,123,145,164"/>
+<area shape="rect" id="node8" href="$namespaceutil.html#a49e20c8c2bf46de2b79f1c833602e5ba" title=" " alt="" coords="5,188,155,229"/>
+<area shape="rect" id="node13" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="55,421,105,447"/>
+</map>
