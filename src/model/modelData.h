@@ -17,6 +17,8 @@
 #include "loading/particleULoading.h"
 #include "nsearch/nsearch.h"
 #include "geometry/fracture.h"
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 
 typedef nsearch::NFlannSearchKd NSearch;

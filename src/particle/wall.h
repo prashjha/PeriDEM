@@ -15,7 +15,8 @@
 #include "baseParticle.h"
 #include "fe/mesh.h"
 #include "inp/pdecks/particleDeck.h"
-#include <string.h> // size_t type
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 
 namespace particle {

@@ -12,7 +12,8 @@
 #define FE_MESH_H
 
 #include "util/point.h" // definition of struct Point
-#include <string>
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 
 // forward declaration of geometry deck

@@ -13,7 +13,8 @@
 
 #include "util/point.h"           // definition of Point
 #include "util/matrix.h"          // definition of SymMatrix3
-#include <string>
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 
 // forward declaration

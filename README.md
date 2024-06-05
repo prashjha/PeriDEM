@@ -261,8 +261,8 @@ Core dependencies are:
   - [cmake](https://cmake.org/) (>= 3.10.2) 
     * recommend to install using `apt-get` or `brew`
   - [vtk](https://vtk.org/) (>= 7.1.1)
-    * recommend to build using script [install_vtk_alone.sh](./tools/build_scripts/ubuntu/install_vtk_alone.sh) 
-      or [install_libs.sh](./tools/build_scripts/ubuntu/install_libs.sh)
+    * recommend to build using script [install_vtk_alone.sh](./tools/compile_scripts/ubuntu/install_vtk_alone.sh) 
+      or [install_libs.sh](./tools/compile_scripts/ubuntu/install_libs.sh)
     * required to output simulation results in `.vtu` format
   - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (>= 0.5.2)
     * recommend to install using `apt-get` or `brew`
@@ -270,7 +270,7 @@ Core dependencies are:
   - [metis](https://github.com/KarypisLab/METIS) (>= 5.1.0)
     * recommend to install using `apt-get` or `brew`. If using `apt-get`, recommend 
       to create symlink to `libmetis.so` file in `/usr/lib/` directory; 
-      see towards end in script [install_base.sh](./tools/build_scripts/ubuntu/install_base.sh). 
+      see towards end in script [install_base.sh](./tools/compile_scripts/ubuntu/install_base.sh). 
       This helps `cmake` locate metis library. 
     * required to partition the mesh
   - MPI
@@ -373,8 +373,8 @@ brew install cmake boost vtk yaml-cpp metis gmsh openmpi
 brew install doxygen
 ```
 
-2. Build peridem using [compile_peridem.sh](./tools/build_scripts/ubuntu/compile_peridem.sh) 
-or in mac use script [compile_peridem.sh](./tools/build_scripts/mac/compile_peridem.sh):
+2. Build peridem using [compile_peridem.sh](./tools/compile_scripts/ubuntu/compile_peridem.sh) 
+or in mac use script [compile_peridem.sh](./tools/compile_scripts/mac/compile_peridem.sh):
 ```sh
 # may have to do `chmod +x compile_peridem.sh` first
 ./compile_peridem.sh

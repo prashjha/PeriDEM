@@ -202,7 +202,7 @@ workflows:
       - documentation:
           filters:
             branches:
-              ignore: gh-pages
+              only: main
       - deploy:
           filters:
             branches:

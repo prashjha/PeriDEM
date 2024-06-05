@@ -14,7 +14,8 @@
 #include "material/mparticle/material.h"
 #include "model/modelData.h"
 
-#include <cstring> // size_t type
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 
 /*! @brief Collection of methods and data related to particle object */
