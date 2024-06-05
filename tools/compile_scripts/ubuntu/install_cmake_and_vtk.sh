@@ -32,7 +32,7 @@ if [ ! -d "$BUILDDIR" ]; then
 fi
 
 ## open a file to write various key paths for subsequent use
-path_file="$SCRIPTPATH/lib_vars_paths.txt"
+path_file="$SCRIPTPATH/lib_vars_paths_cmake_vtk.txt"
 
 # if path file exists, delete it so that it is created a fresh
 if [[ -f  $path_file ]]; then
@@ -44,30 +44,6 @@ fi
 # init path file
 # -----------------------
 echo UBUNTU_CODENAME=${UBUNTU_CODENAME} >> ${path_file}
-
-# -----------------------
-# essentials
-# -----------------------
-# disable prompts during apt-get install
-DEBIAN_FRONTEND=noninteractive
-
-echo "installing essential libraries" && \
-sudo apt-get update --fix-missing && \
-sudo apt-get upgrade -y && \
-sudo apt-get install -y \
-  less ca-certificates gpg wget curl \
-  lzip bzip2 unzip \
-  software-properties-common ubuntu-dev-tools build-essential \
-  openssh-server rsync 
-
-# -----------------------
-# make/configure related libraries
-# -----------------------
-echo "installing make/configure/cmake related libraries" 
-sudo apt-get install -y \
-  m4 autoconf libtool pkg-config make gfortran \
-  lldb valgrind \
-  clang-format clang-tidy 
 
 # -----------------------
 # cmake (manually install in older ubuntu, e.g., bionic)
@@ -115,6 +91,7 @@ else
       CMAKE_TAR_FILE="cmake-$CMAKE_VERSION.tar.gz"
       CMAKE_INSTALL_PATH=$SCRIPTPATH/install/cmake/$CMAKE_VERSION/Release
       if [[ "$install_at_global" = "1" ]]; then
+        echo "cmake to be installed in /usr/local. This will require 'sudo'"
         CMAKE_INSTALL_PATH="/usr/local"
       fi
       CMAKE_SOURCE_DIR=$SOURCEDIR/cmake/$CMAKE_VER
@@ -131,7 +108,11 @@ else
         cd $CMAKE_SOURCE_DIR
         ./bootstrap --prefix=${CMAKE_INSTALL_PATH} 
         make -j -l$BUILDTHREADS
-        make install
+        if [[ "$install_at_global" = "1" ]]; then
+          sudo make install
+        else 
+          make install
+        fi
       fi
       echo "cleaning"
       cd $SCRIPTPATH
@@ -144,85 +125,6 @@ else
       echo "building cmake finished"
     fi
 fi
-
-# -----------------------
-# mpi
-# -----------------------
-echo "install openmpi libraries" 
-sudo apt-get install -y libopenmpi-dev openmpi-bin 
-
-# -----------------------
-# git
-# -----------------------
-echo "install and configure git" 
-sudo apt-get install -y git 
-git config --global url."https://github.com/".insteadOf git@github.com: 
-git config --global url."https://".insteadOf git://
-
-# -----------------------
-# doxygen/code coverage
-# -----------------------
-if [ $doxygen_build = "0" ]; then
-  echo "doxygen and code coverage related libraries" 
-  sudo apt-get install -y \
-    doxygen doxygen-latex graphviz ghostscript \
-    rpm gcovr ruby-coveralls libproj-dev
-fi
-
-# -----------------------
-# python
-# -----------------------
-# first install dependencies for pillow library
-echo "installing dependency for python libraries" 
-sudo apt-get install -y libjpeg-dev zlib1g-dev 
-echo "installing python pip3" 
-sudo apt-get install -y python3-pip 
-echo "install python libraries using pip" 
-if [ "${UBUNTU_CODENAME}" = "noble" ]; then 
-    pip3 install numpy pyvista pandas --break-system-packages
-else 
-    pip3 install numpy pyvista pandas
-fi
-
-# -----------------------
-# essential computational/hpc libraries
-# -----------------------
-echo "installing essential computational/hpc libraries"
-sudo apt-get install -y \
-  libblas-dev liblapack-dev libmpfr-dev libgmp-dev \
-  libtbb-dev libasio-dev libglvnd-dev 
-
-# -----------------------
-# gmsh
-# -----------------------
-echo "installing gmsh libraries" 
-sudo apt-get install -y libgmsh-dev gmsh
-
-# -----------------------
-# flann
-# -----------------------
-echo "installing flann library" 
-sudo apt-get install -y libflann-dev
-
-# -----------------------
-# metis
-# -----------------------
-echo "installing metis" 
-sudo apt-get install -y libmetis-dev 
-echo "creating symlink of metis library" 
-sudo ln -sf /usr/lib/x86_64-linux-gnu/libmetis.so /usr/lib/libmetis.so 
-echo "Display metis header and lib files" 
-ls /usr/include/metis* 
-ls /usr/lib/libmetis* 
-echo "adding metis paths to file" 
-echo METIS_LIB_DIR="/usr/lib" >> ${path_file}
-echo METIS_INCLUDE_DIR="/usr/include" >> ${path_file}
-
-# -----------------------
-# yaml-cpp
-# -----------------------
-echo "installing yaml-cpp" 
-sudo apt-get install -y libyaml-cpp-dev
 
 # -----------------------
 # vtk (build in focal/bionic and apt-get in noble/jammy)
@@ -298,7 +200,7 @@ else
           -D VTK_WRAP_PYTHON=OFF \
           ${VTK_SOURCE_DIR}
     make -j -l$BUILDTHREADS
-    make install
+    sudo make install
     echo "cleaning"
     cd $SCRIPTPATH
     if [ ! -d $VTK_SOURCE_DIR ]; then

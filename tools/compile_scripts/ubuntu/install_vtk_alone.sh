@@ -24,8 +24,6 @@ fi
 
 install_at_global="0" # 0 - create install path in SOURCEDIR, 1 install in /usr/local
 
-vtk_build="2" # 0 - apt-get, 1 - build and install vtk, 2 - apt-get if possible else build and install
-
 # some preliminary setup
 if [ ! -d "$SOURCEDIR" ]; then
     mkdir -p "$SOURCEDIR"
@@ -35,7 +33,7 @@ if [ ! -d "$BUILDDIR" ]; then
 fi
 
 ## open a file to write various key paths for subsequent use
-path_file="$SCRIPTPATH/lib_vars_paths.txt"
+path_file="$SCRIPTPATH/lib_vars_paths_cmake_vtk.txt"
 
 # if path file exists, delete it so that it is created a fresh
 if [[ -f  $path_file ]]; then
@@ -105,7 +103,11 @@ cd "$VTK_BUILD_PATH"
   -D VTK_WRAP_PYTHON=OFF \
   ${VTK_SOURCE_DIR}
 make -j -l$BUILDTHREADS
-make install
+if [[ "$install_at_global" = "1" ]]; then
+  sudo make install
+else 
+  make install
+fi
 echo "cleaning"
 cd $SCRIPTPATH
 if [ ! -d $VTK_SOURCE_DIR ]; then
