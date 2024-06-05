@@ -1,4 +1,0 @@
-<map id="util::geometry::ComplexGeomObject::isInside" name="util::geometry::ComplexGeomObject::isInside">
-<area shape="rect" id="node1" title="Checks if box is completely inside." alt="" coords="5,5,201,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="249,13,391,39"/>
-</map>

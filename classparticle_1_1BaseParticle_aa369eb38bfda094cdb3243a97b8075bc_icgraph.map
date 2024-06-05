@@ -1,7 +1,0 @@
-<map id="particle::BaseParticle::getTypeId" name="particle::BaseParticle::getTypeId">
-<area shape="rect" id="node1" title="Get id among the group of object in the same type as this." alt="" coords="224,100,371,141"/>
-<area shape="rect" id="node2" href="$classloading_1_1ParticleFLoading.html#a8a1f12e4292ce9693d0339c06327fe68" title="Applies force boundary condition." alt="" coords="7,5,175,47"/>
-<area shape="rect" id="node3" href="$classloading_1_1ParticleULoading.html#aee7edb595807fe2516c545d8abe2d75b" title="Applies displacement boundary condition." alt="" coords="5,71,176,112"/>
-<area shape="rect" id="node4" href="$classparticle_1_1Wall.html#ac7a1ea8243a94d1aa17ffc17f400b89b" title="Get id of this wall." alt="" coords="11,137,170,163"/>
-<area shape="rect" id="node5" href="$classloading_1_1ParticleULoading.html#ad625cd13565f41d44a66c94a976b40b4" title="Sets fixity mask." alt="" coords="5,188,176,229"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classparticle_1_1BaseParticle.html" title="A class to store particle geometry, nodal discretization, and methods." alt="" coords="5,31,152,57"/>
-<area shape="rect" id="node2" href="$classparticle_1_1Particle.html" title="A class to store particle geometry, nodal discretization, and methods." alt="" coords="200,5,316,32"/>
-<area shape="rect" id="node3" href="$classparticle_1_1Wall.html" title="Specialization of BaseParticle for modeling of walls. Wall differ from the particles in the sense tha..." alt="" coords="209,56,307,83"/>
-</map>
