@@ -68,7 +68,7 @@ add_test(NAME testmeshpartitioning_builtinmesh
 )
 
 add_test(NAME testmeshpartitioning_usermesh
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 2 -p 4 -m 4 -f mesh.msh
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 2 -p 4 -m 4 -f ../common_data/mesh.msh
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
 )
 
@@ -87,7 +87,7 @@ else ()
             WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/testparallelcomp
     )
     add_test(NAME testparallelcomp_usermesh_mpi
-            COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -m 4 -f mesh.msh
+            COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -m 4 -f ../common_data/mesh.msh
             WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/testparallelcomp
     )
 endif ()
