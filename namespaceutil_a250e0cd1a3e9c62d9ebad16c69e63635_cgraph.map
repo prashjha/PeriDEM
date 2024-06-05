@@ -1,5 +1,0 @@
-<map id="util::doLinesIntersect" name="util::doLinesIntersect">
-<area shape="rect" id="node1" title="Do lines intersect." alt="" coords="5,5,148,32"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a4989349bbfea16310a439c896e8222bf" title="Computes angle between two vectors." alt="" coords="196,5,275,32"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="323,5,443,32"/>
-</map>

@@ -1,4 +1,0 @@
-<map id="inp::MaterialDeck" name="inp::MaterialDeck">
-<area shape="rect" id="node1" title="Structure to read and store material related data." alt="" coords="5,732,253,1059"/>
-<area shape="rect" id="node2" href="$structinp_1_1MatData.html" title="Structure for elastic properties and fracture properties." alt="" coords="75,5,183,669"/>
-</map>

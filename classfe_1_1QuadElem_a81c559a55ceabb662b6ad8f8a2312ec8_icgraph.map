@@ -1,4 +1,0 @@
-<map id="fe::QuadElem::init" name="fe::QuadElem::init">
-<area shape="rect" id="node1" title="Compute the quadrature points for quadrangle element." alt="" coords="224,5,351,32"/>
-<area shape="rect" id="node2" href="$classfe_1_1QuadElem.html#ad381572e301e91f0e85b131e9e2a2f69" title="Constructor for quadrangle element." alt="" coords="5,5,176,32"/>
-</map>

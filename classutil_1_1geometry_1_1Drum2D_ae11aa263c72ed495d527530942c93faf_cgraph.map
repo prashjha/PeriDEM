@@ -1,6 +1,0 @@
-<map id="util::geometry::Drum2D::print" name="util::geometry::Drum2D::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,164,47"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Drum2D.html#a4e514f448cf227bce900fcc9e160afa9" title="Prints the information." alt="" coords="212,5,371,47"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="573,13,687,39"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="419,38,525,65"/>
-</map>

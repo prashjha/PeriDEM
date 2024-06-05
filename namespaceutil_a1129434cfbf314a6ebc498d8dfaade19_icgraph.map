@@ -1,6 +1,0 @@
-<map id="util::computeMeshSize" name="util::computeMeshSize">
-<area shape="rect" id="node1" title="Computes minimum distance between any two nodes." alt="" coords="360,35,515,61"/>
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data." alt="" coords="167,5,312,32"/>
-<area shape="rect" id="node4" href="$classparticle_1_1Particle.html#a420f9e3bb2b356a937b2447064494ca1" title="Constructor." alt="" coords="181,57,297,98"/>
-<area shape="rect" id="node3" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor." alt="" coords="5,5,119,32"/>
-</map>

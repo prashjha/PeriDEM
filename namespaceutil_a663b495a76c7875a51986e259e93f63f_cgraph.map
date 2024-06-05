@@ -1,5 +1,0 @@
-<map id="util::transform_to_uniform_dist" name="util::transform_to_uniform_dist">
-<area shape="rect" id="node1" title="Transform sample from U(0,1) to U(a,b)" alt="" coords="5,23,125,65"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1methods.html#abd99d02390d10842f0fa8af0a4879fa9" title="Returns the maximum from list of data." alt="" coords="173,5,304,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1methods.html#a0c27d7d0f0cd23df3a831d2834bccf08" title="Returns the minimum from list of data." alt="" coords="175,56,302,83"/>
-</map>

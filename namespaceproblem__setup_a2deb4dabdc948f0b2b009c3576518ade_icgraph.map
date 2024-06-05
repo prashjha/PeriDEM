@@ -1,9 +1,0 @@
-<map id="problem_setup.generate_cir_particle_gmsh_input" name="problem_setup.generate_cir_particle_gmsh_input">
-<area shape="rect" id="node1" title=" " alt="" coords="639,93,805,135"/>
-<area shape="rect" id="node2" href="$namespaceproblem__setup.html#a64e067098e447f766d042476ef5abe85" title=" " alt="" coords="444,93,591,135"/>
-<area shape="rect" id="node3" href="$namespaceproblem__setup.html#aff5393227de056de45cfc082e05af1ca" title=" " alt="" coords="215,5,396,47"/>
-<area shape="rect" id="node4" href="$namespaceproblem__setup.html#a147f310ff74124342d15ab356739883f" title=" " alt="" coords="225,123,386,164"/>
-<area shape="rect" id="node6" href="$namespaceproblem__setup.html#af51753c1e02e9634827a449ab8729d44" title=" " alt="" coords="5,57,167,99"/>
-<area shape="rect" id="node7" href="$namespaceproblem__setup.html#a767ffea81ffa775dc9aeb12b2e2a21a4" title=" " alt="" coords="9,188,163,229"/>
-<area shape="rect" id="node5" href="$namespaceproblem__setup.html#a94bf8e7f89d392c05bd34dfd6a513675" title=" " alt="" coords="5,123,167,164"/>
-</map>

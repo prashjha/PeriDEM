@@ -1,8 +1,0 @@
-<map id="util.generate_circle_gmsh_input" name="util.generate_circle_gmsh_input">
-<area shape="rect" id="node1" title=" " alt="" coords="5,74,136,115"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a2c611a7877a2954aa772b1070588254d" title=" " alt="" coords="201,5,325,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a6b6fcdb8cecbf1a465e07b7d80dc7103" title=" " alt="" coords="199,56,327,83"/>
-<area shape="rect" id="node5" href="$namespaceutil.html#a72d82fa53f65276aebeab8f94d9bc0a2" title=" " alt="" coords="184,107,343,133"/>
-<area shape="rect" id="node6" href="$namespaceutil.html#ad685ebb414a7eaa15ce837239da99cc2" title=" " alt="" coords="192,157,335,184"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#aa3e4b03d30366bd4eb0ce3af6fec29f4" title=" " alt="" coords="391,107,483,133"/>
-</map>

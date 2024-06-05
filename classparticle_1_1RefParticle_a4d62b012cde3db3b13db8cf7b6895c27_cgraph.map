@@ -1,7 +1,0 @@
-<map id="particle::RefParticle::RefParticle" name="particle::RefParticle::RefParticle">
-<area shape="rect" id="node1" title="Constructor." alt="" coords="5,74,143,115"/>
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#a5929bc5d7b95e8e9eb4af63209f3ff10" title="Get coordinates of node i." alt="" coords="208,5,339,32"/>
-<area shape="rect" id="node3" href="$classfe_1_1Mesh.html#aac3df3472139b865eda7406c1d1c3d77" title="Get the number of nodes." alt="" coords="191,56,356,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="231,107,316,133"/>
-<area shape="rect" id="node5" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="213,157,333,184"/>
-</map>
