@@ -12,6 +12,8 @@
 #define UTIL_METHODS_H
 
 #include "point.h"           // definition of Point
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 #include <chrono>
 

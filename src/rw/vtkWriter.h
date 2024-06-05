@@ -17,6 +17,8 @@
 
 #include "util/point.h"           // definition of Point
 #include "util/matrix.h"           // definition of SymMatrix3
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 
 namespace rw {
 

@@ -1,13 +1,16 @@
 #!/bin/bash
 
+# get name of this script
+this_script=$(basename "$0")
+
 (
 ## dependencies
 # brew install vtk yaml-cpp metis
 # if building documentation, we also need doxygen
 # brew install doxygen
 
-VTK_DIR="/usr/local/lib/cmake/vtk-9.3"
-METIS_DIR="/usr/lib"
+VTK_LIB_CMAKE_DIR="/usr/local/lib/cmake/vtk-9.3"
+METIS_LIB_DIR="/usr/lib"
 
 echo "<<<<<<<<<<< >>>>>>>>>>>"
 echo "PERIDEM"
@@ -27,15 +30,16 @@ for build_type in "${build_types[@]}"; do
     -DCMAKE_BUILD_TYPE=${build_type} \
     -DEnable_Tests=ON \
     -DDisable_Docker_MPI_Tests=OFF \
-    -DVTK_DIR="${VTK_DIR}" \
-    -DMETIS_DIR="${METIS_DIR}" \
+    -DVTK_DIR="${VTK_LIB_CMAKE_DIR}" \
+    -DMETIS_DIR="${METIS_LIB_DIR}" \
     ../../PeriDEM 
 
-  make -j 8 VERBOSE=1 
+  make -j 8
 
-  ctest --extra-verbose
+  ctest --verbose
 
   # cd to base
   cd ../..
 done
-) |& tee "compile_peridem.log"
+
+) 2>&1 | tee "${this_script}.log"

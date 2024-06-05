@@ -12,8 +12,8 @@
 #define GEOM_FRACTURE_H
 
 #include "util/point.h" // definition of Point
-#include <stdint.h> // uint8_t type
-#include <string.h> // size_t type
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <vector>
 
 /*! @brief Collection of methods and data related to geometry */

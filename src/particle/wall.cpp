@@ -10,11 +10,9 @@
 
 #include "wall.h"
 #include "fe/mesh.h"
-#include "geometry/fracture.h"
 #include "inp/pdecks/particleDeck.h"
 #include "util/geom.h"
 #include "util/io.h"
-#include "util/methods.h"
 #include "material/materialUtil.h"
 
 // Wall class

@@ -8,6 +8,8 @@
 
 #include "util/matrix.h" // definition of SymMatrix3
 #include "util/point.h"  // definition of Point
+#include <cstdint> // uint8_t type
+#include <cstring> // string and size_t type
 #include <fstream>
 #include <vector>
 
