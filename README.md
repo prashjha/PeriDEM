@@ -45,34 +45,16 @@ We have created channels on various platforms:
 - [PeriDEM on slack](peridem.slack.com)
   * Send us an email if interested in joining the workspace.
 
-## Documentation
-Doxygen generated documentation of the code can be found [here](https://prashjha.github.io/PeriDEM/). 
-Documentation will be improved in due time.
+## [Documentation](https://prashjha.github.io/PeriDEM/)
+[Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
 
 ## Tutorial
 We explain the setting-up of simulations in further details in [tutorial](./tutorial/README.md). 
 We consider `two-particle` test setup with non-circular particles and `compressive-test` to 
 discuss the various aspects of simulations.
 
-## Examples
-We next highlight some key examples. For more details, look at the `create_input_file()` 
-within `problem_setup.py` or `input_0.yaml` in [examples](./examples/PeriDEM).
-
-To create input files, the python script is provided. Python script allows easy parameterization 
-of various modeling and geometrical parameters and creating `.geo` files for `gmsh` 
-and particle locations file. Typically, the input files consists of:
-  - `input.yaml` - the main instruction file for `PeriDEM` with details about material models, 
-     particle geometries, time step, etc
-  - `particle_locations.csv` - this file provides location and other details of the 
-     individual particles. Each row in the file consists of 
-    * `i` - zone id that particle belongs to
-    * `x` - x-coordinate of the center of the particle. Next two columns are similarly for `y` and `z` coordinates
-    * `r` - radius of the particle 
-    * `o` - orientation in radians. This is used to give particle (particle mesh) a rotation
-  - `mesh.msh` - mesh file for the reference particle or wall. For example, 
-    in [compressive test](./examples/PeriDEM/compressive_test/n500_circ_hex/init_config/inp) example, 
-    there are four mesh files: one each for the circular and hexagon-shaped particle 
-    and one each for the fixed and mobile wall.
+## [Examples](./examples/README.md)
+We next highlight some key examples. Further details are available in [examples/README.md](./examples/README.md). 
 
 ### Two-particle tests
 
@@ -101,21 +83,13 @@ in individual particles, especially those connected by force chains, resulting i
 yielding of the system. For more details, we refer to 
 [Jha et al. 2021](https://prashjha.github.io/publication/jha-2020-peridem/)
 
-|      <img src="./assets/compressive_test_cir_hex_n500.jpg" width="600">      | 
-|:----------------------------------------------------------------------------:| 
-| [Compressive test setup](./examples/PeriDEM/compressive_test/n500_circ_hex/) |
-
-|                                                                             <img src="./assets/compressive_test_reaction_force_n500.jpg" width="600">                                                                             | 
-|:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:| 
-| **Top**: Plot of reaction force per unit area on the top wall. **Bottom**: Particle state at four times. Color shows the damage at nodes. Damage 1 or above indicates the presence of broken bonds in the neighborhood of a node. |
-
 | <img src="./assets/compressive_test.gif" width="600"> | 
 |:-----------------------------------------------------:| 
 |              Compressive test simulation              | 
 
 ## Brief implementation details
 The main implementation of the model is carried out in the model directory [dem](./src/model/dem). 
-The model is implemented in class `DEMModel`, see [demModel.cpp](./src/model/dem/demModel.cpp). 
+The model is implemented in class [DEMModel](./src/model/dem/demModel.cpp). 
 Function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more details:
 
 ### DEMModel::run()
@@ -201,33 +175,12 @@ void model::DEMModel::integrateVerlet() {
     // compute force
     computeForces();
     
-    // update velocity of nodes
-    {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
-    
-      taskflow.for_each_index(
-        (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-        [this, dt, dim](std::size_t II) {
-          auto i = this->d_fPdCompNodes[II];
-    
-          const auto rho = this->getDensity(i);
-          const auto &fix = this->d_fix[i];
-          for (int dof = 0; dof < dim; dof++) {
-            if (util::methods::isFree(fix, dof)) {
-              this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
-            }
-          }
-        } // loop over nodes
-      ); // for_each
-    
-      executor.run(taskflow).get();
-    }
+    // update velocity of nodes (similar to the above) 
 }
 ```
 
 ### DEMModel::computeForces()
-The key method in time integration is `DEMModel::computeForces()`. 
+The key method in time integration is `DEMModel::computeForces()`
 In this function, we compute internal and external forces at each node of a particle 
 and also account for the external boundary conditions. This function looks like
 ```cpp
@@ -254,52 +207,22 @@ Above gives the basic idea of simulation steps. For more thorough understanding 
 the implementation, interested readers can look at 
 [demModel.cpp](.n/src/model/dem/demModel.cpp).
 
-## Installation
+## [Installation](./tools/README.md)
 
 ### Dependencies
 Core dependencies are:
   - [cmake](https://cmake.org/) (>= 3.10.2) 
-    * recommend to install using `apt-get` or `brew`
   - [vtk](https://vtk.org/) (>= 7.1.1)
-    * recommend to build using script [install_vtk_alone.sh](./tools/compile_scripts/ubuntu/install_vtk_alone.sh) 
-      or [install_libs.sh](./tools/compile_scripts/ubuntu/install_libs.sh)
-    * required to output simulation results in `.vtu` format
   - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (>= 0.5.2)
-    * recommend to install using `apt-get` or `brew`
-    * required to parse input file
   - [metis](https://github.com/KarypisLab/METIS) (>= 5.1.0)
-    * recommend to install using `apt-get` or `brew`. If using `apt-get`, recommend 
-      to create symlink to `libmetis.so` file in `/usr/lib/` directory; 
-      see towards end in script [install_base.sh](./tools/compile_scripts/ubuntu/install_base.sh). 
-      This helps `cmake` locate metis library. 
-    * required to partition the mesh
   - MPI
-    * for parallel simulations
 
 Following dependencies are included in the `PeriDEM` library in `external` folder (see [external/README.md](./external/README.md) for more details):
   - [fast-cpp-csv-parser](https://github.com/ben-strasser/fast-cpp-csv-parser/tree/master) (version included - master)
-    * required to read `.csv` files
   - [fmt](https://github.com/fmtlib/fmt) (>= 7.1.3, version included - 10.2.1)
-    * included as external library in the code
-    * required to output formatted strings
   - [nanoflann](https://github.com/jlblancoc/nanoflann) (>= 1.3.2, version included - v1.5.5)
-    * included as external library in the code
-    * required for neighbor search
   - [taskflow](https://github.com/taskflow/taskflow) (>= 3.7.0)
-    * included as external library in the code
-    * required for asynchronous/parallel for loop
-  - [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) (>= v2.3.3)
-    * included as external library in the code
-    * useful in building better doxygen documentation (see [docs/input-conf.doxy.in](./docs/input-conf.doxy.in) file) 
-
-Additional dependencies for running the examples:
-  - [gmsh](https://gmsh.info/) (>= 3.0.6)
-    * recommend to install using `apt-get` or `brew`
-    * required to build the mesh of various objects in the test
-  - [python3](https://www.python.org/)
-    * required to run the test python scripts
-  - [numpy](https://numpy.org/)
-    * required to run the test python scripts
+  - [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) (>= v2.3.3) 
 
 ### Building the code
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
@@ -317,112 +240,7 @@ cmake   -DEnable_Documentation=OFF # or ON \
 make -j 4
 ```
 
-### Recommendations for quick build
-1. Install most of the dependencies using `apt-get`:
-```sh
-# get ubuntu codename
-UBUNTU_CODENAME="$(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2)"
-
-# Install essentials
-sudo apt-get update 
-
-sudo apt-get install -y \
-    git less wget curl lzip bzip2 unzip autoconf libtool pkg-config \
-    rpm gcovr ruby-coveralls libproj-dev m4 \
-    software-properties-common ubuntu-dev-tools \
-    gfortran make build-essential libssl-dev clang-format-10 clang-tidy \
-    openssh-server rsync \
-    doxygen doxygen-latex graphviz ghostscript \
-    lldb valgrind \
-    python3-pip \
-    ibopenmpi-dev openmpi-bin \
-    libblas-dev liblapack-dev libmpfr-dev libgmp-dev \
-    libhwloc-dev libjemalloc-dev libboost-all-dev libyaml-cpp-dev \
-    libgmsh-dev gmsh libflann-dev \
-    libmetis-dev \
-    libtbb-dev libasio-dev libglvnd-dev \
-    libjpeg-dev zlib1g-dev # for pillow python library \
-    libgl1-mesa-dev # for VTK
-
-if [ "${UBUNTU_CODENAME}" = "focal" ]; then
-  sudo apt-get install -y gcc-10 g++-10 
-  sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-10 100 
-  sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-10 100
-  echo "Display gcc version"  && gcc -v
-fi
-
-# clean
-sudo apt-get autoremove -y && sudo apt-get autoclean -y
-
-# python packages
-pip3 install numpy pyvista pandas
-
-# create symlink for metis
-sudo ln -sf /usr/lib/x86_64-linux-gnu/libmetis.so /usr/lib/libmetis.so 
-echo "Display metis header and lib files" 
-ls /usr/include/metis* 
-ls /usr/lib/libmetis*
-```
-
-> :zap: Above is also available in the bash script [install_base.sh](./tools/build_scripts/ubuntu/install_base.sh).
-
-If you are in mac, the essential libraries can be installed via `brew`
-```sh
-brew install cmake boost vtk yaml-cpp metis gmsh openmpi
-# if building documentation, we also need doxygen
-brew install doxygen
-```
-
-2. Build peridem using [compile_peridem.sh](./tools/compile_scripts/ubuntu/compile_peridem.sh) 
-or in mac use script [compile_peridem.sh](./tools/compile_scripts/mac/compile_peridem.sh):
-```sh
-# may have to do `chmod +x compile_peridem.sh` first
-./compile_peridem.sh
-```
-
-> :warning: Be sure to modify `compile_peridem.sh` file to specify the correct paths where VTK and Metis are installed!
-
-Alternatively, if you have already cloned the PeriDEM library and are in the root 
-directory of PeriDEM, run following in the terminal:
-```sh
-mkdir -p build && cd build 
-cmake   -DEnable_Documentation=OFF # or ON \
-        -DEnable_Tests=ON \
-        -DEnable_High_Load_Tests=OFF # ON if you want ctest to include high-load tests \
-        -DDisable_Docker_MPI_Tests=ON # only for docker; OFF if you can run MPI in docker\
-        -DVTK_DIR="${VTK_DIR}" # e.g., /usr/local/lib/cmake/vtk-9.3 \
-        -DMETIS_DIR="${METIS_DIR}" # e.g., /usr/lib \
-        -DCMAKE_BUILD_TYPE=Release \
-        ../.
-
-make -j 4
-
-# ctest is recommended post building
-ctest --verbose
-```
-
-### Docker
-For `circle-ci` testing, we use docker images `prashjha/peridem-base-focal:latest` 
-(`ubuntu 20.04`) and `prashjha/peridem-base-bionic:latest` (`ubuntu 18.04`). 
-The associated dockerfiles and links to pull from docker hub are:
-  - for `focal` (`ubuntu 20.04`)
-    * link: https://hub.docker.com/r/prashjha/peridem-base-focal
-    * `docker pull prashjha/peridem-base-focal:latest`
-    * [dockerfile](https://github.com/prashjha/dockerimages/blob/main/peridem-base-focal/Dockerfile)
-  - for `bionic` (`ubuntu 18.04`)
-      * link: https://hub.docker.com/r/prashjha/peridem-base-bionic
-      * `docker pull prashjha/peridem-base-bionic:latest`
-      * [dockerfile](https://github.com/prashjha/dockerimages/blob/main/peridem-base-bionic/Dockerfile)
-  - clion setup for remote development
-      * [Dockerfile-peridem-clion-focal](./tools/docker/docker-clion-remote/Dockerfile-peridem-clion-focal)
-      * [Dockerfile-peridem-clion-bionic](./tools/docker/docker-clion-remote/Dockerfile-peridem-clion-bionic)
-  - for example of building `PeriDEM` using docker
-    * [Dockerfile-test-peridem-focal](./tools/docker/compile-peridem-using-docker/Dockerfile-test-peridem-focal)
-    * [Dockerfile-test-peridem-bionic](./tools/docker/compile-peridem-using-docker/Dockerfile-test-peridem-bionic)
-    * These dockerfiles call [compile_peridem.sh](./tools/docker/compile-peridem-using-docker/compile_peridem.sh) script
-
-In [Packages](https://github.com/prashjha?tab=packages&repo_name=PeriDEM), docker 
-images of PeriDEM built on ubuntu-20.04 (`prashjha/peridem-base-focal:latest`) is provided.
+We refer to [tools/README.md](./tools/README.md) for further details about installing dependencies and building the library in different ubuntu releases.
 
 ### Future plans
 We are trying to make PeriDEM MPI-friendly so that we can target large problems. 
@@ -445,14 +263,14 @@ In the past, `PeriDEM` library depended on large libraries such as `HPX`, `PCL`,
 We have put a lot of efforts into reducing the dependencies to absolutely minimum 
 so that it is easier to build and run `PeriDEM` in different operating systems and clusters. 
 At this point, only major library it depends on is `VTK` which can be compiled to 
-different machines quite successfully (patience is needed in compiling `VTK` though).  
+different machines quite successfully (patience is needed in compiling `VTK` though). 
 If you carefully read the information and use the scripts provided, you should be 
 able to compile PeriDEM in ubuntu (>= 18.04) and mac.  
 
-Still, if you are stuck, feel free to reach out or open an issue. For more open 
+Feel free to reach out or open an issue. For more open 
 discussion of issues and ideas, contact via 
 [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) 
-or [PeriDEM on slack](peridem.slack.com) (for slack, send me an email to join). 
+or [PeriDEM on slack](peridem.slack.com) (for slack, send us an email to join). 
 If you like some help, want to contribute, extend the code, or discuss new ideas, 
 please do reach out to us.
 
@@ -467,7 +285,7 @@ with paths are correctly provided in `input.yaml`, we will run the problem (usin
 Some examples are listed below.
 
 ### Two-particle with wall
-Navigate to the example directory `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp` 
+Navigate to the example directory [examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp) 
 and run the example as follows
 ```sh
 mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
@@ -477,33 +295,17 @@ mkdir ../out # <-- make directory for simulation output. In .yaml, we specify ou
 You may also use the included [problem_setup.py](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp/problem_setup.py) 
 to modify simulation parameters and run the simulation using 
 [run.sh](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/run.sh) 
-(in directoy `examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size`). 
+(in directory [examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size)). 
 `run.sh` shows how different input files are created for the simulation.
 
-> :exclamation: You will need to modify the path of `PeriDEM` executible in `run.sh` file, see variable `execsrc`. 
-
+> :exclamation: You may need to modify the path of `PeriDEM` executable in `run.sh` file. 
 
 > In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`. 
 > Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
-#### Important remark on modifying input.yaml file
-To test the examples quickly, you can directly modify the `input.yaml` and re-run 
-the simulation as shown above. For example, you can alter `Final_Time`, 
-`Time_Steps`, `Contact_Radius_Factor`, `Kn`, and other fields in the yaml file. 
-
-However, some care is required when changing the geometrical details of particles 
-and walls in the `input.yaml` file. If you change these details in the `.yaml` file, 
-you will have to ensure that the `.msh` file correspond to the new geometry. 
-
-Except geometrical parameters of walls and particles, rest of the parameters in 
-`input.yaml` can be modified.
-
-> In due time, we will provide more information on setting up input files and covering 
-> all aspects of the simulation.
-
 ### Compressive test
-Navigate to the example directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp` 
-and run the example as follows (note that this is an expensive example)
+Navigate to the example directory [examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp) 
+and run the example as follows (note that this is a computationally expensive example)
 ```sh
 mkdir ../out 
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 12
@@ -511,21 +313,7 @@ mkdir ../out
 
 As before:
   - you can modify [problem_setup.py](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
-  - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory `examples/PeriDEM/compressive_test/n500_circ_hex/run1`).
-
-### Compute times for various examples (From old version of the code!)
-For reference, we list the compute times for various examples.
-  - `T` is the total compute time in units of `second`
-  - `T(n)` means compute time when running the example with `n` threads.
-
-| Test | T(1) | T(2) | T(4) | T(8) |
-| :--- | :---: |  :---: |  :---: |  :---: |
-| two_particles/circ_damp | 143.7 | 95.1 | 76.4 | 78.6 |
-| two_particles/circ_damp_diff_radius | 164 | 114.6 | 96.7 | 99.4 |
-| two_particles/circ_diff_material | 287.7 | 190.1 | 152.7 | 160 |
-| two_particles/circ_diff_radius_diff_material | 329.1 | 229.4 | 195.3 | 200 |
-| two_particles/circ_no_damp | 143.8 | 94.5 | 76.7 | 78.5 |
-| two_particles_wall/concave_diff_material_diff_size | 2749.9 | 1534.6 | 980.8 | 691.1 |
+  - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh).
 
 ## Visualizing results
 Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) 
