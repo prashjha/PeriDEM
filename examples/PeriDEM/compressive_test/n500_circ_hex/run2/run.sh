@@ -1,7 +1,7 @@
 #!/bin/bash
 (
 MY_PWD=$(pwd)
-# locate executible
+# locate executable
 execsrc="../../../../../../bin/PeriDEM"
 nts="2"
 if [[ $# -gt 0 ]]; then

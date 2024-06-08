@@ -326,8 +326,21 @@ public:
    * displacement from nodes obtained from vtu file to get reference position
    * of nodes
    * */
-  void createData(const std::string &filename, bool
-  ref_config = false);
+  void createData(const std::string &filename, bool ref_config = false);
+
+  /*!
+   * @brief Reads element-node connectivity data from file. This function
+   * is meant for cases when mesh was created without element-node connectivity data
+   * but later during output, strain/stress were required which needs element-node
+   * connectivity data.
+   *
+   * File must be either **.vtu** or
+   * **.msh** file and must have element-node connectivity data.
+   *
+   * @param filename Name of the mesh file
+   */
+  bool readElementData(const std::string &filename);
+
   /*!
    * @brief Compute the nodal volume
    *
@@ -466,6 +479,12 @@ public:
 
   /*! @brief Filename to read mesh data */
   std::string d_filename;
+
+  /*! @brief Flag that indicates whether we need enc data (set by input mesh deck in constructor) */
+  bool d_needEncData;
+
+  /*! @brief Flag that indicates whether element-node connectivity data is read from file */
+  bool d_encDataPopulated;
 
   /*! @brief Number of dofs = (dimension) times (number of nodes) */
   size_t d_numDofs;

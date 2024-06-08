@@ -79,7 +79,7 @@ util::Point maxLength(const std::vector<util::Point> &data);
 /*!
  * @brief Returns true if degree of freedom is free
  * @param i Fixity value
- * @param dof Degree of freedom to probe
+ * @param dof Degree of freedom to probe (dof = 0 for x, dof = 1 for y, and dof = 2 for z)
  * @return True True if dof is free
  */
 bool isFree(const int &i, const unsigned int &dof);

@@ -296,6 +296,165 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point> *nodes) {
   d_file.close();
 }
 
+void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
+        size_t &num_elems, std::vector<size_t> *enc,
+        std::vector<std::vector<size_t>> *nec) {
+
+  std::ifstream filein(d_filename);
+
+  // open file
+  if (!d_file) d_file.open(d_filename);
+
+  if (!d_file) {
+    std::cerr << "Error: Can not open file = " << d_filename + ".msh"
+              << ".\n";
+    exit(1);
+  }
+
+  std::string line;
+  int format = 0;
+  int size = 0;
+  double version = 1.0;
+
+  // clear data
+  enc->clear();
+  nec->clear();
+
+  // specify type of element to read
+  if (dim != 2 and dim != 3) {
+    std::cerr << "Error: MshReader currently only supports reading of "
+                 "triangle/quadrangle elements in dimension 2 and tetragonal "
+                 "elements in 3.\n";
+    exit(1);
+  }
+
+  unsigned int num_nodes_con = 0;
+  bool read_elements = false;
+
+  while (true) {
+    std::getline(filein, line);
+    if (filein) {
+      // // read $MeshFormat block
+      if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
+        filein >> version >> format >> size;
+        if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
+          std::cerr << "Error: Unknown .msh file version " << version << "\n";
+          exit(1);
+        }
+
+        // we only support reading of ascii format, so issue error if this
+        // condition is not met
+        if (format) {
+          std::cerr << "Error: Format of .msh is possibly binary which is not"
+                       " supported currently.\n ";
+          exit(1);
+        }
+      }
+      // Read the element block
+      if (line.find("$ELM") == static_cast<std::string::size_type>(0) ||
+               line.find("$Elements") ==
+               static_cast<std::string::size_type>(0)) {
+        read_elements = true;
+
+        // For reading the number of elements and the node ids from the stream
+        unsigned int num_elem = 0;
+        unsigned int node_id = 0;
+
+        // read how many elements are there
+        // this includes point element, line element also
+        filein >> num_elem;
+
+        // As of version 2.2, the format for each element line is:
+        // elm-number elm-type number-of-tags < tag > ... node-number-list
+
+        // read the elements
+        size_t elem_counter = 0;
+        bool found_tri = false;
+        bool found_quad = false;
+        bool found_tet = false;
+        for (unsigned int iel = 0; iel < num_elem; ++iel) {
+          unsigned int id;
+          unsigned int type;
+          unsigned int ntags;
+          int tag;
+          filein >> id >> type >> ntags;
+          for (unsigned int j = 0; j < ntags; j++) filein >> tag;
+
+          // we will read only those elements which we support
+          bool read_this_element = false;
+
+          // read element type we desire and for other element type
+          // perform dummy read
+          if (type == util::msh_type_triangle and dim == 2) {
+            read_this_element = true;
+            found_tri = true;
+            element_type = util::vtk_type_triangle;
+            num_nodes_con =
+                    util::msh_map_element_to_num_nodes[util::msh_type_triangle];
+          } else if (type == util::msh_type_quadrangle and dim == 2) {
+            read_this_element = true;
+            found_quad = true;
+            element_type = util::vtk_type_quad;
+            num_nodes_con =
+                    util::msh_map_element_to_num_nodes[util::msh_type_quadrangle];
+          } else if (type == util::msh_type_tetrahedron and dim == 3) {
+            read_this_element = true;
+            found_tet = true;
+            element_type = util::vtk_type_tetra;
+            num_nodes_con =
+                    util::msh_map_element_to_num_nodes[util::msh_type_tetrahedron];
+          }
+
+          // std::vector<size_t> e_nodes;
+          if (read_this_element) {
+            // read vertex of this element
+            for (unsigned int i = 0; i < num_nodes_con; i++) {
+              filein >> node_id;
+              // add to the element-node connectivity
+              // substract 1 to correct the numbering convention
+              enc->push_back(node_id - 1);
+
+              // fill the node-element connectivity table
+              (*nec)[node_id - 1].push_back(elem_counter);
+            }
+
+            // increment the element counter
+            elem_counter++;
+          } else {
+            // these are the type of elements we need to ignore.
+            size_t n = util::msh_map_element_to_num_nodes[type];
+            // dummy read
+            for (unsigned int i = 0; i < n; i++) filein >> node_id;
+          }
+        }  // element loop
+
+        // check if mesh contains both triangle and quadrangle elements
+        if (found_quad and found_tri) {
+          std::cerr << "Error: Check mesh file. It appears to have both "
+                       "quadrangle elements and triangle elements. "
+                       "Currently we only support one kind of elements.\n";
+          exit(1);
+        }
+
+        // write the number of elements
+        num_elems = elem_counter;
+
+        // read the $ENDELM delimiter
+        std::getline(filein, line);
+      }  // end of reading elements
+    }    // if filein
+
+    // If !filein, check to see if EOF was set.  If so, break out
+    // of while loop.
+    if (filein.eof()) break;
+
+    if (read_elements) break;
+  }  // while true
+
+  // close file
+  filein.close();
+}
+
 bool rw::reader::MshReader::readPointData(const std::string &name,
                                           std::vector<util::Point> *data) {
   // open file

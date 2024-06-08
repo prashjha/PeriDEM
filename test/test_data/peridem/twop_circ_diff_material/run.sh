@@ -2,7 +2,7 @@
 MY_PWD=$(pwd)
 
 (
-# locate executible
+# locate executable
 execsrc="../../../../../bin/PeriDEM"
 nts="2"
 

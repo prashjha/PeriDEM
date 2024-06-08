@@ -77,7 +77,7 @@ public:
    * @brief Writes strain/stress
    * @param model ModelData class object
    */
-  void appendStrainStress(const model::ModelData *model) {};
+  void appendStrainStress(const model::ModelData *model);
 
   /** @}*/
 

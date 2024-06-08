@@ -485,3 +485,56 @@ void rw::writer::VtkParticleWriter::appendContactData(
   }
 }
 
+
+void rw::writer::VtkParticleWriter::appendStrainStress(
+        const model::ModelData *model) {
+
+  if (model->d_xQuadCur.size() == 0) {
+    std::cout << "VtkParticleWriter::appendStrainStress: Nothing to write.\n";
+    return;
+  }
+
+  // write point data
+  auto points = vtkSmartPointer<vtkPoints>::New();
+
+  // get all the quadrature points first
+  for (const auto &x : model->d_xQuadCur)
+    points->InsertNextPoint(x.d_x, x.d_y, x.d_z);
+
+  // write point data
+  d_grid_p = vtkSmartPointer<vtkUnstructuredGrid>::New();
+  d_grid_p->SetPoints(points);
+
+  // now write data associated to nodes (in this case, quad points are nodes)
+  double value[3] = {0., 0., 0.};
+  double value_s[6] = {0., 0., 0., 0., 0., 0.};
+  double p_tag[1] = {0.};
+
+  auto array_strain = vtkSmartPointer<vtkDoubleArray>::New();
+  array_strain->SetNumberOfComponents(6);
+  array_strain->SetName("Strain");
+
+  auto array_stress = vtkSmartPointer<vtkDoubleArray>::New();
+  array_stress->SetNumberOfComponents(6);
+  array_stress->SetName("Stress");
+
+  std::vector<std::string> coord_strings = {"xx", "yy", "zz", "yz", "xz", "xy"};
+  for (size_t i =0; i<6; i++) {
+    array_strain->SetComponentName(i, coord_strings[i].c_str());
+    array_stress->SetComponentName(i, coord_strings[i].c_str());
+  }
+
+  for (size_t i=0; i<model->d_strain.size(); i++) {
+
+    model->d_strain[i].copy(value_s);
+    array_strain->InsertNextTuple(value_s);
+
+    model->d_stress[i].copy(value_s);
+    array_stress->InsertNextTuple(value_s);
+  }
+
+
+  // write
+  d_grid_p->GetPointData()->AddArray(array_strain);
+  d_grid_p->GetPointData()->AddArray(array_stress);
+}

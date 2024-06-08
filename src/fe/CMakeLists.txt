@@ -8,6 +8,7 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(FE ${SOURCES})
+add_library(FE ${SOURCES}
+        elemIncludes.h)
 
 target_link_libraries(FE PUBLIC Util RW ${METIS_LIB})

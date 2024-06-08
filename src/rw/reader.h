@@ -347,6 +347,20 @@ bool readMshFilePointData(const std::string &filename,
                           const std::string &tag,
                           std::vector<double> *data);
 
+/*!
+ * @brief Reads cell data, i.e. element-node connectivity and node-element connectivity
+ * @param filename Name of mesh file
+ * @param dim Dimension
+ * @param element_type Type of element
+ * @param num_elem Number of elements
+ * @param enc Element-node connectivity
+ * @param nec Node-element connectivity
+ */
+void readMshFileCells(const std::string &filename, size_t dim,
+                      size_t &element_type, size_t &num_elem,
+                      std::vector<size_t> *enc,
+                      std::vector<std::vector<size_t>> *nec);
+
 /** @}*/
 
 } // namespace reader

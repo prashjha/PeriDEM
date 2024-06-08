@@ -30,6 +30,8 @@ struct MeshDeck {
   /*!
    * @brief Tag for spatial discretization
    *
+   * @note Value of this variable is equal to @ModelDeck::d_spatialDiscretization
+   *
    * List of allowed values are:
    * - \a finite_difference
    * - \a weak_finite_element
@@ -37,6 +39,18 @@ struct MeshDeck {
    * - \a truss_finite_element
    */
   std::string d_spatialDiscretization;
+
+  /*!
+   * @brief Flag to indicate if we should populate element-node connectivity data in meshes
+   * @note Value of this variable is equal to @ModelDeck::d_populateElementNodeConnectivity
+   */
+  bool d_populateElementNodeConnectivity;
+
+  /*!
+   * @brief Order of quadrature approximation for strain and stress computation (default is 1)
+   * @note Value of this variable is equal to @ModelDeck::d_quadOrder
+   */
+  size_t d_quadOrder;
 
   /*! @brief Filename to read mesh data */
   std::string d_filename;
@@ -65,6 +79,8 @@ struct MeshDeck {
     std::ostringstream oss;
     oss << tabS << "------- MeshDeck --------" << std::endl << std::endl;
     oss << tabS << "Dimension = " << d_dim << std::endl;
+    oss << tabS << "Populate element-node connectivity data = " << d_populateElementNodeConnectivity << std::endl;
+    oss << tabS << "Order of quad approximation = " << d_quadOrder << std::endl;
     oss << tabS << "Spatial discretization type = " << d_spatialDiscretization
         << std::endl;
     oss << tabS << "Filename = " << d_filename << std::endl;

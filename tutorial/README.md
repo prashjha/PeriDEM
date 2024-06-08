@@ -15,7 +15,7 @@ See jupyter notebook [two-particles test](two_particles.ipynb) where we clearly 
 ## Particle and wall test
 See [particle_wall.py](particle_wall.py). You can run the example using
 ```sh
-python3 particle_wall.py --peridem_path=<path to PeriDEM executible>
+python3 particle_wall.py --peridem_path=<path to PeriDEM executable>
 ```
 
 | <img src="assets/particle_wall.gif" width="600"> | 

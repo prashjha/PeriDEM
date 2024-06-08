@@ -21,7 +21,8 @@
 /*! @brief Collection of methods and data related to particle object */
 namespace particle {
 
-/*! @brief A class to store particle geometry, nodal discretization, and methods
+/*!
+ * @brief A class to store particle geometry, nodal discretization, and methods
  *
  * This class generates a base particle for peri-dem simulations. It holds
  * the nodal positions, geometry of particle, list of nodes
@@ -69,7 +70,7 @@ public:
       : d_type(type), d_typeIndex(-1), d_id(id), d_typeId(type_id), d_zoneId(zone_id), d_dim(dim),
         d_numNodes(num_nodes), d_h(h), d_horizon(0), d_density(0), d_computeForce(true),
         d_material_p(nullptr), d_Rc(0.), d_Kn(0.), d_globStart(0), d_globEnd(0),
-        d_modelData_p(model_data) {
+        d_globQuadStart(0), d_globQuadEnd(0), d_modelData_p(model_data) {
 
     if (type == "particle")
       d_typeIndex = 0;
@@ -834,6 +835,14 @@ public:
 
   /*! @brief Id of last node of this object in global node list */
   size_t d_globEnd;
+
+  /*! @brief Id of first node of this object in global quadrature data list,
+   * e.g., strain in elements at quadrature points */
+  size_t d_globQuadStart;
+
+  /*! @brief Id of last node of this object in global quadrature data list,
+   * e.g., strain in elements at quadrature points */
+  size_t d_globQuadEnd;
 
   /*! @brief Reference to model class */
   std::shared_ptr<model::ModelData> d_modelData_p;

@@ -82,7 +82,7 @@ to modify simulation parameters and run the simulation using
 (in directoy [PeriDEM/two_particles_wall/concave_diff_material_diff_size](PeriDEM/two_particles_wall/concave_diff_material_diff_size)).
 `run.sh` shows how different input files are created for the simulation.
 
-> :exclamation: You may need to modify the path of `PeriDEM` executible in `run.sh` file.
+> :exclamation: You may need to modify the path of `PeriDEM` executable in `run.sh` file.
 
 
 > In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`.

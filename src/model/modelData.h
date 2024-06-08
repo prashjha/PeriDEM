@@ -11,6 +11,8 @@
 #ifndef MODEL_MODELDATA_H
 #define MODEL_MODELDATA_H
 
+#include "util/point.h"
+#include "util/matrix.h"
 #include "material/mparticle/material.h"
 #include "inp/input.h"
 #include "loading/particleFLoading.h"
@@ -619,6 +621,54 @@ public:
 
   /*! @brief Damage at nodes */
   std::vector<float> d_Z;
+
+  /**
+   * @name Minor simulation data
+   *
+   * These are postprocessing data and are created if only required during output or postprocessing.
+   */
+  /**@{*/
+
+  /*! @brief Energy of the nodes */
+  std::vector<float> d_e;
+
+  /*! @brief Work done on each of the nodes */
+  std::vector<float> d_w;
+
+  /*! @brief Damage function \f$ \phi \f$ at the nodes */
+  std::vector<float> d_phi;
+
+  /*! @brief Fracture energy of the nodes */
+  std::vector<float> d_eF;
+
+  /*! @brief Bond-based fracture energy of the nodes */
+  std::vector<float> d_eFB;
+
+  /*! @brief Current position of quadrature points */
+  std::vector<util::Point> d_xQuadCur;
+
+  /*! @brief Strain in elements (values at quadrature points) */
+  std::vector<util::SymMatrix3> d_strain;
+
+  /*! @brief Stress in elements (values at quadrature points) */
+  std::vector<util::SymMatrix3> d_stress;
+
+  /*! @brief Total internal energy */
+  float d_te;
+
+  /*! @brief Total work done */
+  float d_tw;
+
+  /*! @brief Total kinetic energy */
+  float d_tk;
+
+  /*! @brief Total fracture energy */
+  float d_teF;
+
+  /*! @brief Total bond-based fracture energy */
+  float d_teFB;
+
+  /** @}*/
 };
 
 /** @}*/

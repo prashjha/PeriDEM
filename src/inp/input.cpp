@@ -37,11 +37,18 @@ void rectDataSizeWarning() {
 
 } // namespace
 
-inp::Input::Input(const std::string &filename)
-    : d_meshDeck_p(nullptr), d_materialDeck_p(nullptr), d_outputDeck_p(nullptr),
+inp::Input::Input(std::string filename, bool createDefault)
+    : d_inputFilename(filename), d_createDefault(createDefault), d_meshDeck_p(nullptr), d_materialDeck_p(nullptr), d_outputDeck_p(nullptr),
       d_modelDeck_p(nullptr) {
 
-  d_inputFilename = filename;
+  if (d_inputFilename.empty() and d_createDefault) {
+    std::cout << "Input: YAML input filename is empty and createDefault is true. "
+                 "Default input decks will be created.\n";
+  }
+  else {
+    std::cerr << "Input: YAML input filename is empty. Exiting.\n";
+    exit(EXIT_FAILURE);
+  }
 
   // follow the order of reading
   setModelDeck();
@@ -57,6 +64,10 @@ inp::Input::Input(const std::string &filename)
   if (!d_modelDeck_p->d_isPeriDEM)
     setMaterialDeck();
   setOutputDeck();
+}
+
+void createDefaultInputConfiguration() {
+
 }
 
 //
@@ -89,6 +100,10 @@ bool inp::Input::isPeriDEM() { return d_modelDeck_p->d_isPeriDEM; }
 //
 void inp::Input::setModelDeck() {
   d_modelDeck_p = std::make_shared<inp::ModelDeck>();
+
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read dimension
@@ -108,9 +123,16 @@ void inp::Input::setModelDeck() {
     d_modelDeck_p->d_spatialDiscretization =
         config["Model"]["Discretization_Type"]["Spatial"].as<std::string>();
 
+
   if (d_modelDeck_p->d_timeDiscretization == "central_difference" or
       d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
     d_modelDeck_p->d_simType = "explicit";
+
+  if (config["Model"]["Populate_ElementNodeConnectivity"])
+    d_modelDeck_p->d_populateElementNodeConnectivity = true;
+
+  if (config["Model"]["Quad_Approximation_Order"])
+    d_modelDeck_p->d_quadOrder = config["Model"]["Quad_Approximation_Order"].as<size_t>();
 
   // check if this is peridem simulation
   if (config["Particle"])
@@ -169,6 +191,10 @@ void inp::Input::setModelDeck() {
 
 void inp::Input::setParticleDeck() {
   d_particleDeck_p = std::make_shared<inp::ParticleDeck>();
+
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read particle container geometry and size
@@ -539,6 +565,10 @@ void inp::Input::setParticleDeck() {
 
 void inp::Input::setContactDeck() {
   d_contactDeck_p = std::make_shared<inp::ContactDeck>();
+
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   if (d_particleDeck_p == nullptr) {
@@ -687,6 +717,9 @@ void inp::Input::setContactDeck() {
 
 void inp::Input::setRestartDeck() {
   d_restartDeck_p = std::make_shared<inp::RestartDeck>();
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read restart file
@@ -715,6 +748,9 @@ void inp::Input::setRestartDeck() {
 
 void inp::Input::setMeshDeck() {
   d_meshDeck_p = std::make_shared<inp::MeshDeck>();
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   // read dimension
@@ -725,6 +761,12 @@ void inp::Input::setMeshDeck() {
   if (config["Model"]["Discretization_Type"]["Spatial"])
     d_meshDeck_p->d_spatialDiscretization =
         config["Model"]["Discretization_Type"]["Spatial"].as<std::string>();
+
+  if (config["Model"]["Populate_ElementNodeConnectivity"])
+    d_meshDeck_p->d_populateElementNodeConnectivity = true;
+
+  if (config["Model"]["Quad_Approximation_Order"])
+    d_meshDeck_p->d_quadOrder = config["Model"]["Quad_Approximation_Order"].as<size_t>();
 
   // read mesh filename
   if (config["Mesh"]["File"])
@@ -743,6 +785,9 @@ void inp::Input::setMeshDeck() {
 
 void inp::Input::setMaterialDeck() {
   d_materialDeck_p = std::make_shared<inp::MaterialDeck>();
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   auto e = config["Material"];
@@ -823,6 +868,9 @@ void inp::Input::setMaterialDeck() {
 
 void inp::Input::setOutputDeck() {
   d_outputDeck_p = std::make_shared<inp::OutputDeck>();
+  if (d_inputFilename.empty() and d_createDefault)
+    return;
+
   YAML::Node config = YAML::LoadFile(d_inputFilename);
 
   if (config["Output"]) {

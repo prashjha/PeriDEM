@@ -28,7 +28,7 @@ set(VERSION_UPDATE 0)
 # config files
 configure_file("${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in" "${PROJECT_SOURCE_DIR}/src/PeriDEMConfig.h")
 
-# executible directory
+# executable directory
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
 
 # set the common library directory
@@ -64,6 +64,7 @@ set(Enable_Documentation FALSE CACHE BOOL "Generate documentation if ON")
 set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if ON")
 set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
 set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
+set(Enable_Apps FALSE CACHE BOOL "Build applications if ON")
 
 #----------------------------------#
 #<<<<<<<<<< Rpath setting >>>>>>>>>>#
@@ -200,7 +201,6 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< Applications >>>>>>>>>>#
 #----------------------------------#
-set(Enable_Apps FALSE CACHE BOOL "Build applications if ON")
 if(${Enable_Apps})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Building apps")
@@ -209,7 +209,7 @@ if(${Enable_Apps})
 endif()
 
 #----------------------------------#
-#<<<<<<<<<< PeriDEM executible >>>>>>>>>>#
+#<<<<<<<<<< PeriDEM executable >>>>>>>>>>#
 #----------------------------------#
 add_executable(PeriDEM src/main.cpp)
 

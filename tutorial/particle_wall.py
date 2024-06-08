@@ -41,12 +41,12 @@ if __name__ == "__main__":
   parser.add_argument('--peridem_path',
                       default=None,
                       type=str,
-                      help="Path to PeriDEM executible")
+                      help="Path to PeriDEM executable")
   args = parser.parse_args()
   if args.peridem_path is None:
-    raise ValueError("Invalid path to PeriDEM executible")
+    raise ValueError("Invalid path to PeriDEM executable")
   if Path(args.peridem_path).is_file() == False:
-    raise ValueError("PeriDEM executible does not exist")
+    raise ValueError("PeriDEM executable does not exist")
 
   fpath = './'
   ## origin (this center is used to discretize the particle and

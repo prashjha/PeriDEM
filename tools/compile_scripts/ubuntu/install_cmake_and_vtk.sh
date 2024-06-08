@@ -62,7 +62,7 @@ fi
 if [ ${cmake_build} = "0" ]; then 
     echo "installing cmake via apt-get"
     sudo apt-get install -y cmake
-    echo "adding cmake executible paths to file" 
+    echo "adding cmake executable paths to file"
     CMAKE_EXE_DIR="/usr/bin"
     echo CMAKE_EXE_DIR="${CMAKE_EXE_DIR}" >> ${path_file}
 else
@@ -83,7 +83,7 @@ else
       sudo apt-get update 
       echo "finally installing cmake using apt-get" 
       sudo apt-get install -y cmake
-      echo "adding cmake executible paths to file" 
+      echo "adding cmake executable paths to file"
       CMAKE_EXE_DIR="/usr/bin"
       echo CMAKE_EXE_DIR="${CMAKE_EXE_DIR}" >> ${path_file}
     else
@@ -120,7 +120,7 @@ else
         rm -rf $CMAKE_SOURCE_DIR
       fi
       echo "installed cmake at path = ${CMAKE_INSTALL_PATH}" 
-      echo "adding cmake executible paths to file"
+      echo "adding cmake executable paths to file"
       echo CMAKE_EXE_DIR="${CMAKE_EXE_DIR}" >> ${path_file}
       echo "building cmake finished"
     fi

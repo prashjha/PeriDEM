@@ -354,7 +354,7 @@ void rw::reader::readMshFile(const std::string &filename, size_t dim,
                              std::vector<size_t> *enc,
                              std::vector<std::vector<size_t>> *nec,
                              std::vector<double> *volumes, bool is_fd) {
-  // call vtk reader
+  // call msh reader
   auto rdr = rw::reader::MshReader(filename);
   rdr.readMesh(dim, nodes, element_type, num_elem, enc, nec, volumes, is_fd);
   rdr.close();
@@ -364,7 +364,7 @@ void rw::reader::readMshFileRestart(const std::string &filename,
                                     std::vector<util::Point> *u,
                                     std::vector<util::Point> *v,
                                     const std::vector<util::Point> *X) {
-  // call vtk reader
+  // call msh reader
   auto rdr = rw::reader::MshReader(filename);
   // if displacement is not in input file, use reference coordinate to get
   // displacement
@@ -390,10 +390,20 @@ void rw::reader::readMshFileRestart(const std::string &filename,
 bool rw::reader::readMshFilePointData(const std::string &filename,
                                       const std::string &tag,
                                       std::vector<double> *data) {
-  // call vtk reader
-  auto rdr = rw::reader::VtkReader(filename);
+  // call msh reader
+  auto rdr = rw::reader::MshReader(filename);
   // get velocity
   auto st = rdr.readPointData(tag, data);
   rdr.close();
   return st;
+}
+
+void rw::reader::readMshFileCells(const std::string &filename, size_t dim,
+                                  size_t &element_type, size_t &num_elem,
+                                  std::vector<size_t> *enc,
+                                  std::vector<std::vector<size_t>> *nec) {
+  // call msh reader
+  auto rdr = rw::reader::MshReader(filename);
+  rdr.readCells(dim, element_type, num_elem, enc, nec);
+  rdr.close();
 }

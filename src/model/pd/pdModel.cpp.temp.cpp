@@ -8,12 +8,10 @@
  * file LICENSE)
  */
 
-#include "demModel.h"
+#include "pdModel.h"
 
 // utils
 #include "material/materialUtil.h"
-#include "particle/particle.h"
-#include "particle/wall.h"
 #include "util/function.h"
 #include "util/geomObjects.h"
 #include "util/matrix.h"
@@ -32,8 +30,6 @@
 #include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
 #include "rw/vtkParticleReader.h"
-#include "fe/elemIncludes.h"
-#include "fe/meshUtil.h"
 
 #include <fmt/format.h>
 #include <fstream>
@@ -46,8 +42,6 @@
 namespace {
 
 FILE *pp_file = nullptr;
-
-int debug_once = -1;
 
 double pen_dist = 0.;
 double contact_area_radius = 0.;
@@ -83,28 +77,28 @@ bool isInList(const std::vector<size_t> *list, size_t i) {
 
 } // namespace
 
-model::DEMModel::DEMModel(inp::Input *deck) : ModelData(deck) {
+model::PDModel::PDModel(inp::Input *deck) : ModelData(deck) {
 
   // initialize logger
   util::io::initLogger(d_outputDeck_p->d_debug,
                        d_outputDeck_p->d_path + "log.txt");
 }
 
-void model::DEMModel::log(std::ostringstream &oss, int priority, bool check_condition, int override_priority,
+void model::PDModel::log(std::ostringstream &oss, int priority, bool check_condition, int override_priority,
                           bool screen_out) {
   int op = override_priority == -1 ? priority : override_priority;
   //if (d_outputDeck_p->d_debug > priority)
   if ((check_condition and d_outputDeck_p->d_debug > priority) or d_outputDeck_p->d_debug > op)
     util::io::log(oss, screen_out);
 }
-void model::DEMModel::log(const std::string &str, int priority, bool check_condition, int override_priority,
+void model::PDModel::log(const std::string &str, int priority, bool check_condition, int override_priority,
                           bool screen_out) {
   int op = override_priority == -1 ? priority : override_priority;  
   if ((check_condition and d_outputDeck_p->d_debug > priority) or d_outputDeck_p->d_debug > op)
     util::io::log(str, screen_out);
 }
 
-void model::DEMModel::run(inp::Input *deck) {
+void model::PDModel::run(inp::Input *deck) {
 
   // initialize data
   init();
@@ -117,9 +111,9 @@ void model::DEMModel::run(inp::Input *deck) {
   integrate();
 }
 
-void model::DEMModel::restart(inp::Input *deck) {
+void model::PDModel::restart(inp::Input *deck) {
 
-  log("DEMModel: Restarting the simulation\n");
+  log("PDModel: Restarting the simulation\n");
 
   // set time step to step specified in restart deck
   d_n = d_restartDeck_p->d_step;
@@ -133,11 +127,11 @@ void model::DEMModel::restart(inp::Input *deck) {
 
   // read displacement and velocity from restart file
   log("  Reading data from restart file = " + d_restartDeck_p->d_file + " \n");
-  auto reader = rw::reader::VtkParticleReader(d_restartDeck_p->d_file);
+  auto reader = rw::reader::VtkParticleReader(d_restartDeck_p->d_file); // TODO
   reader.readNodes(this);
 }
 
-void model::DEMModel::init() {
+void model::PDModel::init() {
 
   // init time step
   d_n = 0;
@@ -147,69 +141,10 @@ void model::DEMModel::init() {
   d_infoN = d_outputDeck_p->d_dtOut;
 
   auto t1 = steady_clock::now();
-  log("DEMModel: Initializing objects.\n");
-
-  // create particles
-  log("DEMModel: Creating particles.\n");
-  createParticles();
-
-  // create particles
-  log("DEMModel: Creating walls.\n");
-  createWalls();
-
-  // setup contact
-  log("DEMModel: Setting up contact.\n");
-  setupContact();
-
-  // setup element-node connectivity data if needed
-  log("DEMModel: Setting up element-node connectivity data for strain/stress.\n");
-  if (util::methods::isTagInList("Strain_Stress", d_outputDeck_p->d_outTags) or d_modelDeck_p->d_populateElementNodeConnectivity) {
-
-    // read element-node connectivity data if not done
-    for (auto &p: d_rParticles) {
-      fe::Mesh *particle_mesh_p = p->getMeshP();
-      if (!particle_mesh_p->d_encDataPopulated &&
-            particle_mesh_p->d_enc.size() == 0) {
-        particle_mesh_p->readElementData(particle_mesh_p->d_filename);
-      }
-    }
-
-    // setup quadrature point and strain/stress data
-    // we need to know size of the data
-    size_t totalQuadPoints = 0;
-    for (auto &p: d_particles) {
-      const auto *particle_mesh_p = p->d_rp_p->getMeshP();
-
-      // get Quadrature
-      fe::BaseElem *elem;
-      if (particle_mesh_p->getElementType() == util::vtk_type_line)
-        elem = new fe::LineElem(d_modelDeck_p->d_quadOrder);
-      else if (particle_mesh_p->getElementType() == util::vtk_type_triangle)
-        elem = new fe::TriElem(d_modelDeck_p->d_quadOrder);
-      else if (particle_mesh_p->getElementType() == util::vtk_type_quad)
-        elem = new fe::QuadElem(d_modelDeck_p->d_quadOrder);
-      else if (particle_mesh_p->getElementType() == util::vtk_type_tetra)
-        elem = new fe::TetElem(d_modelDeck_p->d_quadOrder);
-      else {
-        std::cerr << fmt::format("Error: Can not compute strain/stress as the element "
-                                 "type = {} is not yet supported in this routine.\n", particle_mesh_p->getElementType());
-        exit(EXIT_FAILURE);
-      }
-
-      p->d_globQuadStart = totalQuadPoints;
-      totalQuadPoints += particle_mesh_p->getNumElements() *
-                         elem->getNumQuadPoints();
-      p->d_globQuadEnd = totalQuadPoints;
-    }
-
-    // resize data
-    d_xQuadCur.resize(totalQuadPoints);
-    d_strain.resize(totalQuadPoints);
-    d_stress.resize(totalQuadPoints);
-  } // setting up quadrature data
+  log("PDModel: Initializing objects.\n");
 
   // create search object
-  log("DEMModel: Creating neighbor search tree.\n");
+  log("PDModel: Creating neighbor search tree.\n");
 
   // create tree object
   d_nsearch_p = std::make_unique<NSearch>(d_x, d_outputDeck_p->d_debug);
@@ -217,71 +152,44 @@ void model::DEMModel::init() {
   // setup tree
   double set_tree_time = d_nsearch_p->updatePointCloud(d_x, true);
   set_tree_time += d_nsearch_p->setInputCloud();
-  log(fmt::format("DEMModel: Tree setup time (ms) = {}. \n", set_tree_time));
+  log(fmt::format("PDModel: Tree setup time (ms) = {}. \n", set_tree_time));
 
   // create neighborlists
-  log("DEMModel: Creating neighborlist for peridynamics.\n");
-  // log("DEMModel: Creating neighborlist for contact.\n");
+  log("PDModel: Creating neighborlist for peridynamics.\n");
   updatePeridynamicNeighborlist();
-  // updateContactNeighborlist();
-  // updateNeighborlistCombine();
 
   // create peridynamic bonds
-  log("DEMModel: Creating peridynamics bonds.\n");
+  log("PDModel: Creating peridynamics bonds.\n");
   d_fracture_p = std::make_unique<geometry::Fracture>(&d_x, &d_neighPd);
 
   // compute quantities in state-based simulations
-  log("DEMModel: Compute state-based peridynamic quantities.\n");
-  material::computeStateMx(this, true);
+  log("PDModel: Compute state-based peridynamic quantities.\n");
+  material::computeStateMx(this, true); // TODO
 
   // initialize loading class
-  log("DEMModel: Initializing displacement loading object.\n");
+  log("PDModel: Initializing displacement loading object.\n");
   d_uLoading_p =
-      std::make_unique<loading::ParticleULoading>(d_pDeck_p->d_dispDeck);
+      std::make_unique<loading::ParticleULoading>(d_pDeck_p->d_dispDeck); // TODO
   for (auto &p : d_allParticles)
     d_uLoading_p->setFixity(p);
 
-  log("DEMModel: Initializing force loading object.\n");
+  log("PDModel: Initializing force loading object.\n");
   d_fLoading_p =
-      std::make_unique<loading::ParticleFLoading>(d_pDeck_p->d_forceDeck);
+      std::make_unique<loading::ParticleFLoading>(d_pDeck_p->d_forceDeck); // TODO
 
-  // if all dofs of particle is fixed, then mark it so that we do not
-  // compute force
-  // MAYBE NOT as we may be interested in reaction forces
-  //  for (auto &p : d_allParticles)
-  //    p->checkFixityForForce(); // TODO implement
-
-  // if this is a two-particle test, we set the force calculation off in
-  // first particle
-  if (d_pDeck_p->d_testName == "two_particle")
-    d_particles[0]->d_computeForce = false;
-
-  log(fmt::format("DEMModel: Total particles = {}. \n", d_particles.size()));
-
-  for (const auto &w : d_walls)
-    if (!w->d_computeForce)
-      log(fmt::format("DEMModel: Force OFF in Wall i = {}. \n", w->getTypeId()));
-
-  log("DEMModel: Creating list of nodes on which force is to be computed.\n");
-  // TODO for now we simply look at particle/wall and check if we compute
-  //  force on any of its node. Later, one can have control on individual
-  //  nodes of particle/wall and remove from d_fCompNodes if no force is to
-  //  be computed on them
+  log("PDModel: Creating list of nodes on which force is to be computed.\n");
   for (size_t i = 0; i < d_x.size(); i++) {
-    const auto &ptId = d_ptId[i];
-    const auto &pi = getBaseParticle(ptId);
-    if (pi->d_computeForce) {
-      d_fContCompNodes.push_back(i);
-      if (pi->getTypeIndex() == 0)
-        d_fPdCompNodes.push_back(i); // internal force on particles
-    }
+    if (  util::methods::isFree(getFix(i), 0)
+        & util::methods::isFree(getFix(i), 1)
+        & util::methods::isFree(getFix(i), 2))
+      d_fPdCompNodes.push_back(i); // internal force on particles
   }
 
   // initialize remaining fields (if any)
   d_Z = std::vector<float>(d_x.size(), 0.);
 
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Total setup time (ms) = {}. \n",
+  log(fmt::format("PDModel: Total setup time (ms) = {}. \n",
                   util::methods::timeDiff(t1, t2)));
 
   // compute complexity information
@@ -291,15 +199,13 @@ void model::DEMModel::init() {
       if (util::methods::isFree(f, dof))
         free_dofs++;
   }
-  log(fmt::format("DEMModel: Computational complexity information \n"
-                  "  Number of "
-                  "particles = {}, number of walls = {}, number of dofs = {},"
+  log(fmt::format("PDModel: Computational complexity information \n"
+                  "  Number of dofs = {},"
                   " number of free dofs = {}. \n",
-                  d_particles.size(), d_walls.size(), 3 * d_x.size(),
-                  free_dofs));
+                  3 * d_x.size(), free_dofs));
 }
 
-void model::DEMModel::integrate() {
+void model::PDModel::integrate() {
 
   // perform output at the beginning
   if (d_n == 0 && d_outputDeck_p->d_performOut)
@@ -315,7 +221,7 @@ void model::DEMModel::integrate() {
 
   for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 
-    log(fmt::format("DEMModel: Time step: {}, time: {:.6f}\n", i, d_time), 2, d_n % d_infoN == 0, 3);
+    log(fmt::format("PDModel: Time step: {}, time: {:.6f}\n", i, d_time), 2, d_n % d_infoN == 0, 3);
     
     clock_begin = steady_clock::now();
     log("Integrating\n", false, 0, 3);
@@ -350,7 +256,7 @@ void model::DEMModel::integrate() {
   } // loop over time steps
 
   log(fmt::format(
-          "DEMModel: Total compute time information (s) \n"
+          "PDModel: Total compute time information (s) \n"
           "  Integration = {:.6f}, Peridynamic = {:.6f}, Contact = {:.6f}, "
           "Tree update = {:.6f}, External force = {:.6f}\n",
           integrate_compute_time * 1.e-6, pd_compute_time * 1.e-6,
@@ -358,14 +264,14 @@ void model::DEMModel::integrate() {
           extf_compute_time * 1.e-6), 1);
 }
 
-void model::DEMModel::integrateStep() {
+void model::PDModel::integrateStep() {
   if (d_modelDeck_p->d_timeDiscretization == "central_difference")
     integrateCD();
   else if (d_modelDeck_p->d_timeDiscretization == "velocity_verlet")
     integrateVerlet();
 }
 
-void model::DEMModel::integrateCD() {
+void model::PDModel::integrateCD() {
 
   // update velocity and displacement
   const auto dt = d_modelDeck_p->d_dt;
@@ -406,7 +312,7 @@ void model::DEMModel::integrateCD() {
   computeForces();
 }
 
-void model::DEMModel::integrateVerlet() {
+void model::PDModel::integrateVerlet() {
 
   // update velocity and displacement
   const auto dt = d_modelDeck_p->d_dt;
@@ -472,7 +378,7 @@ void model::DEMModel::integrateVerlet() {
   }
 }
 
-void model::DEMModel::computeForces() {
+void model::PDModel::computeForces() {
 
   bool dbg_condition = d_n % d_infoN == 0;
 
@@ -522,7 +428,7 @@ void model::DEMModel::computeForces() {
   log(fmt::format("    External force time (ms) = {} \n", extf_time), 2, dbg_condition, 3);
 }
 
-void model::DEMModel::computePeridynamicForces() {
+void model::PDModel::computePeridynamicForces() {
 
   log("    Computing peridynamic force \n", 3);
 
@@ -712,7 +618,7 @@ void model::DEMModel::computePeridynamicForces() {
   executor.run(taskflow).get();
 }
 
-void model::DEMModel::computeExternalForces() {
+void model::PDModel::computeExternalForces() {
 
   log("    Computing external force \n", 3);
 
@@ -735,13 +641,13 @@ void model::DEMModel::computeExternalForces() {
     d_fLoading_p->apply(d_time, p); // applied in parallel
 }
 
-void model::DEMModel::computeExternalDisplacementBC() {
+void model::PDModel::computeExternalDisplacementBC() {
   log("    Computing external displacement bc \n", 3);
   for (auto &p : d_allParticles)
     d_uLoading_p->apply(d_time, p); // applied in parallel
 }
 
-void model::DEMModel::computeContactForces() {
+void model::PDModel::computeContactForces() {
 
   log("    Computing normal contact force \n", 3);
 
@@ -997,7 +903,7 @@ void model::DEMModel::computeContactForces() {
   } // loop over particle for damping
 }
 
-void model::DEMModel::applyInitialCondition() {
+void model::PDModel::applyInitialCondition() {
 
   log("Applying initial condition \n", 3);
 
@@ -1023,7 +929,7 @@ void model::DEMModel::applyInitialCondition() {
   executor.run(taskflow).get();
 }
 
-void model::DEMModel::createParticles() {
+void model::PDModel::createParticles() {
 
   d_particles.resize(0);
   d_allParticles.resize(0);
@@ -1049,13 +955,13 @@ void model::DEMModel::createParticles() {
     auto rep_p_params = pz.d_params;
 
     // read mesh data
-    log("DEMModel: Creating mesh for reference particle in zone = " +
+    log("PDModel: Creating mesh for reference particle in zone = " +
                   std::to_string(z_id) + "\n");
     auto *mesh = new fe::Mesh(&pz.d_meshDeck);
     // mesh->print();
 
     // create the reference particle
-    log("DEMModel: Creating reference particle in zone = " +
+    log("PDModel: Creating reference particle in zone = " +
                   std::to_string(z_id) + "\n");
 
     auto ref_p = std::make_shared<particle::RefParticle>(&pz, mesh);
@@ -1082,7 +988,7 @@ void model::DEMModel::createParticles() {
     // mdeck.print();
 
     // check the particle generation method
-    log("DEMModel: Creating particles in zone = " +
+    log("PDModel: Creating particles in zone = " +
                   std::to_string(z_id) + "\n");
 
     if (pz.d_genMethod == "From_File")
@@ -1100,7 +1006,7 @@ void model::DEMModel::createParticles() {
   }
 }
 
-void model::DEMModel::createParticlesFromFile(
+void model::PDModel::createParticlesFromFile(
     size_t z, std::shared_ptr<particle::RefParticle> ref_p) {
 
   // get particle zone
@@ -1214,7 +1120,7 @@ void model::DEMModel::createParticlesFromFile(
   }
 }
 
-void model::DEMModel::createWalls() {
+void model::PDModel::createWalls() {
 
   d_walls.resize(0);
   size_t wall_id_begin = d_particles.size();
@@ -1230,7 +1136,7 @@ void model::DEMModel::createWalls() {
     // read and create mesh data
     fe::Mesh *mesh;
     if (wz.d_meshFlag) {
-      log("DEMModel: Creating mesh for wall in zone = " +
+      log("PDModel: Creating mesh for wall in zone = " +
                     std::to_string(z_id) + "\n");
       // wz.d_meshDeck.print();
       mesh = new fe::Mesh(&wz.d_meshDeck);
@@ -1262,7 +1168,7 @@ void model::DEMModel::createWalls() {
     mdeck.d_horizon = horizon;
 
     // create wall
-    log("DEMModel: Creating wall in zone = " + std::to_string(z_id) +
+    log("PDModel: Creating wall in zone = " + std::to_string(z_id) +
                   "\n");
     auto wall =
         new particle::Wall(z + wall_id_begin, z, wz, z_id, mesh,
@@ -1274,7 +1180,7 @@ void model::DEMModel::createWalls() {
   }
 }
 
-void model::DEMModel::setupContact() {
+void model::PDModel::setupContact() {
 
   // loop over all particle zones and get minimum value of mesh size
   size_t c = 0;
@@ -1293,7 +1199,7 @@ void model::DEMModel::setupContact() {
       d_hMax = h;
   }
 
-  log(fmt::format("DEMModel: Contact setup\n  hmin = {:.6f}, hmax = {:.6f} \n", d_hMin, d_hMax), 1);
+  log(fmt::format("PDModel: Contact setup\n  hmin = {:.6f}, hmax = {:.6f} \n", d_hMin, d_hMax), 1);
 
   d_maxContactR = 0.;
   // precompute bulk modulus of all zones
@@ -1362,7 +1268,7 @@ void model::DEMModel::setupContact() {
   }
 }
 
-void model::DEMModel::updatePeridynamicNeighborlist() {
+void model::PDModel::updatePeridynamicNeighborlist() {
 
   d_neighPd.resize(d_x.size());
   // d_neighPdSqdDist.resize(d_x.size());
@@ -1390,10 +1296,10 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
   executor.run(taskflow).get();
 
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Peridynamics neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
+  log(fmt::format("PDModel: Peridynamics neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
-void model::DEMModel::updateContactNeighborlist() {
+void model::PDModel::updateContactNeighborlist() {
   d_neighC.resize(d_x.size());
   // d_neighCSqdDist.resize(d_x.size());
   auto t1 = steady_clock::now();
@@ -1419,10 +1325,10 @@ void model::DEMModel::updateContactNeighborlist() {
   executor.run(taskflow).get();
 
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
+  log(fmt::format("PDModel: Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
-void model::DEMModel::updateNeighborlistCombine() {
+void model::PDModel::updateNeighborlistCombine() {
 
   d_neighC.resize(d_x.size());
   // d_neighCSqdDist.resize(d_x.size());
@@ -1467,23 +1373,24 @@ void model::DEMModel::updateNeighborlistCombine() {
   executor.run(taskflow).get();
   
   auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Peridynamics+Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
+  log(fmt::format("PDModel: Peridynamics+Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
-void model::DEMModel::output() {
+void model::PDModel::output() {
 
   // write out % completion of simulation at 10% interval
   {
     float p = float(d_n) * 100. / d_modelDeck_p->d_Nt;
     int m = std::max(1, int(d_modelDeck_p->d_Nt / 10));
     if (d_n % m == 0 && int(p) > 0)
-      log(fmt::format("DEMModel: Simulation {}% complete\n", int(p)));
+      log(fmt::format("PDModel: Simulation {}% complete\n", int(p)));
     ;
   }
 
-  log(fmt::format("DEMModel: Output step = {}, time = {:.6f} \n", d_n, d_time),
+  log(fmt::format("PDModel: Output step = {}, time = {:.6f} \n", d_n, d_time),
       2);
 
+  static int debug_once = 0;
   if (d_outputDeck_p->d_debug > 0 and debug_once < 0) {
 
     debug_once = 0;
@@ -1491,13 +1398,19 @@ void model::DEMModel::output() {
     size_t nt = 1;
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
-    oss << tabS << "*******************************************\n";
-    oss << tabS << "Debug various input decks\n\n\n";
+    oss << tabS << "*******************************************" << std::endl;
+    oss << tabS << "Debug various input decks" << std::endl;
+    oss << tabS << std::endl;
+    oss << tabS << std::endl;
     oss << d_modelDeck_p->printStr(nt + 1);
     oss << d_pDeck_p->printStr(nt + 1);
     oss << d_cDeck_p->printStr(nt + 1);
-    oss << tabS << "\n\n*******************************************\n";
-    oss << tabS << "Debug particle data\n\n\n";
+    oss << tabS << std::endl;
+    oss << tabS << std::endl;
+    oss << tabS << "*******************************************" << std::endl;
+    oss << tabS << "Debug particle data" << std::endl;
+    oss << tabS << std::endl;
+    oss << tabS << std::endl;
     oss << tabS << "Number of particles = " << d_particles.size() << std::endl;
     oss << tabS << "Number of particle zones = " << d_zInfo.size() << std::endl;
     for (auto zone : d_zInfo) {
@@ -1513,7 +1426,29 @@ void model::DEMModel::output() {
 
     oss << tabS << "h_min = " << d_hMin << ", h_max = " << d_hMax << std::endl;
 
+    // print particles
+    // for (const auto &p : d_particles)
+    //  oss << p->printStr(nt + 1);
+
     log(oss, 2);
+
+    // dump particle and zone in txt file
+    if (false) {
+      std::ofstream file;
+      file.open(d_outputDeck_p->d_path + "dump.txt");
+      file.precision(15);
+      // write particles
+      for (size_t i = 0; i < d_allParticles.size(); i++) {
+
+        auto particle = d_particles[i];
+        for (size_t j = 0; j < particle->getNumNodes(); j++) {
+          auto xj = particle->getXLocal(j);
+          file << xj.d_x << ", " << xj.d_y << ", " << i << ", "
+               << particle->d_zoneId << std::endl;
+        }
+      }
+      file.close();
+    }
   } // end of debug
 
   size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
@@ -1527,27 +1462,12 @@ void model::DEMModel::output() {
   writer.addTimeStep(d_time);
   writer.close();
 
-  if (util::methods::isTagInList("Strain_Stress", d_outputDeck_p->d_outTags)) {
+  bool compute_strain_stress = false;
+  for (const auto &tag : d_outputDeck_p->d_outTags)
+    if (tag == "Strain_Stress")
+      compute_strain_stress = true;
 
-    // compute current position of quadrature points and strain/stress data
-    {
-      for (auto &p: d_particles) {
-        auto p_mat_data = p->getMaterial()->computeMaterialProperties(
-                p->d_rp_p->getMeshP()->getDimension());
-
-        fe::getCurrentQuadPoints(p->d_rp_p->getMeshP(), d_xRef, d_u, d_xQuadCur,
-                                 p->d_globStart, p->d_globQuadStart,
-                                 d_modelDeck_p->d_quadOrder);
-        fe::getStrainStress(p->d_rp_p->getMeshP(), d_xRef, d_u,
-                            d_input_p->getMaterialDeck()->d_isPlaneStrain,
-                            d_strain, d_stress,
-                            p->d_globStart, p->d_globQuadStart,
-                            p_mat_data.d_nu, p_mat_data.d_lambda,
-                            p_mat_data.d_mu,
-                            true, d_modelDeck_p->d_quadOrder);
-      } // for loop over particles
-    } // compute strain/stress block
-
+  if (compute_strain_stress && false) {
     auto writer1 = rw::writer::VtkParticleWriter(d_outputDeck_p->d_path +
                                                  "output_strain_" +
                                                  std::to_string(d_n / dt_out));
@@ -1572,7 +1492,7 @@ void model::DEMModel::output() {
   }
 }
 
-std::string model::DEMModel::ppTwoParticleTest() {
+std::string model::PDModel::ppTwoParticleTest() {
 
   bool continue_dt = false;
   auto check_dt = d_outputDeck_p->d_dtTestOut;
@@ -1618,7 +1538,7 @@ std::string model::DEMModel::ppTwoParticleTest() {
   return fmt::format("  Post-processing: max y = {:.6f} \n", max_y);
 }
 
-void model::DEMModel::checkStop() {
+void model::PDModel::checkStop() {
 
   if (d_outputDeck_p->d_outCriteria == "max_particle_dist" &&
       d_pDeck_p->d_testName == "two_particle") {
@@ -1655,7 +1575,7 @@ void model::DEMModel::checkStop() {
     //   if (pp_file)
     //     fclose(pp_file);
 
-    //   log(fmt::format("DEMModel: Terminating simulation as one of the failing"
+    //   log(fmt::format("PDModel: Terminating simulation as one of the failing"
     //                   " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
     //                   "distance {:.6f} "
     //                   "more than"
@@ -1667,7 +1587,7 @@ void model::DEMModel::checkStop() {
   }
 }
 
-std::string model::DEMModel::ppCompressiveTest() {
+std::string model::PDModel::ppCompressiveTest() {
   bool continue_dt = false;
   auto check_dt = d_outputDeck_p->d_dtTestOut;
   if ((d_n % check_dt == 0) && (d_n >= check_dt))
