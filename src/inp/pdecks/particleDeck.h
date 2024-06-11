@@ -33,13 +33,10 @@ struct ParticleDeck {
   std::vector<inp::Zone> d_zoneVec;
 
   /*! @brief Maps particle/wall to corresponding zone */
-  std::vector<std::pair<std::string, size_t>> d_zoneToPorWDeck;
+  std::vector<std::pair<std::string, size_t>> d_zoneToParticleORWallDeck;
 
   /*! @brief Particle in zones */
-  std::vector<inp::ParticleZone> d_pZones;
-
-  /*! @brief Walls */
-  std::vector<inp::WallZone> d_wZones;
+  std::vector<inp::ParticleZone> d_particleZones;
 
   /*!
    * @brief Geometry of container in which all particles reside. Currently,
@@ -69,10 +66,10 @@ struct ParticleDeck {
   std::string d_testName;
 
   /*! @brief if it is a compressive test, specify wall id and direction */
-  size_t d_wallIdCompressiveTest;
+  size_t d_particleIdCompressiveTest;
 
   /*! @brief if it is a compressive test, specify force direction on wall */
-  size_t d_wallForceDirectionCompressiveTest;
+  size_t d_particleForceDirectionCompressiveTest;
 
   /*!
    * @brief Constructor
@@ -80,8 +77,8 @@ struct ParticleDeck {
   ParticleDeck()
       : d_contGeom_p(nullptr), d_pNeighDeck(inp::PNeighborDeck()),
         d_gravityActive(false), d_gravity(), d_icDeck(),
-        d_testName(""), d_wallIdCompressiveTest(0),
-        d_wallForceDirectionCompressiveTest(0) {};
+        d_testName(""), d_particleIdCompressiveTest(0),
+        d_particleForceDirectionCompressiveTest(0) {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -95,17 +92,11 @@ struct ParticleDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- ParticleDeck --------" << std::endl << std::endl;
-    oss << tabS << "Number of particle zones  = " << d_pZones.size() << std::endl;
-    oss << tabS << "Number of wall zones  = " << d_wZones.size() << std::endl;
+    oss << tabS << "Number of particle zones  = " << d_particleZones.size() << std::endl;
     oss << tabS << "Particle data:" << std::endl;
-    for (size_t i = 0; i < d_pZones.size(); i++) {
+    for (size_t i = 0; i < d_particleZones.size(); i++) {
       oss << tabS << "Particle data for zone = " << i << std::endl;
-      oss << d_pZones[i].printStr(nt+1, lvl);
-    }
-    oss << tabS << "Wall data:" << std::endl;
-    for (size_t i = 0; i < d_wZones.size(); i++) {
-      oss << tabS << "Wall data for zone = " << i << std::endl;
-      oss << d_wZones[i].printStr(nt+1, lvl);
+      oss << d_particleZones[i].printStr(nt + 1, lvl);
     }
     oss << tabS << "Container geometry info:" << std::endl;
     oss << d_contGeom_p->printStr(nt+1, lvl);

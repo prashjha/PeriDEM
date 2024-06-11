@@ -10,13 +10,10 @@
 
 #include "modelData.h"
 #include "particle/baseParticle.h"
-#include "particle/particle.h"
-#include "particle/wall.h"
-#include "particle/refParticle.h"
 
 double model::ModelData::getDensity(size_t i) {
-  return d_allParticles[d_ptId[i]]->getDensity();
+  return d_particlesListTypeAll[d_ptId[i]]->getDensity();
 };
 double model::ModelData::getHorizon(size_t i) {
-  return d_allParticles[d_ptId[i]]->getHorizon();
+  return d_particlesListTypeAll[d_ptId[i]]->getHorizon();
 };

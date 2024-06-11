@@ -206,15 +206,6 @@ private:
                                    inp::ParticleZone *particle_data);
 
   /*!
-   * @brief Read wall data
-   *
-   * @param string_zone String associated with zone to get the data from YAML file
-   * @param wall_data Pointer to wall data
-   */
-  void setWallData(std::string string_zone,
-                       inp::WallZone *wall_data);
-
-  /*!
    * @brief Read data into particle deck and store its pointer
    */
   void setContactDeck();

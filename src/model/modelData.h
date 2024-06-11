@@ -64,36 +64,36 @@ public:
    * @param i Location in the particle list
    * @return Pointer Pointer to base particle
    */
-  const particle::BaseParticle* getBaseParticle(size_t i) const { return
-            d_allParticles[i]; };
+  const particle::BaseParticle* getParticleFromAllList(size_t i) const { return
+            d_particlesListTypeAll[i]; };
 
-  /*! @copydoc getBaseParticle(size_t i) const */
-  particle::BaseParticle* &getBaseParticle(size_t i) { return
-                                                     d_allParticles[i]; };
+  /*! @copydoc getParticleFromAllList(size_t i) const */
+  particle::BaseParticle* &getParticleFromAllList(size_t i) { return
+                                                     d_particlesListTypeAll[i]; };
 
   /*!
    * @brief Get pointer to particle (excluding wall)
    * @param i Location in the particle list
    * @return Pointer Pointer to particle
    */
-  const particle::Particle* getParticle(size_t i) const { return
-            d_particles[i]; };
+  const particle::BaseParticle* getParticleFromParticleList(size_t i) const { return
+            d_particlesListTypeParticle[i]; };
 
   /*! @copydoc getParticle(size_t i) const */
-  particle::Particle* &getParticle(size_t i) { return
-            d_particles[i]; };
+  particle::BaseParticle* &getParticleFromParticleList(size_t i) { return
+            d_particlesListTypeParticle[i]; };
 
   /*!
    * @brief Get pointer to wall
    * @param i Location in the wall list
    * @return Pointer Pointer to wall
    */
-  const particle::Wall* getWall(size_t i) const { return
-              d_walls[i]; };
+  const particle::BaseParticle* getParticleFromWallList(size_t i) const { return
+              d_particlesListTypeWall[i]; };
 
   /*! @copydoc getWall(size_t i) const */
-  particle::Wall* &getWall(size_t i) { return
-        d_walls[i]; };
+  particle::BaseParticle* &getParticleFromWallList(size_t i) { return
+            d_particlesListTypeWall[i]; };
 
   /*!
    * @brief Get density of particle
@@ -529,18 +529,20 @@ public:
   double d_maxContactR;
 
   /*! @brief Pointer to reference particle */
-  std::vector<std::shared_ptr<particle::RefParticle>> d_rParticles;
+  std::vector<std::shared_ptr<particle::RefParticle>> d_referenceParticles;
 
   /*! @brief List of particles + walls */
-  std::vector<particle::BaseParticle*> d_allParticles;
+  std::vector<particle::BaseParticle*> d_particlesListTypeAll;
 
   /*! @brief List of particles */
-  std::vector<particle::Particle*> d_particles;
+  std::vector<particle::BaseParticle*> d_particlesListTypeParticle;
 
-  /*! @brief List of particles */
-  std::vector<particle::Wall*> d_walls;
+  /*! @brief List of walls */
+  std::vector<particle::BaseParticle*> d_particlesListTypeWall;
 
-  /*! @brief Zone information of particles */
+  /*! @brief Zone information of particles. For zone 0, d_zInfo[0] = [n1, n2]
+   * where n1 is the index at which the particle in this zone starts in d_particlesListTypeAll
+   * and n2 is the index + 1, where index is at which the particle in this zone ends. */
   std::vector<std::vector<size_t>> d_zInfo;
 
   /*! @brief Pointer to displacement Loading object */

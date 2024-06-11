@@ -15,9 +15,6 @@
 #include "util/methods.h"
 #include "model/modelData.h"
 #include "particle/baseParticle.h"
-#include "particle/particle.h"
-#include "particle/wall.h"
-#include "particle/refParticle.h"
 
 #include <cstdint>
 

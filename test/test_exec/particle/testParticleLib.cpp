@@ -9,7 +9,7 @@
  */
 
 #include "testParticleLib.h"
-#include "particle/particle.h"
+#include "particle/baseParticle.h"
 #include "util/point.h"
 #include "util/matrix.h"
 #include <bitset>

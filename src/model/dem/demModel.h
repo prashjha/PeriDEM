@@ -167,8 +167,13 @@ public:
   virtual void createParticlesFromFile(size_t z,
                                        std::shared_ptr<particle::RefParticle> ref_p);
 
-  /*! @brief Creates walls */
-  virtual void createWalls();
+  /*! @brief Creates geometrical object for a particle given particle radius, orientation, and site location */
+  virtual void createGeometryAtSite(const double &particle_radius,
+                                    const double &particle_orient,
+                                    const util::Point &site,
+                                    const std::vector<double> &rep_geom_params,
+                                    const std::shared_ptr<util::geometry::GeomObject> &rep_geom_p,
+                                    std::shared_ptr<util::geometry::GeomObject> &p_geom);
 
   /*! @brief Update neighborlist for contact */
   virtual void updateContactNeighborlist();
@@ -181,6 +186,9 @@ public:
 
   /*! @brief Creates particles in a given container */
   virtual void setupContact();
+
+  /*! @brief Sets up quadrature data */
+  virtual void setupQuadratureData();
 
   /** @}*/
 

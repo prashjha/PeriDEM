@@ -12,8 +12,7 @@
 
 #include "model/dem/demModel.h"
 #include "material/materialUtil.h"
-#include "particle/particle.h"
-#include "particle/wall.h"
+#include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/geomObjects.h"
 #include "util/matrix.h"
@@ -98,10 +97,8 @@ public:
           exit(EXIT_FAILURE);
         }
 
-        p->d_globQuadStart = totalQuadPoints;
         totalQuadPoints += particle_mesh_p->getNumElements() *
                            elem->getNumQuadPoints();
-        p->d_globQuadEnd = totalQuadPoints;
       }
 
       if (d_xQuadCur.size() != totalQuadPoints
@@ -318,31 +315,48 @@ public:
 
 int main(int argc, char *argv[]) {
 
+  // print program version
+  std::cout << "twop (PeriDEM)"
+            << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION << "."
+            << UPDATE_VERSION << ")" << std::endl << std::flush;
+
   util::io::InputParser input(argc, argv);
 
   if (input.cmdOptionExists("-h")) {
     // print help
-    std::cout << "Syntax to run the app: ./twop -i <input file> -n <number of threads>";
-    std::cout << "Example: ./twop -i input.yaml -n 4";
+    std::cout << "Syntax to run the app: ./twop -i <input file> -nThreads <number of threads>";
+    std::cout << "Example: ./twop -i input.yaml -nThreads 4";
   }
-  
-  // print program version
-  std::cout << "twop (PeriDEM)"
-            << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION << "."
-            << UPDATE_VERSION << ")" << std::endl;
+
+  // read input arguments
+  unsigned int nThreads;
+  if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
+  else {
+    nThreads = 2;
+    util::io::print(fmt::format("Running twop with number of threads = {}\n", nThreads));
+  }
+  // set number of threads
+  util::parallel::initNThreads(nThreads);
+  util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
+
+  std::string filename;
+  if (input.cmdOptionExists("-i"))
+    filename = input.getCmdOption("-i");
+  else {
+    filename = "./example/input_0.yaml";
+    util::io::print(fmt::format("Running twop with example input file = {}\n", filename));
+  }
 
   // current time
   auto begin = steady_clock::now();
 
-  // read input data
-  std::string filename = input.getCmdOption("-f");
+  // create deck
   auto *deck = new inp::Input(filename);
 
   // check which model to run
   if (deck->isPeriDEM()) {
     // ensure two variables in the deck are set
     deck->getModelDeck()->d_populateElementNodeConnectivity = true;
-    deck->getMeshDeck()->d_populateElementNodeConnectivity = true;
 
     // simulate model
     twop::Model dem(deck);

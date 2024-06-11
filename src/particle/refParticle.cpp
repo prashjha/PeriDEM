@@ -15,9 +15,16 @@
 #include <iostream>
 
 // Reference particle class
-particle::RefParticle::RefParticle(inp::ParticleZone *z_deck, fe::Mesh *mesh)
-    : d_mesh_p(mesh), d_centerNode(0), d_geom_p(z_deck->d_rParticle_p),
-      d_pRadius(z_deck->d_rParticle_p->boundingRadius()) {
+particle::RefParticle::RefParticle(size_t id,
+                                   std::shared_ptr<model::ModelData> model_data,
+                                   std::shared_ptr<util::geometry::GeomObject> geom,
+                                   std::shared_ptr<fe::Mesh> mesh)
+    : d_id(id),
+      d_modelData_p(model_data),
+      d_geom_p(geom),
+      d_mesh_p(mesh),
+      d_centerNode(0),
+      d_pRadius(geom->boundingRadius()) {
 
   if (d_pRadius < 1.0E-10) {
     std::cerr << "Error: Reference particle radius is too small.\n";

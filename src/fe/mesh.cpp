@@ -203,7 +203,7 @@ bool fe::Mesh::readElementData(const std::string &filename) {
     return false;
   }
 
-  util::io::log("Mesh: Reading element data.\n");
+  util::io::log("Mesh: Reading element-node connectivity data.\n");
 
   int file_type = -1;
   // find the extension of file and call correct reader
@@ -239,6 +239,8 @@ bool fe::Mesh::readElementData(const std::string &filename) {
     d_encDataPopulated = true;
     return true;
   }
+
+  return false;
 }
 
 void fe::Mesh::computeVol() {

@@ -212,7 +212,7 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
       auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
                                 model->d_neighPd, model->d_neighPdSqdDist,
                                 particle->getMeshSize(),
@@ -228,7 +228,7 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
         auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
                                   model->d_neighPd, model->d_neighPdSqdDist,
                                   particle->getMeshSize(),
@@ -248,7 +248,7 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
 
       auto thetax = computeStateThetaxI(i, model->d_xRef, model->d_u,
                                         model->d_vol,
@@ -270,7 +270,7 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
 
         auto thetax = computeStateThetaxI(i, model->d_xRef, model->d_u,
                                           model->d_vol,
@@ -294,7 +294,7 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
 
       auto thetax = computeHydrostaticStrainI(i, model->d_xRef, model->d_u,
                                         model->d_vol,
@@ -314,7 +314,7 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
 
         auto thetax = computeHydrostaticStrainI(i, 
           model->d_xRef, 
@@ -340,7 +340,7 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
 
       updateBondFractureDataI(i, model->d_xRef, model->d_neighPd, model->d_u,
                               particle->getMaterial(),
@@ -354,7 +354,7 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
 
         updateBondFractureDataI(i, 
           model->d_xRef, 

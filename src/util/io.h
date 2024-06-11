@@ -460,6 +460,27 @@ inline std::string checkAndCreateNewFilename(std::string const & filename, std::
   return f;
 }
 
+/*!
+ * @brief Check if file is empty or null
+ *
+ * @param filename Filename with/without extension
+ * @return bool True if file is empty
+ */
+inline bool isFileEmpty(std::string filename) {
+  std::ifstream pFile(filename);
+  return pFile.peek() == std::ifstream::traits_type::eof();
+}
+
+/*!
+ * @brief Check if file is empty or null
+ *
+ * @param pFile File stream
+ * @return bool True if file is empty
+ */
+inline bool isFileEmpty(std::ifstream& pFile) {
+  return pFile.peek() == std::ifstream::traits_type::eof();
+}
+
 } // namespace io
 
 } // namespace util

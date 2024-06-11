@@ -9,6 +9,7 @@
  */
 
 #include "mshReader.h"
+#include "util/io.h"
 
 #include <fstream>
 #include <iostream>
@@ -24,10 +25,17 @@ void rw::reader::MshReader::readMesh(size_t dim,
                                      std::vector<size_t> *enc,
                                      std::vector<std::vector<size_t>> *nec,
                                      std::vector<double> *volumes, bool is_fd) {
-  std::ifstream filein(d_filename);
+
+  if (util::io::isFileEmpty(d_filename)) {
+    std::cerr << "Error: Filename = " << d_filename <<
+                 " in MshReader is either nonexistent or empty.\n";
+    exit(EXIT_FAILURE);
+  }
 
   // open file
-  if (!d_file) d_file.open(d_filename);
+  if (d_file) d_file.close();
+
+  d_file.open(d_filename);
 
   if (!d_file) {
     std::cerr << "Error: Can not open file = " << d_filename + ".msh"
@@ -59,11 +67,11 @@ void rw::reader::MshReader::readMesh(size_t dim,
   bool read_elements = false;
 
   while (true) {
-    std::getline(filein, line);
-    if (filein) {
+    std::getline(d_file, line);
+    if (d_file) {
       // // read $MeshFormat block
       if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
-        filein >> version >> format >> size;
+        d_file >> version >> format >> size;
         if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
           std::cerr << "Error: Unknown .msh file version " << version << "\n";
           exit(1);
@@ -83,7 +91,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
           line.find("$Nodes") == static_cast<std::string::size_type>(0)) {
         read_nodes = true;
         unsigned int num_nodes = 0;
-        filein >> num_nodes;
+        d_file >> num_nodes;
 
         // allocate space
         nodes->resize(num_nodes);
@@ -93,13 +101,13 @@ void rw::reader::MshReader::readMesh(size_t dim,
         double x, y, z;
         unsigned int id;
 
-        // add the nodal coordinates to the filein
+        // add the nodal coordinates to the d_file
         for (unsigned int i = 0; i < num_nodes; ++i) {
-          filein >> id >> x >> y >> z;
+          d_file >> id >> x >> y >> z;
           (*nodes)[id - 1] = util::Point(x, y, z);
         }
         // read the $ENDNOD delimiter
-        std::getline(filein, line);
+        std::getline(d_file, line);
       }  // end of reading nodes
         // Read the element block
       else if (line.find("$ELM") == static_cast<std::string::size_type>(0) ||
@@ -113,7 +121,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
         // read how many elements are there
         // this includes point element, line element also
-        filein >> num_elem;
+        d_file >> num_elem;
 
         // As of version 2.2, the format for each element line is:
         // elm-number elm-type number-of-tags < tag > ... node-number-list
@@ -128,8 +136,8 @@ void rw::reader::MshReader::readMesh(size_t dim,
           unsigned int type;
           unsigned int ntags;
           int tag;
-          filein >> id >> type >> ntags;
-          for (unsigned int j = 0; j < ntags; j++) filein >> tag;
+          d_file >> id >> type >> ntags;
+          for (unsigned int j = 0; j < ntags; j++) d_file >> tag;
 
           // we will read only those elements which we support
           bool read_this_element = false;
@@ -160,7 +168,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
           if (read_this_element) {
             // read vertex of this element
             for (unsigned int i = 0; i < num_nodes_con; i++) {
-              filein >> node_id;
+              d_file >> node_id;
               // add to the element-node connectivity
               // substract 1 to correct the numbering convention
               enc->push_back(node_id - 1);
@@ -184,7 +192,7 @@ void rw::reader::MshReader::readMesh(size_t dim,
             // these are the type of elements we need to ignore.
             size_t n = util::msh_map_element_to_num_nodes[type];
             // dummy read
-            for (unsigned int i = 0; i < n; i++) filein >> node_id;
+            for (unsigned int i = 0; i < n; i++) d_file >> node_id;
           }
         }  // element loop
 
@@ -200,28 +208,37 @@ void rw::reader::MshReader::readMesh(size_t dim,
         num_elems = elem_counter;
 
         // read the $ENDELM delimiter
-        std::getline(filein, line);
+        std::getline(d_file, line);
       }  // end of reading elements
-    }    // if filein
+    }    // if d_file
 
-    // If !filein, check to see if EOF was set.  If so, break out
+    // If !d_file, check to see if EOF was set.  If so, break out
     // of while loop.
-    if (filein.eof()) break;
+    if (d_file.eof()) break;
 
     if (read_nodes and read_elements) break;
 
-    // If !filein and !filein.eof(), stream is in a bad state!
+    // If !d_file and !d_file.eof(), stream is in a bad state!
     // std::cerr<<"Error: Stream is bad! Perhaps the file does not exist?\n";
     // exit(1);
   }  // while true
 
   // close file
-  filein.close();
+  d_file.close();
 }
 
 void rw::reader::MshReader::readNodes(std::vector<util::Point> *nodes) {
+
+  if (util::io::isFileEmpty(d_filename)) {
+    std::cerr << "Error: Filename = " << d_filename <<
+              " in MshReader is either nonexistent or empty.\n";
+    exit(EXIT_FAILURE);
+  }
+
   // open file
-  if (!d_file) d_file = std::ifstream(d_filename);
+  if (d_file) d_file.close();
+
+  d_file.open(d_filename);
 
   if (!d_file) {
     std::cerr << "Error: Can not open file = " << d_filename + ".msh.\n";
@@ -300,10 +317,16 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
         size_t &num_elems, std::vector<size_t> *enc,
         std::vector<std::vector<size_t>> *nec) {
 
-  std::ifstream filein(d_filename);
+  if (util::io::isFileEmpty(d_filename)) {
+    std::cerr << "Error: Filename = " << d_filename <<
+              " in MshReader is either nonexistent or empty.\n";
+    exit(EXIT_FAILURE);
+  }
 
   // open file
-  if (!d_file) d_file.open(d_filename);
+  if (d_file) d_file.close();
+
+  d_file.open(d_filename);
 
   if (!d_file) {
     std::cerr << "Error: Can not open file = " << d_filename + ".msh"
@@ -332,11 +355,11 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
   bool read_elements = false;
 
   while (true) {
-    std::getline(filein, line);
-    if (filein) {
+    std::getline(d_file, line);
+    if (d_file) {
       // // read $MeshFormat block
       if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
-        filein >> version >> format >> size;
+        d_file >> version >> format >> size;
         if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
           std::cerr << "Error: Unknown .msh file version " << version << "\n";
           exit(1);
@@ -362,7 +385,7 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
 
         // read how many elements are there
         // this includes point element, line element also
-        filein >> num_elem;
+        d_file >> num_elem;
 
         // As of version 2.2, the format for each element line is:
         // elm-number elm-type number-of-tags < tag > ... node-number-list
@@ -377,8 +400,8 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
           unsigned int type;
           unsigned int ntags;
           int tag;
-          filein >> id >> type >> ntags;
-          for (unsigned int j = 0; j < ntags; j++) filein >> tag;
+          d_file >> id >> type >> ntags;
+          for (unsigned int j = 0; j < ntags; j++) d_file >> tag;
 
           // we will read only those elements which we support
           bool read_this_element = false;
@@ -409,7 +432,7 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
           if (read_this_element) {
             // read vertex of this element
             for (unsigned int i = 0; i < num_nodes_con; i++) {
-              filein >> node_id;
+              d_file >> node_id;
               // add to the element-node connectivity
               // substract 1 to correct the numbering convention
               enc->push_back(node_id - 1);
@@ -424,7 +447,7 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
             // these are the type of elements we need to ignore.
             size_t n = util::msh_map_element_to_num_nodes[type];
             // dummy read
-            for (unsigned int i = 0; i < n; i++) filein >> node_id;
+            for (unsigned int i = 0; i < n; i++) d_file >> node_id;
           }
         }  // element loop
 
@@ -440,19 +463,19 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
         num_elems = elem_counter;
 
         // read the $ENDELM delimiter
-        std::getline(filein, line);
+        std::getline(d_file, line);
       }  // end of reading elements
-    }    // if filein
+    }    // if d_file
 
-    // If !filein, check to see if EOF was set.  If so, break out
+    // If !d_file, check to see if EOF was set.  If so, break out
     // of while loop.
-    if (filein.eof()) break;
+    if (d_file.eof()) break;
 
     if (read_elements) break;
   }  // while true
 
   // close file
-  filein.close();
+  d_file.close();
 }
 
 bool rw::reader::MshReader::readPointData(const std::string &name,

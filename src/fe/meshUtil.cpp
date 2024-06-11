@@ -286,7 +286,7 @@ void fe::getStrainStress(const fe::Mesh *mesh_p,
   assert(( (xRef.size() >= mesh_p->getNumNodes() + iNodeStart) ||
            (u.size() >= mesh_p->getNumNodes() + iNodeStart)
          ) &&
-         "Number of elements i nnodal data can not be smaller than number of "
+         "Number of elements i nodal data can not be smaller than number of "
          "nodes.\n");
 
   // get Quadrature

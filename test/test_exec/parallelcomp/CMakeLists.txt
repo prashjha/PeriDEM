@@ -10,5 +10,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestParallelComp ${SOURCES})
 
-target_link_libraries(TestParallelComp PUBLIC Util FE Geometry Particle
-        NSearch fmt::fmt Threads::Threads MPI::MPI_CXX)
+target_link_libraries(TestParallelComp PUBLIC FE Geometry MPI::MPI_CXX)

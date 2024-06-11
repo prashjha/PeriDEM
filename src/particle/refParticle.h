@@ -19,7 +19,8 @@
 #include "util/matrix.h" // definition of Matrix3
 #include "util/point.h"  // definition of Point
 #include "util/transformation.h"
-#include "transformParticle.h"
+#include "particleTransform.h"
+#include "model/modelData.h"
 
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
@@ -40,10 +41,15 @@ class RefParticle {
 public:
   /*!
    * @brief Constructor
-   * @param z_deck Particle zone deck
+   * @param id Id of this object in list of all reference particles in ModelData
+   * @param model_data Global model data
+   * @param geom Particle geometry object
    * @param mesh Pointer to mesh
    */
-  RefParticle(inp::ParticleZone *z_deck, fe::Mesh * mesh);
+  RefParticle(size_t id,
+              std::shared_ptr<model::ModelData> model_data,
+              std::shared_ptr<util::geometry::GeomObject> geom,
+              std::shared_ptr<fe::Mesh> mesh);
 
   /**
    * @name Accessors
@@ -54,10 +60,10 @@ public:
    * @brief Get pointer to mesh object
    * @return mesh Pointer to mesh
    */
-  fe::Mesh *getMeshP() { return d_mesh_p.get(); };
+  std::shared_ptr<fe::Mesh> &getMeshP() { return d_mesh_p; };
 
   /*! @copydoc getMeshP() */
-  const fe::Mesh *getMeshP() const { return d_mesh_p.get(); };
+  const std::shared_ptr<fe::Mesh> &getMeshP() const { return d_mesh_p; };
 
   /*!
    * @brief Get reference to mesh object
@@ -134,8 +140,14 @@ public:
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
 private:
+  /*! @brief Id of reference particle in list d_referenceParticles in ModelData */
+  size_t d_id;
+
+  /*! @brief Reference to model class */
+  std::shared_ptr<model::ModelData> d_modelData_p;
+
   /*! @brief Pointer to mesh on reference particle */
-  std::unique_ptr<fe::Mesh> d_mesh_p;
+  std::shared_ptr<fe::Mesh> d_mesh_p;
 
   /*! @brief Id of mesh node closest to the particle center */
   size_t d_centerNode;

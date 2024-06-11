@@ -448,7 +448,7 @@ void model::PDModel::computePeridynamicForces() {
         const auto rho = this->getDensity(i);
         const auto &fix = this->d_fix[i];
         const auto &ptId = this->getPtId(i);
-        auto &pi = this->getBaseParticle(ptId);
+        auto &pi = this->getParticleFromAllParticles(ptId);
 
         if (pi->d_material_p->isStateActive()) {
 
@@ -524,7 +524,7 @@ void model::PDModel::computePeridynamicForces() {
 
       const auto rhoi = this->getDensity(i);
       const auto &ptIdi = this->getPtId(i);
-      auto &pi = this->getBaseParticle(ptIdi);
+      auto &pi = this->getParticleFromAllParticles(ptIdi);
 
       const double horizon = pi->getHorizon();
       const double mesh_size = pi->getMeshSize();
@@ -667,7 +667,7 @@ void model::PDModel::computeContactForces() {
       double scalar_f = 0.;
 
       const auto &ptIdi = this->getPtId(i);
-      auto &pi = this->getBaseParticle(ptIdi);
+      auto &pi = this->getParticleFromAllParticles(ptIdi);
       double horizon = pi->d_material_p->getHorizon();
       double search_r = this->d_maxContactR;
 
@@ -690,7 +690,7 @@ void model::PDModel::computeContactForces() {
           auto &j_id = neighs[j];
           auto &rij_sqr = sqr_dist[j];
           auto &ptIdj = this->d_ptId[j_id];
-          auto &pj = this->getBaseParticle(ptIdj);
+          auto &pj = this->getParticleFromAllParticles(ptIdj);
           double rhoj = pj->getDensity();
           // double Rji = std::sqrt(rij_sqr);
           double Rji = (this->d_x[j_id] - yi).length();
@@ -832,7 +832,7 @@ void model::PDModel::computeContactForces() {
             for (std::size_t j = 0; j < neighs.size(); ++j) {
               auto &j_id = neighs[j];
               auto &ptIdj = this->d_ptId[j_id];
-              auto &pj = this->getBaseParticle(ptIdj);
+              auto &pj = this->getParticleFromAllParticles(ptIdj);
 
               // we are only interested in nodes from wall
               if (pj->getTypeIndex() == 1) {

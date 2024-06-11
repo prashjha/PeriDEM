@@ -37,13 +37,13 @@ struct PBCData {
   std::string d_selectionType;
 
   /*! @brief Region geometry (if any) */
-  std::shared_ptr<util::geometry::GeomObject> d_region_p;
+  std::shared_ptr<util::geometry::GeomObject> d_regionGeom_p;
 
   /*! @brief List of particles (if any) */
   std::vector<size_t> d_pList;
 
-  /*! @brief List of walls (if any) */
-  std::vector<size_t> d_wList;
+  /*! @brief List of particles to not include (if any) */
+  std::vector<size_t> d_pNotList;
 
   /*!
    * @brief Name of the formula with respect to time
@@ -92,7 +92,7 @@ struct PBCData {
   /*!
    * @brief Constructor
    */
-  PBCData() : d_region_p(nullptr), d_isDisplacementZero(false){};
+  PBCData() : d_regionGeom_p(nullptr), d_isDisplacementZero(false){};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -107,14 +107,14 @@ struct PBCData {
     std::ostringstream oss;
     oss << tabS << "------- PBCData --------" << std::endl << std::endl;
     oss << tabS << "Selection type  = " << d_selectionType << std::endl;
-    if (d_region_p != nullptr)
-      oss << d_region_p->printStr(nt+1, lvl);
+    if (d_regionGeom_p != nullptr)
+      oss << d_regionGeom_p->printStr(nt + 1, lvl);
     if (!d_pList.empty())
       oss << tabS << "Particle list = ["
           << util::io::printStr<size_t>(d_pList, 0) << "]" << std::endl;
-    if (!d_wList.empty())
-      oss << tabS << "Wall list = ["
-          << util::io::printStr<size_t>(d_wList, 0) << "]" << std::endl;
+    if (!d_pNotList.empty())
+      oss << tabS << "Particle excluded list = ["
+          << util::io::printStr<size_t>(d_pNotList, 0) << "]" << std::endl;
     oss << tabS << "Time function type = " << d_timeFnType << std::endl;
     oss << tabS << "Time function parameters = ["
         << util::io::printStr<double>(d_timeFnParams, 0) << "]" << std::endl;

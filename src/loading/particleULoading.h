@@ -42,37 +42,31 @@ public:
   ParticleULoading(std::vector<inp::PBCData> &bc_data);
 
   /*!
-   * @brief Sets fixity mask
-   * @param particle Particle object pointer
+   * @brief Function that checks if given particle with id = id needs to be processed
+   * within boundary condition data bc
+   * @param id Id of particle in all particle list
+   * @param bc Boundary condition data
+   * @return bool True if particle should be processed further
    */
-  void setFixityParticle(particle::BaseParticle *particle);
+  bool needToProcessParticle(size_t id,
+                             const inp::PBCData &bc);
 
   /*!
-   * @brief Sets fixity mask
-   * @param wall Wall object pointer
+   * @brief Function that checks if we need to do computation at a given point x within a particle with id = id
+   * @param x Coordinates of a point within particle (reference coordinate)
+   * @param id Id of particle in all particle list
+   * @param bc Boundary condition data
+   * @return bool True if we compute at x
    */
-  void setFixityWall(particle::BaseParticle *wall);
+  bool needToComputeDof(const util::Point &x,
+                        size_t id,
+                        const inp::PBCData &bc);
 
   /*!
    * @brief Sets fixity mask
    * @param wall Wall object pointer
    */
   void setFixity(particle::BaseParticle *wall);
-
-
-  /*!
-   * @brief Applies displacement boundary condition
-   * @param time Current time
-   * @param particle Particle object pointer
-   */
-  void applyParticle(const double &time, particle::BaseParticle *particle);
-
-  /*!
-   * @brief Applies displacement boundary condition
-   * @param time Current time
-   * @param wall Wall object pointer
-   */
-  void applyWall(const double &time, particle::BaseParticle *wall);
 
   /*!
    * @brief Applies displacement boundary condition
@@ -83,9 +77,6 @@ public:
 
   /*! @brief Flag to indicate whether particles are fixed */
   std::vector<bool> d_pZeroDisplacementApplied;
-
-  /*! @brief Flag to indicate whether particles are fixed */
-  std::vector<bool> d_wZeroDisplacementApplied;
 };
 
 } // namespace loading

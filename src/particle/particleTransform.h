@@ -38,6 +38,8 @@ struct ParticleTransform {
 
   /*!
    * @brief Constructor
+   *
+   * Default constructor creates identity transformation, i.e., transform(x) = x.
    */
   ParticleTransform()
       : d_translation(util::Point()), d_axis(util::Point()),
