@@ -842,7 +842,7 @@ def create_input_file(inp_dir, pp_tag):
   large_drum2d = [R_large, w_large_drum2d, center[0], center[1], center[2]]
 
   ## time 
-  final_time = 1.
+  final_time = 0.1
   num_steps = 1000000
   # final_time = 0.00002
   # num_steps = 2
@@ -1201,7 +1201,7 @@ def create_input_file(inp_dir, pp_tag):
     inpf.write("  Perform_Out: false\n")
   inpf.write("  Test_Output_Interval: %d\n" % (test_dt_out_n))
   
-  inpf.write("  Debug: 2\n")
+  inpf.write("  Debug: 3\n")
   inpf.write("  Tag_PP: %d\n" %(int(pp_tag)))
 
   # close file
