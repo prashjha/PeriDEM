@@ -167,6 +167,9 @@ public:
   virtual void createParticlesFromFile(size_t z,
                                        std::shared_ptr<particle::RefParticle> ref_p);
 
+  virtual void createParticleUsingParticleZoneGeomObject(size_t z,
+                                       std::shared_ptr<particle::RefParticle> ref_p);
+
   /*! @brief Creates geometrical object for a particle given particle radius, orientation, and site location */
   virtual void createGeometryAtSite(const double &particle_radius,
                                     const double &particle_orient,

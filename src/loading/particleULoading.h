@@ -64,16 +64,16 @@ public:
 
   /*!
    * @brief Sets fixity mask
-   * @param wall Wall object pointer
+   * @param particle Particle object pointer
    */
-  void setFixity(particle::BaseParticle *wall);
+  void setFixity(particle::BaseParticle *particle);
 
   /*!
    * @brief Applies displacement boundary condition
    * @param time Current time
-   * @param wall Wall object pointer
+   * @param particle Particle object pointer
    */
-  void apply(const double &time, particle::BaseParticle *wall);
+  void apply(const double &time, particle::BaseParticle *particle);
 
   /*! @brief Flag to indicate whether particles are fixed */
   std::vector<bool> d_pZeroDisplacementApplied;

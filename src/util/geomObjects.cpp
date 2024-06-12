@@ -2844,6 +2844,12 @@ namespace util {
       } // rectangle_minus_rectangle
       else if (geom_type == "complex") {
 
+        /*
+        std::cout << "vec_type = " << util::io::printStr(vec_type, 0)
+                  << ", vec_flag = " << util::io::printStr(vec_flag, 0)
+                  << "\n";
+        */
+
         num_params_needed = {0};
         std::vector<size_t> params_level(vec_type.size());
         for (size_t i = 0; i < vec_type.size(); i++) {
@@ -2857,6 +2863,9 @@ namespace util {
                       << " has zero number of parameters required. \n";
             exit(EXIT_FAILURE);
           }
+
+          //std::cout << "Geom type = " << vec_type[i]
+          //          << ", params required = " << params_level[i] << "\n";
 
           num_params_needed[0] += params_level[i];
         }

@@ -35,6 +35,67 @@ void rectDataSizeWarning() {
                "future, this will be strongly preferred.\n";
 }
 
+std::string stringVecSerial(const std::vector<std::string> &svec) {
+  if (svec.empty())
+    return "";
+
+  std::string s = "";
+  for (size_t i=0; i<svec.size(); i++) {
+    s = s + svec[i];
+    if (i < svec.size() - 1)
+      s = s + "; ";
+  }
+
+  return s;
+}
+
+void readGeometry(YAML::Node data,
+           std::string data_block_name,
+           std::string &name,
+           std::vector<double> &params,
+           std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo) {
+
+  if (!data["Type"]) {
+    std::cerr << "Error; Can not read geometry type in yaml data in block = "
+              << data_block_name << ".\n";
+    exit(EXIT_FAILURE);
+  }
+  name = data["Type"].as<std::string>();
+
+  if (name == "complex") {
+    // read vector of types and flags
+    if (data["Vec_Type"]) {
+      for (auto f: data["Vec_Type"])
+        complexInfo.first.push_back(f.as<std::string>());
+    } else {
+      std::cerr << "Error: To define complex geometry, we require vector of "
+                   "types in yaml data block = "
+                << data_block_name << "\n";
+      exit(EXIT_FAILURE);
+    }
+
+    if (data["Vec_Flag"]) {
+      for (auto f: data["Vec_Flag"])
+        complexInfo.second.push_back(f.as<std::string>());
+    } else {
+      std::cerr << "Error: To define complex geometry, we require vector of "
+                   "flags in yaml data block = "
+                << data_block_name << "\n";
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  params.clear();
+  if (data["Parameters"]) {
+    for (auto f : data["Parameters"])
+      params.push_back(f.as<double>());
+  } else {
+    std::cerr << "Error: Parameters defining geometry is not present in data block = "
+              << data_block_name << ".\n";
+    exit(EXIT_FAILURE);
+  }
+}
+
 } // namespace
 
 inp::Input::Input(std::string filename, bool createDefault)
@@ -54,6 +115,8 @@ inp::Input::Input(std::string filename, bool createDefault)
 
   // follow the order of reading
   setModelDeck();
+  setOutputDeck();
+
   if (d_modelDeck_p->d_isPeriDEM) {
     setParticleDeck();
     setContactDeck();
@@ -65,7 +128,6 @@ inp::Input::Input(std::string filename, bool createDefault)
 
   if (!d_modelDeck_p->d_isPeriDEM)
     setMaterialDeck();
-  setOutputDeck();
 }
 
 void createDefaultInputConfiguration() {
@@ -205,43 +267,20 @@ void inp::Input::setParticleDeck() {
   // read particle container geometry and size
   if (config["Container"]["Geometry"]) {
     auto ce = config["Container"]["Geometry"];
-    std::string pgeom = ce["Type"].as<std::string>();
 
-    std::vector<std::string> vec_geom_type;
-    std::vector<std::string> vec_geom_flag;
+    readGeometry(ce,
+            "Container->Geometry",
+            d_particleDeck_p->d_contGeomName,
+            d_particleDeck_p->d_contGeomParams,
+            d_particleDeck_p->d_contGeomComplexInfo);
 
-    if (pgeom == "complex") {
-      // read vector of types and flags
-      if (ce["Vec_Type"]) {
-        for (auto f: ce["Vec_Type"])
-          vec_geom_type.push_back(f.as<std::string>());
-      } else {
-        std::cerr << "Error: To define complex geometry, we require vector of types.";
-        exit(1);
-      }
-
-      if (ce["Vec_Flag"]) {
-        for (auto f: ce["Vec_Flag"])
-          vec_geom_flag.push_back(f.as<std::string>());
-      } else {
-        std::cerr << "Error: To define complex geometry, we require vector of flags.";
-        exit(1);
-      }
-    }
-
-    std::vector<double> pparams;
-    if (ce["Parameters"]) {
-      for (auto f : ce["Parameters"])
-        pparams.push_back(f.as<double>());
-    } else {
-
-      std::cerr << "Error: Parameters defining container is not present.\n";
-      exit(1);
-    }
-
-    util::geometry::createGeomObject(pgeom, pparams, vec_geom_type,
-                                     vec_geom_flag,
-                                     d_particleDeck_p->d_contGeom_p, d_modelDeck_p->d_dim);
+    util::geometry::createGeomObject(
+            d_particleDeck_p->d_contGeomName,
+            d_particleDeck_p->d_contGeomParams,
+            d_particleDeck_p->d_contGeomComplexInfo.first,
+            d_particleDeck_p->d_contGeomComplexInfo.second,
+            d_particleDeck_p->d_contGeom_p,
+            d_modelDeck_p->d_dim);
     //std::cout << d_particleDeck_p->d_contGeom_p->printStr(0, 0) << std::flush;
   } else {
     std::cerr << "Error: Need particle container information.\n";
@@ -636,10 +675,14 @@ void inp::Input::setContactDeck() {
     for (size_t zz = z; zz <= n; zz++) {
       std::string read_zone = "Zone_" + std::to_string(z) + std::to_string(zz);
 
+      if (d_outputDeck_p->d_debug > 1)
+        std::cout << "Processing pair (z, zz) = (" << z << ", " << zz << ").\n";
+
       auto e = config["Contact"][read_zone];
 
       // check if we copy the contact data from previous zone pair
       if (e["Copy_Contact_Data"]) {
+
         // get pair of zone id to copy
         std::vector<size_t> zone_pair;
         for (auto j : e["Copy_Contact_Data"])
@@ -652,7 +695,8 @@ void inp::Input::setContactDeck() {
         }
 
         // check if zone_pair data has been read (if not then issue error)
-        if (zone_pair[0] > z or zone_pair[1] > zz - 1) {
+        //if (zone_pair[0] > z or zone_pair[1] > zz - 1) {
+        if (zone_pair[0] > z or (zone_pair[0] ==  z and zone_pair[1] >= zz)) {
           std::cerr << "Error: Can not copy the contact data for zone = " <<
               read_zone << " as the pair of data = ("
                            << zone_pair[0] << ", " << zone_pair[1]
@@ -663,6 +707,13 @@ void inp::Input::setContactDeck() {
         // create a copy of contact data
         inp::ContactPairDeck cd =
             d_contactDeck_p->d_data[zone_pair[0] - 1][zone_pair[1] - 1];
+
+        if (d_outputDeck_p->d_debug > 1) {
+          std::cout << "Processing pair (z, zz) = (" << z << ", " << zz << "). "
+                    << "Copying contact data from (n, m) = (" << zone_pair[0]
+                    << ", " << zone_pair[1] << ").\n";
+          std::cout << cd.printStr();
+        }
 
         // copy to the data
         d_contactDeck_p->d_data[z - 1][zz - 1] = cd;
@@ -708,7 +759,10 @@ void inp::Input::setContactDeck() {
 
           if (!v_max_found) {
             std::cerr << "Error: Need V_Max parameter for contact force. Either"
-                         " provide V_Max (and/or Delta_Max) or provide Kn\n";
+                         " provide V_Max (and/or Delta_Max) or provide Kn.\n"
+                      << "Processing pair (z, zz) = (" << z << ", " << zz << ").\n"
+                      << "Contact deck info\n"
+                      << cd.printStr();
             exit(1);
           }
         } else {
@@ -1148,44 +1202,26 @@ void inp::Input::setZoneData(std::vector<std::string> s_config,
 
   // read zone information
   if (e["Type"]) {
-    zone_data->d_geomName = e["Type"].as<std::string>();
-
-    std::vector<std::string> vec_geom_type;
-    std::vector<std::string> vec_geom_flag;
-
-    if (zone_data->d_geomName == "complex") {
-      // read vector of types and flags
-      if (e["Vec_Type"]) {
-        for (auto f : e["Vec_Type"])
-          vec_geom_type.push_back(f.as<std::string>());
-      } else {
-        std::cerr
-            << "Error: To define complex geometry, we require vector of types.";
-        exit(1);
-      }
-
-      if (e["Vec_Flag"]) {
-        for (auto f : e["Vec_Flag"])
-          vec_geom_flag.push_back(f.as<std::string>());
-      } else {
-        std::cerr
-            << "Error: To define complex geometry, we require vector of flags.";
-        exit(1);
-      }
-    }
-
-    if (e["Parameters"]) {
-      for (auto f : e["Parameters"])
-        zone_data->d_geomParams.push_back(f.as<double>());
-    }
+    readGeometry(e, stringVecSerial(s_config),
+                 zone_data->d_geomName,
+                 zone_data->d_geomParams,
+                 zone_data->d_geomComplexInfo);
 
     util::geometry::createGeomObject(
-            zone_data->d_geomName, zone_data->d_geomParams, vec_geom_type, vec_geom_flag,
-            zone_data->d_geom_p, d_modelDeck_p->d_dim, false);
+            zone_data->d_geomName,
+            zone_data->d_geomParams,
+            zone_data->d_geomComplexInfo.first,
+            zone_data->d_geomComplexInfo.second,
+            zone_data->d_geom_p,
+            d_modelDeck_p->d_dim,
+            false);
   } else {
     // assign container geometry
-    zone_data->d_geomName = config["Container"]["Geometry"]["Type"].as<std::string>();
-    zone_data->d_geom_p = this->d_particleDeck_p->d_contGeom_p;
+    this->d_particleDeck_p->copyContainerGeometry(
+            zone_data->d_geomName,
+            zone_data->d_geomParams,
+            zone_data->d_geomComplexInfo,
+            zone_data->d_geom_p);
   }
 }
 
@@ -1219,49 +1255,49 @@ void inp::Input::setParticleData(std::string string_zone,
   if (pe["All_Dofs_Constrained"])
     particle_data->d_allDofsConstrained = pe["All_Dofs_Constrained"].as<bool>();
 
+  particle_data->d_createParticleUsingParticleZoneGeomObject = false;
+  if (pe["Create_Particle_Using_ParticleZone_GeomObject"])
+    particle_data->d_createParticleUsingParticleZoneGeomObject
+      = pe["Create_Particle_Using_ParticleZone_GeomObject"].as<bool>();
+
   // <<<< >>>>
   // <<<< STEP 2 - Read geometry type and create geometry >>>>
   // <<<< >>>>
-  std::string geomType;
   if (pe) {
-    if (pe["Type"])
-      geomType = pe["Type"].as<std::string>();
-    else {
-      std::cerr << "Error: Particle/wall geometry type for zone = " << string_zone
-                << " is not provided.\n";
-      exit(1);
-    }
 
-    // read parameters which define particle
-    if (pe["Parameters"]) {
-      for (auto f : pe["Parameters"])
-        particle_data->d_geomParams.push_back(f.as<double>());
+    readGeometry(pe, "Particle->" + string_zone,
+                 particle_data->d_geomName,
+                 particle_data->d_geomParams,
+                 particle_data->d_geomComplexInfo);
 
-      std::vector<std::string> vec_geom_type;
-      std::vector<std::string> vec_geom_flag;
-
-      // create reference particle
-      util::geometry::createGeomObject(geomType, particle_data->d_geomParams,
-                                       vec_geom_type,
-                                       vec_geom_flag,
-                                       particle_data->d_geom_p,
-                                       d_modelDeck_p->d_dim);
-
-      //std::cout << particle_data->d_particle_p->printStr(0, 0) << std::flush;
-    } else {
-      std::cerr << "Error: Particle/wall parameter for zone = " << string_zone
-                << "is not provided.\n";
-      exit(1);
-    }
+    // create particle
+    util::geometry::createGeomObject(particle_data->d_geomName,
+                                     particle_data->d_geomParams,
+                                     particle_data->d_geomComplexInfo.first,
+                                     particle_data->d_geomComplexInfo.second,
+                                     particle_data->d_geom_p,
+                                     d_modelDeck_p->d_dim);
 
     // read test name (if any)
     if (pe["Near_Bd_Nodes_Tol"])
       particle_data->d_nearBdNodesTol =
-          pe["Near_Bd_Nodes_Tol"].as<double>();
-  } else {
-    std::cerr << "Error: Particle/wall details for zone = " << string_zone
-              << "is not provided.\n";
-    exit(1);
+              pe["Near_Bd_Nodes_Tol"].as<double>();
+  }
+  else {
+    if (particle_data->d_createParticleUsingParticleZoneGeomObject) {
+      // create geometry from container as we do not really need geometry object
+      // for this particle created through
+      this->d_particleDeck_p->copyContainerGeometry(
+              particle_data->d_geomName,
+              particle_data->d_geomParams,
+              particle_data->d_geomComplexInfo,
+              particle_data->d_geom_p);
+    }
+    else {
+      std::cerr << "Error: Particle/wall details for zone = " << string_zone
+                << "is not provided.\n";
+      exit(1);
+    }
   }
 
   // <<<< >>>>
@@ -1270,60 +1306,53 @@ void inp::Input::setParticleData(std::string string_zone,
   auto re = config["Mesh"][string_zone]["Reference_Particle"];
   std::string refGeomType;
   if (re) {
-    if (re["Type"])
-      refGeomType = re["Type"].as<std::string>();
-    else {
-      std::cerr << "Error: Particle type for Mesh->Zone = " << string_zone
-                << "->Reference_Particle is not provided.\n";
-      exit(1);
-    }
 
-    // read parameters which define particle
-    if (re["Parameters"]) {
-      for (auto f : re["Parameters"])
-        particle_data->d_refParticleGeomParams.push_back(f.as<double>());
+    readGeometry(re, "Particle->" + string_zone + "->Reference_Particle",
+                 particle_data->d_refParticleGeomName,
+                 particle_data->d_refParticleGeomParams,
+                 particle_data->d_refParticleGeomComplexInfo);
 
-      std::vector<std::string> vec_geom_type;
-      std::vector<std::string> vec_geom_flag;
+    util::geometry::createGeomObject(refGeomType, particle_data->d_refParticleGeomParams,
+                                     particle_data->d_refParticleGeomComplexInfo.first,
+                                     particle_data->d_refParticleGeomComplexInfo.second,
+                                     particle_data->d_refParticleGeom_p,
+                                     d_modelDeck_p->d_dim);
 
-      // create reference particle
-      util::geometry::createGeomObject(refGeomType, particle_data->d_refParticleGeomParams,
-                                       vec_geom_type,
-                                       vec_geom_flag,
-                                       particle_data->d_refParticleGeom_p,
-                                       d_modelDeck_p->d_dim);
-
-      //std::cout << particle_data->d_rParticle_p->printStr(0, 0) << std::flush;
-    } else {
-      std::cerr << "Error: Particle parameter for reference particle is not "
-                   "provided.\n";
-      exit(1);
-    }
   } else {
     // use the general particle data for the reference particle as well
-    particle_data->d_refParticleGeom_p = particle_data->d_geom_p;
-    particle_data->d_refParticleGeomParams = particle_data->d_geomParams;
+    bool copy_from_ref = false;
+    particle_data->copyContainerGeometry(
+            particle_data->d_refParticleGeomName,
+            particle_data->d_refParticleGeomParams,
+            particle_data->d_refParticleGeomComplexInfo,
+            particle_data->d_refParticleGeom_p,
+            copy_from_ref);
   }
 
   // <<<< >>>>
   // <<<< STEP 4 - Read particle generation method >>>>
   // <<<< >>>>
-  if (config["Particle_Generation"]["From_File"]) {
+  if (!particle_data->d_createParticleUsingParticleZoneGeomObject) {
+    if (config["Particle_Generation"]["From_File"]) {
 
-    particle_data->d_genMethod = "From_File";
-    particle_data->d_particleFile =
-        config["Particle_Generation"]["From_File"].as<std::string>();
+      particle_data->d_genMethod = "From_File";
+      particle_data->d_particleFile =
+              config["Particle_Generation"]["From_File"].as<std::string>();
 
-    if (config["Particle_Generation"]["File_Data_Type"]) {
-      particle_data->d_particleFileDataType =
-          config["Particle_Generation"]["File_Data_Type"].as<std::string>();
+      if (config["Particle_Generation"]["File_Data_Type"]) {
+        particle_data->d_particleFileDataType =
+                config["Particle_Generation"]["File_Data_Type"].as<std::string>();
+      } else {
+        particle_data->d_particleFileDataType = "loc_rad";
+      }
     } else {
-      particle_data->d_particleFileDataType = "loc_rad";
+      std::cerr << "Error: Particle_Generation->From_File block is not provided"
+                   ". Can not generate particles for dem simulation. "
+                   "Terminating the simulation.\n";
+      exit(1);
     }
-  } else {
-    std::cerr << "Error: Particle_Generation->From_File block is not provided"
-                 ". Can not generate particles for dem simulation. "
-                 "Terminating the simulation.\n";
-    exit(1);
+  }
+  else {
+    particle_data->d_genMethod = "Create_Particle_Using_ParticleZone_GeomObject";
   }
 }

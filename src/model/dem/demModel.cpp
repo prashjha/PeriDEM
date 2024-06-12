@@ -226,8 +226,7 @@ void model::DEMModel::init() {
     const auto &pi = getParticleFromAllList(ptId);
     if (pi->d_computeForce) {
       d_fContCompNodes.push_back(i);
-      if (pi->getTypeIndex() == 0)
-        d_fPdCompNodes.push_back(i); // internal force on particles
+      d_fPdCompNodes.push_back(i);
     }
   }
 
@@ -246,18 +245,24 @@ void model::DEMModel::init() {
         free_dofs++;
   }
   log(fmt::format("DEMModel: Computational complexity information \n"
-                  "  Number of "
-                  "particles = {}, number of walls = {}, number of dofs = {},"
-                  " number of free dofs = {}. \n",
-                  d_particlesListTypeParticle.size(), d_particlesListTypeWall.size(), 3 * d_x.size(),
+                  "  Total number of particles = {}, number of "
+                  "particles = {}, number of walls = {}, \n"
+                  "  number of dofs = {}, number of free dofs = {}. \n",
+                  d_particlesListTypeAll.size(),
+                  d_particlesListTypeParticle.size(),
+                  d_particlesListTypeWall.size(),
+                  3 * d_x.size(),
                   free_dofs));
 }
 
 void model::DEMModel::integrate() {
 
   // perform output at the beginning
-  if (d_n == 0 && d_outputDeck_p->d_performOut)
+  if (d_n == 0 && d_outputDeck_p->d_performOut) {
+    log(fmt::format("DEMModel: Output step = {}, time = {:.6f} \n", d_n, d_time),
+        2);
     output();
+  }
 
   // apply initial condition
   if (d_n == 0)
@@ -1041,39 +1046,22 @@ void model::DEMModel::createParticles() {
 
     d_referenceParticles.emplace_back(ref_p);
 
-    //
-    // TODO Check horizon calculation below to ensure it works for all kinds of particles/walls
-    // create material for particles in this zone
-    // If horizon is provided, set horizon to that value.
-    // If horizon to mesh ratio is provided, set horizon accordingly.
-    // If both are not provided, take horizon as radius of particle.
-    //
-    auto &mdeck = pz.d_matDeck;
-    double radius = rep_geom_params[0];
-    double horizon = radius;
-    if (mdeck.d_horizon > 0.)
-      horizon = mdeck.d_horizon;
-    else {
-      if (mdeck.d_horizonMeshRatio > 0.) {
-        if (!pz.d_isWall)
-          horizon = mdeck.d_horizonMeshRatio *
-                  (radius / ref_p->getParticleRadius()) * mesh->getMeshSize();
-        else
-          horizon = mdeck.d_horizonMeshRatio * mesh->getMeshSize();
-      }
-    }
-    mdeck.d_horizon = horizon;
-
     // check the particle generation method
     log("DEMModel: Creating particles in zone = " +
                   std::to_string(z_id) + "\n");
 
-    if (pz.d_genMethod == "From_File")
+    if (pz.d_genMethod == "From_File") {
       createParticlesFromFile(z, ref_p);
+    }
     else {
-      std::cerr << "Error: Particle generation method = " << pz.d_genMethod <<
-                   " not recognized.\n";
-      exit(1);
+      if (pz.d_createParticleUsingParticleZoneGeomObject) {
+        createParticleUsingParticleZoneGeomObject(z, ref_p);
+      }
+      else {
+        std::cerr << "Error: Particle generation method = " << pz.d_genMethod <<
+                  " not recognized.\n";
+        exit(1);
+      }
     }
 
     // get new size of data
@@ -1084,8 +1072,56 @@ void model::DEMModel::createParticles() {
   }
 }
 
+void model::DEMModel::createParticleUsingParticleZoneGeomObject(
+        size_t z,
+        std::shared_ptr<particle::RefParticle> ref_p) {
+
+  log("DEMModel: Creating particle using Particle Zone Geometry Object", 1);
+
+  // get particle zone
+  auto &pz = d_pDeck_p->d_particleZones[z];
+
+  // get zone id
+  auto z_id = pz.d_zone.d_zoneId;
+
+  // ref_p has geometry and mesh which will be used in creating this particle
+  // we need to create identity transform
+  auto p_transform = particle::ParticleTransform();
+
+  // create particle
+  auto p = new particle::BaseParticle(
+          pz.d_isWall ? "wall" : "particle",
+          d_particlesListTypeAll.size(),
+          pz.d_isWall ? d_particlesListTypeWall.size() : d_particlesListTypeParticle.size(),
+          z_id,
+          ref_p->getDimension(),
+          pz.d_particleDescription,
+          pz.d_isWall,
+          pz.d_allDofsConstrained,
+          ref_p->getNumNodes(),
+          0.,
+          static_cast<std::shared_ptr<ModelData>>(this),
+          ref_p,
+          ref_p->getGeomP(),
+          p_transform,
+          ref_p->getMeshP(),
+          pz.d_matDeck,
+          true);
+
+  // push p to list
+  if (pz.d_isWall)
+    d_particlesListTypeWall.push_back(p);
+  else
+    d_particlesListTypeParticle.push_back(p);
+
+  d_particlesListTypeAll.push_back(p);
+
+}
+
 void model::DEMModel::createParticlesFromFile(
     size_t z, std::shared_ptr<particle::RefParticle> ref_p) {
+
+  log("DEMModel: Creating particle from file", 1);
 
   // get particle zone
   auto &pz = d_pDeck_p->d_particleZones[z];
@@ -1180,15 +1216,6 @@ void model::DEMModel::createParticlesFromFile(
             ref_p->getMeshP(),
             pz.d_matDeck,
             true);
-
-    //p->print();
-
-    if (p->d_computeForce) {
-      std::cout << "Warning: particle compute force is off\n\n";
-    }
-    if (p->d_allDofsConstrained) {
-      std::cout << "Warning: particle all dofs are constrained\n\n";
-    }
 
     // push p to list
     if (pz.d_isWall)

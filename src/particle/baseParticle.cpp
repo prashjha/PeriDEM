@@ -175,6 +175,15 @@ particle::BaseParticle::BaseParticle(std::string particle_type,
   // set contact coefficient for internal contact
   d_Kn = (18. / (M_PI * std::pow(horizon, 5))) *
          d_material_p->computeMaterialProperties(getDimension()).d_K;
+
+  if (!d_computeForce) {
+    std::cout << "Warning: Compute force is OFF in particle with id = "
+              << d_id << "\n";
+  }
+  if (d_allDofsConstrained) {
+    std::cout << "Warning: All DoFs are OFF in particle with id = "
+              << d_id << "\n";
+  }
 }
 
 std::string particle::BaseParticle::printStr(int nt, int lvl) const {

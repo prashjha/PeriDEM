@@ -48,7 +48,8 @@ bool loading::ParticleFLoading::needToProcessParticle(size_t id, const inp::PBCD
                          && (isInList(id, bc.d_pNotList) ||
                              !isInList(id, bc.d_pList));
 
-  return skip_condition1 or skip_condition2 or skip_condition3;
+  bool skip = skip_condition1 or skip_condition2 or skip_condition3;
+  return !skip;
 }
 
 bool loading::ParticleFLoading::needToComputeDof(const util::Point &x,

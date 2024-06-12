@@ -66,6 +66,15 @@ public:
   const std::shared_ptr<fe::Mesh> &getMeshP() const { return d_mesh_p; };
 
   /*!
+   * @brief Get pointer to geometry object
+   * @return pointer Pointer
+   */
+  std::shared_ptr<util::geometry::GeomObject> &getGeomP() { return d_geom_p; };
+
+  /*! @copydoc getGeomP() */
+  const std::shared_ptr<util::geometry::GeomObject> &getGeomP() const { return d_geom_p; };
+
+  /*!
    * @brief Get reference to mesh object
    * @return mesh Reference to mesh
    */
@@ -139,7 +148,7 @@ public:
    */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
-private:
+public:
   /*! @brief Id of reference particle in list d_referenceParticles in ModelData */
   size_t d_id;
 
