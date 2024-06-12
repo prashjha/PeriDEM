@@ -1,8 +1,8 @@
 import os
 import numpy as np
-import csv
+# import csv
 import sys
-import pyvista as pv
+# import pyvista as pv
 
 def print_bool(arg, prefix = ""):
 
@@ -46,64 +46,6 @@ def print_int_list(arg, prefix = ""):
 
   return str
 
-def does_intersect_rect(p, r, particles, padding, rect):
-
-  # check intersection with rectangle
-  pr = [p[0] - r, p[1] - r, p[2], p[0] + r, p[1] + r, p[2]]
-
-  if pr[0] < rect[0] + padding or pr[1] < rect[1] + padding or pr[3] > rect[3] - padding or pr[4] > rect[4] - padding:
-
-    # print('circle (xc = {}, r = {:5.3e}) intersects rect = {} with pad = {:5.3e}'.format(p, r, rect, padding))
-
-    return True
-
-  # loop over particles
-  # for pi in particles:
-  #   dx = [p[0] - pi[1], p[1] - pi[2], p[2] - pi[3]]
-  #   rR = r + pi[4] + padding
-  #   if np.linalg.norm(dx) < rR: 
-  #     return True
-
-  # print('circle (xc = {}, r = {:5.3e}) does not intersects rect = {} with pad = {:5.3e}'.format(p, r, rect, padding))
-  return False
-
-def does_intersect_with_cylindrical_wall(p, particles, R_in, center, bar_rect, padding):
-
-  # p -> [id, x, y, z, r]
-
-  for q in particles:
-
-    pq = np.array([p[i+1] - q[i+1] for i in range(3)])
-    if np.linalg.norm(pq) <= p[-1] + q[-1] + padding:
-      return True
-
-  dx = np.array([p[i+1] - center[i] for i in range(3)])
-  if np.linalg.norm(dx) > R_in - p[-1] - padding:
-    return True
-
-  r = p[-1]
-  for i in range(4):
-    pr = [p[i+1] for i in range(3)]
-    if i == 0:
-      pr[0] = pr[0] - r
-      pr[1] = pr[1] - r
-    elif i == 1:
-      pr[0] = pr[0] - r
-      pr[1] = pr[1] + r
-    elif i == 2:
-      pr[0] = pr[0] + r
-      pr[1] = pr[1] - r
-    elif i == 3:
-      pr[0] = pr[0] + r
-      pr[1] = pr[1] + r
-
-    if pr[0] > bar_rect[0] - padding and pr[1] > bar_rect[1] - padding and pr[0] < bar_rect[3] + padding and pr[1] < bar_rect[4] + padding:
-
-      return True
-
-  return False
-
-
 
 def write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, zone_string, Kn):
   inpf.write("  Zone_%s:\n" % (zone_string))
@@ -132,6 +74,10 @@ def write_material_zone_part(inpf, zone_string, horizon, rho, K, G, Gc):
   inpf.write("    Influence_Function:\n")
   inpf.write("      Type: 1\n")
 
+def copy_contact_zone(inpf, zone_numbers, zone_copy_from):
+  for s in zone_numbers:
+    inpf.write("  Zone_%d:\n" % (s))
+    inpf.write("    Copy_Contact_Data: " + print_int_list(zone_copy_from))
 
 def get_E(K, nu):
   return 3. * K * (1. - 2. * nu)
@@ -164,6 +110,15 @@ def rotate(p, theta, axis):
   n_cross_p = np.cross(axis_np, p_np)
 
   return (1. - ct) * p_dot_n * axis_np + ct * p_np + st * n_cross_p
+
+def get_ref_rect_points(center, radius, add_center = False):
+
+  p1 = [center[0] - radius, center[1] - radius, center[2]]
+  p2 = [center[0] + radius, center[1] - radius, center[2]]
+  p3 = [center[0] + radius, center[1] + radius, center[2]]
+  p4 = [center[0] - radius, center[1] + radius, center[2]]
+
+  return [p1, p2, p3, p4]
 
 def get_ref_triangle_points(center, radius, add_center = False):
 
@@ -283,8 +238,36 @@ def get_ref_drum_points(center, radius, width, add_center = False):
 
   return points
 
+def does_rect_intersect_rect(r1, r2, padding):
 
-def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R2, id_choices1, id_choices2, Nmax, R_in, bar_rect, z_coord, add_orient = True):
+  # enlarge rectangle by adding padding
+  r1_padding = [r1[0] - padding, r1[1] - padding, r1[2], r1[3] + padding, r1[4] + padding, r1[5]]
+
+  return r1_padding[0] < r2[3] and r1_padding[3] > r2[0] and r1_padding[1] < r2[4] and r1_padding[4] > r2[1]
+
+def does_intersect_with_cylindrical_wall(p, particles, R_in, center, bar_rect, padding):
+
+  # p -> [id, x, y, z, r]
+
+  p_center = [p[i+1] for i in range(3)]
+  p_r = p[4]
+
+  for q in particles:
+
+    pq = np.array([p[i+1] - q[i+1] for i in range(3)])
+    if np.linalg.norm(pq) <= p[-1] + q[-1] + padding:
+      return True
+
+  dx = np.array([p[i+1] - center[i] for i in range(3)])
+  if np.linalg.norm(dx) > R_in - p[-1] - padding:
+    return True
+
+  
+  p_rect = [p_center[0] - p_r, p_center[1] - p_r, p_center[2], p_center[0] + p_r, p_center[1] + p_r, p_center[2]]
+  
+  return does_rect_intersect_rect(p_rect, bar_rect, padding)
+
+def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R2, id_choices1, id_choices2, R_in, bar_rect, z_coord, add_orient = True):
 
   np.random.seed(30)
   sim_inp_dir = str(inp_dir)
@@ -297,7 +280,7 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
   method_to_use = 0
 
   if method_to_use == 0:
-    N1 = 30
+    N1 = 40
     N2 = 10
     pcount = 0
     count = 0
@@ -343,6 +326,7 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
       count +=1
 
   elif method_to_use == 1:
+    Nmax = 50
     # find how approximate number of rows and cols we can have
     check_r = R1
     if R1 > R2:
@@ -451,21 +435,23 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
   inpf.close()
 
   # to visualize in paraview
-  points = []
-  rads = []
-  zones = []
-  for p in particles:
-    points.append([p[1], p[2], p[3]])
-    rads.append(p[-1])
-    zones.append(int(p[0]))
+  write_vtu = False
+  if write_vtu:
+    points = []
+    rads = []
+    zones = []
+    for p in particles:
+      points.append([p[1], p[2], p[3]])
+      rads.append(p[-1])
+      zones.append(int(p[0]))
 
-  points = np.array(points)
-  rads = np.array(rads)
-  zones = np.array(zones)
-  mesh = pv.PolyData(points)
-  mesh["radius"] = rads
-  mesh["zone"] = zones
-  pv.save_meshio(sim_inp_dir + 'particle_locations_' + str(pp_tag) + '.vtu', mesh)
+    points = np.array(points)
+    rads = np.array(rads)
+    zones = np.array(zones)
+    mesh = pv.PolyData(points)
+    mesh["radius"] = rads
+    mesh["zone"] = zones
+    pv.save_meshio(sim_inp_dir + 'particle_locations_' + str(pp_tag) + '.vtu', mesh)
 
   print('number of particles created = {}'.format(len(particles)))
 
@@ -798,10 +784,12 @@ def create_input_file(inp_dir, pp_tag):
   # 1 - small particle circle
   # 2 - small particle triangle
   # 3 - small particle drum2d
-  # 4 - large particle circle
-  # 5 - large particle triangle
-  # 6 - large particle drum2d
-  # 7 - cylindrical wall
+  # 4 - small particle hex
+  # 5 - large particle circle
+  # 6 - large particle triangle
+  # 7 - large particle drum2d
+  # 8 - large particle hex
+  # 9 - cylindrical wall
 
   ## geometry
   center = [0., 0., 0.]
@@ -832,6 +820,8 @@ def create_input_file(inp_dir, pp_tag):
   # small drum2d
   w_small_drum2d = R_small * 0.4
   small_drum2d = [R_small, w_small_drum2d, center[0], center[1], center[2]]
+  # small hex
+  small_hex = small_circle
 
   # large circle
   large_circle = [R_large, center[0], center[1], center[2]]
@@ -840,6 +830,8 @@ def create_input_file(inp_dir, pp_tag):
   # large drum2d
   w_large_drum2d = R_large* 0.4
   large_drum2d = [R_large, w_large_drum2d, center[0], center[1], center[2]]
+  # large hex
+  large_hex = large_circle
 
   ## time 
   final_time = 0.1
@@ -909,27 +901,30 @@ def create_input_file(inp_dir, pp_tag):
 
   # generate particle locations
   padding = 1.1 * R_contact_factor * mesh_size
-  Nmax = 5000
-  max_y = 0.2*R_in
-  num_particles_zones_1_to_6, particles_zones_1_to_6 = particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R_small, R_large, [0, 1, 2], [3, 4, 5], Nmax, R_in, bar_rectangle_attached_to_cylinder, z_coord = 0., add_orient = True)
+  max_y = 0.3*R_in
+  num_particles_zones_1_to_8, particles_zones_1_to_8 = particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R_small, R_large, [0, 1, 2, 3], [4, 5, 6, 7], R_in, bar_rectangle_attached_to_cylinder, z_coord = 0., add_orient = True)
 
   # generate particle .geo file (large)
-  zones_mesh_fnames = ["mesh_cir_small", "mesh_tri_small", "mesh_drum2d_small", "mesh_cir_large", "mesh_tri_large", "mesh_drum2d_large", "mesh_wall"]
+  zones_mesh_fnames = ["mesh_cir_small", "mesh_tri_small", "mesh_drum2d_small", "mesh_hex_small", "mesh_cir_large", "mesh_tri_large", "mesh_drum2d_large", "mesh_hex_large", "mesh_wall"]
 
   ## circle
   generate_cir_particle_gmsh_input(inp_dir, zones_mesh_fnames[0], center, R_small, mesh_size, pp_tag)
-  generate_cir_particle_gmsh_input(inp_dir, zones_mesh_fnames[3], center, R_large, mesh_size, pp_tag)
+  generate_cir_particle_gmsh_input(inp_dir, zones_mesh_fnames[4], center, R_large, mesh_size, pp_tag)
 
   ## triangle
   generate_tri_particle_gmsh_input(inp_dir, zones_mesh_fnames[1], center, R_small, mesh_size, pp_tag)
-  generate_tri_particle_gmsh_input(inp_dir, zones_mesh_fnames[4], center, R_large, mesh_size, pp_tag)
+  generate_tri_particle_gmsh_input(inp_dir, zones_mesh_fnames[5], center, R_large, mesh_size, pp_tag)
 
   ## drum2d
   generate_drum2d_particle_gmsh_input(inp_dir, zones_mesh_fnames[2], center, R_small, 2.*w_small_drum2d, mesh_size, pp_tag)
-  generate_drum2d_particle_gmsh_input(inp_dir, zones_mesh_fnames[5], center, R_large, 2.*w_large_drum2d, mesh_size, pp_tag)
+  generate_drum2d_particle_gmsh_input(inp_dir, zones_mesh_fnames[6], center, R_large, 2.*w_large_drum2d, mesh_size, pp_tag)
+
+  ## hex
+  generate_hex_particle_gmsh_input(inp_dir, zones_mesh_fnames[3], center, R_small, mesh_size, pp_tag)
+  generate_hex_particle_gmsh_input(inp_dir, zones_mesh_fnames[7], center, R_large, mesh_size, pp_tag)
 
   ## wall
-  generate_wall_gmsh_input(inp_dir, zones_mesh_fnames[6], center, R_out, R_in, W_bar, L_bar, mesh_size, pp_tag)
+  generate_wall_gmsh_input(inp_dir, zones_mesh_fnames[8], center, R_out, R_in, W_bar, L_bar, mesh_size, pp_tag)
 
   os.system("mkdir -p out")
 
@@ -940,8 +935,8 @@ def create_input_file(inp_dir, pp_tag):
     print('\n')
 
     os.system("gmsh {}_{}.geo -2".format(s, pp_tag))
-    os.system("gmsh {}_{}.geo -2 &> /dev/null".format(s, pp_tag))
-    os.system("gmsh {}_{}.geo -2 -o {}_{}.vtk &> /dev/null".format(s, pp_tag, s, pp_tag))
+    #os.system("gmsh {}_{}.geo -2 &> /dev/null".format(s, pp_tag))
+    #os.system("gmsh {}_{}.geo -2 -o {}_{}.vtk &> /dev/null".format(s, pp_tag, s, pp_tag))
 
 
   ### ---------------------------------------------------------------- ###
@@ -967,11 +962,11 @@ def create_input_file(inp_dir, pp_tag):
 
   # zone info
   inpf.write("Zone:\n")
-  inpf.write("  Zones: 7\n")
+  inpf.write("  Zones: 9\n")
 
-  for i in range(7):
+  for i in range(9):
     inpf.write("  Zone_%d:\n" % (i+1))
-    if i == 6: 
+    if i == 8: 
       inpf.write("    Is_Wall: true\n")
     else:
       inpf.write("    Is_Wall: false\n")
@@ -980,14 +975,14 @@ def create_input_file(inp_dir, pp_tag):
   inpf.write("Particle:\n")
   inpf.write("  Test_Name: multi_particle_attrition\n")
 
-  particle_data = [['circle', small_circle], ['triangle', small_triangle], ['drum2d', small_drum2d], ['circle', large_circle], ['triangle', large_triangle], ['drum2d', large_drum2d]]
-  for i in range(6):
+  particle_data = [['circle', small_circle], ['triangle', small_triangle], ['drum2d', small_drum2d], ['hexagon', small_hex], ['circle', large_circle], ['triangle', large_triangle], ['drum2d', large_drum2d], ['hexagon', large_hex]]
+  for i in range(len(particle_data)):
     inpf.write("  Zone_%d:\n" % (i+1))
     inpf.write("    Type: %s\n" % (particle_data[i][0]))
     inpf.write("    Parameters: " + print_dbl_list((particle_data[i][1])))
 
   ## last zone (wall)
-  inpf.write("  Zone_7:\n")
+  inpf.write("  Zone_9:\n")
   inpf.write("    Is_Wall: true\n")
   inpf.write("    Type: complex\n")
   inpf.write("    Vec_Type: [circle, circle, rectangle]\n")
@@ -1004,7 +999,7 @@ def create_input_file(inp_dir, pp_tag):
   # Mesh info
   inpf.write("Mesh:\n")
 
-  for i in range(7):
+  for i in range(9):
     inpf.write("  Zone_%d:\n" % (i+1))
     inpf.write("    File: %s\n" % (zones_mesh_fnames[i] + "_" + str(pp_tag) + ".msh"))
 
@@ -1014,108 +1009,74 @@ def create_input_file(inp_dir, pp_tag):
   ## 11
   write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "11", Kn_small_small)
 
-  ## 12 --> copy from 11
-  inpf.write("  Zone_12:\n")
-  inpf.write("    Copy_Contact_Data: [1, 1]\n")
+  ## 12, 13, 14 --> copy from 11
+  copy_contact_zone(inpf, [12, 13, 14], [1, 1])
+  
+  ## 15
+  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "15", Kn_small_large)
 
-  ## 13 --> copy from 11
-  inpf.write("  Zone_13:\n")
-  inpf.write("    Copy_Contact_Data: [1, 1]\n")
+  ## 16, 17, 18 --> copy from 15
+  copy_contact_zone(inpf, [16, 17, 18], [1, 5])
 
-  ## 14
-  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "14", Kn_small_large)
+  ## 19
+  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "19", Kn_small_wall)
 
-  ## 15 --> copy from 14
-  inpf.write("  Zone_15:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 22, 23, 24 --> copy from 11
+  copy_contact_zone(inpf, [22, 23, 24], [1, 1])
 
-  ## 16 --> copy from 14
-  inpf.write("  Zone_16:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 25, 26, 27, 28 --> copy from 15
+  copy_contact_zone(inpf, [25, 26, 27, 28], [1, 5])
 
-  ## 17
-  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "17", Kn_small_wall)
+  ## 29 --> copy from 19
+  copy_contact_zone(inpf, [29], [1, 9])
 
-  ## 22 --> copy from 11
-  inpf.write("  Zone_22:\n")
-  inpf.write("    Copy_Contact_Data: [1, 1]\n")
+  ## 33, 34 --> copy from 11
+  copy_contact_zone(inpf, [33, 34], [1, 1])
 
-  ## 23 --> copy from 11
-  inpf.write("  Zone_23:\n")
-  inpf.write("    Copy_Contact_Data: [1, 1]\n")
+  ## 35, 36, 37, 38 --> copy from 15
+  copy_contact_zone(inpf, [35, 36, 37, 38], [1, 5])
 
-  ## 24 --> copy from 14
-  inpf.write("  Zone_24:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 39 --> copy from 19
+  copy_contact_zone(inpf, [39], [1, 9])
 
-  ## 25 --> copy from 14
-  inpf.write("  Zone_25:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 44 --> copy from 11
+  copy_contact_zone(inpf, [44], [1, 1])
 
-  ## 26 --> copy from 14
-  inpf.write("  Zone_26:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 45, 46, 47, 48 --> copy from 15
+  copy_contact_zone(inpf, [45, 46, 47, 48], [1, 5])
 
-  ## 27 --> copy from 17
-  inpf.write("  Zone_27:\n")
-  inpf.write("    Copy_Contact_Data: [1, 7]\n")
+  ## 49 --> copy from 19
+  copy_contact_zone(inpf, [49], [1, 9])
 
-  ## 33 --> copy from 11
-  inpf.write("  Zone_33:\n")
-  inpf.write("    Copy_Contact_Data: [1, 1]\n")
+  ## 55
+  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "55", Kn_large_large)
 
-  ## 34 --> copy from 14
-  inpf.write("  Zone_34:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 56, 57, 58 --> copy from 55
+  copy_contact_zone(inpf, [56, 57, 58], [5, 5])
 
-  ## 35 --> copy from 14
-  inpf.write("  Zone_35:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 59
+  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "59", Kn_large_wall)
 
-  ## 36 --> copy from 14
-  inpf.write("  Zone_36:\n")
-  inpf.write("    Copy_Contact_Data: [1, 4]\n")
+  ## 66, 67, 68 --> copy from 55
+  copy_contact_zone(inpf, [66, 67, 68], [5, 5])
 
-  ## 37 --> copy from 17
-  inpf.write("  Zone_37:\n")
-  inpf.write("    Copy_Contact_Data: [1, 7]\n")
+  ## 69 --> copy from 59
+  copy_contact_zone(inpf, [69], [5, 9])
 
-  ## 44 
-  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "44", Kn_large_large)
+  ## 77, 78 --> copy from 55
+  copy_contact_zone(inpf, [77, 78], [5, 5])
 
-  ## 45 --> copy from 44
-  inpf.write("  Zone_45:\n")
-  inpf.write("    Copy_Contact_Data: [4, 4]\n")
+  ## 79 --> copy from 59
+  copy_contact_zone(inpf, [79], [5, 9])
 
-  ## 46 --> copy from 44
-  inpf.write("  Zone_46:\n")
-  inpf.write("    Copy_Contact_Data: [4, 4]\n")
+  ## 88 --> copy from 55
+  copy_contact_zone(inpf, [88], [5, 5])
 
-  ## 47
-  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "47", Kn_large_wall)
+  ## 89 --> copy from 59
+  copy_contact_zone(inpf, [89], [5, 9])
 
-  ## 55 --> copy from 44
-  inpf.write("  Zone_55:\n")
-  inpf.write("    Copy_Contact_Data: [4, 4]\n")
-
-  ## 56 --> copy from 44
-  inpf.write("  Zone_56:\n")
-  inpf.write("    Copy_Contact_Data: [4, 4]\n")
-
-  ## 57 --> copy from 47
-  inpf.write("  Zone_57:\n")
-  inpf.write("    Copy_Contact_Data: [4, 7]\n")
-
-  ## 66 --> copy from 44
-  inpf.write("  Zone_66:\n")
-  inpf.write("    Copy_Contact_Data: [4, 4]\n")
-
-  ## 67 --> copy from 47
-  inpf.write("  Zone_67:\n")
-  inpf.write("    Copy_Contact_Data: [4, 7]\n")
-
-  ## 77
-  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "77", Kn_wall_wall)
+  ## 99
+  write_contact_zone_part(inpf, R_contact_factor, damping_active, friction_active, beta_n_eps, friction_coeff, Kn_factor, beta_n_factor, "99", Kn_wall_wall)
 
   # Neighbor info
   inpf.write("Neighbor:\n")
@@ -1137,18 +1098,26 @@ def create_input_file(inp_dir, pp_tag):
   inpf.write("    Copy_Material_Data: 1\n")
 
   ## zone 4
-  write_material_zone_part(inpf, "4", horizon, rho_large, K_large, G_large, Gc_large)
+  inpf.write("  Zone_4:\n")
+  inpf.write("    Copy_Material_Data: 1\n")
 
   ## zone 5
-  inpf.write("  Zone_5:\n")
-  inpf.write("    Copy_Material_Data: 4\n")
+  write_material_zone_part(inpf, "5", horizon, rho_large, K_large, G_large, Gc_large)
 
   ## zone 6
   inpf.write("  Zone_6:\n")
-  inpf.write("    Copy_Material_Data: 4\n")
+  inpf.write("    Copy_Material_Data: 5\n")
 
   ## zone 7
-  write_material_zone_part(inpf, "7", horizon, rho_wall, K_wall, G_wall, Gc_wall)
+  inpf.write("  Zone_7:\n")
+  inpf.write("    Copy_Material_Data: 5\n")
+
+  ## zone 8
+  inpf.write("  Zone_8:\n")
+  inpf.write("    Copy_Material_Data: 5\n")
+
+  ## zone 9
+  write_material_zone_part(inpf, "9", horizon, rho_wall, K_wall, G_wall, Gc_wall)
 
   # Force
   if gravity_active == True:
@@ -1160,8 +1129,8 @@ def create_input_file(inp_dir, pp_tag):
   inpf.write("  Sets: 1\n")
 
   inpf.write("  Set_1:\n")
-  # wall particle id will be num_particles_zones_1_to_6
-  inpf.write("    Particle_List: [%d]\n" % (num_particles_zones_1_to_6))
+  # wall particle id will be num_particles_zones_1_to_8
+  inpf.write("    Particle_List: [%d]\n" % (num_particles_zones_1_to_8))
   inpf.write("    Direction: [1,2]\n")
   inpf.write("    Time_Function:\n")
   inpf.write("      Type: rotation\n")

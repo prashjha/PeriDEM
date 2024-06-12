@@ -3,7 +3,7 @@ Model:
   Discretization_Type:
     Spatial: finite_difference
     Time: central_difference
-  Final_Time: 1.000000e+00
+  Final_Time: 1.000000e-01
   Time_Steps: 1000000
 Container:
   Geometry:
@@ -12,7 +12,7 @@ Container:
     Vec_Flag: [plus, minus, plus]
     Parameters: [2.100000e-02, 0.000000e+00, 0.000000e+00, 0.000000e+00, 2.000000e-02, 0.000000e+00, 0.000000e+00, 0.000000e+00, 1.400000e-02, -1.500000e-03, 0.000000e+00, 2.000000e-02, 1.500000e-03, 0.000000e+00]
 Zone:
-  Zones: 7
+  Zones: 9
   Zone_1:
     Is_Wall: false
   Zone_2:
@@ -26,6 +26,10 @@ Zone:
   Zone_6:
     Is_Wall: false
   Zone_7:
+    Is_Wall: false
+  Zone_8:
+    Is_Wall: false
+  Zone_9:
     Is_Wall: true
 Particle:
   Test_Name: multi_particle_attrition
@@ -39,15 +43,21 @@ Particle:
     Type: drum2d
     Parameters: [1.000000e-03, 4.000000e-04, 0.000000e+00, 0.000000e+00, 0.000000e+00]
   Zone_4:
+    Type: hexagon
+    Parameters: [1.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_5:
     Type: circle
     Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
-  Zone_5:
+  Zone_6:
     Type: triangle
     Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
-  Zone_6:
+  Zone_7:
     Type: drum2d
     Parameters: [3.000000e-03, 1.200000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
-  Zone_7:
+  Zone_8:
+    Type: hexagon
+    Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_9:
     Is_Wall: true
     Type: complex
     Vec_Type: [circle, circle, rectangle]
@@ -66,12 +76,16 @@ Mesh:
   Zone_3:
     File: mesh_drum2d_small_0.msh
   Zone_4:
-    File: mesh_cir_large_0.msh
+    File: mesh_hex_small_0.msh
   Zone_5:
-    File: mesh_tri_large_0.msh
+    File: mesh_cir_large_0.msh
   Zone_6:
-    File: mesh_drum2d_large_0.msh
+    File: mesh_tri_large_0.msh
   Zone_7:
+    File: mesh_drum2d_large_0.msh
+  Zone_8:
+    File: mesh_hex_large_0.msh
+  Zone_9:
     File: mesh_wall_0.msh
 Contact:
   Zone_11:
@@ -88,6 +102,8 @@ Contact:
   Zone_13:
     Copy_Contact_Data: [1, 1]
   Zone_14:
+    Copy_Contact_Data: [1, 1]
+  Zone_15:
     Contact_Radius_Factor: 9.500000e-01
     Damping_On: false
     Friction_On: false
@@ -96,11 +112,13 @@ Contact:
     Friction_Coeff: 5.000000e-01
     Kn_Factor: 1.000000e+00
     Beta_n_Factor: 1.000000e+02
-  Zone_15:
-    Copy_Contact_Data: [1, 4]
   Zone_16:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_17:
+    Copy_Contact_Data: [1, 5]
+  Zone_18:
+    Copy_Contact_Data: [1, 5]
+  Zone_19:
     Contact_Radius_Factor: 9.500000e-01
     Damping_On: false
     Friction_On: false
@@ -114,37 +132,44 @@ Contact:
   Zone_23:
     Copy_Contact_Data: [1, 1]
   Zone_24:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 1]
   Zone_25:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_26:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_27:
-    Copy_Contact_Data: [1, 7]
+    Copy_Contact_Data: [1, 5]
+  Zone_28:
+    Copy_Contact_Data: [1, 5]
+  Zone_29:
+    Copy_Contact_Data: [1, 9]
   Zone_33:
     Copy_Contact_Data: [1, 1]
   Zone_34:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 1]
   Zone_35:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_36:
-    Copy_Contact_Data: [1, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_37:
-    Copy_Contact_Data: [1, 7]
+    Copy_Contact_Data: [1, 5]
+  Zone_38:
+    Copy_Contact_Data: [1, 5]
+  Zone_39:
+    Copy_Contact_Data: [1, 9]
   Zone_44:
-    Contact_Radius_Factor: 9.500000e-01
-    Damping_On: false
-    Friction_On: false
-    Kn: 7.368284e+21
-    Epsilon: 9.500000e-01
-    Friction_Coeff: 5.000000e-01
-    Kn_Factor: 1.000000e+00
-    Beta_n_Factor: 1.000000e+02
+    Copy_Contact_Data: [1, 1]
   Zone_45:
-    Copy_Contact_Data: [4, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_46:
-    Copy_Contact_Data: [4, 4]
+    Copy_Contact_Data: [1, 5]
   Zone_47:
+    Copy_Contact_Data: [1, 5]
+  Zone_48:
+    Copy_Contact_Data: [1, 5]
+  Zone_49:
+    Copy_Contact_Data: [1, 9]
+  Zone_55:
     Contact_Radius_Factor: 9.500000e-01
     Damping_On: false
     Friction_On: false
@@ -153,17 +178,40 @@ Contact:
     Friction_Coeff: 5.000000e-01
     Kn_Factor: 1.000000e+00
     Beta_n_Factor: 1.000000e+02
-  Zone_55:
-    Copy_Contact_Data: [4, 4]
   Zone_56:
-    Copy_Contact_Data: [4, 4]
+    Copy_Contact_Data: [5, 5]
   Zone_57:
-    Copy_Contact_Data: [4, 7]
+    Copy_Contact_Data: [5, 5]
+  Zone_58:
+    Copy_Contact_Data: [5, 5]
+  Zone_59:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 7.368284e+21
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 1.000000e+00
+    Beta_n_Factor: 1.000000e+02
   Zone_66:
-    Copy_Contact_Data: [4, 4]
+    Copy_Contact_Data: [5, 5]
   Zone_67:
-    Copy_Contact_Data: [4, 7]
+    Copy_Contact_Data: [5, 5]
+  Zone_68:
+    Copy_Contact_Data: [5, 5]
+  Zone_69:
+    Copy_Contact_Data: [5, 9]
   Zone_77:
+    Copy_Contact_Data: [5, 5]
+  Zone_78:
+    Copy_Contact_Data: [5, 5]
+  Zone_79:
+    Copy_Contact_Data: [5, 9]
+  Zone_88:
+    Copy_Contact_Data: [5, 5]
+  Zone_89:
+    Copy_Contact_Data: [5, 9]
+  Zone_99:
     Contact_Radius_Factor: 9.500000e-01
     Damping_On: false
     Friction_On: false
@@ -191,6 +239,8 @@ Material:
   Zone_3:
     Copy_Material_Data: 1
   Zone_4:
+    Copy_Material_Data: 1
+  Zone_5:
     Type: PDState
     Horizon: 6.000000e-04
     Density: 1.200000e+03
@@ -200,11 +250,13 @@ Material:
     Gc: 1.000000e+02
     Influence_Function:
       Type: 1
-  Zone_5:
-    Copy_Material_Data: 4
   Zone_6:
-    Copy_Material_Data: 4
+    Copy_Material_Data: 5
   Zone_7:
+    Copy_Material_Data: 5
+  Zone_8:
+    Copy_Material_Data: 5
+  Zone_9:
     Type: PDState
     Horizon: 6.000000e-04
     Density: 1.200000e+03
@@ -219,7 +271,7 @@ Force_BC:
 Displacement_BC:
   Sets: 1
   Set_1:
-    Particle_List: [40]
+    Particle_List: [50]
     Direction: [1,2]
     Time_Function:
       Type: rotation
