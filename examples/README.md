@@ -58,6 +58,18 @@ yielding of the system. For more details, we refer to
 |:------------------------------------------------------:| 
 |              Compressive test simulation               | 
 
+
+### Attrition tests - Particles in a rotating container
+We consider mix of different particles in a rotating container. Particles considered include circular, triangular, hexagonal, and drum shaped. Particles come in large and small shapes (their sizes are purturbed randomly). In order to to introduce diversity of material properties, we considered large particles to be tougher compared to the smaller ones. Setup files are in [PeriDEM/attrition_tests](./PeriDEM/attrition_tests)
+
+| <img src="../assets/attrition_test_sim1.gif" width="600"> | <img src="../assets/attrition_test_sim2.gif" width="600"> | 
+|:-----------------------------------------------------:| :-----------------------------------------------------:| 
+|              Rotating cylinder ([setup](./PeriDEM/attrition_tests/sim1_multi_particle_circ_tri_drum_with_rotating_cylinder_with_protrusion))              |               Rotating cylinder with center of rotation offset ([setup](./PeriDEM/attrition_tests/sim2_multi_particle_circ_tri_drum_hex_with_rotating_cylinder_with_protrusion_thin_container_and_change_rotation_rate))              | 
+
+Complex container geometries can be considered as well. For example, the image below is from [attrition_tests](./PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container) and includes rotating rectangle with opening and internal groves of different shapes. The rotating container with particles inside is contained within another rectangle which is fixed in its place.
+
+<img src="./PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container/init_view.png" width="600">
+
 ## Running simulations
 Assuming that the input file is `input.yaml` and all other files such as `.msh`
 file for particle/wall and particle locations file are created and their filenames

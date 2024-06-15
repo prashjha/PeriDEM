@@ -184,7 +184,9 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config) {
       std::cerr << "Error: Check nodal volume " << v
                 << " is less than " <<  0.01 * std::pow(d_h, d_dim)
                 << ", Node = " << counter
-                << " at position = " << d_nodes[counter].printStr() << "\n";
+                << " at position = " << d_nodes[counter].printStr() << "\n"
+                << "mesh filename = " << filename << "\n"
+                << printStr() << "\n";
 
       exit(1);
     }

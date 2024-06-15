@@ -40,7 +40,7 @@ double computeStateMxI(size_t i, const std::vector<util::Point> &nodes,
     double rji = (xj - xi).length();
     //double rji = std::sqrt(neighbors_sq_dist[i][k]);
 
-    if (util::isGreater(rji, horizon) or j == i)
+    if (util::isGreater(rji, horizon)) // or j == i) <-- check! For weighted volume, we don't want to skip the node itself
       continue;
 
     // get corrected volume of node j
@@ -61,6 +61,8 @@ double computeStateMxI(size_t i, const std::vector<util::Point> &nodes,
 
     oss << "Mesh size = " << mesh_size << "\n";
     oss << "J = " << material->getInfFn(0.5 * horizon) << "\n";
+    oss << "weighted volume (times 1.0e10) = " << m*1.e+10 << "\n";
+    oss << "nodal coord = " << xi.printStr() << "\n";
     oss << material->printStr(0, 0);
 
     std::cout << oss.str();
