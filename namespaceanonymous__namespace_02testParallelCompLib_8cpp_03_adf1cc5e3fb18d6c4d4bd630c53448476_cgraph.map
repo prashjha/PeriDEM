@@ -1,0 +1,7 @@
+<map id="anonymous_namespace{testParallelCompLib::cpp}::setupOwnerAndGhost" name="anonymous_namespace{testParallelCompLib::cpp}::setupOwnerAndGhost">
+<area shape="rect" id="node1" title=" " alt="" coords="5,16,196,72"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="244,5,392,32"/>
+<area shape="rect" id="node5" href="$namespaceutil_1_1parallel.html#ad67dcfb56bf70d082e443e849c832c00" title="Get size (number) of processors." alt="" coords="247,56,389,83"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="440,31,575,57"/>
+<area shape="rect" id="node4" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="623,31,795,57"/>
+</map>

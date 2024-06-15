@@ -1,0 +1,5 @@
+<map id="problem_setup.generate_rigid_wall_gmsh_input" name="problem_setup.generate_rigid_wall_gmsh_input">
+<area shape="rect" id="node1" title=" " alt="" coords="429,35,591,76"/>
+<area shape="rect" id="node2" href="$namespaceproblem__setup.html#a8c789550cc1b70abe559c976bcf664e4" title=" " alt="" coords="207,5,381,47"/>
+<area shape="rect" id="node3" href="$namespaceproblem__setup.html#a767ffea81ffa775dc9aeb12b2e2a21a4" title=" " alt="" coords="5,35,159,76"/>
+</map>

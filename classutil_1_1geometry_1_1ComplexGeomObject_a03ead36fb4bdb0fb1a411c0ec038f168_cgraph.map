@@ -1,0 +1,5 @@
+<map id="util::geometry::ComplexGeomObject::center" name="util::geometry::ComplexGeomObject::center">
+<area shape="rect" id="node1" title="Computes the center of object." alt="" coords="5,23,201,65"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="281,5,381,32"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="249,56,412,83"/>
+</map>

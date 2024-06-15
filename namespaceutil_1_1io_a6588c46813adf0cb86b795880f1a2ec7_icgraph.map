@@ -1,0 +1,10 @@
+<map id="util::io::getExtensionFromFile" name="util::io::getExtensionFromFile">
+<area shape="rect" id="node1" title="Get extension from the filename." alt="" coords="479,186,671,213"/>
+<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a8a38ac2a0437a16aa1c311b6a075dc51" title="Check for extension and if possible create new filename from a given filename and a given extension." alt="" coords="258,88,421,129"/>
+<area shape="rect" id="node6" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data." alt="" coords="267,186,412,213"/>
+<area shape="rect" id="node8" href="$classfe_1_1Mesh.html#a1fc63a979a642992882c047238aaa3d4" title="Reads element&#45;node connectivity data from file. This function is meant for cases when mesh was create..." alt="" coords="248,237,431,263"/>
+<area shape="rect" id="node3" href="$classrw_1_1writer_1_1MshWriter.html#a4adb871247d273260dd6be70e2ca7aed" title="Constructor." alt="" coords="31,5,174,47"/>
+<area shape="rect" id="node4" href="$classrw_1_1reader_1_1VtkParticleReader.html#a5362ff880839792d2e59868589ebe18c" title="Constructor." alt="" coords="5,71,200,112"/>
+<area shape="rect" id="node5" href="$classrw_1_1reader_1_1VtkReader.html#ab368c92bebcab3859293eee1d3d6f8ce" title="Constructor." alt="" coords="27,136,178,177"/>
+<area shape="rect" id="node7" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor." alt="" coords="46,202,159,229"/>
+</map>

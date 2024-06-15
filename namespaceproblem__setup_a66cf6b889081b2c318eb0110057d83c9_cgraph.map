@@ -1,0 +1,22 @@
+<map id="problem_setup.does_intersect_with_rectangle_wall_with_protrusion_and_opening" name="problem_setup.does_intersect_with_rectangle_wall_with_protrusion_and_opening">
+<area shape="rect" id="node1" title=" " alt="" coords="5,342,180,413"/>
+<area shape="rect" id="node2" href="$namespaceproblem__setup.html#a2e70a598341c87dd2c2432efaaa83e4e" title=" " alt="" coords="262,5,401,61"/>
+<area shape="rect" id="node3" href="$namespaceproblem__setup.html#a2deb4dabdc948f0b2b009c3576518ade" title=" " alt="" coords="248,86,415,127"/>
+<area shape="rect" id="node4" href="$namespaceproblem__setup.html#ae83c0d80c0947e65b98e4a2da0c07601" title=" " alt="" coords="234,151,429,193"/>
+<area shape="rect" id="node5" href="$namespaceproblem__setup.html#a700be09e5b12da02f5d11c0d21cf5d5b" title=" " alt="" coords="510,207,661,249"/>
+<area shape="rect" id="node7" href="$namespaceproblem__setup.html#a876a947fad9cf3729999101abe3e823f" title=" " alt="" coords="245,269,418,310"/>
+<area shape="rect" id="node8" href="$namespaceproblem__setup.html#a8e552b0e3bb3bde7c390d6906dbe88cd" title=" " alt="" coords="510,273,661,314"/>
+<area shape="rect" id="node9" href="$namespaceproblem__setup.html#a541e6c5ea41e139ea1eca83975753fbb" title=" " alt="" coords="250,386,413,427"/>
+<area shape="rect" id="node10" href="$namespaceproblem__setup.html#ac4731e8b5a85713f528c4c79651768ac" title=" " alt="" coords="510,415,661,457"/>
+<area shape="rect" id="node11" href="$namespaceproblem__setup.html#acd177bfd3b1c888bea6db62136e4f483" title=" " alt="" coords="228,503,435,574"/>
+<area shape="rect" id="node12" href="$namespaceproblem__setup.html#a6852c92ff854fb8fa9a34c4bbb63af8a" title=" " alt="" coords="228,598,435,669"/>
+<area shape="rect" id="node13" href="$namespaceproblem__setup.html#a662426f1cd2c0857864b28e98daa4d5a" title=" " alt="" coords="255,693,408,734"/>
+<area shape="rect" id="node16" href="$namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054" title="Prints formatted information." alt="" coords="540,756,631,783"/>
+<area shape="rect" id="node6" href="$namespaceproblem__setup.html#a192b6d085d04429814f30104aeb18493" title=" " alt="" coords="738,248,882,275"/>
+<area shape="rect" id="node14" href="$namespaceproblem__setup.html#a49682af72cdc7bca4f282619eb559d90" title=" " alt="" coords="483,638,688,679"/>
+<area shape="rect" id="node15" href="$namespaceproblem__setup.html#aa39e6862e38920798278f55a2578a6ef" title=" " alt="" coords="505,704,666,731"/>
+<area shape="rect" id="node17" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="736,731,884,757"/>
+<area shape="rect" id="node19" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="757,781,863,808"/>
+<area shape="rect" id="node18" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="932,731,1067,757"/>
+<area shape="rect" id="node20" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="943,781,1056,808"/>
+</map>

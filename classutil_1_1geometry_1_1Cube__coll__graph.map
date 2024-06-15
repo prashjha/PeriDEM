@@ -1,0 +1,5 @@
+<map id="util::geometry::Cube" name="util::geometry::Cube">
+<area shape="rect" id="node1" title="Defines cube." alt="" coords="115,556,255,1088"/>
+<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,188,493"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="213,20,335,479"/>
+</map>
