@@ -1,6 +1,0 @@
-<map id="util::geometry::Sphere::print" name="util::geometry::Sphere::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,156,47"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Sphere.html#a2fdd42a419832bab000c7ddc746b5d93" title="Prints the information." alt="" coords="204,5,355,47"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="581,13,695,39"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="403,38,533,65"/>
-</map>

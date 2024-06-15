@@ -1,4 +1,0 @@
-<map id="inp::Input::setRestartDeck" name="inp::Input::setRestartDeck">
-<area shape="rect" id="node1" title="Read data into restart deck and store its pointer." alt="" coords="167,5,343,32"/>
-<area shape="rect" id="node2" href="$classinp_1_1Input.html#a1ab2b8acc12782bd57ae1a107eafa32d" title="Constructor." alt="" coords="5,5,119,32"/>
-</map>
