@@ -56,4 +56,4 @@ for build_type in "${build_types[@]}"; do
   # cd to base
   cd ../..
 done
-) 2>&1 | tee "${this_script}.log"
+) 2>&1 | tee "$(basename "$0").log"

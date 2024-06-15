@@ -25,13 +25,14 @@
 
 fe::Mesh::Mesh(size_t dim)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
-      d_h(0.), d_dim(dim) {}
+      d_h(0.), d_dim(dim), d_encDataPopulated(false), d_needEncData(false) {}
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
       d_h(deck->d_h), d_dim(deck->d_dim),
       d_spatialDiscretization(deck->d_spatialDiscretization),
-      d_filename(deck->d_filename) {
+      d_filename(deck->d_filename), d_encDataPopulated(false),
+      d_needEncData(deck->d_populateElementNodeConnectivity) {
 
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
@@ -63,15 +64,21 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
 //
 void fe::Mesh::createData(const std::string &filename, bool ref_config) {
 
-  int file_type = -1;
+  util::io::log("Mesh: Reading element data.\n");
 
+  int file_type = -1;
   // find the extension of file and call correct reader
-  if (filename.substr(filename.find_last_of(".") + 1) == "csv")
+  if (util::io::getExtensionFromFile(filename) == "csv")
     file_type = 0;
-  if (filename.substr(filename.find_last_of(".") + 1) == "msh")
+  else if (util::io::getExtensionFromFile(filename) == "msh")
     file_type = 1;
-  if (filename.substr(filename.find_last_of(".") + 1) == "vtu")
+  else if (util::io::getExtensionFromFile(filename) == "vtu")
     file_type = 2;
+  else {
+    std::cerr << "Error: Currently only '.csv', '.msg', and '.vtu' "
+                 "files are supported for reading mesh.\n";
+    exit(EXIT_FAILURE);
+  }
 
   if (d_spatialDiscretization != "finite_difference" and file_type == 0) {
 
@@ -85,16 +92,14 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config) {
   if (d_spatialDiscretization == "finite_difference")
     is_fd = true;
 
-  //
   // read node and elements
-  //
-  util::io::log("Mesh: Reading mesh.\n");
-
   if (file_type == 0)
     rw::reader::readCsvFile(filename, d_dim, &d_nodes, &d_vol);
-  else if (file_type == 1)
+  else if (file_type == 1) {
     rw::reader::readMshFile(filename, d_dim, &d_nodes, d_eType, d_numElems,
                             &d_enc, &d_nec, &d_vol, false);
+    d_encDataPopulated = true;
+  }
   else if (file_type == 2) {
     //
     // old reading of mesh
@@ -124,9 +129,11 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config) {
 
     // read element data (only if this is fe simulation or if we need
     // element-node connectivity data for nodal volume calculation)
-    if (!is_fd || !found_volume_data)
+    if (!is_fd || !found_volume_data) {
       rw::reader::readVtuFileCells(filename, d_dim, d_eType, d_numElems, &d_enc,
                                    &d_nec);
+      d_encDataPopulated = true;
+    }
 
     // check if file has fixity data
     rw::reader::readVtuFilePointData(filename, "Fixity", &d_fix);
@@ -177,13 +184,65 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config) {
       std::cerr << "Error: Check nodal volume " << v
                 << " is less than " <<  0.01 * std::pow(d_h, d_dim)
                 << ", Node = " << counter
-                << " at position = " << d_nodes[counter].printStr() << "\n";
+                << " at position = " << d_nodes[counter].printStr() << "\n"
+                << "mesh filename = " << filename << "\n"
+                << printStr() << "\n";
 
       exit(1);
     }
 
     counter++;
   }
+
+  if (d_needEncData and (!d_encDataPopulated or d_enc.empty()))
+    readElementData(d_filename);
+}
+
+bool fe::Mesh::readElementData(const std::string &filename) {
+
+  if (d_encDataPopulated and !d_enc.empty()) {
+    util::io::log("Mesh: Element data is populated already.\n");
+    return false;
+  }
+
+  util::io::log("Mesh: Reading element-node connectivity data.\n");
+
+  int file_type = -1;
+  // find the extension of file and call correct reader
+  if (util::io::getExtensionFromFile(filename) == "csv")
+    file_type = 0;
+  else if (util::io::getExtensionFromFile(filename) == "msh")
+    file_type = 1;
+  else if (util::io::getExtensionFromFile(filename) == "vtu")
+    file_type = 2;
+  else {
+    std::cerr << "Error: Currently only '.csv', '.msg', and '.vtu' "
+                 "files are supported for reading mesh.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  if (file_type == 0) {
+    std::cerr << "Error: readElementData() requires file to be either "
+                 ".vtu or .msh mesh file.\n";
+    exit(EXIT_FAILURE);
+  }
+
+  if (file_type == 1) {
+    rw::reader::readMshFileCells(filename, d_dim, d_eType, d_numElems,
+                                       &d_enc,
+                                       &d_nec);
+    d_encDataPopulated = true;
+    return true;
+  }
+  else if (file_type == 2) {
+    rw::reader::readVtuFileCells(filename, d_dim, d_eType, d_numElems,
+                                 &d_enc,
+                                 &d_nec);
+    d_encDataPopulated = true;
+    return true;
+  }
+
+  return false;
 }
 
 void fe::Mesh::computeVol() {

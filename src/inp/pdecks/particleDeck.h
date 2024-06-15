@@ -33,19 +33,25 @@ struct ParticleDeck {
   std::vector<inp::Zone> d_zoneVec;
 
   /*! @brief Maps particle/wall to corresponding zone */
-  std::vector<std::pair<std::string, size_t>> d_zoneToPorWDeck;
+  std::vector<std::pair<std::string, size_t>> d_zoneToParticleORWallDeck;
 
   /*! @brief Particle in zones */
-  std::vector<inp::ParticleZone> d_pZones;
-
-  /*! @brief Walls */
-  std::vector<inp::WallZone> d_wZones;
+  std::vector<inp::ParticleZone> d_particleZones;
 
   /*!
    * @brief Geometry of container in which all particles reside. Currently,
    * we only support rectangle (2-d) and cuboid (3-d)
    */
   std::shared_ptr<util::geometry::GeomObject> d_contGeom_p;
+
+  /*! @brief Container geometry name */
+  std::string d_contGeomName;
+
+  /*! @brief Container geometry parameters */
+  std::vector<double> d_contGeomParams;
+
+  /*! @brief Container geometry info if it is a complex type */
+  std::pair<std::vector<std::string>, std::vector<std::string>> d_contGeomComplexInfo;
 
   /*! @brief Neighbor search data */
   inp::PNeighborDeck d_pNeighDeck;
@@ -69,19 +75,23 @@ struct ParticleDeck {
   std::string d_testName;
 
   /*! @brief if it is a compressive test, specify wall id and direction */
-  size_t d_wallIdCompressiveTest;
+  size_t d_particleIdCompressiveTest;
 
   /*! @brief if it is a compressive test, specify force direction on wall */
-  size_t d_wallForceDirectionCompressiveTest;
+  size_t d_particleForceDirectionCompressiveTest;
 
   /*!
    * @brief Constructor
    */
   ParticleDeck()
-      : d_contGeom_p(nullptr), d_pNeighDeck(inp::PNeighborDeck()),
-        d_gravityActive(false), d_gravity(), d_icDeck(),
-        d_testName(""), d_wallIdCompressiveTest(0),
-        d_wallForceDirectionCompressiveTest(0) {};
+      : d_contGeom_p(nullptr),
+        d_pNeighDeck(inp::PNeighborDeck()),
+        d_gravityActive(false),
+        d_gravity(),
+        d_icDeck(),
+        d_testName(""),
+        d_particleIdCompressiveTest(0),
+        d_particleForceDirectionCompressiveTest(0) {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -95,19 +105,26 @@ struct ParticleDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- ParticleDeck --------" << std::endl << std::endl;
-    oss << tabS << "Number of particle zones  = " << d_pZones.size() << std::endl;
-    oss << tabS << "Number of wall zones  = " << d_wZones.size() << std::endl;
+    oss << tabS << "Number of particle zones  = " << d_particleZones.size() << std::endl;
     oss << tabS << "Particle data:" << std::endl;
-    for (size_t i = 0; i < d_pZones.size(); i++) {
+    for (size_t i = 0; i < d_particleZones.size(); i++) {
       oss << tabS << "Particle data for zone = " << i << std::endl;
-      oss << d_pZones[i].printStr(nt+1, lvl);
-    }
-    oss << tabS << "Wall data:" << std::endl;
-    for (size_t i = 0; i < d_wZones.size(); i++) {
-      oss << tabS << "Wall data for zone = " << i << std::endl;
-      oss << d_wZones[i].printStr(nt+1, lvl);
+      oss << d_particleZones[i].printStr(nt + 1, lvl);
     }
     oss << tabS << "Container geometry info:" << std::endl;
+    oss << tabS << "Container geometry name = " << d_contGeomName << std::endl;
+    oss << tabS << "Container geometry parameters = ["
+        << util::io::printStr<double>(d_contGeomParams, 0)
+        << "]" << std::endl;
+    if (!d_contGeomComplexInfo.first.empty()) {
+      oss << tabS << "Container geometry vec type for complex geometry = ["
+          << util::io::printStr(d_contGeomComplexInfo.first, 0)
+          << "]" << std::endl;
+
+      oss << tabS << "Container geometry vec flag for complex geometry = ["
+          << util::io::printStr(d_contGeomComplexInfo.second, 0)
+          << "]" << std::endl;
+    }
     oss << d_contGeom_p->printStr(nt+1, lvl);
     oss << tabS << "Neighbor data:" << std::endl;
     oss << d_pNeighDeck.printStr(nt+1, lvl);
@@ -143,6 +160,24 @@ struct ParticleDeck {
    * @param lvl Information level (higher means more information)
    */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
+
+  /*!
+   * @brief Copies the geometry details
+   *
+   * @param name Name of geometry
+   * @param params Parameters
+   * @param complexInfo Pair of vector of geometry names and flags for complex geometry
+   * @param geom Pointer to geometry object
+   */
+  void copyContainerGeometry(std::string &name,
+         std::vector<double> &params,
+         std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo,
+         std::shared_ptr<util::geometry::GeomObject> &geom) {
+    name = d_contGeomName;
+    params = d_contGeomParams;
+    complexInfo = d_contGeomComplexInfo;
+    geom = d_contGeom_p;
+  }
 };
 
 /** @}*/

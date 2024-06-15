@@ -1,7 +1,7 @@
 #!/bin/bash
 (
 MY_PWD=$(pwd)
-# locate executible
+# locate executable
 execsrc="../../../../../bin/PeriDEM"
 nts="2"
 if [[ $# -gt 0 ]]; then
@@ -40,6 +40,6 @@ gmsh "$f_w_mesh.geo" -2 -o "$f_w_mesh.vtk"  &> /dev/null
 
 echo "Running PeriDEM ... "
 f_inp="input$f_suf.yaml"
-"$execsrc" -i "$f_inp" --hpx:threads=$nts
+"$execsrc" -i "$f_inp" -nThreads $nts
 
 ) 2>&1 |  tee output.log

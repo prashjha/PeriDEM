@@ -10,4 +10,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestParticle ${SOURCES})
 
-target_link_libraries(TestParticle PUBLIC FE Geometry Particle)
+target_link_libraries(TestParticle PUBLIC Particle)

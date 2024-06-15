@@ -39,7 +39,7 @@ public:
    * @param dim Dimension
    * @param nodes Vector of nodes data
    * @param element_type Type of element
-   * @param num_elem Number of elements
+   * @param num_elems Number of elements
    * @param enc Vector holding element-node connectivity
    * @param nec Vector holding node-element connectivity
    * @param volumes Vector holding volume of the nodes
@@ -47,7 +47,7 @@ public:
    * simulation
    */
   void readMesh(size_t dim, std::vector<util::Point> *nodes,
-                size_t &element_type, size_t &num_elem,
+                size_t &element_type, size_t &num_elems,
                 std::vector<size_t> *enc, std::vector<std::vector<size_t>> *nec,
                 std::vector<double> *volumes, bool is_fd = false);
 
@@ -57,6 +57,18 @@ public:
    * @param nodes Vector of nodal coordinates
    */
   void readNodes(std::vector<util::Point> *nodes);
+
+  /*!
+   * @brief Reads cell data, i.e. element-node connectivity and node-element connectivity
+   * @param dim Dimension
+   * @param element_type Type of element
+   * @param num_elems Number of elements
+   * @param enc Element-node connectivity
+   * @param nec Node-element connectivity
+   */
+  void readCells(size_t dim, size_t &element_type,
+                 size_t &num_elems, std::vector<size_t> *enc,
+                 std::vector<std::vector<size_t>> *nec);
 
   /*!
    * @brief reads point data from .vtu file

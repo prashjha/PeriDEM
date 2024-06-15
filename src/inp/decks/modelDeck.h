@@ -56,6 +56,12 @@ struct ModelDeck {
    */
   std::string d_timeDiscretization;
 
+  /*! @brief Flag to indicate if we should populate element-node connectivity data in meshes */
+  bool d_populateElementNodeConnectivity;
+
+  /*! @brief Order of quadrature approximation for strain and stress computation (default is 1) */
+  size_t d_quadOrder;
+
   /*! @brief Specify if this is PeriDEM simulation */
   bool d_isPeriDEM;
 
@@ -91,8 +97,9 @@ struct ModelDeck {
    * @brief Constructor
    */
   ModelDeck()
-      : d_dim(0), d_isRestartActive(false), d_tFinal(0.), d_dt(0.), d_Nt(0),
-        d_horizon(0.), d_rh(0), d_h(0.), d_isPeriDEM(false), d_seed(1) {};
+      : d_dim(0), d_isRestartActive(false), d_populateElementNodeConnectivity(false),
+        d_tFinal(0.), d_dt(0.), d_Nt(0),
+        d_horizon(0.), d_rh(0), d_h(0.), d_isPeriDEM(false), d_seed(1), d_quadOrder(1) {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -108,6 +115,8 @@ struct ModelDeck {
     oss << tabS << "------- ModelDeck --------" << std::endl << std::endl;
     oss << tabS << "Simulation type = " << d_simType << std::endl;
     oss << tabS << "Restart active = " << d_isRestartActive << std::endl;
+    oss << tabS << "Populate element-node connectivity data = " << d_populateElementNodeConnectivity << std::endl;
+    oss << tabS << "Order of quad approximation = " << d_quadOrder << std::endl;
     oss << tabS << "Spatial discretization type = " << d_spatialDiscretization
               << std::endl;
     oss << tabS << "Time discretization type = " << d_timeDiscretization

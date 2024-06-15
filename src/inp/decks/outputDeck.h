@@ -46,7 +46,14 @@ struct OutputDeck {
   /*! @brief Size of time steps (or frequency) for output operation */
   size_t d_dtOutOld;
 
-  /*! @brief Flag specifying debug level */
+  /*!
+   * @brief Flag specifying debug level
+   * TODO verify below value-description text
+   * value = 0: code is almost completely silent
+   * value = 1: some information are printed and logged
+   * value = 2: more verbosity
+   * value = 3: highest verbosity
+   */
   size_t d_debug;
 
   /*!

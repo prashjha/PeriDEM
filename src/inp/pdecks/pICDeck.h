@@ -32,8 +32,8 @@ struct PICDeck {
   /*! @brief List of particles (if any) */
   std::vector<size_t> d_pList;
 
-  /*! @brief List of walls (if any) */
-  std::vector<size_t> d_wList;
+  /*! @brief List of particles to not include (if any) */
+  std::vector<size_t> d_pNotList;
 
   /*!
    * @brief Constructor
@@ -57,9 +57,9 @@ struct PICDeck {
     if (!d_pList.empty())
       oss << tabS << "Particle list = ["
           << util::io::printStr<size_t>(d_pList, 0) << "]" << std::endl;
-    if (!d_wList.empty())
-      oss << tabS << "Wall list = ["
-          << util::io::printStr<size_t>(d_wList, 0) << "]" << std::endl;
+    if (!d_pNotList.empty())
+      oss << tabS << "Particle excluded list = ["
+          << util::io::printStr<size_t>(d_pNotList, 0) << "]" << std::endl;
     oss << tabS << std::endl;
 
     return oss.str();

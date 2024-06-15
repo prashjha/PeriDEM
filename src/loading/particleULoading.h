@@ -42,50 +42,41 @@ public:
   ParticleULoading(std::vector<inp::PBCData> &bc_data);
 
   /*!
+   * @brief Function that checks if given particle with id = id needs to be processed
+   * within boundary condition data bc
+   * @param id Id of particle in all particle list
+   * @param bc Boundary condition data
+   * @return bool True if particle should be processed further
+   */
+  bool needToProcessParticle(size_t id,
+                             const inp::PBCData &bc);
+
+  /*!
+   * @brief Function that checks if we need to do computation at a given point x within a particle with id = id
+   * @param x Coordinates of a point within particle (reference coordinate)
+   * @param id Id of particle in all particle list
+   * @param bc Boundary condition data
+   * @return bool True if we compute at x
+   */
+  bool needToComputeDof(const util::Point &x,
+                        size_t id,
+                        const inp::PBCData &bc);
+
+  /*!
    * @brief Sets fixity mask
    * @param particle Particle object pointer
    */
-  void setFixityParticle(particle::BaseParticle *particle);
-
-  /*!
-   * @brief Sets fixity mask
-   * @param wall Wall object pointer
-   */
-  void setFixityWall(particle::BaseParticle *wall);
-
-  /*!
-   * @brief Sets fixity mask
-   * @param wall Wall object pointer
-   */
-  void setFixity(particle::BaseParticle *wall);
-
+  void setFixity(particle::BaseParticle *particle);
 
   /*!
    * @brief Applies displacement boundary condition
    * @param time Current time
    * @param particle Particle object pointer
    */
-  void applyParticle(const double &time, particle::BaseParticle *particle);
-
-  /*!
-   * @brief Applies displacement boundary condition
-   * @param time Current time
-   * @param wall Wall object pointer
-   */
-  void applyWall(const double &time, particle::BaseParticle *wall);
-
-  /*!
-   * @brief Applies displacement boundary condition
-   * @param time Current time
-   * @param wall Wall object pointer
-   */
-  void apply(const double &time, particle::BaseParticle *wall);
+  void apply(const double &time, particle::BaseParticle *particle);
 
   /*! @brief Flag to indicate whether particles are fixed */
   std::vector<bool> d_pZeroDisplacementApplied;
-
-  /*! @brief Flag to indicate whether particles are fixed */
-  std::vector<bool> d_wZeroDisplacementApplied;
 };
 
 } // namespace loading

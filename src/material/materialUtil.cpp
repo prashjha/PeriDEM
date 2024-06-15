@@ -40,7 +40,7 @@ double computeStateMxI(size_t i, const std::vector<util::Point> &nodes,
     double rji = (xj - xi).length();
     //double rji = std::sqrt(neighbors_sq_dist[i][k]);
 
-    if (util::isGreater(rji, horizon) or j == i)
+    if (util::isGreater(rji, horizon)) // or j == i) <-- check! For weighted volume, we don't want to skip the node itself
       continue;
 
     // get corrected volume of node j
@@ -61,6 +61,8 @@ double computeStateMxI(size_t i, const std::vector<util::Point> &nodes,
 
     oss << "Mesh size = " << mesh_size << "\n";
     oss << "J = " << material->getInfFn(0.5 * horizon) << "\n";
+    oss << "weighted volume (times 1.0e10) = " << m*1.e+10 << "\n";
+    oss << "nodal coord = " << xi.printStr() << "\n";
     oss << material->printStr(0, 0);
 
     std::cout << oss.str();
@@ -212,7 +214,7 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
       auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
                                 model->d_neighPd, model->d_neighPdSqdDist,
                                 particle->getMeshSize(),
@@ -228,7 +230,7 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
         auto mx = computeStateMxI(i, model->d_xRef, model->d_vol,
                                   model->d_neighPd, model->d_neighPdSqdDist,
                                   particle->getMeshSize(),
@@ -248,7 +250,7 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
 
       auto thetax = computeStateThetaxI(i, model->d_xRef, model->d_u,
                                         model->d_vol,
@@ -270,7 +272,7 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
 
         auto thetax = computeStateThetaxI(i, model->d_xRef, model->d_u,
                                           model->d_vol,
@@ -294,7 +296,7 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
 
       auto thetax = computeHydrostaticStrainI(i, model->d_xRef, model->d_u,
                                         model->d_vol,
@@ -314,7 +316,7 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
 
         auto thetax = computeHydrostaticStrainI(i, 
           model->d_xRef, 
@@ -340,7 +342,7 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {
       const auto &pti = model->getPtId(i);
-      const auto &particle = model->getBaseParticle(pti);
+      const auto &particle = model->getParticleFromAllList(pti);
 
       updateBondFractureDataI(i, model->d_xRef, model->d_neighPd, model->d_u,
                               particle->getMaterial(),
@@ -354,7 +356,7 @@ void material::updateBondFractureData(model::ModelData *model, bool compute_in_p
     taskflow.for_each_index(
       (std::size_t) 0, model->d_x.size(), (std::size_t) 1, [model](std::size_t i) {
         const auto &pti = model->getPtId(i);
-        const auto &particle = model->getBaseParticle(pti);
+        const auto &particle = model->getParticleFromAllList(pti);
 
         updateBondFractureDataI(i, 
           model->d_xRef, 

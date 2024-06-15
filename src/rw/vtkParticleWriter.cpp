@@ -23,9 +23,6 @@
 #include <cstdint>
 #include "model/modelData.h"
 #include "particle/baseParticle.h"
-#include "particle/particle.h"
-#include "particle/wall.h"
-#include "particle/refParticle.h"
 
 #include "util/methods.h"
 
@@ -182,7 +179,7 @@ void rw::writer::VtkParticleWriter::appendNodes(
 
     for (size_t i = 0; i<model->d_x.size(); i++) {
       auto pi = model->getPtId(i);
-      p_tag[0] = double(model->getBaseParticle(pi)->getTypeId());
+      p_tag[0] = double(model->getParticleFromAllList(pi)->getId());
       array->InsertNextTuple(p_tag);
     }
 
@@ -199,7 +196,7 @@ void rw::writer::VtkParticleWriter::appendNodes(
 
     for (size_t i = 0; i<model->d_x.size(); i++) {
       auto pi = model->getPtId(i);
-      p_tag[0] = double(model->getBaseParticle(pi)->d_zoneId);
+      p_tag[0] = double(model->getParticleFromAllList(pi)->d_zoneId);
       array->InsertNextTuple(p_tag);
     }
 
@@ -258,7 +255,7 @@ void rw::writer::VtkParticleWriter::appendNodes(
   // handle theta
   if (util::methods::isTagInList("Theta", tags)) {
 
-    if (model->getBaseParticle(0)->d_material_p->isStateActive()) {
+    if (model->getParticleFromAllList(0)->d_material_p->isStateActive()) {
 
       auto array = vtkSmartPointer<vtkDoubleArray>::New();
       array->SetNumberOfComponents(1);
@@ -294,20 +291,11 @@ void rw::writer::VtkParticleWriter::appendMesh(
   size_t num_vertex = 0;
 
   // count number of elements in all particles
-  for (const auto &p : model->d_particles) {
-    const auto &rp = p->d_rp_p;
-    num_elems += rp->getMeshP()->getNumElements();
+  for (const auto &p : model->d_particlesListTypeAll) {
+    //const auto &rp = p->d_rp_p;
+    num_elems += p->getMeshP()->getNumElements();
     auto n =
-        util::vtk_map_element_to_num_nodes[rp->getMeshP()->getElementType()];
-    if (num_vertex < n)
-      num_vertex = n;
-  }
-
-  // count number of elements in all walls
-  for (const auto &p: model->d_walls) {
-    num_elems += p->d_mesh_p->getNumElements();
-    auto n =
-        util::vtk_map_element_to_num_nodes[p->d_mesh_p->getElementType()];
+        util::vtk_map_element_to_num_nodes[p->getMeshP()->getElementType()];
     if (num_vertex < n)
       num_vertex = n;
   }
@@ -321,10 +309,9 @@ void rw::writer::VtkParticleWriter::appendMesh(
 
   // loop over particles
   size_t global_elem_counter = 0;
-  size_t node_number_start = 0;
-  for (const auto &p : model->d_particles) {
+  for (const auto &p : model->d_particlesListTypeAll) {
     // get mesh of reference particle in this zone
-    const auto &mesh = p->d_rp_p->getMeshP();
+    const auto &mesh = p->getMeshP();
 
     // get element type
     size_t element_type = mesh->getElementType();
@@ -337,7 +324,7 @@ void rw::writer::VtkParticleWriter::appendMesh(
 
       // assign global ids to the nodes
       for (size_t n=0; n<elem.size(); n++)
-        ids[n] = elem[n] + node_number_start;
+        ids[n] = elem[n] + p->d_globStart;
 
       cells->InsertNextCell(num_vertex_p, ids);
       cell_types[global_elem_counter] = element_type;
@@ -345,38 +332,6 @@ void rw::writer::VtkParticleWriter::appendMesh(
       // increment global element counter
       global_elem_counter++;
     }
-
-    // adjust global node ids
-    node_number_start += mesh->getNumNodes();
-  }
-
-  // loop over walls
-  for (const auto &p : model->d_walls) {
-    // get mesh of reference particle in this zone
-    const auto &mesh = p->d_mesh_p;
-
-    // get element type
-    size_t element_type = mesh->getElementType();
-
-    // loop over elements of this particle
-    size_t num_vertex_p = util::vtk_map_element_to_num_nodes[element_type];
-    vtkIdType ids[num_vertex_p];
-    for (size_t e =0; e < mesh->getNumElements(); e++) {
-      auto elem = mesh->getElementConnectivity(e);
-
-      // assign global ids to the nodes
-      for (size_t n=0; n<elem.size(); n++)
-        ids[n] = elem[n] + node_number_start;
-
-      cells->InsertNextCell(num_vertex_p, ids);
-      cell_types[global_elem_counter] = element_type;
-
-      // increment global element counter
-      global_elem_counter++;
-    }
-
-    // adjust global node ids
-    node_number_start += mesh->getNumNodes();
   }
 
   // element node connectivity
@@ -485,3 +440,56 @@ void rw::writer::VtkParticleWriter::appendContactData(
   }
 }
 
+
+void rw::writer::VtkParticleWriter::appendStrainStress(
+        const model::ModelData *model) {
+
+  if (model->d_xQuadCur.size() == 0) {
+    std::cout << "VtkParticleWriter::appendStrainStress: Nothing to write.\n";
+    return;
+  }
+
+  // write point data
+  auto points = vtkSmartPointer<vtkPoints>::New();
+
+  // get all the quadrature points first
+  for (const auto &x : model->d_xQuadCur)
+    points->InsertNextPoint(x.d_x, x.d_y, x.d_z);
+
+  // write point data
+  d_grid_p = vtkSmartPointer<vtkUnstructuredGrid>::New();
+  d_grid_p->SetPoints(points);
+
+  // now write data associated to nodes (in this case, quad points are nodes)
+  double value[3] = {0., 0., 0.};
+  double value_s[6] = {0., 0., 0., 0., 0., 0.};
+  double p_tag[1] = {0.};
+
+  auto array_strain = vtkSmartPointer<vtkDoubleArray>::New();
+  array_strain->SetNumberOfComponents(6);
+  array_strain->SetName("Strain");
+
+  auto array_stress = vtkSmartPointer<vtkDoubleArray>::New();
+  array_stress->SetNumberOfComponents(6);
+  array_stress->SetName("Stress");
+
+  std::vector<std::string> coord_strings = {"xx", "yy", "zz", "yz", "xz", "xy"};
+  for (size_t i =0; i<6; i++) {
+    array_strain->SetComponentName(i, coord_strings[i].c_str());
+    array_stress->SetComponentName(i, coord_strings[i].c_str());
+  }
+
+  for (size_t i=0; i<model->d_strain.size(); i++) {
+
+    model->d_strain[i].copy(value_s);
+    array_strain->InsertNextTuple(value_s);
+
+    model->d_stress[i].copy(value_s);
+    array_stress->InsertNextTuple(value_s);
+  }
+
+
+  // write
+  d_grid_p->GetPointData()->AddArray(array_strain);
+  d_grid_p->GetPointData()->AddArray(array_stress);
+}

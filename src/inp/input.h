@@ -64,8 +64,9 @@ public:
   /*!
    * @brief Constructor
    * @param filename Filename of input file
+   * @param createDefault If true creates default objects if filename is empty
    */
-  explicit Input(const std::string &filename);
+  explicit Input(std::string filename = "", bool createDefault = false);
 
   /**
    * @name Accessor methods
@@ -130,6 +131,12 @@ private:
    * Reads input file into the respective decks
    */
   /**@{*/
+
+  /*!
+   * @brief Create default input configuration
+   */
+  void createDefaultInputConfiguration();
+
 
   /*!
    * @brief Read data into material deck and store its pointer
@@ -199,15 +206,6 @@ private:
                                    inp::ParticleZone *particle_data);
 
   /*!
-   * @brief Read wall data
-   *
-   * @param string_zone String associated with zone to get the data from YAML file
-   * @param wall_data Pointer to wall data
-   */
-  void setWallData(std::string string_zone,
-                       inp::WallZone *wall_data);
-
-  /*!
    * @brief Read data into particle deck and store its pointer
    */
   void setContactDeck();
@@ -221,6 +219,9 @@ private:
 
   /*! @brief Name of input file */
   std::string d_inputFilename;
+
+  /*! @brief Specify if create defaul objects in Input */
+  bool d_createDefault;
 
   /** @}*/
 

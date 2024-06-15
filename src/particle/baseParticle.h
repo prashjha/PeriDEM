@@ -11,6 +11,7 @@
 #ifndef PARTICLE_BASEPARTICLE_H
 #define PARTICLE_BASEPARTICLE_H
 
+#include "refParticle.h"
 #include "material/mparticle/material.h"
 #include "model/modelData.h"
 
@@ -21,7 +22,8 @@
 /*! @brief Collection of methods and data related to particle object */
 namespace particle {
 
-/*! @brief A class to store particle geometry, nodal discretization, and methods
+/*!
+ * @brief A class to store particle geometry, nodal discretization, and methods
  *
  * This class generates a base particle for peri-dem simulations. It holds
  * the nodal positions, geometry of particle, list of nodes
@@ -32,50 +34,47 @@ public:
   /*!
    * @brief Constructor
    *
-   * @param type Type of the particle (e.g. particle or wall)
+   * @param particle_type Type of the particle (e.g. particle or wall)
    */
-  BaseParticle(std::string type = "none")
-      : d_type(type), d_typeIndex(-1), d_id(0), d_typeId(0),
-        d_zoneId(0),
-        d_dim
-                                  (0), d_numNodes
-        (0), d_h(0), d_horizon(0), d_density(0),
-        d_computeForce(true), d_material_p(nullptr), d_Rc(0.), d_Kn(0.),
-        d_globStart(0), d_globEnd(0), d_modelData_p(nullptr) {
-
-    if (type == "particle")
-      d_typeIndex = 0;
-    if (type == "wall")
-        d_typeIndex = 1;
-  }
+  BaseParticle(std::string particle_type = "none");
 
   /*!
    * @brief Constructor
    *
-   * @param type Type of the object (e.g. particle or wall)
+   * @param particle_type Type of the object (e.g. particle or wall)
    * @param id Id of this object in list of all base particle objects
-   * @param type_id Id of this object in list of specific type of particles
+   * @param particle_type_id Id of this object in list of specific type of particles
    * (e.g. id in the list of walls or particles)
    * @param zone_id Zone id this object belongs to
    * @param dim Spatial dimension
+   * @param particle_description Description of particle if there is (e.g., 'rigid')
+   * @param is_particle_a_wall Is this particle actually a wall?
+   * @param are_all_dofs_constrained True means all dofs are constrained
+   * so we do not need to compute forces
    * @param num_nodes Number of nodes
    * @param h Mesh size
    * @param model_data Global model data
+   * @param material_deck Material input data deck
+   * @param populate_data Modify global model data to add the properties of
+   * this object
    */
-  BaseParticle(std::string type, size_t id, size_t type_id, size_t zone_id,
+  BaseParticle(std::string particle_type,
+               size_t id,
+               size_t particle_type_id,
+               size_t zone_id,
                size_t dim,
-               size_t num_nodes, double h,
-               std::shared_ptr<model::ModelData> model_data)
-      : d_type(type), d_typeIndex(-1), d_id(id), d_typeId(type_id), d_zoneId(zone_id), d_dim(dim),
-        d_numNodes(num_nodes), d_h(h), d_horizon(0), d_density(0), d_computeForce(true),
-        d_material_p(nullptr), d_Rc(0.), d_Kn(0.), d_globStart(0), d_globEnd(0),
-        d_modelData_p(model_data) {
-
-    if (type == "particle")
-      d_typeIndex = 0;
-    if (type == "wall")
-      d_typeIndex = 1;
-  }
+               std::string particle_description,
+               bool is_particle_a_wall,
+               bool are_all_dofs_constrained,
+               size_t num_nodes,
+               double h,
+               std::shared_ptr<model::ModelData> model_data,
+               std::shared_ptr<particle::RefParticle> ref_particle,
+               std::shared_ptr<util::geometry::GeomObject> geom,
+               particle::ParticleTransform &transform,
+               std::shared_ptr<fe::Mesh> mesh,
+               inp::MaterialDeck &material_deck,
+               bool populate_data = true);
 
   /**
    * @name Accessors
@@ -104,13 +103,31 @@ public:
    * @brief Get id among the group of object in the same type as this
    * @return id ID of this object
    */
-  size_t getTypeId() const { return d_typeId; };
+  //size_t getTypeId() const { return d_typeId; };
 
   /*!
    * @brief Get the dimension of the domain
    * @return N Dimension
    */
   size_t getDimension() const { return d_dim; };
+
+  /*!
+   * @brief Get pointer to mesh object
+   * @return mesh Pointer to mesh
+   */
+  std::shared_ptr<fe::Mesh> &getMeshP() { return d_mesh_p; };
+
+  /*! @copydoc getMeshP() */
+  const std::shared_ptr<fe::Mesh> &getMeshP() const { return d_mesh_p; };
+
+  /*!
+   * @brief Get reference to mesh object
+   * @return mesh Reference to mesh
+   */
+  fe::Mesh &getMesh() { return *d_mesh_p; };
+
+  /*! @copydoc getMesh() */
+  const fe::Mesh &getMesh() const { return *d_mesh_p; };
 
   /*!
    * @brief Get mesh size
@@ -784,15 +801,98 @@ public:
 
   /** @}*/
 
+  /**
+   * @name Get and set center node data
+   */
+  /**@{*/
+
+  /*!
+   * @brief Get id of center node of particle
+   * @return Id Id of center node
+   */
+  size_t getCenterNodeId() const { return d_rp_p->getCenterNodeId(); };
+
+  /*!
+   * @brief Get radius of reference particle
+   * @return Radius Radius of reference particle
+   */
+  double getParticleRadius() const { return d_pRadius; };
+
+  /*!
+   * @brief Get current coordinate of center node
+   * @return x Current coordinate
+   */
+  util::Point &getXCenter() {
+    return d_modelData_p->getX(d_globStart + d_rp_p->getCenterNodeId());
+  };
+
+  /*! @copydoc getXCenter() */
+  const util::Point &getXCenter() const {
+    return d_modelData_p->getX(d_globStart + d_rp_p->getCenterNodeId());
+  };
+
+  /*!
+   * @brief Get displacement of center node
+   * @return u Displacement
+   */
+  util::Point &getUCenter() {
+    return d_modelData_p->getU(d_globStart + d_rp_p->getCenterNodeId());
+  };
+
+  /*! @copydoc getUCenter() */
+  const util::Point &getUCenter() const {
+    return d_modelData_p->getU(d_globStart + d_rp_p->getCenterNodeId());
+  };
+
+  /*!
+   * @brief Get velocity of center node
+   * @return v Velocity
+   */
+  util::Point &getVCenter() {
+    return d_modelData_p->getV(d_globStart + d_rp_p->getCenterNodeId());
+  };
+
+  /*! @copydoc getVCenter() */
+  const util::Point &getVCenter() const {
+    return d_modelData_p->getV(d_globStart + d_rp_p->getCenterNodeId());
+  };
+  /** @}*/
+
+  /*!
+   * @brief Returns the string containing printable information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   * @return string String containing printable information about the object
+   */
+  std::string printStr(int nt = 0, int lvl = 0) const;
+
+  /*!
+   * @brief Prints the information about the object
+   *
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
+   */
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
+
 public:
 
-  /*! @brief particle type */
+  /*! @brief particle type, e.g., particle or wall */
   std::string d_type;
 
-  /*! String to integer map for particle type */
+  /*!
+   * @brief Particle information. E.g., "rigid".
+   * If nothing specific is available, value will be empty string
+   */
+  std::string d_particleDescription;
+
+  /*! Integer-based particle identity. 0 means it is a particle and 1 means it is a wall */
   int d_typeIndex; // string - int map
 
-  /*! @brief Id of this particle */
+  /*! @brief Is this particle actually a wall? */
+  bool d_isWall;
+
+  /*! @brief Id of this particle in all particles list */
   size_t d_id;
 
   /*! @brief Id of this particle in the category (for example if this is a
@@ -808,8 +908,17 @@ public:
   /*! @brief Number of nodes in this particle */
   size_t d_numNodes;
 
+  /*! @brief Particle radius */
+  double d_pRadius;
+
   /*! @brief mesh size */
   double d_h;
+
+  /*!
+   * @brief Specify if all dofs are constrained so we do
+   * not update displacement, velocity, and force data
+   */
+  bool d_allDofsConstrained;
 
   /*! @brief Specify if we compute force */
   bool d_computeForce;
@@ -835,8 +944,28 @@ public:
   /*! @brief Id of last node of this object in global node list */
   size_t d_globEnd;
 
+  /*! @brief Id of first node of this object in global quadrature data list,
+   * e.g., strain in elements at quadrature points */
+  size_t d_globQuadStart;
+
+  /*! @brief Id of last node of this object in global quadrature data list,
+   * e.g., strain in elements at quadrature points */
+  size_t d_globQuadEnd;
+
   /*! @brief Reference to model class */
   std::shared_ptr<model::ModelData> d_modelData_p;
+
+  /*! @brief Pointer to reference particle */
+  std::shared_ptr<particle::RefParticle> d_rp_p;
+
+  /*! @brief Geometrical object defining this particle */
+  std::shared_ptr<util::geometry::GeomObject> d_geom_p;
+
+  /*! @brief Transformation related data */
+  particle::ParticleTransform d_tform;
+
+  /*! @brief Pointer to mesh on reference particle */
+  std::shared_ptr<fe::Mesh> d_mesh_p;
 };
 
 } // namespace particle
