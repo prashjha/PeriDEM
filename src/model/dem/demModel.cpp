@@ -59,6 +59,10 @@ double pd_compute_time = 0.;
 double extf_compute_time = 0.;
 double integrate_compute_time = 0.;
 
+double avg_contact_neigh_update_time = 0.;
+double avg_contact_force_time = 0.;
+double avg_peridynamics_force_time = 0.;
+
 double max_y = 0.;
 
 steady_clock::time_point clock_begin = steady_clock::now();
@@ -482,6 +486,7 @@ void model::DEMModel::computeForces() {
   computePeridynamicForces();
   auto pd_time = util::methods::timeDiff(t1, steady_clock::now());
   pd_compute_time += pd_time;
+  avg_peridynamics_force_time += pd_time;
   log(fmt::format("    Peridynamics force time (ms) = {} \n", pd_time), 2, dbg_condition, 3);
 
   // update contact neighborlist
@@ -489,6 +494,7 @@ void model::DEMModel::computeForces() {
   updateContactNeighborlist();
   auto current_contact_neigh_update_time = util::methods::timeDiff(t1, steady_clock::now());
   contact_neigh_update_time += current_contact_neigh_update_time;
+  avg_contact_neigh_update_time += current_contact_neigh_update_time;
   log(fmt::format("    Contact neighborlist update time (ms) = {} \n",
                   current_contact_neigh_update_time), 2, dbg_condition, 3);
 
@@ -497,6 +503,7 @@ void model::DEMModel::computeForces() {
   computeContactForces();
   auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
   contact_compute_time += contact_time;
+  avg_contact_force_time += contact_time;
   log(fmt::format("    Contact force time (ms) = {} \n",
                   contact_time), 2, dbg_condition, 3);
 
@@ -506,6 +513,20 @@ void model::DEMModel::computeForces() {
   auto extf_time = util::methods::timeDiff(t1, steady_clock::now());
   extf_compute_time += extf_time;
   log(fmt::format("    External force time (ms) = {} \n", extf_time), 2, dbg_condition, 3);
+
+  // output avg time info
+  if (dbg_condition) {
+    log(fmt::format("    Avg time: contact neigh update = {}, "
+                    "contact force = {}, "
+                    "peridynamics force = {} \n",
+                    avg_contact_neigh_update_time,
+                    avg_contact_force_time,
+                    avg_peridynamics_force_time), 2, dbg_condition, 3);
+
+    avg_contact_neigh_update_time = 0.;
+    avg_contact_force_time = 0.;
+    avg_peridynamics_force_time = 0.;
+  }
 }
 
 void model::DEMModel::computePeridynamicForces() {
