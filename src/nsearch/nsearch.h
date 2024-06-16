@@ -65,17 +65,91 @@ public:
       std::vector<float> &sqr_dist) = 0;
 
   /*!
-   * @brief Perform radius search to find points in a point cloud within specified distance from a given point
-   * @param searchPoint Point near which we want neighbors
-   * @param search_r Search radius
-   * @param neighs Indices of points in neighborhood
-   * @param sqr_dist Squared distance of neighboring points from search point
-   * @return number Number of points in neighborhood
+   * @copydoc radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<int> &neighs,
+      std::vector<float> &sqr_dist) = 0
    */
   virtual size_t radiusSearch(
       const util::Point &searchPoint, const double &search_r,
       std::vector<size_t> &neighs,
       std::vector<double> &sqr_dist) = 0;
+
+    /*!
+     * @brief Perform radius search to find points in a point cloud within specified distance from a given point.
+     * This function also checks the tag of potential point and only if the point has a different tag it will be added to the list.
+     * This is useful for getting neighbor lists for contact. In this case, tag of a point is the particle id (particle it belongs to).
+     *
+     * @param searchPoint Point near which we want neighbors
+     * @param search_r Search radius
+     * @param neighs Indices of points in neighborhood
+     * @param sqr_dist Squared distance of neighboring points from search point
+     * @param searchPointTag Tag of a search point
+     * @param dataTags Vector of tags for each point in the pointcloud
+     * @return number Number of points in neighborhood
+     */
+    virtual size_t radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) = 0;
+
+    /*!
+     * @copydoc radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            std::vector<size_t> &dataTags) = 0
+     */
+    virtual size_t radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<int> &neighs,
+            std::vector<float> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) = 0;
+
+    /*!
+     * @brief Perform radius search to find points in a point cloud within specified distance from a given point.
+     * This function also checks the tag of potential point and only if the point has a same tag it will be added to the list.
+     * This is useful for getting neighbor lists for peridynamics. In this case, tag of a point is the particle id (particle it belongs to).
+     *
+     * @param searchPoint Point near which we want neighbors
+     * @param search_r Search radius
+     * @param neighs Indices of points in neighborhood
+     * @param sqr_dist Squared distance of neighboring points from search point
+     * @param searchPointTag Tag of a search point
+     * @param dataTags Vector of tags for each point in the pointcloud
+     * @return number Number of points in neighborhood
+     */
+    virtual size_t radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) = 0;
+
+    /*!
+     * @copydoc radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            std::vector<size_t> &dataTags) = 0
+     */
+    virtual size_t radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<int> &neighs,
+            std::vector<float> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) = 0;
 
 public:
   /*! @brief control the verbosity */
@@ -88,6 +162,7 @@ public:
 /*!
  * @brief A class for nearest neighbor search using nanoflann library
  */
+template <int dim = 3>
 class NFlannSearchKd : public BaseNSearch {
 
 public:
@@ -96,15 +171,26 @@ public:
    *
    * @param x Point cloud
    * @param debug Debug level to print information
-   * @param tree_resolution Tree resolution
+   * @param max_leaf Maximum number of leafs
    */
-  explicit NFlannSearchKd(const PointCloud &x, size_t debug = 0, double tree_resolution = 1.);
+  explicit NFlannSearchKd(const PointCloud &x, size_t debug = 0, size_t max_leafs = 10)
+          : BaseNSearch("nflann_kdtree", debug),
+            d_cloud(x),
+            d_tree(dim, d_cloud,
+                   nanoflann::KDTreeSingleIndexAdaptorParams(max_leafs /* max leaf */)) {
+    d_params.sorted = false;
+  };
 
   /*!
    * @brief Set input cloud
    * @return double Time taken to update the point cloud
    */
-  double setInputCloud() override;
+  double setInputCloud() override  {
+    auto t1 = steady_clock::now();
+    d_tree.buildIndex();
+    auto t2 = steady_clock::now();
+    return util::methods::timeDiff(t1, t2);
+  };
 
   /*!
    * @brief Function to implement point cloud update
@@ -116,40 +202,192 @@ public:
    * @return double Time taken to update the point cloud
    */
   double updatePointCloud(const std::vector<util::Point> &x,
-                          bool parallel = true) override;
+                          bool parallel = true) override {
+    return 0;
+  };
 
   /*!
-   * @brief Perform radius search to find points in a point cloud within specified distance from a given point
-   * @param searchPoint Point near which we want neighbors
-   * @param search_r Search radius
-   * @param neighs Indices of points in neighborhood
-   * @param sqr_dist Squared distance of neighboring points from search point
-   * @return number Number of points in neighborhood
+   * @copydoc BaseNSearch::radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<size_t> &neighs,
+      std::vector<double> &sqr_dist) = 0
    */
   size_t radiusSearch(
       const util::Point &searchPoint, const double &search_r,
       std::vector<size_t> &neighs,
-      std::vector<double> &sqr_dist) override;
+      std::vector<double> &sqr_dist) override {
+
+    double query_pt[3] = {searchPoint[0], searchPoint[1], searchPoint[2]};
+
+    TreeSearchRes resultSet(search_r * search_r, neighs, sqr_dist);
+    return d_tree.radiusSearchCustomCallback(&query_pt[0], resultSet, d_params);
+  };
 
   /*!
-   * @brief Perform radius search to find points in a point cloud within specified distance from a given point
-   * @param searchPoint Point near which we want neighbors
-   * @param search_r Search radius
-   * @param neighs Indices of points in neighborhood
-   * @param sqr_dist Squared distance of neighboring points from search point
-   * @return number Number of points in neighborhood
+   * @copydoc BaseNSearch::radiusSearch(
+      const util::Point &searchPoint, const double &search_r,
+      std::vector<int> &neighs,
+      std::vector<float> &sqr_dist) = 0
    */
   size_t radiusSearch(
       const util::Point &searchPoint, const double &search_r,
       std::vector<int> &neighs,
-      std::vector<float> &sqr_dist) override;
+      std::vector<float> &sqr_dist) override {
+
+    // ugly but quick fix
+    // first, get results using int and float and then convert
+    std::vector<size_t> neighs_temp;
+    std::vector<double> sqr_dist_temp;
+    auto N =
+            this->radiusSearch(searchPoint, search_r, neighs_temp, sqr_dist_temp);
+
+    if (N > 0) {
+      neighs.resize(N);
+      sqr_dist.resize(N);
+      for (size_t i=0; i<N; i++) {
+        neighs.push_back(int(neighs_temp[i]));
+        sqr_dist.push_back(float(sqr_dist_temp[i]));
+      }
+    }
+
+    return N;
+  };
+
+
+    /*!
+     * @copydoc BaseNSearch::radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            std::vector<size_t> &dataTags) = 0
+     */
+    size_t radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) override {
+
+      double query_pt[3] = {searchPoint[0], searchPoint[1], searchPoint[2]};
+
+      TreeSearchCheckIDExcludeRes resultSet(search_r * search_r,
+                            neighs, sqr_dist, searchPointTag, dataTags);
+
+      return d_tree.radiusSearchCustomCallback(&query_pt[0], resultSet, d_params);
+    };
+
+    /*!
+     * @copydoc BaseNSearch::radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            std::vector<size_t> &dataTags) = 0
+     */
+    size_t radiusSearchExcludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<int> &neighs,
+            std::vector<float> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) override {
+
+      // first, get results using int and float and then convert
+      std::vector<size_t> neighs_temp;
+      std::vector<double> sqr_dist_temp;
+      auto N =
+              this->radiusSearchExcludeTag(searchPoint, search_r,
+                                           neighs_temp, sqr_dist_temp,
+                                           searchPointTag, dataTags);
+
+      if (N > 0) {
+        neighs.resize(N);
+        sqr_dist.resize(N);
+        for (size_t i=0; i<N; i++) {
+          neighs.push_back(int(neighs_temp[i]));
+          sqr_dist.push_back(float(sqr_dist_temp[i]));
+        }
+      }
+
+      return N;
+    };
+
+    /*!
+     * @copydoc BaseNSearch::radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            std::vector<size_t> &dataTags) = 0
+     */
+    size_t radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) override {
+
+      double query_pt[3] = {searchPoint[0], searchPoint[1], searchPoint[2]};
+
+      TreeSearchCheckIDIncludeRes resultSet(search_r * search_r,
+                                            neighs, sqr_dist,
+                                            searchPointTag, dataTags);
+
+      return d_tree.radiusSearchCustomCallback(&query_pt[0], resultSet, d_params);
+    };
+
+    /*!
+     * @copydoc BaseNSearch::radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<size_t> &neighs,
+            std::vector<double> &sqr_dist,
+            const size_t &searchPointTag,
+            std::vector<size_t> &dataTags) = 0
+     */
+    size_t radiusSearchIncludeTag(
+            const util::Point &searchPoint,
+            const double &search_r,
+            std::vector<int> &neighs,
+            std::vector<float> &sqr_dist,
+            const size_t &searchPointTag,
+            const std::vector<size_t> &dataTags) override {
+
+      // first, get results using int and float and then convert
+      std::vector<size_t> neighs_temp;
+      std::vector<double> sqr_dist_temp;
+      auto N =
+              this->radiusSearchIncludeTag(searchPoint, search_r,
+                                           neighs_temp, sqr_dist_temp,
+                                           searchPointTag, dataTags);
+
+      if (N > 0) {
+        neighs.resize(N);
+        sqr_dist.resize(N);
+        for (size_t i=0; i<N; i++) {
+          neighs.push_back(int(neighs_temp[i]));
+          sqr_dist.push_back(float(sqr_dist_temp[i]));
+        }
+      }
+
+      return N;
+    };
 
 public:
   /*! @brief coordinates of the points */
   PointCloudAdaptor d_cloud;
 
   /*! @brief Tree */
-  NFlannKdTree d_tree;
+  nanoflann::KDTreeSingleIndexAdaptor<
+          nanoflann::L2_Simple_Adaptor<double, PointCloudAdaptor>, PointCloudAdaptor,
+          dim
+  > d_tree;
 
   /*! @brief Tree search parameters */
   nanoflann::SearchParameters d_params;

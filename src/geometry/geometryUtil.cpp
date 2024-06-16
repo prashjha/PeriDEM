@@ -12,7 +12,7 @@
 #include "nsearch/nsearch.h"
 #include <fmt/format.h>
 
-typedef nsearch::NFlannSearchKd NSearch;
+typedef nsearch::NFlannSearchKd<3> NSearch;
 
 void geometry::computeNonlocalNeighborhood(const std::vector<util::Point> &nodes,
                                       double horizon,

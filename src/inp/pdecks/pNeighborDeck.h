@@ -27,14 +27,22 @@ struct PNeighborDeck {
    * radius of particle) */
   double d_sFactor;
 
-  /*! @brief Neighbor search tolerance */
+  /*!
+   * @brief Neighbor search tolerance
+   */
   double d_sTol;
+
+  /*! @brief Neighbor update time interval (for contact) */
+  size_t d_neighUpdateInterval;
 
   /*!
    * @brief Constructor
    */
   PNeighborDeck()
-      : d_updateCriteria("max_distance_travel"), d_sFactor(5.), d_sTol(0.){};
+      : d_updateCriteria("max_distance_travel"),
+        d_sFactor(1.),
+        d_sTol(0.),
+        d_neighUpdateInterval(1) {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -51,6 +59,7 @@ struct PNeighborDeck {
     oss << tabS << "Update criteria  = " << d_updateCriteria << std::endl;
     oss << tabS << "Search factor = " << d_sFactor << std::endl;
     oss << tabS << "Search tolerance = " << d_sTol << std::endl;
+    oss << tabS << "Search update interval = " << d_neighUpdateInterval << std::endl;
     oss << tabS << std::endl;
 
     return oss.str();

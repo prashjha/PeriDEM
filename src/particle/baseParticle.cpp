@@ -129,6 +129,7 @@ particle::BaseParticle::BaseParticle(std::string particle_type,
       d_modelData_p->d_x.push_back(d_tform.apply(d_rp_p->getNode(i)));
       d_modelData_p->d_u.push_back(util::Point());
       d_modelData_p->d_v.push_back(util::Point());
+      d_modelData_p->d_vMag.push_back(0.);
       d_modelData_p->d_f.push_back(util::Point());
       d_modelData_p->d_vol.push_back(
           d_rp_p->getNodalVolume(i) *

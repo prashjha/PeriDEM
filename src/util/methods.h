@@ -106,12 +106,53 @@ inline std::pair<size_t, T> minAndMinIndex(const std::vector<T> &data) {
       return {data[i], i};
 };
 
+
+/*!
+ * @brief Returns the index corresponding to maximum from list of data
+ * @param data List of real numbers
+ * @return i Index with a maximum value
+ */
+template <typename T>
+inline size_t maxIndex(const std::vector<T> &data,
+                       size_t data_start, size_t data_end) {
+
+  if (data.size() == 0) {
+    std::cerr << "Error: maxIndex() is called with data of size " << data.size()
+              << ".\n";
+    exit(EXIT_FAILURE);
+  }
+
+  if (data_end == 0 or data_end > data.size()) {
+    std::cerr << "Error: maxIndex() data_end = " << data_end
+              << " is not valid for the data of size " << data.size()
+              << ".\n";
+    exit(EXIT_FAILURE);
+  }
+
+  if (data_start > data.size() - 1) {
+    std::cerr << "Error: maxIndex() data_start = " << data_start
+              << " is not valid for the data of size " << data.size()
+              << ".\n";
+    exit(EXIT_FAILURE);
+  }
+
+  // initialize original index locations
+  std::vector<size_t> idx(data_end - data_start);
+  std::iota(idx.begin(), idx.end() , 0);
+
+  std::stable_sort(idx.begin(), idx.end(),
+                   [&data, &data_start](size_t i1, size_t i2)
+                   {return data[i1 + data_start] > data[i2 + data_start];});
+
+  return idx[0] + data_start;
+};
+
 /*!
  * @brief Returns the index that has maximum length of point from list of points
  * @param data List of points
  * @return i Index with maximum length of point
  */
-inline double maxLengthIndex(const std::vector<util::Point> &data) {
+inline size_t maxLengthIndex(const std::vector<util::Point> &data) {
       std::vector<double> length_data(data.size());
       for (size_t i = 0; i < data.size(); i++)
         length_data[i] = data[i].length();
@@ -124,7 +165,7 @@ inline double maxLengthIndex(const std::vector<util::Point> &data) {
  * @param data List of points
  * @return i Index with minimum length of point
  */
-inline double minLengthIndex(const std::vector<util::Point> &data) {
+inline size_t minLengthIndex(const std::vector<util::Point> &data) {
   std::vector<double> length_data(data.size());
   for (size_t i = 0; i < data.size(); i++)
     length_data[i] = data[i].length();
@@ -185,7 +226,6 @@ inline std::pair<double, size_t> minLengthAndMinLengthIndex(const std::vector<ut
       auto i = util::methods::minIndex(length_data);
       return {length_data[i], i};
 };
-
 
 
 /*!

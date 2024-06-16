@@ -53,6 +53,8 @@ double contact_area_radius = 0.;
 
 double tree_compute_time = 0.;
 double contact_compute_time = 0.;
+double contact_neigh_update_time = 0.;
+double peridynamics_neigh_update_time = 0.;
 double pd_compute_time = 0.;
 double extf_compute_time = 0.;
 double integrate_compute_time = 0.;
@@ -79,6 +81,10 @@ bool isInList(const std::vector<size_t> *list, size_t i) {
 
   return false;
 }
+
+/*! @brief Pointer to nsearch */
+std::unique_ptr<nsearch::NFlannSearchKd<2>> nsearch_2d_p;
+std::unique_ptr<nsearch::NFlannSearchKd<3>> nsearch_3d_p;
 
 } // namespace
 
@@ -147,11 +153,17 @@ void model::DEMModel::init() {
   d_infoN = d_outputDeck_p->d_dtOut;
 
   auto t1 = steady_clock::now();
+  auto t2 = steady_clock::now();
   log("DEMModel: Initializing objects.\n");
 
   // create particles
   log("DEMModel: Creating particles.\n");
   createParticles();
+
+  log("DEMModel: Creating maximum velocity data for particles.\n");
+  d_maxVelocityParticlesListTypeAll
+          = std::vector<double>(d_particlesListTypeAll.size(), 0.);
+  d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
 
   // setup contact
   log("DEMModel: Setting up contact.\n");
@@ -168,16 +180,22 @@ void model::DEMModel::init() {
   d_nsearch_p = std::make_unique<NSearch>(d_x, d_outputDeck_p->d_debug);
 
   // setup tree
-  double set_tree_time = d_nsearch_p->updatePointCloud(d_x, true);
-  set_tree_time += d_nsearch_p->setInputCloud();
+  double set_tree_time = d_nsearch_p->setInputCloud();
   log(fmt::format("DEMModel: Tree setup time (ms) = {}. \n", set_tree_time));
 
   // create neighborlists
   log("DEMModel: Creating neighborlist for peridynamics.\n");
   // log("DEMModel: Creating neighborlist for contact.\n");
+  t1 = steady_clock::now();
   updatePeridynamicNeighborlist();
-  // updateContactNeighborlist();
-  // updateNeighborlistCombine();
+  t2 = steady_clock::now();
+  peridynamics_neigh_update_time = util::methods::timeDiff(t1, t2);
+
+  t1 = steady_clock::now();
+  updateContactNeighborlist();
+  t2 = steady_clock::now();
+  contact_neigh_update_time = util::methods::timeDiff(t1, t2);
+
 
   // create peridynamic bonds
   log("DEMModel: Creating peridynamics bonds.\n");
@@ -210,7 +228,8 @@ void model::DEMModel::init() {
     d_particlesListTypeAll[0]->d_computeForce = false;
   }
 
-  log(fmt::format("DEMModel: Total particles = {}. \n", d_particlesListTypeAll.size()));
+  log(fmt::format("DEMModel: Total particles = {}. \n",
+                  d_particlesListTypeAll.size()));
 
   for (const auto &p : d_particlesListTypeAll)
     if (!p->d_computeForce)
@@ -233,7 +252,7 @@ void model::DEMModel::init() {
   // initialize remaining fields (if any)
   d_Z = std::vector<float>(d_x.size(), 0.);
 
-  auto t2 = steady_clock::now();
+  t2 = steady_clock::now();
   log(fmt::format("DEMModel: Total setup time (ms) = {}. \n",
                   util::methods::timeDiff(t1, t2)));
 
@@ -327,7 +346,7 @@ void model::DEMModel::integrateStep() {
 void model::DEMModel::integrateCD() {
 
   // update velocity and displacement
-  const auto dt = d_modelDeck_p->d_dt;
+  d_currentDt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
   tf::Executor executor(util::parallel::getNThreads());
@@ -336,7 +355,7 @@ void model::DEMModel::integrateCD() {
   // update current position, displacement, and velocity of nodes
   taskflow.for_each_index(
     (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-      [this, dt, dim](std::size_t II) {
+      [this, dim](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
@@ -344,11 +363,13 @@ void model::DEMModel::integrateCD() {
 
         for (int dof = 0; dof < dim; dof++) {
           if (util::methods::isFree(fix, dof)) {
-            this->d_v[i][dof] += (dt / rho) * this->d_f[i][dof];
-            this->d_u[i][dof] += dt * this->d_v[i][dof];
-            this->d_x[i][dof] += dt * this->d_v[i][dof];
+            this->d_v[i][dof] += (this->d_currentDt / rho) * this->d_f[i][dof];
+            this->d_u[i][dof] += this->d_currentDt * this->d_v[i][dof];
+            this->d_x[i][dof] += this->d_currentDt * this->d_v[i][dof];
           }
         }
+
+        this->d_vMag[i] = this->d_v[i].length();
       } // loop over nodes
   ); // for_each
 
@@ -356,7 +377,7 @@ void model::DEMModel::integrateCD() {
 
   // advance time
   d_n++;
-  d_time += dt;
+  d_time += d_currentDt;
 
   // update displacement bc
   computeExternalDisplacementBC();
@@ -368,7 +389,7 @@ void model::DEMModel::integrateCD() {
 void model::DEMModel::integrateVerlet() {
 
   // update velocity and displacement
-  const auto dt = d_modelDeck_p->d_dt;
+  d_currentDt = d_modelDeck_p->d_dt;
   const auto dim = d_modelDeck_p->d_dim;
 
   // update current position, displacement, and velocity of nodes
@@ -378,7 +399,7 @@ void model::DEMModel::integrateVerlet() {
 
     taskflow.for_each_index(
       (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-        [this, dt, dim](std::size_t II) {
+        [this, dim](std::size_t II) {
           auto i = this->d_fPdCompNodes[II];
 
           const auto rho = this->getDensity(i);
@@ -386,10 +407,12 @@ void model::DEMModel::integrateVerlet() {
 
           for (int dof = 0; dof < dim; dof++) {
             if (util::methods::isFree(fix, dof)) {
-              this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
-              this->d_u[i][dof] += dt * this->d_v[i][dof];
-              this->d_x[i][dof] += dt * this->d_v[i][dof];
+              this->d_v[i][dof] += 0.5 * (this->d_currentDt / rho) * this->d_f[i][dof];
+              this->d_u[i][dof] += this->d_currentDt * this->d_v[i][dof];
+              this->d_x[i][dof] += this->d_currentDt * this->d_v[i][dof];
             }
+
+            this->d_vMag[i] = this->d_v[i].length();
           }
         } // loop over nodes
     ); // for_each
@@ -399,7 +422,7 @@ void model::DEMModel::integrateVerlet() {
 
   // advance time
   d_n++;
-  d_time += dt;
+  d_time += d_currentDt;
 
   // update displacement bc
   computeExternalDisplacementBC();
@@ -414,15 +437,17 @@ void model::DEMModel::integrateVerlet() {
 
     taskflow.for_each_index(
       (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-      [this, dt, dim](std::size_t II) {
+      [this, dim](std::size_t II) {
         auto i = this->d_fPdCompNodes[II];
 
         const auto rho = this->getDensity(i);
         const auto &fix = this->d_fix[i];
         for (int dof = 0; dof < dim; dof++) {
           if (util::methods::isFree(fix, dof)) {
-            this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
+            this->d_v[i][dof] += 0.5 * (this->d_currentDt / rho) * this->d_f[i][dof];
           }
+
+          this->d_vMag[i] = this->d_v[i].length();
         }
       } // loop over nodes
     ); // for_each
@@ -436,13 +461,6 @@ void model::DEMModel::computeForces() {
   bool dbg_condition = d_n % d_infoN == 0;
 
   log("  Compute forces \n", 2, dbg_condition, 3);
-
-  // update the point cloud (make sure that d_x is updated along with displacement)
-  auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
-  pt_cloud_update_time += d_nsearch_p->setInputCloud();
-  tree_compute_time += pt_cloud_update_time;
-  log(fmt::format("    Point cloud update time (ms) = {} \n",
-                    pt_cloud_update_time), 2, dbg_condition, 3);
 
   // reset force
   auto t1 = steady_clock::now();
@@ -466,12 +484,21 @@ void model::DEMModel::computeForces() {
   pd_compute_time += pd_time;
   log(fmt::format("    Peridynamics force time (ms) = {} \n", pd_time), 2, dbg_condition, 3);
 
+  // update contact neighborlist
+  t1 = steady_clock::now();
+  updateContactNeighborlist();
+  auto current_contact_neigh_update_time = util::methods::timeDiff(t1, steady_clock::now());
+  contact_neigh_update_time += current_contact_neigh_update_time;
+  log(fmt::format("    Contact neighborlist update time (ms) = {} \n",
+                  current_contact_neigh_update_time), 2, dbg_condition, 3);
+
   // compute contact forces between particles
   t1 = steady_clock::now();
   computeContactForces();
   auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
   contact_compute_time += contact_time;
-  log(fmt::format("    Contact force time (ms) = {} \n", contact_time), 2, dbg_condition, 3);
+  log(fmt::format("    Contact force time (ms) = {} \n",
+                  contact_time), 2, dbg_condition, 3);
 
   // Compute external forces
   t1 = steady_clock::now();
@@ -712,7 +739,11 @@ void model::DEMModel::computeContactForces() {
   tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
 
-  taskflow.for_each_index((std::size_t) 0, d_fContCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
+  taskflow.for_each_index((std::size_t) 0,
+                          d_fContCompNodes.size(),
+                          (std::size_t) 1,
+                          [this](std::size_t II) {
+
       auto i = this->d_fContCompNodes[II];
 
       // local variable to hold force
@@ -732,30 +763,29 @@ void model::DEMModel::computeContactForces() {
       const auto &vi = this->d_v[i];
       const auto &voli = this->d_vol[i];
 
-      std::vector<size_t> neighs;
-      std::vector<double> sqr_dist;
-      auto search_status =
-          this->d_nsearch_p->radiusSearch(yi, search_r, neighs, sqr_dist);
+      const std::vector<size_t> &neighs = this->d_neighC[i];
 
-      if (search_status > 0) {
-        for (std::size_t j = 0; j < neighs.size(); ++j) {
+      if (neighs.size() > 0) {
 
-          auto &j_id = neighs[j];
-          auto &rij_sqr = sqr_dist[j];
+        for (const auto &j_id: neighs) {
+
+          //auto &j_id = neighs[j];
+          const auto &yj = this->d_x[j_id]; // current coordinates
+          double Rji = (yj - yi).length();
           auto &ptIdj = this->d_ptId[j_id];
           auto &pj = this->getParticleFromAllList(ptIdj);
           double rhoj = pj->getDensity();
-          // double Rji = std::sqrt(rij_sqr);
-          double Rji = (this->d_x[j_id] - yi).length();
 
           bool both_walls =
               (pi->getTypeIndex() == 1 and pj->getTypeIndex() == 1);
 
           if (j_id != i) {
             if (ptIdj != ptIdi && !both_walls) {
+
               // apply particle-particle or particle-wall contact here
               const auto &contact =
                   d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+
               if (util::isLess(Rji, contact.d_contactR)) {
 
                 auto yji = this->d_x[j_id] - yi;
@@ -818,6 +848,8 @@ void model::DEMModel::computeContactForces() {
   log("    Computing normal damping force \n", 3);
   for (auto &pi : d_particlesListTypeParticle) {
 
+    auto pi_id = pi->getId();
+
     double Ri = pi->d_geom_p->boundingRadius();
     double vol_pi = M_PI * Ri * Ri;
     auto pi_xc = pi->getXCenter();
@@ -867,51 +899,36 @@ void model::DEMModel::computeContactForces() {
     // particle-wall
     // Step 1: Create list of wall nodes that are within the Rc distance
     // of at least one of the particle
-    std::vector<std::vector<size_t>> wall_nodes(pi->getNumNodes());
+    // This is done already in updateContactNeighborList()
 
+    // step 2 - condensed wall nodes into one vector (has to be done serially
+    d_neighWallNodesCondensed[pi->getId()].clear();
     {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
+      for (size_t j=0; j<d_neighWallNodes[pi_id].size(); j++) {
 
-      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1, [this, pi, &wall_nodes](std::size_t i) {
-          auto yi = this->d_x[pi->getNodeId(i)];
-          double search_r = this->d_maxContactR;
-          std::vector<size_t> neighs;
-          std::vector<double> sqr_dist;
-          auto search_status =
-              this->d_nsearch_p->radiusSearch(yi, search_r, neighs, sqr_dist);
+        const auto &j_id = pi->getNodeId(j);
+        const auto &yj = this->d_x[j_id];
 
-          if (search_status > 0) {
-            for (std::size_t j = 0; j < neighs.size(); ++j) {
-              auto &j_id = neighs[j];
-              auto &ptIdj = this->d_ptId[j_id];
-              auto &pj = this->getParticleFromAllList(ptIdj);
+        for (size_t k=0; k<d_neighWallNodes[pi_id][j].size(); k++) {
 
-              // we are only interested in nodes from wall
-              if (pj->getTypeIndex() == 1) {
-                double Rji = (this->d_x[j_id] - yi).length();
-                const auto &contact =
-                    d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
-                if (util::isLess(Rji, contact.d_contactR))
-                  wall_nodes[i].push_back(j_id);
-              }
-            }
-          }
-        }
-      ); // for_each
+          const auto &k_id = d_neighWallNodes[pi_id][j][k];
+          const auto &pk = d_particlesListTypeAll[d_ptId[k_id]];
 
-      executor.run(taskflow).get();
-    }
+          double Rjk = (this->d_x[k_id] - yj).length();
 
-    // condense wall nodes into single vector
-    std::vector<size_t> wall_nodes_condense;
-    for (auto &nds : wall_nodes) {
-      for (auto &j : nds)
-        addToList(&wall_nodes_condense, j);
-    }
+          const auto &contact =
+                  d_cDeck_p->getContact(pi->d_zoneId, pk->d_zoneId);
+
+          if (util::isLess(Rjk, contact.d_contactR))
+            addToList(&d_neighWallNodesCondensed[pi_id], k_id);
+
+        } // loop over k
+      } // loop over j
+    } // step 2
 
     // now loop over wall nodes and add force to center of particle
-    for (auto &j : wall_nodes_condense) {
+    for (auto &j : d_neighWallNodesCondensed[pi_id]) {
+
       auto &ptIdj = this->d_ptId[j];
       auto &pj = this->d_particlesListTypeAll[ptIdj];
       auto rhoj = pj->getDensity();
@@ -919,7 +936,8 @@ void model::DEMModel::computeContactForces() {
       auto meq = rhoi * vol_pi;
       //auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
 
-      const auto &contact = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+      const auto &contact
+            = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
 
       // beta_n
       auto beta_n = contact.d_betan *
@@ -1076,7 +1094,7 @@ void model::DEMModel::createParticleUsingParticleZoneGeomObject(
         size_t z,
         std::shared_ptr<particle::RefParticle> ref_p) {
 
-  log("DEMModel: Creating particle using Particle Zone Geometry Object", 1);
+  log("DEMModel: Creating particle using Particle Zone Geometry Object\n", 1);
 
   // get particle zone
   auto &pz = d_pDeck_p->d_particleZones[z];
@@ -1443,7 +1461,12 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
 
       std::vector<size_t> neighs;
       std::vector<double> sqr_dist;
-      if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs, sqr_dist) > 0) {
+      if (this->d_nsearch_p->radiusSearchIncludeTag(this->d_x[i],
+                                                    search_r,
+                                                    neighs,
+                                                    sqr_dist,
+                                                    this->d_ptId[i],
+                                                    this->d_ptId) > 0) {
         for (std::size_t j = 0; j < neighs.size(); ++j)
           if (neighs[j] != i && this->d_ptId[neighs[j]] == pi) {
             this->d_neighPd[i].push_back(size_t(neighs[j]));
@@ -1460,32 +1483,175 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
 }
 
 void model::DEMModel::updateContactNeighborlist() {
-  d_neighC.resize(d_x.size());
-  // d_neighCSqdDist.resize(d_x.size());
-  auto t1 = steady_clock::now();
 
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
+  // check if we should proceed with updates
+  if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
+    return;
 
-  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
+  // first update the maximum velocity in all particles
+  for (auto &pi : d_particlesListTypeAll) {
+    auto max_v_node = util::methods::maxIndex(d_vMag,
+                                              pi->d_globStart, pi->d_globEnd);
+
+    if (max_v_node > pi->d_globEnd or max_v_node < pi->d_globStart) {
+      std::cerr << fmt::format("Error: max_v_node = {} for "
+                               "particle of id = {} is not in the limit.\n",
+                               max_v_node, pi->getId())
+               << "Particle info = \n"
+               << pi->printStr()
+               << "\n\n Magnitude of velocity = "
+               << d_vMag[max_v_node] << "\n";
+      exit(EXIT_FAILURE);
+    }
+
+    d_maxVelocityParticlesListTypeAll[pi->getId()]
+        = d_vMag[max_v_node];
+  }
+
+  // find max velocity among all particles
+  d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
+
+  if (d_maxVelocity * d_currentDt > d_maxContactR * d_pDeck_p->d_pNeighDeck.d_sFactor) {
+    log(fmt::format("Warning: Max velocity time time step = {} is above "
+                    "the maximum search radius = {} for contact.\n",
+                    d_maxVelocity * d_currentDt, d_maxContactR * d_pDeck_p->d_pNeighDeck.d_sFactor));
+  }
+
+  // update contact neighborlist
+  // check criteria
+
+  if (d_pDeck_p->d_pNeighDeck.d_updateCriteria == "simple_all"
+        or d_pDeck_p->d_pNeighDeck.d_updateCriteria == "max_velocity_all") {
+
+    // update the point cloud (make sure that d_x is updated along with displacement)
+    auto pt_cloud_update_time = d_nsearch_p->setInputCloud();
+    tree_compute_time += pt_cloud_update_time;
+    log(fmt::format("    Point cloud update time (ms) = {} \n",
+                    pt_cloud_update_time), 2, d_n % d_infoN == 0, 3);
+
+    if (d_neighC.size() != d_x.size())
+      d_neighC.resize(d_x.size());
+
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
+
+    taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1,
+                            [this](std::size_t i) {
+
       const auto &pi = this->d_ptId[i];
-        double search_r = this->d_maxContactR;
+      const auto &pi_particle = this->d_particlesListTypeAll[pi];
+
+      double search_r = this->d_maxContactR *
+                        this->d_pDeck_p->d_pNeighDeck.d_sFactor;
+
+      // search?
+      bool perform_search_based_on_particle = true;
+      if (pi_particle->d_typeIndex == 1) // wall
+        perform_search_based_on_particle = false;
+
+      if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
+        perform_search_based_on_particle = false;
+
+      bool perform_search_based_on_criteria = false;
+      if (this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
+          "simple_all") {
+        perform_search_based_on_criteria = true;
+      } else if (
+              this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
+              "max_velocity_all") {
+        // based on the max velocity of the particle this node belongs to
+        if (this->d_maxVelocity * this->d_currentDt > 0.5 * search_r
+            or this->d_n == 0)
+          perform_search_based_on_criteria = true;
+      }
+
+      if (perform_search_based_on_criteria and perform_search_based_on_particle) {
+
         std::vector<size_t> neighs;
         std::vector<double> sqr_dist;
-        if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs, sqr_dist) > 0) {
-          for (std::size_t j = 0; j < neighs.size(); ++j)
-            if (neighs[j] != i && this->d_ptId[neighs[j]] != pi) {
-              this->d_neighC[i].push_back(size_t(neighs[j]));
+
+        this->d_neighC[i].clear();
+
+        auto n = this->d_nsearch_p->radiusSearchExcludeTag(
+                this->d_x[i],
+                search_r,
+                neighs,
+                sqr_dist,
+                this->d_ptId[i],
+                this->d_ptId);
+
+        if (n > 0) {
+          for (auto neigh: neighs)
+            if (neigh != i) {
+              this->d_neighC[i].push_back(neigh);
               // this->d_neighCSqdDist[i].push_back(sqr_dist[j]);
             }
         }
+      }
+  }
+    ); // for_each
+
+    executor.run(taskflow).get();
+  }
+
+  // handle particle-wall neighborlist (based on the d_neighC that we already computed)
+  d_neighWallNodes.resize(d_particlesListTypeAll.size());
+  d_neighWallNodesDistance.resize(d_particlesListTypeAll.size());
+  d_neighWallNodesCondensed.resize(d_particlesListTypeAll.size());
+
+  for (auto &pi : d_particlesListTypeParticle) {
+
+    d_neighWallNodes[pi->getId()].resize(pi->getNumNodes());
+    d_neighWallNodesDistance[pi->getId()].resize(pi->getNumNodes());
+
+    // get all wall nodes that are within contact distance to the nodes of this particle
+    {
+      tf::Executor executor(util::parallel::getNThreads());
+      tf::Taskflow taskflow;
+
+      taskflow.for_each_index((std::size_t) 0,
+                              pi->getNumNodes(),
+                              (std::size_t) 1,
+                              [this, &pi](std::size_t i) {
+
+            auto i_glob = pi->getNodeId(i);
+            auto yi = this->d_x[i_glob];
+
+            const std::vector<size_t> &neighs = this->d_neighC[i_glob];
+
+            this->d_neighWallNodes[pi->getId()][i].clear();
+            this->d_neighWallNodesDistance[pi->getId()][i].clear();
+
+            for (const auto &j_id: neighs) {
+
+              auto &ptIdj = this->d_ptId[j_id];
+              auto &pj = this->getParticleFromAllList(
+                      ptIdj);
+
+              // we are only interested in nodes from wall
+              if (pj->getTypeIndex() == 1) {
+                  //auto Rji = (this->d_x[j_id] -
+                  //              yi).length();
+                  //                const auto &contact =
+                  //                        d_cDeck_p->getContact(
+                  //                                pi->d_zoneId,
+                  //                                pj->d_zoneId);
+                  //                auto search_r = contact.d_contactR
+                  //                                  * this->d_pDeck_p->d_pNeighDeck.d_sFactor;
+                  //
+                  //                if (util::isLess(Rji, search_r))
+                  //                  wall_nodes[i].push_back(j_id);
+                  this->d_neighWallNodes[pi->getId()][i].push_back(j_id);
+                  //this->d_neighWallNodesDistance[pi->getId()][i].push_back(Rji);
+              }
+            }
+        }
+      ); // for_each
+
+      executor.run(taskflow).get();
     }
-  ); // for_each
+  } // loop over particles
 
-  executor.run(taskflow).get();
-
-  auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
 }
 
 void model::DEMModel::updateNeighborlistCombine() {

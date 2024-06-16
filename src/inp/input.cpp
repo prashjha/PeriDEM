@@ -366,6 +366,10 @@ void inp::Input::setParticleDeck() {
       d_particleDeck_p->d_pNeighDeck.d_sFactor =
           ne["Search_Factor"].as<double>();
 
+    if (ne["Search_Interval"])
+      d_particleDeck_p->d_pNeighDeck.d_neighUpdateInterval =
+              ne["Search_Interval"].as<size_t>();
+
     for (auto p : d_particleDeck_p->d_particleZones) {
 
       // if particle is actually a wall then we do it differently
