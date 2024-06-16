@@ -1139,7 +1139,7 @@ void model::DEMModel::createParticleUsingParticleZoneGeomObject(
 void model::DEMModel::createParticlesFromFile(
     size_t z, std::shared_ptr<particle::RefParticle> ref_p) {
 
-  log("DEMModel: Creating particle from file", 1);
+  log("DEMModel: Creating particle from file\n", 1);
 
   // get particle zone
   auto &pz = d_pDeck_p->d_particleZones[z];
@@ -1167,7 +1167,8 @@ void model::DEMModel::createParticlesFromFile(
         orients.push_back(
             util::transform_to_uniform_dist(0., 2. * M_PI, uniform_dist()));
     }
-  } else if (pz.d_particleFileDataType == "loc_rad_orient") {
+  }
+  else if (pz.d_particleFileDataType == "loc_rad_orient") {
     rw::reader::readParticleWithOrientCsvFile(pz.d_particleFile,
                                               d_modelDeck_p->d_dim, &centers,
                                               &rads, &orients, z_id);
