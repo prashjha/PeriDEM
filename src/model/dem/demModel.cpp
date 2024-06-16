@@ -744,106 +744,106 @@ void model::DEMModel::computeContactForces() {
                           (std::size_t) 1,
                           [this](std::size_t II) {
 
-      auto i = this->d_fContCompNodes[II];
+                              auto i = this->d_fContCompNodes[II];
 
-      // local variable to hold force
-      util::Point force_i = util::Point();
-      double scalar_f = 0.;
+                              // local variable to hold force
+                              util::Point force_i = util::Point();
+                              double scalar_f = 0.;
 
-      const auto &ptIdi = this->getPtId(i);
-      auto &pi = this->getParticleFromAllList(ptIdi);
-      double horizon = pi->d_material_p->getHorizon();
-      double search_r = this->d_maxContactR;
+                              const auto &ptIdi = this->getPtId(i);
+                              auto &pi = this->getParticleFromAllList(ptIdi);
+                              double horizon = pi->d_material_p->getHorizon();
+                              double search_r = this->d_maxContactR;
 
-      // particle data
-      double rhoi = pi->getDensity();
+                              // particle data
+                              double rhoi = pi->getDensity();
 
-      const auto &yi = this->d_x[i]; // current coordinates
-      const auto &ui = this->d_u[i];
-      const auto &vi = this->d_v[i];
-      const auto &voli = this->d_vol[i];
+                              const auto &yi = this->d_x[i]; // current coordinates
+                              const auto &ui = this->d_u[i];
+                              const auto &vi = this->d_v[i];
+                              const auto &voli = this->d_vol[i];
 
-      const std::vector<size_t> &neighs = this->d_neighC[i];
+                              const std::vector<size_t> &neighs = this->d_neighC[i];
 
-      if (neighs.size() > 0) {
+                              if (neighs.size() > 0) {
 
-        for (const auto &j_id: neighs) {
+                                for (const auto &j_id: neighs) {
 
-          //auto &j_id = neighs[j];
-          const auto &yj = this->d_x[j_id]; // current coordinates
-          double Rji = (yj - yi).length();
-          auto &ptIdj = this->d_ptId[j_id];
-          auto &pj = this->getParticleFromAllList(ptIdj);
-          double rhoj = pj->getDensity();
+                                  //auto &j_id = neighs[j];
+                                  const auto &yj = this->d_x[j_id]; // current coordinates
+                                  double Rji = (yj - yi).length();
+                                  auto &ptIdj = this->d_ptId[j_id];
+                                  auto &pj = this->getParticleFromAllList(ptIdj);
+                                  double rhoj = pj->getDensity();
 
-          bool both_walls =
-              (pi->getTypeIndex() == 1 and pj->getTypeIndex() == 1);
+                                  bool both_walls =
+                                          (pi->getTypeIndex() == 1 and pj->getTypeIndex() == 1);
 
-          if (j_id != i) {
-            if (ptIdj != ptIdi && !both_walls) {
+                                  if (j_id != i) {
+                                    if (ptIdj != ptIdi && !both_walls) {
 
-              // apply particle-particle or particle-wall contact here
-              const auto &contact =
-                  d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+                                      // apply particle-particle or particle-wall contact here
+                                      const auto &contact =
+                                              d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
 
-              if (util::isLess(Rji, contact.d_contactR)) {
+                                      if (util::isLess(Rji, contact.d_contactR)) {
 
-                auto yji = this->d_x[j_id] - yi;
-                auto volj = this->d_vol[j_id];
-                auto vji = this->d_v[j_id] - vi;
+                                        auto yji = this->d_x[j_id] - yi;
+                                        auto volj = this->d_vol[j_id];
+                                        auto vji = this->d_v[j_id] - vi;
 
-                // resolve velocity vector in normal and tangential components
-                auto en = yji / Rji;
-                auto vn_mag = (vji * en);
-                auto et = vji - vn_mag * en;
-                if (util::isGreater(et.length(), 0.))
-                  et = et / et.length();
-                else
-                  et = util::Point();
+                                        // resolve velocity vector in normal and tangential components
+                                        auto en = yji / Rji;
+                                        auto vn_mag = (vji * en);
+                                        auto et = vji - vn_mag * en;
+                                        if (util::isGreater(et.length(), 0.))
+                                          et = et / et.length();
+                                        else
+                                          et = util::Point();
 
-                // Formula using bulk modulus and horizon
-                scalar_f = contact.d_Kn * (Rji - contact.d_contactR) *
-                            volj; // divided by voli
-                if (scalar_f > 0.)
-                  scalar_f = 0.;
-                force_i += scalar_f * en;
+                                        // Formula using bulk modulus and horizon
+                                        scalar_f = contact.d_Kn * (Rji - contact.d_contactR) *
+                                                   volj; // divided by voli
+                                        if (scalar_f > 0.)
+                                          scalar_f = 0.;
+                                        force_i += scalar_f * en;
 
-                // compute friction force (since f < 0, |f| = -f)
-                force_i += contact.d_mu * scalar_f * et;
+                                        // compute friction force (since f < 0, |f| = -f)
+                                        force_i += contact.d_mu * scalar_f * et;
 
-                // if particle-wall pair, apply damping contact here <--
-                // doesnt seem to work
-                bool node_lvl_damp = false;
-                // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
-                //   node_lvl_damp = true;
+                                        // if particle-wall pair, apply damping contact here <--
+                                        // doesnt seem to work
+                                        bool node_lvl_damp = false;
+                                        // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
+                                        //   node_lvl_damp = true;
 
-                if (node_lvl_damp) {
-                  // apply damping at the node level
-                  auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
-                  auto beta_n =
-                      contact.d_betan *
-                      std::sqrt(contact.d_kappa * contact.d_contactR * meq);
+                                        if (node_lvl_damp) {
+                                          // apply damping at the node level
+                                          auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
+                                          auto beta_n =
+                                                  contact.d_betan *
+                                                  std::sqrt(contact.d_kappa * contact.d_contactR * meq);
 
-                  auto &pii = this->d_particlesListTypeAll[pi->getId()];
-                  vji = this->d_v[j_id] - pii->getVCenter();
-                  vn_mag = (vji * en);
-                  if (vn_mag > 0.)
-                    vn_mag = 0.;
-                  force_i += beta_n * vn_mag * en / voli;
-                }
-              } // within contact radius
-            }   // particle-particle contact
-          }     // if j_id is not i
-        }       // loop over neighbors
-      }         // contact neighbor
+                                          auto &pii = this->d_particlesListTypeAll[pi->getId()];
+                                          vji = this->d_v[j_id] - pii->getVCenter();
+                                          vn_mag = (vji * en);
+                                          if (vn_mag > 0.)
+                                            vn_mag = 0.;
+                                          force_i += beta_n * vn_mag * en / voli;
+                                        }
+                                      } // within contact radius
+                                    }   // particle-particle contact
+                                  }     // if j_id is not i
+                                }       // loop over neighbors
+                              }         // contact neighbor
 
-      this->d_f[i] += force_i;
-    }
+                              this->d_f[i] += force_i;
+                          }
   ); // for_each
 
   executor.run(taskflow).get();
 
-  
+
   // damping force
   log("    Computing normal damping force \n", 3);
   for (auto &pi : d_particlesListTypeParticle) {
@@ -937,7 +937,7 @@ void model::DEMModel::computeContactForces() {
       //auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
 
       const auto &contact
-            = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+              = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
 
       // beta_n
       auto beta_n = contact.d_betan *
@@ -966,8 +966,8 @@ void model::DEMModel::computeContactForces() {
 
       taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1,
                               [this, pi, force_i](std::size_t i) {
-          this->d_f[pi->getNodeId(i)] += force_i;
-        }
+                                  this->d_f[pi->getNodeId(i)] += force_i;
+                              }
       ); // for_each
 
       executor.run(taskflow).get();
