@@ -535,6 +535,12 @@ public:
   /*! @brief Maximum contact radius between over pairs of particles and walls */
   double d_maxContactR;
 
+  /*! @brief Neighborlist update interval */
+  size_t d_contNeighUpdateInterval;
+
+  /*! @brief Neighborlist contact search radius (multiple of d_maxContactR). This variable will be updated during simulation based on maximum velocity */
+  double d_contNeighSearchRadius;
+
   /*! @brief Pointer to reference particle */
   std::vector<std::shared_ptr<particle::RefParticle>> d_referenceParticles;
 

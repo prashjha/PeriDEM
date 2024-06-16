@@ -39,7 +39,7 @@ struct PNeighborDeck {
    * @brief Constructor
    */
   PNeighborDeck()
-      : d_updateCriteria("max_distance_travel"),
+      : d_updateCriteria("simple_all"),
         d_sFactor(1.),
         d_sTol(0.),
         d_neighUpdateInterval(1) {};

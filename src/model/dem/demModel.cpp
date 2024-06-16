@@ -51,6 +51,8 @@ int debug_once = -1;
 double pen_dist = 0.;
 double contact_area_radius = 0.;
 
+bool dbg_condition = false;
+
 double tree_compute_time = 0.;
 double contact_compute_time = 0.;
 double contact_neigh_update_time = 0.;
@@ -59,6 +61,7 @@ double pd_compute_time = 0.;
 double extf_compute_time = 0.;
 double integrate_compute_time = 0.;
 
+double avg_tree_update_time = 0.;
 double avg_contact_neigh_update_time = 0.;
 double avg_contact_force_time = 0.;
 double avg_peridynamics_force_time = 0.;
@@ -195,11 +198,13 @@ void model::DEMModel::init() {
   t2 = steady_clock::now();
   peridynamics_neigh_update_time = util::methods::timeDiff(t1, t2);
 
+  log("DEMModel: Creating neighborlist for contact.\n");
+  d_contNeighUpdateInterval = d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval;
+  d_contNeighSearchRadius = d_pDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
   t1 = steady_clock::now();
   updateContactNeighborlist();
   t2 = steady_clock::now();
   contact_neigh_update_time = util::methods::timeDiff(t1, t2);
-
 
   // create peridynamic bonds
   log("DEMModel: Creating peridynamics bonds.\n");
@@ -462,7 +467,7 @@ void model::DEMModel::integrateVerlet() {
 
 void model::DEMModel::computeForces() {
 
-  bool dbg_condition = d_n % d_infoN == 0;
+  dbg_condition = d_n % d_infoN == 0;
 
   log("  Compute forces \n", 2, dbg_condition, 3);
 
@@ -478,16 +483,12 @@ void model::DEMModel::computeForces() {
 
   executor.run(taskflow).get();
 
-  log(fmt::format("    Force reset time (ms) = {} \n",
-                    util::methods::timeDiff(t1, steady_clock::now())), 2, dbg_condition, 3);
-
   // compute peridynamic forces
   t1 = steady_clock::now();
   computePeridynamicForces();
   auto pd_time = util::methods::timeDiff(t1, steady_clock::now());
   pd_compute_time += pd_time;
   avg_peridynamics_force_time += pd_time;
-  log(fmt::format("    Peridynamics force time (ms) = {} \n", pd_time), 2, dbg_condition, 3);
 
   // update contact neighborlist
   t1 = steady_clock::now();
@@ -495,8 +496,6 @@ void model::DEMModel::computeForces() {
   auto current_contact_neigh_update_time = util::methods::timeDiff(t1, steady_clock::now());
   contact_neigh_update_time += current_contact_neigh_update_time;
   avg_contact_neigh_update_time += current_contact_neigh_update_time;
-  log(fmt::format("    Contact neighborlist update time (ms) = {} \n",
-                  current_contact_neigh_update_time), 2, dbg_condition, 3);
 
   // compute contact forces between particles
   t1 = steady_clock::now();
@@ -504,29 +503,64 @@ void model::DEMModel::computeForces() {
   auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
   contact_compute_time += contact_time;
   avg_contact_force_time += contact_time;
-  log(fmt::format("    Contact force time (ms) = {} \n",
-                  contact_time), 2, dbg_condition, 3);
 
   // Compute external forces
   t1 = steady_clock::now();
   computeExternalForces();
   auto extf_time = util::methods::timeDiff(t1, steady_clock::now());
   extf_compute_time += extf_time;
-  log(fmt::format("    External force time (ms) = {} \n", extf_time), 2, dbg_condition, 3);
 
   // output avg time info
   if (dbg_condition) {
-    log(fmt::format("    Avg time: contact neigh update = {}, "
-                    "contact force = {}, "
-                    "peridynamics force = {} \n",
-                    avg_contact_neigh_update_time,
-                    avg_contact_force_time,
-                    avg_peridynamics_force_time), 2, dbg_condition, 3);
+    log(fmt::format("    Avg time: \n"
+                    "      {:35s} = {:8d}\n"
+                    "      {:35s} = {:8d}\n"
+                    "      {:35s} = {:8d}\n"
+                    "      {:35s} = {:8d}\n"
+                    "      {:35s} = {:8d}\n",
+                    "tree update", size_t(avg_tree_update_time/d_infoN),
+                    "contact neigh update", size_t(avg_contact_neigh_update_time/d_infoN),
+                    "contact force", size_t(avg_contact_force_time/d_infoN),
+                    "total contact", size_t(avg_tree_update_time/d_infoN) + size_t(avg_contact_neigh_update_time/d_infoN) + size_t(avg_contact_force_time/d_infoN),
+                    "peridynamics force", size_t(avg_peridynamics_force_time/d_infoN)),
+        2, dbg_condition, 3);
 
+    avg_tree_update_time = 0.;
     avg_contact_neigh_update_time = 0.;
     avg_contact_force_time = 0.;
     avg_peridynamics_force_time = 0.;
   }
+
+  log(fmt::format("    {:50s} = {:8d} \n",
+                  "Force reset time (ms)",
+                  size_t(util::methods::timeDiff(t1, steady_clock::now()))
+      ),
+      2, dbg_condition, 3);
+
+  log(fmt::format("    {:50s} = {:8d} \n",
+                  "Peridynamics force time (ms)",
+                  size_t(pd_time)
+      ),
+      2, dbg_condition, 3);
+
+  log(fmt::format("    {:50s} = {:8d} \n",
+                  "Contact neighborlist update time (ms)",
+                  size_t(current_contact_neigh_update_time)
+      ),
+      2, dbg_condition, 3);
+
+  log(fmt::format("    {:50s} = {:8d} \n",
+                  "Contact force time (ms)",
+                  size_t(contact_time)
+      ),
+      2, dbg_condition, 3);
+
+  log(fmt::format("    {:50s} = {:8d} \n",
+                  "External force time (ms)",
+                  size_t(extf_time)
+      ),
+      2, dbg_condition, 3);
+
 }
 
 void model::DEMModel::computePeridynamicForces() {
@@ -1510,46 +1544,19 @@ void model::DEMModel::updateContactNeighborlist() {
   if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
     return;
 
-  // first update the maximum velocity in all particles
-  for (auto &pi : d_particlesListTypeAll) {
-    auto max_v_node = util::methods::maxIndex(d_vMag,
-                                              pi->d_globStart, pi->d_globEnd);
-
-    if (max_v_node > pi->d_globEnd or max_v_node < pi->d_globStart) {
-      std::cerr << fmt::format("Error: max_v_node = {} for "
-                               "particle of id = {} is not in the limit.\n",
-                               max_v_node, pi->getId())
-               << "Particle info = \n"
-               << pi->printStr()
-               << "\n\n Magnitude of velocity = "
-               << d_vMag[max_v_node] << "\n";
-      exit(EXIT_FAILURE);
-    }
-
-    d_maxVelocityParticlesListTypeAll[pi->getId()]
-        = d_vMag[max_v_node];
-  }
-
-  // find max velocity among all particles
-  d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
-
-  if (d_maxVelocity * d_currentDt > d_maxContactR * d_pDeck_p->d_pNeighDeck.d_sFactor) {
-    log(fmt::format("Warning: Max velocity time time step = {} is above "
-                    "the maximum search radius = {} for contact.\n",
-                    d_maxVelocity * d_currentDt, d_maxContactR * d_pDeck_p->d_pNeighDeck.d_sFactor));
-  }
+  updateContactNeighborSearchParameters();
 
   // update contact neighborlist
   // check criteria
-
   if (d_pDeck_p->d_pNeighDeck.d_updateCriteria == "simple_all"
         or d_pDeck_p->d_pNeighDeck.d_updateCriteria == "max_velocity_all") {
 
     // update the point cloud (make sure that d_x is updated along with displacement)
     auto pt_cloud_update_time = d_nsearch_p->setInputCloud();
     tree_compute_time += pt_cloud_update_time;
+    avg_tree_update_time += pt_cloud_update_time;
     log(fmt::format("    Point cloud update time (ms) = {} \n",
-                    pt_cloud_update_time), 2, d_n % d_infoN == 0, 3);
+                    pt_cloud_update_time), 2, dbg_condition, 3);
 
     if (d_neighC.size() != d_x.size())
       d_neighC.resize(d_x.size());
@@ -1563,9 +1570,6 @@ void model::DEMModel::updateContactNeighborlist() {
       const auto &pi = this->d_ptId[i];
       const auto &pi_particle = this->d_particlesListTypeAll[pi];
 
-      double search_r = this->d_maxContactR *
-                        this->d_pDeck_p->d_pNeighDeck.d_sFactor;
-
       // search?
       bool perform_search_based_on_particle = true;
       if (pi_particle->d_typeIndex == 1) // wall
@@ -1576,15 +1580,9 @@ void model::DEMModel::updateContactNeighborlist() {
 
       bool perform_search_based_on_criteria = false;
       if (this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
-          "simple_all") {
-        perform_search_based_on_criteria = true;
-      } else if (
-              this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
+          "simple_all" or this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
               "max_velocity_all") {
-        // based on the max velocity of the particle this node belongs to
-        if (this->d_maxVelocity * this->d_currentDt > 0.5 * search_r
-            or this->d_n == 0)
-          perform_search_based_on_criteria = true;
+        perform_search_based_on_criteria = true;
       }
 
       if (perform_search_based_on_criteria and perform_search_based_on_particle) {
@@ -1596,7 +1594,7 @@ void model::DEMModel::updateContactNeighborlist() {
 
         auto n = this->d_nsearch_p->radiusSearchExcludeTag(
                 this->d_x[i],
-                search_r,
+                this->d_contNeighSearchRadius,
                 neighs,
                 sqr_dist,
                 this->d_ptId[i],
@@ -1674,6 +1672,82 @@ void model::DEMModel::updateContactNeighborlist() {
     }
   } // loop over particles
 
+}
+
+void model::DEMModel::updateContactNeighborSearchParameters() {
+
+  // check if we should proceed with updates
+  if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
+    return;
+
+  // first update the maximum velocity in all particles
+  for (auto &pi : d_particlesListTypeAll) {
+    auto max_v_node = util::methods::maxIndex(d_vMag,
+                                              pi->d_globStart, pi->d_globEnd);
+
+    if (max_v_node > pi->d_globEnd or max_v_node < pi->d_globStart) {
+      std::cerr << fmt::format("Error: max_v_node = {} for "
+                               "particle of id = {} is not in the limit.\n",
+                               max_v_node, pi->getId())
+                << "Particle info = \n"
+                << pi->printStr()
+                << "\n\n Magnitude of velocity = "
+                << d_vMag[max_v_node] << "\n";
+      exit(EXIT_FAILURE);
+    }
+
+    d_maxVelocityParticlesListTypeAll[pi->getId()]
+            = d_vMag[max_v_node];
+  }
+
+  // find max velocity among all particles
+  d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
+
+  // now we find the best parameters for contact search
+
+  // TO ensure that in d_neighUpdateInterval time steps, the search radius is above the
+  // distance traveled by object with velocity d_maxVelocity
+  // also multiply by a safety factor
+  double safety_factor = d_pDeck_p->d_pNeighDeck.d_sFactor > 5 ? d_pDeck_p->d_pNeighDeck.d_sFactor : 10;
+  auto max_search_r_from_contact_R = d_pDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
+  auto max_search_r = d_maxVelocity * d_currentDt
+                      * d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval
+                      * safety_factor;
+
+
+  if (util::isGreater(max_search_r, max_search_r_from_contact_R )) {
+    log(fmt::format("Warning: Max search radius based on maximum velocity = {:4.6e} is above "
+                    "the maximum contact radius = {:4.6e} for contact.\n",
+                    max_search_r, max_search_r_from_contact_R),
+        2, dbg_condition, 3);
+    log("Warning: Adjusting contact neighborlist update interval.\n", 2, dbg_condition, 3);
+
+    d_contNeighUpdateInterval = size_t(d_maxContactR/(d_maxVelocity * d_currentDt));
+    if (d_contNeighUpdateInterval < 1)
+      d_contNeighUpdateInterval = 1;
+
+    log(fmt::format("Warning: New contact neighborlist "
+                    "update interval is = {}.\n", d_contNeighUpdateInterval),
+        2, dbg_condition, 3);
+
+    d_contNeighSearchRadius = max_search_r;
+  }
+  else {
+    d_contNeighSearchRadius = max_search_r_from_contact_R;
+  }
+
+  log(fmt::format("    Contact neighbor parameters: \n"
+                  "      {:35s} = {:d}\n"
+                  "      {:35s} = {:4.6e}\n"
+                  "      {:35s} = {:4.6e}\n"
+                  "      {:35s} = {:4.6e}\n"
+                  "      {:35s} = {:4.6e}\n",
+                  "contact neighbor update interval", d_contNeighUpdateInterval,
+                  "search radius", d_contNeighSearchRadius,
+                  "max search r from velocity", max_search_r,
+                  "max search r from contact r", max_search_r_from_contact_R,
+                  "max velocity", d_maxVelocity),
+      2, dbg_condition, 3);
 }
 
 void model::DEMModel::updateNeighborlistCombine() {
