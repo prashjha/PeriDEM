@@ -60,6 +60,7 @@ double peridynamics_neigh_update_time = 0.;
 double pd_compute_time = 0.;
 double extf_compute_time = 0.;
 double integrate_compute_time = 0.;
+double pt_cloud_update_time = 0.;
 
 double avg_tree_update_time = 0.;
 double avg_contact_neigh_update_time = 0.;
@@ -482,6 +483,7 @@ void model::DEMModel::computeForces() {
   ); // for_each
 
   executor.run(taskflow).get();
+  auto force_reset_time = util::methods::timeDiff(t1, steady_clock::now());
 
   // compute peridynamic forces
   t1 = steady_clock::now();
@@ -532,8 +534,14 @@ void model::DEMModel::computeForces() {
   }
 
   log(fmt::format("    {:50s} = {:8d} \n",
+                  "Point cloud update time (ms)",
+                  size_t(pt_cloud_update_time)
+      ),
+      2, dbg_condition, 3);
+
+  log(fmt::format("    {:50s} = {:8d} \n",
                   "Force reset time (ms)",
-                  size_t(util::methods::timeDiff(t1, steady_clock::now()))
+                  size_t(force_reset_time)
       ),
       2, dbg_condition, 3);
 
@@ -1552,11 +1560,9 @@ void model::DEMModel::updateContactNeighborlist() {
         or d_pDeck_p->d_pNeighDeck.d_updateCriteria == "max_velocity_all") {
 
     // update the point cloud (make sure that d_x is updated along with displacement)
-    auto pt_cloud_update_time = d_nsearch_p->setInputCloud();
+    pt_cloud_update_time = d_nsearch_p->setInputCloud();
     tree_compute_time += pt_cloud_update_time;
     avg_tree_update_time += pt_cloud_update_time;
-    log(fmt::format("    Point cloud update time (ms) = {} \n",
-                    pt_cloud_update_time), 2, dbg_condition, 3);
 
     if (d_neighC.size() != d_x.size())
       d_neighC.resize(d_x.size());
