@@ -1556,8 +1556,9 @@ void model::DEMModel::updateContactNeighborlist() {
 
   // update contact neighborlist
   // check criteria
-  if (d_pDeck_p->d_pNeighDeck.d_updateCriteria == "simple_all"
-        or d_pDeck_p->d_pNeighDeck.d_updateCriteria == "max_velocity_all") {
+  //  if (d_pDeck_p->d_pNeighDeck.d_updateCriteria == "simple_all"
+  //        or d_pDeck_p->d_pNeighDeck.d_updateCriteria == "max_velocity_all") {
+  if (true) { // WIP: different search methods
 
     // update the point cloud (make sure that d_x is updated along with displacement)
     pt_cloud_update_time = d_nsearch_p->setInputCloud();
@@ -1584,12 +1585,8 @@ void model::DEMModel::updateContactNeighborlist() {
       if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
         perform_search_based_on_particle = false;
 
-      bool perform_search_based_on_criteria = false;
-      if (this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
-          "simple_all" or this->d_pDeck_p->d_pNeighDeck.d_updateCriteria ==
-              "max_velocity_all") {
-        perform_search_based_on_criteria = true;
-      }
+      bool perform_search_based_on_criteria = true;
+      // WIP: different search methods
 
       if (perform_search_based_on_criteria and perform_search_based_on_particle) {
 
@@ -1686,6 +1683,12 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
   if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
     return;
 
+  if (d_contNeighUpdateInterval == 1) {
+    // further optimization of parameters is not possible
+    d_contNeighSearchRadius = d_maxContactR;
+    return;
+  }
+
   // first update the maximum velocity in all particles
   for (auto &pi : d_particlesListTypeAll) {
     auto max_v_node = util::methods::maxIndex(d_vMag,
@@ -1729,17 +1732,22 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
     log("Warning: Adjusting contact neighborlist update interval.\n", 2, dbg_condition, 3);
 
     d_contNeighUpdateInterval = size_t(d_maxContactR/(d_maxVelocity * d_currentDt));
-    if (d_contNeighUpdateInterval < 1)
+    d_contNeighSearchRadius = max_search_r_from_contact_R;
+    if (d_contNeighUpdateInterval < 1) {
       d_contNeighUpdateInterval = 1;
+      d_contNeighSearchRadius = d_maxContactR;
+    }
 
     log(fmt::format("Warning: New contact neighborlist "
-                    "update interval is = {}.\n", d_contNeighUpdateInterval),
+                    "update interval is = {:3d} "
+                    "and search radius is = {:4.6e}.\n",
+                    d_contNeighUpdateInterval,
+                    d_contNeighSearchRadius),
         2, dbg_condition, 3);
 
-    d_contNeighSearchRadius = max_search_r;
   }
   else {
-    d_contNeighSearchRadius = max_search_r_from_contact_R;
+    d_contNeighSearchRadius = d_contNeighUpdateInterval < 2 ? d_maxContactR : max_search_r_from_contact_R;
   }
 
   log(fmt::format("    Contact neighbor parameters: \n"
