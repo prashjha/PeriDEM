@@ -263,6 +263,7 @@ void fe::Mesh::computeVol() {
                  "element mesh as the element-node connectivity data is "
                  "invalid."
               << std::endl;
+    exit(EXIT_FAILURE);
   }
 
   if (false) {

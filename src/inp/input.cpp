@@ -679,7 +679,7 @@ void inp::Input::setContactDeck() {
     for (size_t zz = z; zz <= n; zz++) {
       std::string read_zone = "Zone_" + std::to_string(z) + std::to_string(zz);
 
-      if (d_outputDeck_p->d_debug > 1)
+      if (d_outputDeck_p->d_debug > 3)
         std::cout << "Processing pair (z, zz) = (" << z << ", " << zz << ").\n";
 
       auto e = config["Contact"][read_zone];
@@ -712,7 +712,7 @@ void inp::Input::setContactDeck() {
         inp::ContactPairDeck cd =
             d_contactDeck_p->d_data[zone_pair[0] - 1][zone_pair[1] - 1];
 
-        if (d_outputDeck_p->d_debug > 1) {
+        if (d_outputDeck_p->d_debug > 3) {
           std::cout << "Processing pair (z, zz) = (" << z << ", " << zz << "). "
                     << "Copying contact data from (n, m) = (" << zone_pair[0]
                     << ", " << zone_pair[1] << ").\n";

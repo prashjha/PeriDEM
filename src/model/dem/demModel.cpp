@@ -1548,11 +1548,11 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
 
 void model::DEMModel::updateContactNeighborlist() {
 
+  updateContactNeighborSearchParameters();
+
   // check if we should proceed with updates
   if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
     return;
-
-  updateContactNeighborSearchParameters();
 
   // update contact neighborlist
   // check criteria
@@ -1679,8 +1679,13 @@ void model::DEMModel::updateContactNeighborlist() {
 
 void model::DEMModel::updateContactNeighborSearchParameters() {
 
-  // check if we should proceed with updates
-  if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
+  // check if we should proceed with parameter update
+  // param update is done at smaller interval than the search itself to avoid
+  // scenarios where particles suddenly move with a high velocity
+  size_t update_param_interval =
+          d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval > 5 ? size_t(
+                  0.2 * d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval) : 1;
+  if (d_n > 0 and d_n % update_param_interval != 0)
     return;
 
   if (d_contNeighUpdateInterval == 1) {
@@ -1755,9 +1760,13 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
                   "      {:35s} = {:4.6e}\n"
                   "      {:35s} = {:4.6e}\n"
                   "      {:35s} = {:4.6e}\n"
+                  "      {:35s} = {:4.6e}\n"
+                  "      {:35s} = {:4.6e}\n"
                   "      {:35s} = {:4.6e}\n",
                   "contact neighbor update interval", d_contNeighUpdateInterval,
                   "search radius", d_contNeighSearchRadius,
+                  "max contanct radius", d_maxContactR,
+                  "search radius factor", d_pDeck_p->d_pNeighDeck.d_sFactor,
                   "max search r from velocity", max_search_r,
                   "max search r from contact r", max_search_r_from_contact_R,
                   "max velocity", d_maxVelocity),
