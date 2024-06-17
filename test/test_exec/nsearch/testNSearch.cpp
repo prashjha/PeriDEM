@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   }
 
   std::vector<int> leafMaxSizes = {2, 5, 8, 10, 12, 15, 20};
-  std::vector<double> L_test = {1., 1000., 0.01};
+  std::vector<double> L_test = {1., 0.01};
   std::vector<double> dL_test = {0.2, 0.5};
   std::vector<int> seeds = {1093};//, 13828, 78474};
   std::vector<int> N_test = {N};

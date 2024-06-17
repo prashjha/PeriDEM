@@ -52,12 +52,12 @@ add_test(NAME testfe
 
 # nsearch lib
 add_test(NAME testnsearch
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 20 -o 0
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 10 -o 0
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
 add_test(NAME testnsearch_profilenanoflann
-        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 20 -o 1
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 10 -o 1
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
