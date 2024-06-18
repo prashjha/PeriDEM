@@ -1551,71 +1551,67 @@ void model::DEMModel::updateContactNeighborlist() {
   updateContactNeighborSearchParameters();
 
   // check if we should proceed with updates
-  if (d_n > 0 and d_n % d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval != 0)
+  if (d_contNeighTimestepCounter > 0 and d_contNeighTimestepCounter % d_contNeighUpdateInterval != 0) {
+    d_contNeighTimestepCounter += 1;
     return;
+  }
+
+  d_contNeighTimestepCounter += 1;
 
   // update contact neighborlist
-  // check criteria
-  //  if (d_pDeck_p->d_pNeighDeck.d_updateCriteria == "simple_all"
-  //        or d_pDeck_p->d_pNeighDeck.d_updateCriteria == "max_velocity_all") {
-  if (true) { // WIP: different search methods
 
-    // update the point cloud (make sure that d_x is updated along with displacement)
-    pt_cloud_update_time = d_nsearch_p->setInputCloud();
-    tree_compute_time += pt_cloud_update_time;
-    avg_tree_update_time += pt_cloud_update_time;
+  // update the point cloud (make sure that d_x is updated along with displacement)
+  pt_cloud_update_time = d_nsearch_p->setInputCloud();
+  tree_compute_time += pt_cloud_update_time;
+  avg_tree_update_time += pt_cloud_update_time;
 
-    if (d_neighC.size() != d_x.size())
-      d_neighC.resize(d_x.size());
+  if (d_neighC.size() != d_x.size())
+    d_neighC.resize(d_x.size());
 
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
 
-    taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1,
-                            [this](std::size_t i) {
+  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1,
+                          [this](std::size_t i) {
 
-      const auto &pi = this->d_ptId[i];
-      const auto &pi_particle = this->d_particlesListTypeAll[pi];
+    const auto &pi = this->d_ptId[i];
+    const auto &pi_particle = this->d_particlesListTypeAll[pi];
 
-      // search?
-      bool perform_search_based_on_particle = true;
-      if (pi_particle->d_typeIndex == 1) // wall
-        perform_search_based_on_particle = false;
+    // search?
+    bool perform_search_based_on_particle = true;
+    if (pi_particle->d_typeIndex == 1) // wall
+      perform_search_based_on_particle = false;
 
-      if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
-        perform_search_based_on_particle = false;
+    if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
+      perform_search_based_on_particle = false;
 
-      bool perform_search_based_on_criteria = true;
-      // WIP: different search methods
+    if (perform_search_based_on_particle) {
 
-      if (perform_search_based_on_criteria and perform_search_based_on_particle) {
+      std::vector<size_t> neighs;
+      std::vector<double> sqr_dist;
 
-        std::vector<size_t> neighs;
-        std::vector<double> sqr_dist;
+      this->d_neighC[i].clear();
 
-        this->d_neighC[i].clear();
+      auto n = this->d_nsearch_p->radiusSearchExcludeTag(
+              this->d_x[i],
+              this->d_contNeighSearchRadius,
+              neighs,
+              sqr_dist,
+              this->d_ptId[i],
+              this->d_ptId);
 
-        auto n = this->d_nsearch_p->radiusSearchExcludeTag(
-                this->d_x[i],
-                this->d_contNeighSearchRadius,
-                neighs,
-                sqr_dist,
-                this->d_ptId[i],
-                this->d_ptId);
-
-        if (n > 0) {
-          for (auto neigh: neighs)
-            if (neigh != i) {
-              this->d_neighC[i].push_back(neigh);
-              // this->d_neighCSqdDist[i].push_back(sqr_dist[j]);
-            }
+      if (n > 0) {
+        for (auto neigh: neighs) {
+          if (neigh != i)
+            this->d_neighC[i].push_back(neigh);
         }
       }
-  }
-    ); // for_each
+    }
+}
+  ); // for_each
 
-    executor.run(taskflow).get();
-  }
+  executor.run(taskflow).get();
+
 
   // handle particle-wall neighborlist (based on the d_neighC that we already computed)
   d_neighWallNodes.resize(d_particlesListTypeAll.size());
@@ -1653,17 +1649,6 @@ void model::DEMModel::updateContactNeighborlist() {
 
               // we are only interested in nodes from wall
               if (pj->getTypeIndex() == 1) {
-                  //auto Rji = (this->d_x[j_id] -
-                  //              yi).length();
-                  //                const auto &contact =
-                  //                        d_cDeck_p->getContact(
-                  //                                pi->d_zoneId,
-                  //                                pj->d_zoneId);
-                  //                auto search_r = contact.d_contactR
-                  //                                  * this->d_pDeck_p->d_pNeighDeck.d_sFactor;
-                  //
-                  //                if (util::isLess(Rji, search_r))
-                  //                  wall_nodes[i].push_back(j_id);
                   this->d_neighWallNodes[pi->getId()][i].push_back(j_id);
                   //this->d_neighWallNodesDistance[pi->getId()][i].push_back(Rji);
               }
@@ -1679,13 +1664,20 @@ void model::DEMModel::updateContactNeighborlist() {
 
 void model::DEMModel::updateContactNeighborSearchParameters() {
 
+  // initialize parameters
+  if (d_contNeighUpdateInterval == 0 and util::isLess(d_contNeighSearchRadius, 1.e-16)) {
+    d_contNeighUpdateInterval = d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval;
+    d_contNeighTimestepCounter = d_n % d_contNeighUpdateInterval;
+    d_contNeighSearchRadius = d_maxContactR * d_pDeck_p->d_pNeighDeck.d_sFactor;
+  }
+
   // check if we should proceed with parameter update
   // param update is done at smaller interval than the search itself to avoid
   // scenarios where particles suddenly move with a high velocity
   size_t update_param_interval =
-          d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval > 5 ? size_t(
-                  0.2 * d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval) : 1;
-  if (d_n > 0 and d_n % update_param_interval != 0)
+          d_contNeighUpdateInterval > 5 ? size_t(
+                  0.2 * d_contNeighUpdateInterval) : 1;
+  if (d_contNeighTimestepCounter > 0 and d_contNeighTimestepCounter % update_param_interval != 0)
     return;
 
   if (d_contNeighUpdateInterval == 1) {
@@ -1730,24 +1722,32 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
 
 
   if (util::isGreater(max_search_r, max_search_r_from_contact_R )) {
+    // issue warning
     log(fmt::format("Warning: Max search radius based on maximum velocity = {:4.6e} is above "
                     "the maximum contact radius = {:4.6e} for contact.\n",
                     max_search_r, max_search_r_from_contact_R),
         2, dbg_condition, 3);
+
     log("Warning: Adjusting contact neighborlist update interval.\n", 2, dbg_condition, 3);
 
     d_contNeighUpdateInterval = size_t(d_maxContactR/(d_maxVelocity * d_currentDt));
     d_contNeighSearchRadius = max_search_r_from_contact_R;
+    // reset time step counter for contact so that the contact list is updated in the current time step
+    // and the update cycle starts from the current time step
+    d_contNeighTimestepCounter = 0;
+
     if (d_contNeighUpdateInterval < 1) {
       d_contNeighUpdateInterval = 1;
       d_contNeighSearchRadius = d_maxContactR;
     }
 
-    log(fmt::format("Warning: New contact neighborlist "
-                    "update interval is = {:3d} "
-                    "and search radius is = {:4.6e}.\n",
+    log(fmt::format("Warning: New contact search parameters: "
+                    "update interval = {:3d}, "
+                    "search radius = {:4.6e}, "
+                    "update time step counter = {:3d}.\n",
                     d_contNeighUpdateInterval,
-                    d_contNeighSearchRadius),
+                    d_contNeighSearchRadius,
+                    d_contNeighTimestepCounter),
         2, dbg_condition, 3);
 
   }
@@ -1757,6 +1757,7 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
 
   log(fmt::format("    Contact neighbor parameters: \n"
                   "      {:35s} = {:d}\n"
+                  "      {:35s} = {:d}\n"
                   "      {:35s} = {:4.6e}\n"
                   "      {:35s} = {:4.6e}\n"
                   "      {:35s} = {:4.6e}\n"
@@ -1764,6 +1765,7 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
                   "      {:35s} = {:4.6e}\n"
                   "      {:35s} = {:4.6e}\n",
                   "contact neighbor update interval", d_contNeighUpdateInterval,
+                  "contact neighbor update time step counter", d_contNeighTimestepCounter,
                   "search radius", d_contNeighSearchRadius,
                   "max contanct radius", d_maxContactR,
                   "search radius factor", d_pDeck_p->d_pNeighDeck.d_sFactor,
@@ -1774,51 +1776,8 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
 }
 
 void model::DEMModel::updateNeighborlistCombine() {
-
-  d_neighC.resize(d_x.size());
-  // d_neighCSqdDist.resize(d_x.size());
-  d_neighPd.resize(d_x.size());
-  // d_neighPdSqdDist.resize(d_x.size());
-  auto t1 = steady_clock::now();
-
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
-      const auto &pi = this->d_ptId[i];
-      double horizon = this->d_particlesListTypeAll[pi]->d_material_p->getHorizon();
-      double search_r = horizon;
-      if (this->d_maxContactR > search_r)
-        search_r = this->d_maxContactR;
-      std::vector<size_t> neighs;
-      std::vector<double> sqr_dist;
-      if (this->d_nsearch_p->radiusSearch(this->d_x[i], search_r, neighs, sqr_dist) > 0) {
-        for (std::size_t j = 0; j < neighs.size(); ++j) {
-          auto &j_id = neighs[j];
-          auto &rij = sqr_dist[j];
-
-          // for contact
-          if (j_id != i && this->d_ptId[j_id] != pi &&
-              rij < this->d_maxContactR * 1.001) {
-            this->d_neighC[i].push_back(size_t(j_id));
-            // this->d_neighCSqdDist[i].push_back(rij);
-          }
-
-          // for peridynamic
-          if (j_id != i && this->d_ptId[j_id] == pi &&
-              rij < horizon * 1.001) {
-            this->d_neighPd[i].push_back(size_t(j_id));
-            // this->d_neighPdSqdDist[i].push_back(rij);
-          }
-        }
-      }
-    }
-  ); // for_each
-
-  executor.run(taskflow).get();
-  
-  auto t2 = steady_clock::now();
-  log(fmt::format("DEMModel: Peridynamics+Contact neighbor update time = {}\n", util::methods::timeDiff(t1, t2)), 2);
+  // Not used
+  return;
 }
 
 void model::DEMModel::output() {

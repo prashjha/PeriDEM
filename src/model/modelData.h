@@ -59,6 +59,9 @@ public:
         d_outputDeck_p(deck->getOutputDeck()),
         d_pDeck_p(deck->getParticleDeck()), d_cDeck_p(deck->getContactDeck()),
         d_stop(false), d_hMax(0.), d_hMin(0.), d_maxContactR(0.),
+        d_contNeighUpdateInterval(0),
+        d_contNeighTimestepCounter(0),
+        d_contNeighSearchRadius(0.),
         d_uLoading_p(nullptr), d_fLoading_p(nullptr),
         d_fracture_p(nullptr), d_nsearch_p(nullptr)  {}
 
@@ -537,6 +540,9 @@ public:
 
   /*! @brief Neighborlist update interval */
   size_t d_contNeighUpdateInterval;
+
+  /*! @brief Contact neighborlist time step counter */
+  size_t d_contNeighTimestepCounter;
 
   /*! @brief Neighborlist contact search radius (multiple of d_maxContactR). This variable will be updated during simulation based on maximum velocity */
   double d_contNeighSearchRadius;
