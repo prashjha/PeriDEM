@@ -182,8 +182,8 @@ void loading::ParticleULoading::apply(const double &time,
                   auto u_i = util::Point();
                   auto v_i = util::Point();
                   for (auto d : bc.d_direction) {
-                    u_i[d] = du;
-                    v_i[d] = dv;
+                    u_i[d-1] = du;
+                    v_i[d-1] = dv;
                   }
 
                   if (bc.d_timeFnType == "rotation") {
