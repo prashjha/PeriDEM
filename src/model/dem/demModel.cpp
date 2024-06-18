@@ -48,6 +48,8 @@ FILE *pp_file = nullptr;
 
 int debug_once = -1;
 
+int update_contact_neigh_search_params_init_call_count = 0;
+
 double pen_dist = 0.;
 double contact_area_radius = 0.;
 
@@ -515,11 +517,11 @@ void model::DEMModel::computeForces() {
   // output avg time info
   if (dbg_condition) {
     log(fmt::format("    Avg time: \n"
-                    "      {:35s} = {:8d}\n"
-                    "      {:35s} = {:8d}\n"
-                    "      {:35s} = {:8d}\n"
-                    "      {:35s} = {:8d}\n"
-                    "      {:35s} = {:8d}\n",
+                    "      {:48s} = {:8d}\n"
+                    "      {:48s} = {:8d}\n"
+                    "      {:48s} = {:8d}\n"
+                    "      {:48s} = {:8d}\n"
+                    "      {:48s} = {:8d}\n",
                     "tree update", size_t(avg_tree_update_time/d_infoN),
                     "contact neigh update", size_t(avg_contact_neigh_update_time/d_infoN),
                     "contact force", size_t(avg_contact_force_time/d_infoN),
@@ -1548,15 +1550,10 @@ void model::DEMModel::updatePeridynamicNeighborlist() {
 
 void model::DEMModel::updateContactNeighborlist() {
 
-  updateContactNeighborSearchParameters();
+  auto update = updateContactNeighborSearchParameters();
 
-  // check if we should proceed with updates
-  if (d_contNeighTimestepCounter > 0 and d_contNeighTimestepCounter % d_contNeighUpdateInterval != 0) {
-    d_contNeighTimestepCounter += 1;
+  if (!update)
     return;
-  }
-
-  d_contNeighTimestepCounter += 1;
 
   // update contact neighborlist
 
@@ -1662,13 +1659,44 @@ void model::DEMModel::updateContactNeighborlist() {
 
 }
 
-void model::DEMModel::updateContactNeighborSearchParameters() {
+bool model::DEMModel::updateContactNeighborSearchParameters() {
 
   // initialize parameters
-  if (d_contNeighUpdateInterval == 0 and util::isLess(d_contNeighSearchRadius, 1.e-16)) {
+  if (d_contNeighUpdateInterval == 0 and
+      util::isLess(d_contNeighSearchRadius, 1.e-16)) {
     d_contNeighUpdateInterval = d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval;
     d_contNeighTimestepCounter = d_n % d_contNeighUpdateInterval;
     d_contNeighSearchRadius = d_maxContactR * d_pDeck_p->d_pNeighDeck.d_sFactor;
+  }
+
+  // at d_n = 0, this function will be called twice because updateContactNeighborlist() will be
+  // called twice: one inside init() and second inside computeForces()
+  // so to match d_n and d_contNeighTimestepCounter in the initial stage of simulation, we need to handle the special case
+  if (d_n == 0) {
+    update_contact_neigh_search_params_init_call_count++;
+
+    if (update_contact_neigh_search_params_init_call_count == 1)
+      return true;
+
+    if (update_contact_neigh_search_params_init_call_count == 2) {
+      d_contNeighTimestepCounter++;
+      return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
+    }
+  }
+
+  // handle case of restart
+  if (d_modelDeck_p->d_isRestartActive and d_n == d_restartDeck_p->d_step) {
+    // assign correct value for restart step
+    d_contNeighTimestepCounter = d_n % d_contNeighUpdateInterval;
+  }
+
+  if (d_contNeighUpdateInterval == 1) {
+    // further optimization of parameters is not possible
+    d_contNeighSearchRadius = d_maxContactR;
+
+    // update counter and return condition for contact search
+    d_contNeighTimestepCounter++;
+    return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
   }
 
   // check if we should proceed with parameter update
@@ -1677,13 +1705,12 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
   size_t update_param_interval =
           d_contNeighUpdateInterval > 5 ? size_t(
                   0.2 * d_contNeighUpdateInterval) : 1;
-  if (d_contNeighTimestepCounter > 0 and d_contNeighTimestepCounter % update_param_interval != 0)
-    return;
 
-  if (d_contNeighUpdateInterval == 1) {
-    // further optimization of parameters is not possible
-    d_contNeighSearchRadius = d_maxContactR;
-    return;
+  // check if we ought to update search parameters; if not, return
+  if (d_contNeighTimestepCounter > 0 and d_contNeighTimestepCounter % update_param_interval != 0) {
+    // update counter and return condition for contact search
+    d_contNeighTimestepCounter++;
+    return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
   }
 
   // first update the maximum velocity in all particles
@@ -1722,12 +1749,15 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
 
 
   if (util::isGreater(max_search_r, max_search_r_from_contact_R )) {
+
     // issue warning
     log(fmt::format("Warning: Max search radius based on maximum velocity = {:4.6e} is above "
-                    "the maximum contact radius = {:4.6e} for contact.\n",
-                    max_search_r, max_search_r_from_contact_R),
+                    "the maximum contact radius = {:4.6e} for contact. Time = {:4.6e}, time step = {}\n",
+                    max_search_r, max_search_r_from_contact_R,
+                    d_time, d_n),
         2, dbg_condition, 3);
 
+    // update parameters
     log("Warning: Adjusting contact neighborlist update interval.\n", 2, dbg_condition, 3);
 
     d_contNeighUpdateInterval = size_t(d_maxContactR/(d_maxVelocity * d_currentDt));
@@ -1740,39 +1770,36 @@ void model::DEMModel::updateContactNeighborSearchParameters() {
       d_contNeighUpdateInterval = 1;
       d_contNeighSearchRadius = d_maxContactR;
     }
-
-    log(fmt::format("Warning: New contact search parameters: "
-                    "update interval = {:3d}, "
-                    "search radius = {:4.6e}, "
-                    "update time step counter = {:3d}.\n",
-                    d_contNeighUpdateInterval,
-                    d_contNeighSearchRadius,
-                    d_contNeighTimestepCounter),
-        2, dbg_condition, 3);
-
   }
   else {
+    // update search radius
     d_contNeighSearchRadius = d_contNeighUpdateInterval < 2 ? d_maxContactR : max_search_r_from_contact_R;
   }
 
   log(fmt::format("    Contact neighbor parameters: \n"
-                  "      {:35s} = {:d}\n"
-                  "      {:35s} = {:d}\n"
-                  "      {:35s} = {:4.6e}\n"
-                  "      {:35s} = {:4.6e}\n"
-                  "      {:35s} = {:4.6e}\n"
-                  "      {:35s} = {:4.6e}\n"
-                  "      {:35s} = {:4.6e}\n"
-                  "      {:35s} = {:4.6e}\n",
+                  "      {:48s} = {:d}\n"
+                  "      {:48s} = {:d}\n"
+                  "      {:48s} = {:d}\n"
+                  "      {:48s} = {:4.6e}\n"
+                  "      {:48s} = {:4.6e}\n"
+                  "      {:48s} = {:4.6e}\n"
+                  "      {:48s} = {:4.6e}\n"
+                  "      {:48s} = {:4.6e}\n"
+                  "      {:48s} = {:4.6e}\n",
+                  "time step", d_n,
                   "contact neighbor update interval", d_contNeighUpdateInterval,
                   "contact neighbor update time step counter", d_contNeighTimestepCounter,
                   "search radius", d_contNeighSearchRadius,
-                  "max contanct radius", d_maxContactR,
+                  "max contact radius", d_maxContactR,
                   "search radius factor", d_pDeck_p->d_pNeighDeck.d_sFactor,
                   "max search r from velocity", max_search_r,
                   "max search r from contact r", max_search_r_from_contact_R,
                   "max velocity", d_maxVelocity),
       2, dbg_condition, 3);
+
+  // update counter and return condition for contact search
+  d_contNeighTimestepCounter++;
+  return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
 }
 
 void model::DEMModel::updateNeighborlistCombine() {

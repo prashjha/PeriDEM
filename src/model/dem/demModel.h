@@ -194,7 +194,7 @@ public:
   virtual void setupQuadratureData();
 
   /*! @brief Update contact neighbor search parameters */
-  virtual void updateContactNeighborSearchParameters();
+  virtual bool updateContactNeighborSearchParameters();
 
   /** @}*/
 
