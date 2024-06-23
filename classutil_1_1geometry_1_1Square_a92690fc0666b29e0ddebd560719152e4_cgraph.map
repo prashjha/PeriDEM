@@ -1,0 +1,6 @@
+<map id="util::geometry::Square::isNear" name="util::geometry::Square::isNear">
+<area shape="rect" id="node1" title="Checks if point is within given distance of this object." alt="" coords="5,23,156,65"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box." alt="" coords="204,31,349,57"/>
+<area shape="rect" id="node3" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="397,5,497,32"/>
+<area shape="rect" id="node4" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="405,56,490,83"/>
+</map>

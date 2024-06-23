@@ -1,0 +1,5 @@
+<map id="util::geometry::Drum2D::isInside" name="util::geometry::Drum2D::isInside">
+<area shape="rect" id="node1" title="Checks if point is inside this object." alt="" coords="5,5,164,47"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="212,13,292,39"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="340,13,457,39"/>
+</map>
