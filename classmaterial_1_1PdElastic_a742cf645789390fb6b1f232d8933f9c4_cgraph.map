@@ -1,5 +1,0 @@
-<map id="material::PdElastic::getSc" name="material::PdElastic::getSc">
-<area shape="rect" id="node1" title="Returns critical bond strain." alt="" coords="5,5,137,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="185,13,316,39"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="364,13,527,39"/>
-</map>

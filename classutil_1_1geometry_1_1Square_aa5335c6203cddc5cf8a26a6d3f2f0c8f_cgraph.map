@@ -1,7 +1,0 @@
-<map id="util::geometry::Square::print" name="util::geometry::Square::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,15,156,56"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1Square.html#a3f19c157ef47f4374ec431617e39d8cd" title="Returns the string containing printable information about the object." alt="" coords="204,15,355,56"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="581,22,695,49"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="403,22,533,49"/>
-<area shape="rect" id="node5" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="415,73,521,100"/>
-</map>

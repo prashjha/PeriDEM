@@ -1,4 +1,0 @@
-<map id="rw::reader::MshReader::readCells" name="rw::reader::MshReader::readCells">
-<area shape="rect" id="node1" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="5,5,160,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a84719264167bd78ddcfca050b78a952a" title="Check if file is empty or null." alt="" coords="208,13,343,39"/>
-</map>

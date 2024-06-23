@@ -1,6 +1,0 @@
-<map id="inp::ParticleDeck" name="inp::ParticleDeck">
-<area shape="rect" id="node1" title="Structure to read and store particle related input data." alt="" coords="89,725,298,1037"/>
-<area shape="rect" id="node2" href="$structinp_1_1PNeighborDeck.html" title="User&#45;input data for particle neighbor search." alt="" coords="5,527,144,663"/>
-<area shape="rect" id="node3" href="$structinp_1_1PICDeck.html" title="User&#45;input data for particle neighbor search." alt="" coords="283,527,384,663"/>
-<area shape="rect" id="node4" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="153,5,276,464"/>
-</map>

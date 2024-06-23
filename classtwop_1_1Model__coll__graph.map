@@ -1,6 +1,0 @@
-<map id="twop::Model" name="twop::Model">
-<area shape="rect" id="node1" title=" " alt="" coords="10,4051,239,4363"/>
-<area shape="rect" id="node2" href="$classmodel_1_1DEMModel.html" title="A class for discrete element particle simulation with peridynamic model" alt="" coords="5,3117,244,4001"/>
-<area shape="rect" id="node3" href="$classmodel_1_1ModelData.html" title="A class to store model data." alt="" coords="25,981,224,3068"/>
-<area shape="rect" id="node4" href="$classinp_1_1Input.html" title="A class to read input file." alt="" coords="13,5,236,919"/>
-</map>

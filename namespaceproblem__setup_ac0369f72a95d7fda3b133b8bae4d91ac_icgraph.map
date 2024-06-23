@@ -1,5 +1,0 @@
-<map id="problem_setup.generate_rect_floor_gmsh_input" name="problem_setup.generate_rect_floor_gmsh_input">
-<area shape="rect" id="node1" title=" " alt="" coords="532,13,693,54"/>
-<area shape="rect" id="node2" href="$namespaceproblem__setup.html#ab2d86f4fe187ef9b78d1ad4ea438b98b" title=" " alt="" coords="239,5,484,61"/>
-<area shape="rect" id="node3" href="$namespaceproblem__setup.html#aa86d439a2a3be267e8af3fe687016583" title=" " alt="" coords="5,13,191,54"/>
-</map>

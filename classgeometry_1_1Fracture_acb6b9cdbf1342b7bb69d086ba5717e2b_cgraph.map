@@ -1,5 +1,0 @@
-<map id="geometry::Fracture::print" name="geometry::Fracture::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,137,47"/>
-<area shape="rect" id="node2" href="$classgeometry_1_1Fracture.html#adc48e0e446313e3042fe121fbdd4544c" title="Returns the string containing printable information about the object." alt="" coords="185,5,317,47"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="365,13,479,39"/>
-</map>

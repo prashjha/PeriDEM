@@ -1,9 +1,0 @@
-<map id="inp::ParticleDeck::print" name="inp::ParticleDeck::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,92,136,133"/>
-<area shape="rect" id="node2" href="$structinp_1_1ParticleDeck.html#a8c108509288e78450218a3e2612bf40e" title="Returns the string containing printable information about the object." alt="" coords="184,92,315,133"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="568,70,681,97"/>
-<area shape="rect" id="node4" href="$structinp_1_1PNeighborDeck.html#a219ecbd7772ad665e8cc0dcba0b88cca" title="Returns the string containing printable information about the object." alt="" coords="369,33,507,75"/>
-<area shape="rect" id="node5" href="$structinp_1_1PICDeck.html#a0bbc0d684f9fd0ddd7d8b46e99f22014" title="Returns the string containing printable information about the object." alt="" coords="363,150,513,177"/>
-<area shape="rect" id="node6" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Returns the string containing printable information about the object." alt="" coords="561,175,688,202"/>
-<area shape="rect" id="node7" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="385,99,491,126"/>
-</map>
