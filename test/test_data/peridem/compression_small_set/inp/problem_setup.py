@@ -453,9 +453,11 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
           # zone this particle belongs to
           p_zone = 0
           if p_type == 0:
-            p_zone = np.random.choice(id_choices1, size=1)[0]
+            # p_zone = np.random.choice(id_choices1, size=1)[0]
+            p_zone = id_choices1[counter1 % len(id_choices1)]
           else:
-            p_zone = np.random.choice(id_choices2, size=1)[0]
+            # p_zone = np.random.choice(id_choices2, size=1)[0]
+            p_zone = id_choices2[counter2 % len(id_choices2)]
           
           # perturb radius
           r = r0 + np.random.uniform(-0.1 * r0, 0.1 * r0)
@@ -1175,7 +1177,7 @@ def create_input_file(inp_dir, pp_tag):
   horizon = 2 * mesh_size
   
   ## internal rectangle
-  Lin, Win = 0.011, 0.009
+  Lin, Win = 0.012, 0.008
   L, W = Lin + 1.5*horizon, Win + 1.5*horizon
 
   in_rect = [center[0] - 0.5*Lin, center[1] - 0.5*Win, center[2], center[0] + 0.5*Lin, center[1] + 0.5*Win, center[2]]
@@ -1301,7 +1303,7 @@ def create_input_file(inp_dir, pp_tag):
   padding = 1.1 * R_contact_factor * mesh_size
   max_y = moving_wall_y - 3*mesh_size
   # number of particles of small and large sizes
-  N1, N2 = 12, 8
+  N1, N2 = 10, 8
   id_choices1 = [0, 1, 2, 3]
   id_choices2 = [4, 5, 6, 7]
   num_particles_zones_1_to_8, particles_zones_1_to_8 = particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R_small, R_large, id_choices1, id_choices2, N1, N2, in_rect, z_coord = 0., add_orient = True)
@@ -1618,7 +1620,7 @@ def create_input_file(inp_dir, pp_tag):
     inpf.write("  Perform_Out: false\n")
   inpf.write("  Test_Output_Interval: %d\n" % (test_dt_out_n))
   
-  inpf.write("  Debug: 2\n")
+  inpf.write("  Debug: 3\n")
   inpf.write("  Tag_PP: %d\n" %(int(pp_tag)))
 
   # close file
