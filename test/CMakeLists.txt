@@ -106,10 +106,15 @@ add_test(NAME twop_circ
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ
         )
 
-# add_test(NAME twop_wall_concave_diff_material_diff_size
-#         COMMAND ${BASH_PROGRAM} ./run.sh
-#         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_wall_concave_diff_material_diff_size
-#         )
+add_test(NAME attrition_mix_particles_small_set
+        COMMAND ${BASH_PROGRAM} ./run.sh
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/attrition_mix_particles_small_set
+)
+
+add_test(NAME compression_small_set
+        COMMAND ${BASH_PROGRAM} ./run.sh
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compression_small_set
+)
 
 if (${Enable_High_Load_Tests})
 
@@ -117,6 +122,21 @@ if (${Enable_High_Load_Tests})
             COMMAND ${BASH_PROGRAM} ./run.sh
             WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_concave_and_hex
             )
+
+    add_test(NAME twop_wall_concave_diff_material_diff_size
+            COMMAND ${BASH_PROGRAM} ./run.sh
+            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_wall_concave_diff_material_diff_size
+    )
+
+    add_test(NAME attrition_mix_particles_large_set
+            COMMAND ${BASH_PROGRAM} ./run.sh
+            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/attrition_mix_particles_large_set
+    )
+
+    add_test(NAME compression_large_set
+            COMMAND ${BASH_PROGRAM} ./run.sh
+            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compression_large_set
+    )
 
     #add_test(NAME twop_concave
     #        COMMAND ${BASH_PROGRAM} ./run.sh
@@ -143,20 +163,20 @@ if (${Enable_High_Load_Tests})
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_sphere
     #        )
 
-    add_test(NAME compressive_n25
-            COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n25
-            )
+    #    add_test(NAME compressive_n25
+    #            COMMAND ${BASH_PROGRAM} ./run.sh
+    #            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n25
+    #            )
 
     #add_test(NAME compressive_n51
     #        COMMAND ${BASH_PROGRAM} ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n51
     #        )
 
-    add_test(NAME compressive_n51_restart
-            COMMAND ./run.sh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n51_restart
-            )
+    #    add_test(NAME compressive_n51_restart
+    #            COMMAND ./run.sh
+    #            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n51_restart
+    #            )
 endif() # high load tests
 
 #endif ()

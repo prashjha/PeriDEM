@@ -305,7 +305,11 @@ void model::DEMModel::integrate() {
 
   for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 
-    log(fmt::format("DEMModel: Time step: {}, time: {:.6f}\n", i, d_time), 2, d_n % d_infoN == 0, 3);
+    log(fmt::format("DEMModel: Time step: {}, time: {:8.6f}, steps completed = {}%\n",
+                    i,
+                    d_time,
+                    float(i) * 100. / d_modelDeck_p->d_Nt),
+        2, d_n % d_infoN == 0, 3);
     
     clock_begin = steady_clock::now();
     log("Integrating\n", false, 0, 3);
@@ -341,11 +345,17 @@ void model::DEMModel::integrate() {
 
   log(fmt::format(
           "DEMModel: Total compute time information (s) \n"
-          "  Integration = {:.6f}, Peridynamic = {:.6f}, Contact = {:.6f}, "
-          "Tree update = {:.6f}, External force = {:.6f}\n",
-          integrate_compute_time * 1.e-6, pd_compute_time * 1.e-6,
-          contact_compute_time * 1.e-6, tree_compute_time * 1.e-6,
-          extf_compute_time * 1.e-6), 1);
+          "  {:22s} = {:8.2f} \n"
+          "  {:22s} = {:8.2f} \n"
+          "  {:22s} = {:8.2f} \n"
+          "  {:22s} = {:8.2f} \n"
+          "  {:22s} = {:8.2f} \n",
+          "Time integration", integrate_compute_time * 1.e-6,
+          "Peridynamics force", pd_compute_time * 1.e-6,
+          "Contact force", contact_compute_time * 1.e-6,
+          "Search tree update", tree_compute_time * 1.e-6,
+          "External force", extf_compute_time * 1.e-6)
+          );
 }
 
 void model::DEMModel::integrateStep() {
@@ -516,7 +526,7 @@ void model::DEMModel::computeForces() {
 
   // output avg time info
   if (dbg_condition) {
-    log(fmt::format("    Avg time: \n"
+    log(fmt::format("    Avg time (ms): \n"
                     "      {:48s} = {:8d}\n"
                     "      {:48s} = {:8d}\n"
                     "      {:48s} = {:8d}\n"
@@ -1459,12 +1469,14 @@ void model::DEMModel::setupContact() {
                       "Vmax = {:5.3e}, "
                       "betan = {:7.5f}, mu = {:.4f}, kappa = {:5.3e}\n",
                       deck->d_contactR, d_hMin, deck->d_Kn, deck->d_vMax,
-                      deck->d_betan, deck->d_mu, deck->d_kappa), 1);
+                      deck->d_betan, deck->d_mu, deck->d_kappa), 2);
     }
   }
 }
 
 void model::DEMModel::setupQuadratureData() {
+
+  return ;
 
   if (util::methods::isTagInList("Strain_Stress", d_outputDeck_p->d_outTags)
       or d_modelDeck_p->d_populateElementNodeConnectivity) {
@@ -1737,6 +1749,7 @@ bool model::DEMModel::updateContactNeighborSearchParameters() {
   d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
 
   // now we find the best parameters for contact search
+  auto up_interval_old = d_contNeighUpdateInterval;
 
   // TO ensure that in d_neighUpdateInterval time steps, the search radius is above the
   // distance traveled by object with velocity d_maxVelocity
@@ -1750,17 +1763,18 @@ bool model::DEMModel::updateContactNeighborSearchParameters() {
 
   if (util::isGreater(max_search_r, max_search_r_from_contact_R )) {
 
-    // issue warning
-    log(fmt::format("Warning: Max search radius based on maximum velocity = {:4.6e} is above "
-                    "the maximum contact radius = {:4.6e} for contact. Time = {:4.6e}, time step = {}\n",
-                    max_search_r, max_search_r_from_contact_R,
-                    d_time, d_n),
-        2, dbg_condition, 3);
-
-    // update parameters
-    log("Warning: Adjusting contact neighborlist update interval.\n", 2, dbg_condition, 3);
-
     d_contNeighUpdateInterval = size_t(d_maxContactR/(d_maxVelocity * d_currentDt));
+    if (up_interval_old > d_contNeighUpdateInterval) {
+      // issue warning
+      log(fmt::format("Warning: Contact search radius based on velocity is greater than "
+                      "the max contact radius.\n"
+                      "Warning: Adjusting contact neighborlist update interval.\n"
+                      "{:>13} = {:4.6e}, time step = {}, "
+                      "velocity-based r = {:4.6e}, max contact r = {:4.6e}\n",
+                      "Time", d_time, d_n, max_search_r, max_search_r_from_contact_R),
+          2, dbg_condition, 3);
+    }
+
     d_contNeighSearchRadius = max_search_r_from_contact_R;
     // reset time step counter for contact so that the contact list is updated in the current time step
     // and the update cycle starts from the current time step
@@ -1776,26 +1790,30 @@ bool model::DEMModel::updateContactNeighborSearchParameters() {
     d_contNeighSearchRadius = d_contNeighUpdateInterval < 2 ? d_maxContactR : max_search_r_from_contact_R;
   }
 
-  log(fmt::format("    Contact neighbor parameters: \n"
-                  "      {:48s} = {:d}\n"
-                  "      {:48s} = {:d}\n"
-                  "      {:48s} = {:d}\n"
-                  "      {:48s} = {:4.6e}\n"
-                  "      {:48s} = {:4.6e}\n"
-                  "      {:48s} = {:4.6e}\n"
-                  "      {:48s} = {:4.6e}\n"
-                  "      {:48s} = {:4.6e}\n"
-                  "      {:48s} = {:4.6e}\n",
-                  "time step", d_n,
-                  "contact neighbor update interval", d_contNeighUpdateInterval,
-                  "contact neighbor update time step counter", d_contNeighTimestepCounter,
-                  "search radius", d_contNeighSearchRadius,
-                  "max contact radius", d_maxContactR,
-                  "search radius factor", d_pDeck_p->d_pNeighDeck.d_sFactor,
-                  "max search r from velocity", max_search_r,
-                  "max search r from contact r", max_search_r_from_contact_R,
-                  "max velocity", d_maxVelocity),
-      2, dbg_condition, 3);
+  if (up_interval_old > d_contNeighUpdateInterval) {
+    log(fmt::format("    Contact neighbor parameters: \n"
+                    "      {:48s} = {:d}\n"
+                    "      {:48s} = {:d}\n"
+                    "      {:48s} = {:d}\n"
+                    "      {:48s} = {:4.6e}\n"
+                    "      {:48s} = {:4.6e}\n"
+                    "      {:48s} = {:4.6e}\n"
+                    "      {:48s} = {:4.6e}\n"
+                    "      {:48s} = {:4.6e}\n"
+                    "      {:48s} = {:4.6e}\n",
+                    "time step", d_n,
+                    "contact neighbor update interval",
+                    d_contNeighUpdateInterval,
+                    "contact neighbor update time step counter",
+                    d_contNeighTimestepCounter,
+                    "search radius", d_contNeighSearchRadius,
+                    "max contact radius", d_maxContactR,
+                    "search radius factor", d_pDeck_p->d_pNeighDeck.d_sFactor,
+                    "max search r from velocity", max_search_r,
+                    "max search r from contact r", max_search_r_from_contact_R,
+                    "max velocity", d_maxVelocity),
+        2, dbg_condition, 3);
+  }
 
   // update counter and return condition for contact search
   d_contNeighTimestepCounter++;

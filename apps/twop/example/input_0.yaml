@@ -124,5 +124,5 @@ Output:
   Perform_FE_Out: false
   Perform_Out: true
   Test_Output_Interval: 4000
-  Debug: 1
+  Debug: 3
   Tag_PP: 0
