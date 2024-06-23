@@ -392,6 +392,7 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
 
     pcount = 0
     count = 0
+    select_count = 0
     while pcount < N1 and count < 100*N1:
       if count%N1 == 0:
         print('small particle iter = ', count)
@@ -400,9 +401,10 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
       r = R1 + np.random.uniform(-0.1 * R1, 0.1 * R1)
       x = center[0] + np.random.uniform(-0.5*Lin + R1 + padding, 0.5*Lin - R1- padding)
       y = np.random.uniform(-0.5*Lin + R1 + padding, max_y - R1 - padding)
-      p_zone = np.random.choice(id_choices1, size=1)[0]
-      if np.random.uniform(0., 1.) > 0.25:
-        p_zone = np.random.choice(id_choices1, size=1)[0]
+      # p_zone = np.random.choice(id_choices1, size=1)[0]
+      # if np.random.uniform(0., 1.) > 0.25:
+      #   p_zone = np.random.choice(id_choices1, size=1)[0]
+      p_zone = id_choices1[select_count % len(id_choices1)]
       p = [p_zone, x,y,center[2], r]
 
       # check if it collides of existing particles
@@ -411,6 +413,8 @@ def particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R1, R
       if pintersect == False:
         particles.append(p)
         pcount += 1
+        select_count += 1
+
       count +=1
 
   inpf = open(inp_dir + 'particle_locations_' + str(pp_tag) + '.csv','w')
@@ -1025,17 +1029,19 @@ def create_input_file(inp_dir, pp_tag):
   
   L = 0.04
   W = 0.05
-  Lin = L - horizon
-  Win = W - horizon
+  Lin = L - 3*horizon
+  Win = W - 3*horizon
 
   ## wall rotation rate
-  wall_rotation_rate = -20. * np.pi
+  wall_rotation_rate = -30. * np.pi
   wall_rotation_center = [0.15*Lin, 0.15*Win, 0.]
 
   ## rotation of outer rectangle will be within following rectangle
   wall_rot_max_dist_from_rot_center = L - (0.5*L - wall_rotation_center[0])
   if wall_rot_max_dist_from_rot_center < W - (0.5*W - wall_rotation_center[1]):
     wall_rot_max_dist_from_rot_center = W - (0.5*W - wall_rotation_center[1])
+    
+  wall_rot_max_dist_from_rot_center = wall_rot_max_dist_from_rot_center + 0.05*L
   
   # two corner points
   wall_rot_working_rect_relative_corner_point_1 = [-wall_rot_max_dist_from_rot_center, -wall_rot_max_dist_from_rot_center, 0.]
@@ -1054,8 +1060,8 @@ def create_input_file(inp_dir, pp_tag):
   # right-top corner
   base_rect_inner_corner_point_2 = [wall_rot_working_rect_corner_point_2[0] + 0.2*L, wall_rot_working_rect_corner_point_2[1] + 0.2*L, wall_rot_working_rect_corner_point_2[2]]
 
-  base_rect_x_thickness = 0.5*horizon
-  base_rect_y_thickness = 0.5*horizon
+  base_rect_x_thickness = 3*horizon
+  base_rect_y_thickness = 3*horizon
 
   # annulus rectangle requires 12 parameters (first 6 are for outer rectangle and rest are inner/void rectangle). Six parameters are coordinates of two corner points
   base_rect_innr_pts = get_ref_rect_points(get_center(base_rect_inner_corner_point_1, base_rect_inner_corner_point_1), base_rect_inner_corner_point_2[0] - base_rect_inner_corner_point_1[0], base_rect_inner_corner_point_2[1] - base_rect_inner_corner_point_1[1])
@@ -1090,9 +1096,9 @@ def create_input_file(inp_dir, pp_tag):
 
   ## time 
   final_time = 0.1
-  num_steps = 4000000
-  # final_time = 0.00002
-  # num_steps = 2
+  num_steps = 1000000
+  # final_time = 0.1
+  # num_steps = 40000
   num_outputs = 400
   dt_out_n = num_steps / num_outputs
   test_dt_out_n = dt_out_n / 100
@@ -1102,7 +1108,7 @@ def create_input_file(inp_dir, pp_tag):
   poisson = 0.25
 
   rho_wall = 1200.
-  K_wall = 1.e+6
+  K_wall = 1.e+4
   E_wall = get_E(K_wall, poisson)
   G_wall = get_G(E_wall, poisson)
   Gc_wall = 100.
@@ -1114,7 +1120,7 @@ def create_input_file(inp_dir, pp_tag):
   Gc_large = Gc_wall
 
   rho_small = 1200.
-  K_small = 2.e+5
+  K_small = 2.e+3
   E_small = get_E(K_small, poisson)
   G_small = get_G(E_small, poisson)
   Gc_small = 50.
@@ -1151,6 +1157,10 @@ def create_input_file(inp_dir, pp_tag):
   gravity_active = True
   gravity = [0., -10., 0.]
 
+  ## neighbor search details
+  neigh_search_factor = 10.
+  neigh_search_interval = 40
+  neigh_search_criteria = "simple_all"
 
 
   ### ---------------------------------------------------------------- ###
@@ -1161,7 +1171,7 @@ def create_input_file(inp_dir, pp_tag):
   padding = 1.1 * R_contact_factor * mesh_size
   max_y = 0.5*Lin - 3*mesh_size
   # number of particles of small and large sizes
-  N1, N2 = 30, 8
+  N1, N2 = 40, 12
   id_choices1 = [0, 3, 1, 2]
   id_choices2 = [4, 5, 6, 7]
   num_particles_zones_1_to_8, particles_zones_1_to_8 = particle_locations(inp_dir, pp_tag, center, padding, max_y, mesh_size, R_small, R_large, id_choices1, id_choices2, N1, N2, Lin, Win, z_coord = 0., add_orient = True)
@@ -1378,8 +1388,9 @@ def create_input_file(inp_dir, pp_tag):
 
   # Neighbor info
   inpf.write("Neighbor:\n")
-  inpf.write("  Update_Criteria: simple_all\n")
-  inpf.write("  Search_Factor: 5.0\n")
+  inpf.write("  Update_Criteria: %s\n" % (neigh_search_criteria))
+  inpf.write("  Search_Factor: %4.e\n" % (neigh_search_factor))
+  inpf.write("  Search_Interval: %d\n" % (neigh_search_interval))
 
   # Material info
   inpf.write("Material:\n")

@@ -17,6 +17,7 @@ typedef std::mt19937 RandGenerator;
 typedef std::lognormal_distribution<> LogNormalDistribution;
 typedef std::uniform_real_distribution<> UniformDistribution;
 typedef std::normal_distribution<> NormalDistribution;
+typedef std::uniform_int_distribution<> UniformIntDistribution;
 
 namespace util {
 

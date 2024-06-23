@@ -23,7 +23,7 @@
 #include <cstring> // string and size_t type
 #include <vector>
 
-typedef nsearch::NFlannSearchKd NSearch;
+typedef nsearch::NFlannSearchKd<3> NSearch;
 
 // forward declare particle and wall
 namespace particle {
@@ -49,13 +49,19 @@ public:
    * @param deck Input deck
    */
   ModelData(inp::Input *deck)
-      : d_n(0), d_time(0.), d_infoN(1),
+      : d_n(0),
+        d_time(0.),
+        d_currentDt(0.),
+        d_infoN(1),
         d_input_p(deck),
         d_modelDeck_p(deck->getModelDeck()),
         d_restartDeck_p(deck->getRestartDeck()),
         d_outputDeck_p(deck->getOutputDeck()),
         d_pDeck_p(deck->getParticleDeck()), d_cDeck_p(deck->getContactDeck()),
         d_stop(false), d_hMax(0.), d_hMin(0.), d_maxContactR(0.),
+        d_contNeighUpdateInterval(0),
+        d_contNeighTimestepCounter(0),
+        d_contNeighSearchRadius(0.),
         d_uLoading_p(nullptr), d_fLoading_p(nullptr),
         d_fracture_p(nullptr), d_nsearch_p(nullptr)  {}
 
@@ -495,6 +501,9 @@ public:
   /*! @brief Current time */
   double d_time;
 
+  /*! @brief Current timestep */
+  double d_currentDt;
+
   /*! @brief Print log step interval */
   size_t d_infoN;
 
@@ -516,6 +525,7 @@ public:
   /*! @brief Contact deck */
   std::shared_ptr<inp::ContactDeck> d_cDeck_p;
 
+
   /*! @brief flag to stop the simulation midway */
   bool d_stop;
 
@@ -528,6 +538,15 @@ public:
   /*! @brief Maximum contact radius between over pairs of particles and walls */
   double d_maxContactR;
 
+  /*! @brief Neighborlist update interval */
+  size_t d_contNeighUpdateInterval;
+
+  /*! @brief Contact neighborlist time step counter */
+  size_t d_contNeighTimestepCounter;
+
+  /*! @brief Neighborlist contact search radius (multiple of d_maxContactR). This variable will be updated during simulation based on maximum velocity */
+  double d_contNeighSearchRadius;
+
   /*! @brief Pointer to reference particle */
   std::vector<std::shared_ptr<particle::RefParticle>> d_referenceParticles;
 
@@ -539,6 +558,12 @@ public:
 
   /*! @brief List of walls */
   std::vector<particle::BaseParticle*> d_particlesListTypeWall;
+
+  /*! @brief Maximum velocity among all nodes in the particle for each particle */
+  std::vector<double> d_maxVelocityParticlesListTypeAll;
+
+  /*! @brief Maximum velocity among all nodes */
+  double d_maxVelocity;
 
   /*! @brief Zone information of particles. For zone 0, d_zInfo[0] = [n1, n2]
    * where n1 is the index at which the particle in this zone starts in d_particlesListTypeAll
@@ -569,6 +594,9 @@ public:
   /*! @brief Velocity of the nodes */
   std::vector<util::Point> d_v;
 
+  /*! @brief Magnitude of velocity of the nodes */
+  std::vector<double> d_vMag;
+
   /*! @brief Total force on the nodes */
   std::vector<util::Point> d_f;
 
@@ -587,6 +615,15 @@ public:
 
   /*! @brief Square distance neighbor data for peridynamic forces */
   std::vector<std::vector<float>> d_neighPdSqdDist;
+
+  /*! @brief Neighbor data for contact between particle and walls */
+  std::vector<std::vector<std::vector<size_t>>> d_neighWallNodes;
+
+  /*! @brief Neighbor data (distance) for contact between particle and walls */
+  std::vector<std::vector<std::vector<double>>> d_neighWallNodesDistance;
+
+  /*! @brief Neighbor data for contact between particle and walls condensed into single vector for each particle */
+  std::vector<std::vector<size_t>> d_neighWallNodesCondensed;
 
   /*! @brief Vector of fixity mask of each node
    *

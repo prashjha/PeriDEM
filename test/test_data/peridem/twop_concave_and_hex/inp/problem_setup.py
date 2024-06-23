@@ -386,6 +386,11 @@ def create_input_file(inp_dir, pp_tag):
   # free_fall_vel[1] = -np.sqrt(2. * np.abs(gravity[1]) * free_fall_dist) 
   free_fall_vel[1] = -1.
 
+  ## neighbor search details
+  neigh_search_factor = 10.
+  neigh_search_interval = 40
+  neigh_search_criteria = "simple_all"
+
 
   ### ---------------------------------------------------------------- ###
   # generate YAML file
@@ -517,12 +522,11 @@ def create_input_file(inp_dir, pp_tag):
   inpf.write("    Kn_Factor: 1.0\n")
   inpf.write("    Beta_n_Factor: %4.6e\n" % (beta_n_factor))
 
-  #
   # Neighbor info
-  #
   inpf.write("Neighbor:\n")
-  inpf.write("  Update_Criteria: simple_all\n")
-  inpf.write("  Search_Factor: 5.0\n")
+  inpf.write("  Update_Criteria: %s\n" % (neigh_search_criteria))
+  inpf.write("  Search_Factor: %4.e\n" % (neigh_search_factor))
+  inpf.write("  Search_Interval: %d\n" % (neigh_search_interval))
 
   #
   # Material info
@@ -622,10 +626,6 @@ def create_input_file(inp_dir, pp_tag):
   # inpf.write("    Type: max_particle_dist\n")
   # inpf.write("    Parameters: [%4.6e]\n" % (2. * sim_h))
 
-
-  inpf.write("HPX:\n")
-  inpf.write("  Partitions: 1\n")
-
   # close file
   inpf.close()
 
@@ -634,9 +634,20 @@ def create_input_file(inp_dir, pp_tag):
   # particle_locations(inp_dir, pp_tag, R1, R2, particle_dist - free_fall_dist)
   particle_locations_orient(inp_dir, pp_tag, R1, R2, particle_dist - free_fall_dist)
 
+  p_mesh_fname = ['mesh_particle_1', 'mesh_particle_2']
   # generate particle .geo file (large)
-  generate_drum_particle_gmsh_input(inp_dir, 'mesh_particle_1', center, R1, drum1_neck_width, mesh_size, pp_tag)
-  generate_hex_particle_gmsh_input(inp_dir, 'mesh_particle_2', center, R2, mesh_size, pp_tag)
+  generate_drum_particle_gmsh_input(inp_dir, p_mesh_fname[0], center, R1, drum1_neck_width, mesh_size, pp_tag)
+  generate_hex_particle_gmsh_input(inp_dir, p_mesh_fname[1], center, R2, mesh_size, pp_tag)
+
+  os.system("mkdir -p ../out")
+
+  for s in p_mesh_fname:
+    print('\n\n')
+    print(s)
+    print("gmsh {}_{}.geo -2".format(s, pp_tag))
+    print('\n\n')
+    os.system("gmsh {}_{}.geo -2".format(s, pp_tag))
+    # os.system("gmsh {}_{}.geo -2 -o {}_{}.vtk".format(s, pp_tag, s, pp_tag))
 
 
 ##-------------------------------------------------------##

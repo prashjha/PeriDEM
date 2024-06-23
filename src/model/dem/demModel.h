@@ -193,6 +193,9 @@ public:
   /*! @brief Sets up quadrature data */
   virtual void setupQuadratureData();
 
+  /*! @brief Update contact neighbor search parameters */
+  virtual bool updateContactNeighborSearchParameters();
+
   /** @}*/
 
   /**

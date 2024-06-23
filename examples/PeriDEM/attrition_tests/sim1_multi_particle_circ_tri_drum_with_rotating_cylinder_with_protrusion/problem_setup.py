@@ -903,6 +903,11 @@ def create_input_file(inp_dir, pp_tag):
   ## wall rotation rate
   rotation_rate = -20. * np.pi
 
+  ## neighbor search details
+  neigh_search_factor = 10.
+  neigh_search_interval = 40
+  neigh_search_criteria = "simple_all"
+
   ### ---------------------------------------------------------------- ###
   # generate mesh and particle location data
   ### ---------------------------------------------------------------- ###
@@ -1119,8 +1124,9 @@ def create_input_file(inp_dir, pp_tag):
 
   # Neighbor info
   inpf.write("Neighbor:\n")
-  inpf.write("  Update_Criteria: simple_all\n")
-  inpf.write("  Search_Factor: 5.0\n")
+  inpf.write("  Update_Criteria: %s\n" % (neigh_search_criteria))
+  inpf.write("  Search_Factor: %4.e\n" % (neigh_search_factor))
+  inpf.write("  Search_Interval: %d\n" % (neigh_search_interval))
 
   # Material info
   inpf.write("Material:\n")

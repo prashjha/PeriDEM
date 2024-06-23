@@ -123,12 +123,14 @@ particle::BaseParticle::BaseParticle(std::string particle_type,
 
     d_globStart = d_modelData_p->d_x.size();
     d_globEnd = d_modelData_p->d_x.size() + d_rp_p->getNumNodes();
+
     for (size_t i = 0; i < d_rp_p->getNumNodes(); i++) {
 
       d_modelData_p->d_xRef.push_back(d_tform.apply(d_rp_p->getNode(i)));
       d_modelData_p->d_x.push_back(d_tform.apply(d_rp_p->getNode(i)));
       d_modelData_p->d_u.push_back(util::Point());
       d_modelData_p->d_v.push_back(util::Point());
+      d_modelData_p->d_vMag.push_back(0.);
       d_modelData_p->d_f.push_back(util::Point());
       d_modelData_p->d_vol.push_back(
           d_rp_p->getNodalVolume(i) *

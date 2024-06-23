@@ -149,7 +149,7 @@ void loading::ParticleFLoading::apply(const double &time,
 
                   auto force_i = util::Point();
                   for (auto d : bc.d_direction) {
-                    force_i[d] = fmax;
+                    force_i[d-1] = fmax;
                   }
 
                   // add force

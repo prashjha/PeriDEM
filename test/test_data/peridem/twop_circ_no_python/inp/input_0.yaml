@@ -60,7 +60,8 @@ Contact:
     Beta_n_Factor: 1.000000e+02
 Neighbor:
   Update_Criteria: simple_all
-  Search_Factor: 5.0
+  Search_Factor: 1e+01
+  Search_Interval: 40
 Material:
   Zone_1:
     Type: PDState
@@ -125,5 +126,3 @@ Output:
   Test_Output_Interval: 2000
   Debug: 1
   Tag_PP: 0
-HPX:
-  Partitions: 1

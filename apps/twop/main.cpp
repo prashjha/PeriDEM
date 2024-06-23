@@ -78,8 +78,8 @@ public:
     // check if init() successfully created quadrature data which we need for postprocessing
     {
       size_t totalQuadPoints = 0;
-      for (auto &p: d_particles) {
-        const auto *particle_mesh_p = p->d_rp_p->getMeshP();
+      for (auto &p: d_particlesListTypeAll) {
+        const auto &particle_mesh_p = p->d_rp_p->getMeshP();
 
         // get Quadrature
         fe::BaseElem *elem;
