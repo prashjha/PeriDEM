@@ -1,7 +1,0 @@
-<map id="inp::MeshDeck::printStr" name="inp::MeshDeck::printStr">
-<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="372,56,532,83"/>
-<area shape="rect" id="node2" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor." alt="" coords="196,5,309,32"/>
-<area shape="rect" id="node3" href="$structinp_1_1MeshDeck.html#aa00ff74d241c5569af82134db5248e28" title="Prints the information about the object." alt="" coords="181,56,324,83"/>
-<area shape="rect" id="node4" href="$structinp_1_1ParticleZone.html#a8e17f5dad0559571e5a39985127f62d9" title="Returns the string containing printable information about the object." alt="" coords="189,107,317,149"/>
-<area shape="rect" id="node5" href="$structinp_1_1ParticleZone.html#a12bfb6cae7040783161b3b0897e3cd92" title="Prints the information about the object." alt="" coords="5,107,133,149"/>
-</map>

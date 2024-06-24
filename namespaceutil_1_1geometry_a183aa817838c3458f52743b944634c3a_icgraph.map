@@ -1,4 +1,0 @@
-<map id="util::geometry::isNumberOfParamForComplexGeometryValid" name="util::geometry::isNumberOfParamForComplexGeometryValid">
-<area shape="rect" id="node1" title="Ascertain if number of parameters are correct for the given geometry." alt="" coords="233,5,464,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1geometry.html#a44f3f0e0cc6edb964264a0cc22735209" title="Create geometrical object from the given data." alt="" coords="5,5,185,47"/>
-</map>

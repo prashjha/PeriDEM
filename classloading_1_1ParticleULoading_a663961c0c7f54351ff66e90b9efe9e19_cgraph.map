@@ -1,4 +1,0 @@
-<map id="loading::ParticleULoading::needToComputeDof" name="loading::ParticleULoading::needToComputeDof">
-<area shape="rect" id="node1" title="Function that checks if we need to do computation at a given point x within a particle with id = id." alt="" coords="5,13,176,54"/>
-<area shape="rect" id="node2" href="$namespaceanonymous__namespace_02particleULoading_8cpp_03.html#a638f68614523165276ec3add96f3de37" title=" " alt="" coords="224,5,387,61"/>
-</map>

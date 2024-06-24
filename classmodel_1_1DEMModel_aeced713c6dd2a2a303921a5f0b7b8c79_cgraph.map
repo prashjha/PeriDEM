@@ -1,5 +1,0 @@
-<map id="model::DEMModel::createParticleUsingParticleZoneGeomObject" name="model::DEMModel::createParticleUsingParticleZoneGeomObject">
-<area shape="rect" id="node1" title="Creates particles in a given container." alt="" coords="5,5,224,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="272,13,355,39"/>
-<area shape="rect" id="node3" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="403,13,532,39"/>
-</map>

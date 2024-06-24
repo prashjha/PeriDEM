@@ -1,6 +1,0 @@
-<map id="util::Point::dot" name="util::Point::dot">
-<area shape="rect" id="node1" title="Computes the dot product of this vector with another point." alt="" coords="220,71,323,98"/>
-<area shape="rect" id="node2" href="$classmaterial_1_1RnpMaterial.html#a48afe3504638e5ecc8044b3bcf6eaaba" title="Returns the bond strain." alt="" coords="15,5,162,47"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html#a803dcd2affeab37724dbbf88162b8519" title="Computes projection of vector on this vector." alt="" coords="27,71,151,98"/>
-<area shape="rect" id="node4" href="$structutil_1_1Point.html#abf4765b20357baee854adc75f6bdf5ed" title="Computes projection of vector on plane with normal as this vector." alt="" coords="5,122,172,149"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="util::geometry::Drum2D" name="util::geometry::Drum2D">
-<area shape="rect" id="node1" title="Defines Drum2D." alt="" coords="105,571,264,1088"/>
-<area shape="rect" id="node2" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,188,493"/>
-<area shape="rect" id="node3" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="213,20,335,479"/>
-</map>

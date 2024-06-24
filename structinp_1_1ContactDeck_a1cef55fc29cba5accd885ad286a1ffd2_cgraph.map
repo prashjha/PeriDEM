@@ -1,7 +1,0 @@
-<map id="inp::ContactDeck::print" name="inp::ContactDeck::print">
-<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,56,163,83"/>
-<area shape="rect" id="node2" href="$structinp_1_1ContactDeck.html#aa691dc21ae205d91cabd4bd0d6d57dee" title="Returns the string containing printable information about the object." alt="" coords="211,56,385,83"/>
-<area shape="rect" id="node3" href="$structinp_1_1ContactDeck.html#a21d71871444bed1ecbe43614c51eb8c7" title="Returns the contact data." alt="" coords="433,5,629,32"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="677,85,791,112"/>
-<area shape="rect" id="node5" href="$structinp_1_1ContactPairDeck.html#ab81bbedb62aae664a6a640cab1572c13" title="Returns the string containing printable information about the object." alt="" coords="458,107,605,149"/>
-</map>

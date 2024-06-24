@@ -1,4 +1,0 @@
-<map id="util::geometry::Rectangle::inscribedRadius" name="util::geometry::Rectangle::inscribedRadius">
-<area shape="rect" id="node1" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="5,5,173,47"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="221,13,307,39"/>
-</map>

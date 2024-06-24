@@ -1,5 +1,0 @@
-<map id="util::geometry::Line::printStr" name="util::geometry::Line::printStr">
-<area shape="rect" id="node1" title="Returns the string containing printable information about the object." alt="" coords="5,5,139,47"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="365,13,479,39"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="187,38,317,65"/>
-</map>
