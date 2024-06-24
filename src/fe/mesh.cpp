@@ -25,14 +25,16 @@
 
 fe::Mesh::Mesh(size_t dim)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
-      d_h(0.), d_dim(dim), d_encDataPopulated(false), d_needEncData(false) {}
+      d_h(0.), d_dim(dim), d_encDataPopulated(false), d_needEncData(false),
+      d_nPart(0){}
 
 fe::Mesh::Mesh(inp::MeshDeck *deck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
       d_h(deck->d_h), d_dim(deck->d_dim),
       d_spatialDiscretization(deck->d_spatialDiscretization),
       d_filename(deck->d_filename), d_encDataPopulated(false),
-      d_needEncData(deck->d_populateElementNodeConnectivity) {
+      d_needEncData(deck->d_populateElementNodeConnectivity),
+      d_nPart(0) {
 
   // perform check on input data
   if (d_spatialDiscretization != "finite_difference" and
