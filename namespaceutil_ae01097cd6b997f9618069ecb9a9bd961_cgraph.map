@@ -1,0 +1,5 @@
+<map id="util.get_ref_hex_points" name="util.get_ref_hex_points">
+<area shape="rect" id="node1" title=" " alt="" coords="5,5,159,32"/>
+<area shape="rect" id="node2" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="207,5,287,32"/>
+<area shape="rect" id="node3" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="335,5,452,32"/>
+</map>

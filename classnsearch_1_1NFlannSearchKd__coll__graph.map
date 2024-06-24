@@ -1,0 +1,5 @@
+<map id="nsearch::NFlannSearchKd&lt; dim &gt;" name="nsearch::NFlannSearchKd&lt; dim &gt;">
+<area shape="rect" id="node1" title="A class for nearest neighbor search using nanoflann library." alt="" coords="111,277,297,501"/>
+<area shape="rect" id="node2" href="$classnsearch_1_1BaseNSearch.html" title="A class for nearest neighbor search." alt="" coords="5,5,192,215"/>
+<area shape="rect" id="node3" href="$structnsearch_1_1PointCloudAdaptor.html" title="Allows custom point cloud data structure to interface with nanoflann. See https://github...." alt="" coords="217,42,402,178"/>
+</map>

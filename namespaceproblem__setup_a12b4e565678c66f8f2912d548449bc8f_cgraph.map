@@ -1,0 +1,23 @@
+<map id="problem_setup.get_center" name="problem_setup.get_center">
+<area shape="rect" id="node1" title=" " alt="" coords="5,560,177,587"/>
+<area shape="rect" id="node2" href="$namespaceproblem__setup.html#a66cf6b889081b2c318eb0110057d83c9" title=" " alt="" coords="225,574,400,645"/>
+<area shape="rect" id="node3" href="$namespaceproblem__setup.html#a2e70a598341c87dd2c2432efaaa83e4e" title=" " alt="" coords="482,318,621,374"/>
+<area shape="rect" id="node4" href="$namespaceproblem__setup.html#a2deb4dabdc948f0b2b009c3576518ade" title=" " alt="" coords="468,398,635,440"/>
+<area shape="rect" id="node5" href="$namespaceproblem__setup.html#ae83c0d80c0947e65b98e4a2da0c07601" title=" " alt="" coords="454,136,649,177"/>
+<area shape="rect" id="node6" href="$namespaceproblem__setup.html#a700be09e5b12da02f5d11c0d21cf5d5b" title=" " alt="" coords="730,142,881,184"/>
+<area shape="rect" id="node7" href="$namespaceproblem__setup.html#a192b6d085d04429814f30104aeb18493" title=" " alt="" coords="958,179,1102,206"/>
+<area shape="rect" id="node8" href="$namespaceproblem__setup.html#a876a947fad9cf3729999101abe3e823f" title=" " alt="" coords="465,516,638,557"/>
+<area shape="rect" id="node9" href="$namespaceproblem__setup.html#a8e552b0e3bb3bde7c390d6906dbe88cd" title=" " alt="" coords="730,260,881,301"/>
+<area shape="rect" id="node10" href="$namespaceproblem__setup.html#a541e6c5ea41e139ea1eca83975753fbb" title=" " alt="" coords="470,684,633,725"/>
+<area shape="rect" id="node11" href="$namespaceproblem__setup.html#ac4731e8b5a85713f528c4c79651768ac" title=" " alt="" coords="730,654,881,696"/>
+<area shape="rect" id="node12" href="$namespaceproblem__setup.html#acd177bfd3b1c888bea6db62136e4f483" title=" " alt="" coords="448,801,655,872"/>
+<area shape="rect" id="node13" href="$namespaceproblem__setup.html#a6852c92ff854fb8fa9a34c4bbb63af8a" title=" " alt="" coords="448,896,655,966"/>
+<area shape="rect" id="node14" href="$namespaceproblem__setup.html#a662426f1cd2c0857864b28e98daa4d5a" title=" " alt="" coords="475,1093,628,1134"/>
+<area shape="rect" id="node17" href="$namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054" title="Prints formatted information." alt="" coords="760,1042,851,1068"/>
+<area shape="rect" id="node20" href="$namespaceproblem__setup.html#a3a3222f7534e079f07e28030de327742" title=" " alt="" coords="243,1149,382,1190"/>
+<area shape="rect" id="node21" href="$namespaceproblem__setup.html#a58a765e10407e76320682bfd9f6462ae" title=" " alt="" coords="476,201,627,242"/>
+<area shape="rect" id="node15" href="$namespaceproblem__setup.html#a49682af72cdc7bca4f282619eb559d90" title=" " alt="" coords="703,1152,908,1193"/>
+<area shape="rect" id="node16" href="$namespaceproblem__setup.html#aa39e6862e38920798278f55a2578a6ef" title=" " alt="" coords="725,1100,886,1127"/>
+<area shape="rect" id="node18" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="956,1067,1104,1094"/>
+<area shape="rect" id="node19" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="977,1016,1083,1043"/>
+</map>

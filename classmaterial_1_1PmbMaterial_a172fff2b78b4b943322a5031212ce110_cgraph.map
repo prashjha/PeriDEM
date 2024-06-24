@@ -1,0 +1,5 @@
+<map id="material::PmbMaterial::print" name="material::PmbMaterial::print">
+<area shape="rect" id="node1" title="Prints the information about the object." alt="" coords="5,5,155,47"/>
+<area shape="rect" id="node2" href="$classmaterial_1_1PmbMaterial.html#af39e090af2473a0fb21388b988e00bdd" title="Returns the string containing printable information about the object." alt="" coords="203,5,352,47"/>
+<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="400,13,513,39"/>
+</map>
