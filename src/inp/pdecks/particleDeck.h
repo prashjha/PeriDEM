@@ -84,7 +84,7 @@ struct ParticleDeck {
    * @brief Constructor
    */
   ParticleDeck()
-      : d_contGeom_p(nullptr),
+      : d_contGeom_p(std::make_shared<util::geometry::NullGeomObject>()),
         d_pNeighDeck(inp::PNeighborDeck()),
         d_gravityActive(false),
         d_gravity(),

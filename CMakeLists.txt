@@ -6,7 +6,7 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.5)
 project(PeriDEM LANGUAGES CXX C)
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
-set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamically enhanced DEM model for granular media")
+set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamics-based high-fidelity model for granular media")
 
 # version
 set(VERSION_MAJOR 0)
@@ -26,7 +26,8 @@ set(VERSION_UPDATE 0)
 #----------------------------------#
 
 # config files
-configure_file("${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in" "${PROJECT_SOURCE_DIR}/src/PeriDEMConfig.h")
+configure_file("${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in"
+        "${PROJECT_SOURCE_DIR}/src/PeriDEMConfig.h")
 
 # executable directory
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
@@ -55,6 +56,25 @@ endif()
 
 # cmake policy <-- check if it is still needed
 #cmake_policy(SET CMP0023 OLD)
+
+#----------------------------------#
+#<<<<<<<<<< Compiler flags >>>>>>>>>>#
+#----------------------------------#
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread -fPIC")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif ()
+
+# set standard to 17
+set(CMAKE_CXX_STANDARD 20)
+
+if (${Enable_CMAKE_Debug_Build})
+    message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
+    message(STATUS "CMAKE_EXE_LINKER_FLAGS = ${CMAKE_EXE_LINKER_FLAGS}")
+    message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
+    message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
+endif()
 
 #----------------------------------#
 #<<<<<<<<<< New CMAKE variables >>>>>>>>>>#
@@ -129,31 +149,6 @@ if(${Enable_Documentation})
 endif()
 
 #----------------------------------#
-#<<<<<<<<<< Compiler flags >>>>>>>>>>#
-#----------------------------------#
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread -fPIC")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-endif ()
-
-# set gnu standard to 17
-if (CMAKE_VERSION VERSION_LESS "3.1")
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "--std=gnu++17 ${CMAKE_CXX_FLAGS}")
-    endif ()
-else ()
-    set(CMAKE_CXX_STANDARD 17)
-endif ()
-
-if (${Enable_CMAKE_Debug_Build})
-    message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
-    message(STATUS "CMAKE_EXE_LINKER_FLAGS = ${CMAKE_EXE_LINKER_FLAGS}")
-    message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
-    message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
-endif()
-
-#----------------------------------#
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
 if (${Enable_CMAKE_Debug_Build})
@@ -223,9 +218,8 @@ if(${Enable_Tests})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Copying test directory to build directory")
     endif()
-    add_custom_command(
-            TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
+    file(COPY
             ${CMAKE_SOURCE_DIR}/test/test_data/
+            DESTINATION
             ${PROJECT_BINARY_DIR}/test/test_data/)
 endif()

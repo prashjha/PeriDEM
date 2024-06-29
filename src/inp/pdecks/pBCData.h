@@ -39,6 +39,15 @@ struct PBCData {
   /*! @brief Region geometry (if any) */
   std::shared_ptr<util::geometry::GeomObject> d_regionGeom_p;
 
+  /*! @brief Region geometry name */
+  std::string d_regionGeomName;
+
+  /*! @brief Region geometry parameters */
+  std::vector<double> d_regionGeomParams;
+
+  /*! @brief Region geometry info if it is a complex type */
+  std::pair<std::vector<std::string>, std::vector<std::string>> d_regionGeomComplexInfo;
+
   /*! @brief List of particles (if any) */
   std::vector<size_t> d_pList;
 
@@ -107,8 +116,25 @@ struct PBCData {
     std::ostringstream oss;
     oss << tabS << "------- PBCData --------" << std::endl << std::endl;
     oss << tabS << "Selection type  = " << d_selectionType << std::endl;
-    if (d_regionGeom_p != nullptr)
+    if (d_regionGeom_p != nullptr) {
+      oss << tabS << "Region geometry name  = " << d_regionGeomName << std::endl;
+      oss << tabS << "Region parameters list = ["
+          << util::io::printStr(d_regionGeomParams, 0) << "]" << std::endl;
+      if (!d_regionGeomComplexInfo.first.empty()) {
+        oss << tabS << "Region complex type data = ";
+        for (size_t i=0; i<d_regionGeomComplexInfo.first.size(); i++) {
+          oss << "(" << d_regionGeomComplexInfo.first[i]
+              << ", " << d_regionGeomComplexInfo.second[i]
+              << ")";
+          if (i == d_regionGeomComplexInfo.first.size() - 1)
+            oss << "\n";
+          else
+            oss << "; ";
+        }
+      }
+
       oss << d_regionGeom_p->printStr(nt + 1, lvl);
+    }
     if (!d_pList.empty())
       oss << tabS << "Particle list = ["
           << util::io::printStr<size_t>(d_pList, 0) << "]" << std::endl;

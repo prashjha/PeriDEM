@@ -42,22 +42,13 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-namespace {
-steady_clock::time_point clock_begin = steady_clock::now();
-steady_clock::time_point clock_end = steady_clock::now();
-
-std::ostringstream oss;
-}
-
 namespace twop {
 using util::io::log;
 
 class Model : public model::DEMModel {
 
 public:
-  explicit Model(inp::Input *deck) : model::DEMModel(deck) {
-
-    d_quadOrder = deck->getModelDeck()->d_quadOrder;
+  explicit Model(inp::Input *deck) : model::DEMModel(deck, "twop::Model") {
 
     if (d_ppFile.is_open())
       d_ppFile.close();
@@ -71,7 +62,7 @@ public:
 
   void run(inp::Input *deck) override {
 
-    log("twop::Model: Running twop app \n");
+    log(d_name + ": Running twop app \n");
 
     init();
 
@@ -114,7 +105,11 @@ public:
 
   void integrate() override {
     // perform output at the beginning
-    if (d_n == 0 && d_outputDeck_p->d_performOut) output();
+    if (d_n == 0 && d_outputDeck_p->d_performOut) {
+      log(fmt::format("{}: Output step = {}, time = {:.6f} \n", d_name, d_n, d_time),
+          2);
+      output();
+    }
 
     // apply initial condition
     if (d_n == 0) applyInitialCondition();
@@ -125,18 +120,22 @@ public:
 
     for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 
-      if (d_n % 100 == 0)
-        log(fmt::format("twop::Model: time step: {} \n", i));
+      log(fmt::format("{}: Time step: {}, time: {:8.6f}, steps completed = {}%\n",
+                      d_name,
+                      i,
+                      d_time,
+                      float(i) * 100. / d_modelDeck_p->d_Nt),
+          2, d_n % d_infoN == 0, 3);
 
       // NOTE: If there is need for different time-stepping scheme, one can
       // define another function similar to these two below
-      clock_begin = steady_clock::now();
+      auto t1 = steady_clock::now();
       integrateStep();
+      double integrate_time =
+              util::methods::timeDiff(t1, steady_clock::now());
 
-      if (d_n % 100 == 0)
-        log(fmt::format(
-            "  Integration time: {} \n",
-            util::methods::timeDiff(clock_begin, steady_clock::now())));
+      log(fmt::format("  Integration time (ms) = {}\n", integrate_time),
+          2, d_n % d_infoN == 0, 3);
 
       if (d_pDeck_p->d_testName == "two_particle") {
         // NOTE: The purpose of this app 'twop' is to show that if we have
@@ -152,11 +151,7 @@ public:
       // handle general output
       if ((d_n % d_outputDeck_p->d_dtOut == 0) &&
           (d_n >= d_outputDeck_p->d_dtOut) && d_outputDeck_p->d_performOut) {
-        clock_begin = steady_clock::now();
         output();
-        log(fmt::format(
-            "   Output time: {} \n",
-            util::methods::timeDiff(clock_begin, steady_clock::now())));
       }
 
       // check for stop (we may want to terminate the simulation early if the
@@ -185,14 +180,15 @@ public:
     d_ppFile << d_time << ", " << -d_penDist << ", " << d_contactAreaRadius
              << ", " << d_maxStressLocRef << ", " << d_maxStress << ", "
              << d_maxDist << ", " << d_contactAreaRadiusIdeal << ", "
-             << d_maxStressLocRefIdeal << ", " << d_maxStressIdeal << std::flush;
+             << d_maxStressLocRefIdeal << ", " << d_maxStressIdeal
+             << std::endl;
   }
 
   void twoParticleTestPenetrationDist() {
 
     // get alias for particles
-    const auto &p0 = this->d_particles[0];
-    const auto &p1 = this->d_particles[1];
+    const auto &p0 = this->d_particlesListTypeAll[0];
+    const auto &p1 = this->d_particlesListTypeAll[1];
 
     // get penetration distance
     const auto &xc0 = p0->getXCenter();
@@ -223,7 +219,7 @@ public:
     if (util::isLess(d_maxY, max_y_loc))
       d_maxY = max_y_loc;
 
-    log(fmt::format("max y: {} \n", d_maxY));
+    log(fmt::format("max y: {} \n", d_maxY), 2, d_n % d_infoN == 0, 3);
 
     // compute ideal values
     static int contact_pp_ideal = -1;
@@ -255,30 +251,45 @@ public:
     auto max_stress_loc_cur_t = util::Point();
     auto max_stress_loc_ref_t = util::Point();
 
-    // compute stress and strain
-    for (auto &p: d_particles) {
-      auto p_mat_data = p->getMaterial()->computeMaterialProperties(
-              p->d_rp_p->getMeshP()->getDimension());
+    // if particle mat data is not computed, compute them
+    if (d_particlesMatDataList.empty()) {
+      for (auto &p: d_particlesListTypeAll) {
+        d_particlesMatDataList.push_back(p->getMaterial()->computeMaterialProperties(
+                p->getMeshP()->getDimension()));
+      }
+    }
 
-      fe::getCurrentQuadPoints(p->d_rp_p->getMeshP(), d_xRef, d_u, d_xQuadCur,
-                               p->d_globStart, p->d_globQuadStart,
-                               d_quadOrder);
-      fe::getStrainStress(p->d_rp_p->getMeshP(), d_xRef, d_u,
-                          d_input_p->getMaterialDeck()->d_isPlaneStrain,
+    // compute stress and strain
+    for (auto &p: d_particlesListTypeAll) {
+
+      const auto particle_mesh_p = p->getMeshP();
+
+      fe::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
+                               p->d_globStart,
+                               p->d_globQuadStart,
+                               d_modelDeck_p->d_quadOrder);
+
+      auto p_z_id = p->d_zoneId;
+      auto isPlaneStrain = d_pDeck_p->d_particleZones[p_z_id].d_matDeck.d_isPlaneStrain;
+      fe::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
+                          isPlaneStrain,
                           d_strain, d_stress,
-                          p->d_globStart, p->d_globQuadStart,
-                          p_mat_data.d_nu, p_mat_data.d_lambda,
-                          p_mat_data.d_mu,
-                          true, d_quadOrder);
+                          p->d_globStart,
+                          p->d_globQuadStart,
+                          d_particlesMatDataList[p->getId()].d_nu,
+                          d_particlesMatDataList[p->getId()].d_lambda,
+                          d_particlesMatDataList[p->getId()].d_mu,
+                          true,
+                          d_modelDeck_p->d_quadOrder);
 
       double p_max_stress = 0.;
       auto p_max_stress_loc_cur = util::Point();
       auto p_max_stress_loc_ref = util::Point();
-      fe::getMaxShearStressAndLoc(p->d_rp_p->getMeshP(), d_xRef, d_u, d_stress,
+      fe::getMaxShearStressAndLoc(p->getMeshP().get(), d_xRef, d_u, d_stress,
                                   p_max_stress,
                                   p_max_stress_loc_ref,
                                   p_max_stress_loc_cur,
-                                  p->d_globStart, p->d_globQuadStart, d_quadOrder);
+                                  p->d_globStart, p->d_globQuadStart, d_modelDeck_p->d_quadOrder);
 
       if (util::isGreater(p_max_stress, max_stress_t)) {
         max_stress_t = p_max_stress;
@@ -294,7 +305,6 @@ public:
   }
 
 public:
-  std::ofstream d_ppFile;
 
   double d_penDist = 0.;
   double d_contactAreaRadius = 0.;
@@ -308,8 +318,6 @@ public:
   double d_contactAreaRadiusIdeal = 0.;
   double d_maxStressIdeal = 0.;
   double d_maxStressLocRefIdeal = 0.;
-
-  size_t d_quadOrder = 1;
 };
 } // namespace twop
 

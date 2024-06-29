@@ -5,18 +5,13 @@ Model:
     Time: central_difference
   Final_Time: 4.000000e-02
   Time_Steps: 400000
-Policy:
-  Enable_PostProcessing: true
+  Particle_Sim_Type: Multi_Particle
 Container:
   Geometry:
     Type: rectangle
     Parameters: [0.000000e+00, 0.000000e+00, 0.000000e+00, 6.000000e-03, 9.000000e-03, 0.000000e+00]
 Zone:
   Zones: 2
-  Zone_1:
-    Is_Wall: false
-  Zone_2:
-    Is_Wall: false
 Particle:
   Test_Name: two_particle
   Zone_1:
@@ -60,7 +55,8 @@ Contact:
     Beta_n_Factor: 1.000000e+02
 Neighbor:
   Update_Criteria: simple_all
-  Search_Factor: 5.0
+  Search_Factor: 1e+01
+  Search_Interval: 100
 Material:
   Zone_1:
     Type: PDState
@@ -121,8 +117,8 @@ Output:
     - Theta
   Output_Interval: 4000
   Compress_Type: zlib
-  Perform_FE_Out: false
+  Perform_FE_Out: true
   Perform_Out: true
-  Test_Output_Interval: 4000
-  Debug: 3
+  Test_Output_Interval: 400
+  Debug: 2
   Tag_PP: 0

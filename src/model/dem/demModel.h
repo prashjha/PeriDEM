@@ -36,7 +36,10 @@ public:
    * @brief Constructor
    * @param deck The input deck
    */
-  explicit DEMModel(inp::Input *deck);
+  explicit DEMModel(inp::Input *deck, std::string modelName = "DEMModel");
+
+  /*! @brief Name of the model for logging purposes (useful if other classes are built on top of this class) */
+  std::string d_name;
 
   /*! @brief Prints message if any of these two conditions are true
    * 1. if check_condition == true and dbg_lvl > priority
@@ -83,6 +86,9 @@ public:
 
   /*! @brief Initialize remaining data members */
   virtual void init();
+
+  /*! @brief Closure operations */
+  virtual void close();
 
   /** @}*/
 

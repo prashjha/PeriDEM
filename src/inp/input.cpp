@@ -99,7 +99,11 @@ void readGeometry(YAML::Node data,
 } // namespace
 
 inp::Input::Input(std::string filename, bool createDefault)
-    : d_inputFilename(filename), d_createDefault(createDefault), d_meshDeck_p(nullptr), d_materialDeck_p(nullptr), d_outputDeck_p(nullptr),
+    : d_inputFilename(filename),
+      d_createDefault(createDefault),
+      d_meshDeck_p(nullptr),
+      d_materialDeck_p(nullptr),
+      d_outputDeck_p(nullptr),
       d_modelDeck_p(nullptr) {
 
   if (d_inputFilename.empty()) {
@@ -117,17 +121,16 @@ inp::Input::Input(std::string filename, bool createDefault)
   setModelDeck();
   setOutputDeck();
 
-  if (d_modelDeck_p->d_isPeriDEM) {
+  // read particle data
+  {
     setParticleDeck();
     setContactDeck();
   }
   setRestartDeck();
 
-  if (!d_modelDeck_p->d_isPeriDEM)
-    setMeshDeck();
+  // setMeshDeck();
 
-  if (!d_modelDeck_p->d_isPeriDEM)
-    setMaterialDeck();
+  // setMaterialDeck();
 }
 
 void createDefaultInputConfiguration() {
@@ -137,6 +140,18 @@ void createDefaultInputConfiguration() {
 //
 // accessor methods
 //
+bool inp::Input::isMultiParticle() {
+  return d_modelDeck_p->d_particleSimType == "Multi_Particle";
+}
+
+bool inp::Input::isPeriDEM() {
+  if (d_modelDeck_p->d_particleSimType == "Multi_Particle" or
+            d_modelDeck_p->d_particleSimType == "Single_Particle")
+    return true;
+
+  return false;
+}
+
 std::shared_ptr<inp::MaterialDeck> inp::Input::getMaterialDeck() { return
                                                                     d_materialDeck_p; }
 
@@ -156,8 +171,6 @@ std::shared_ptr<inp::ParticleDeck> inp::Input::getParticleDeck() { return
                                                                     d_particleDeck_p; }
 std::shared_ptr<inp::ContactDeck> inp::Input::getContactDeck() { return
                                                                   d_contactDeck_p; }
-
-bool inp::Input::isPeriDEM() { return d_modelDeck_p->d_isPeriDEM; }
 
 //
 // setter methods
@@ -198,38 +211,40 @@ void inp::Input::setModelDeck() {
   if (config["Model"]["Quad_Approximation_Order"])
     d_modelDeck_p->d_quadOrder = config["Model"]["Quad_Approximation_Order"].as<size_t>();
 
-  // check if this is peridem simulation
-  if (config["Particle"])
-    d_modelDeck_p->d_isPeriDEM = true;
+  // check if this is single or multi-particle simulation
+  {
+    if (config["Model"]["Particle_Sim_Type"])
+      d_modelDeck_p->d_particleSimType = config["Model"]["Particle_Sim_Type"].as<std::string>();
+    else {
+      // determine based on other data in input file
+      if (config["Particle"])
+        d_modelDeck_p->d_particleSimType = "Multi_Particle";
+    }
 
-  // read horizon and horizon to mesh ratio (if available)
-  if (config["Model"]["Horizon"])
-    d_modelDeck_p->d_horizon = config["Model"]["Horizon"].as<double>();
-  if (config["Model"]["Horizon_h_Ratio"])
-    d_modelDeck_p->d_rh = config["Model"]["Horizon_h_Ratio"].as<int>();
-  if (config["Model"]["Mesh_Size"])
-    d_modelDeck_p->d_h = config["Model"]["Mesh_Size"].as<double>();
-
-  if (!config["Model"]["Horizon"]) {
-
-    // check and issue error if this is not peridem simulation
-    if (!d_modelDeck_p->d_isPeriDEM)
-      if (!config["Model"]["Horizon_h_Ratio"] or
-          !config["Model"]["Mesh_Size"]) {
-
-        std::cerr << "Error: Horizon is not provided. In this case "
-                     "Horizon_h_Ratio and Mesh_Size are necessary to compute "
-                     "horizon.\n";
-        exit(1);
-      }
-
-    d_modelDeck_p->d_horizon = d_modelDeck_p->d_h * double(d_modelDeck_p->d_rh);
+    // check
+    if (d_modelDeck_p->d_particleSimType != "Multi_Particle" && d_modelDeck_p->d_particleSimType != "Single_Particle") {
+      std::cerr << "Error: d_particleSimType = " << d_modelDeck_p->d_particleSimType
+                << " in Model Deck is invalid.\n";
+      exit(EXIT_FAILURE);
+    }
   }
 
-  if (!config["Model"]["Mesh_Size"])
-    if (config["Model"]["Horizon_h_Ratio"])
-      d_modelDeck_p->d_h =
-          d_modelDeck_p->d_horizon / double(d_modelDeck_p->d_rh);
+  // read horizon and horizon to mesh ratio (if available)
+  if (config["Model"]["Mesh_Size"])
+    d_modelDeck_p->d_h = config["Model"]["Mesh_Size"].as<double>();
+  if (config["Model"]["Horizon"])
+    d_modelDeck_p->d_horizon = config["Model"]["Horizon"].as<double>();
+  if (config["Model"]["Horizon_h_Ratio"]) {
+    d_modelDeck_p->d_rh = config["Model"]["Horizon_h_Ratio"].as<int>();
+    if (config["Model"]["Mesh_Size"]) {
+      d_modelDeck_p->d_horizon = d_modelDeck_p->d_h * double(d_modelDeck_p->d_rh);
+    }
+    else {
+      if (config["Model"]["Horizon"])
+        d_modelDeck_p->d_h =
+                d_modelDeck_p->d_horizon / double(d_modelDeck_p->d_rh);
+    }
+  }
 
   // read final time and time step
   if (config["Model"]["Final_Time"])
@@ -248,9 +263,9 @@ void inp::Input::setModelDeck() {
   if (config["Restart"])
     d_modelDeck_p->d_isRestartActive = true;
 
-  // check if this is restart problem
+  // seed for random number generators
   if (config["Model"]["Seed"])
-    d_modelDeck_p->d_seed = config["Model"]["Seed"].as<int>();;
+    d_modelDeck_p->d_seed = config["Model"]["Seed"].as<int>();
 } // setModelDeck
 
 void inp::Input::setParticleDeck() {
@@ -282,76 +297,129 @@ void inp::Input::setParticleDeck() {
             d_particleDeck_p->d_contGeom_p,
             d_modelDeck_p->d_dim);
     //std::cout << d_particleDeck_p->d_contGeom_p->printStr(0, 0) << std::flush;
-  } else {
-    std::cerr << "Error: Need particle container information.\n";
-    exit(1);
   }
+  //  else {
+  //    if (d_modelDeck_p->d_particleSimType == "Multi_Particle") {
+  //      std::cerr << "Error: Need particle container information.\n";
+  //      exit(1);
+  //    }
+  //  }
 
   // <<<< >>>>
   // <<<< STEP 2 - Read Zone data >>>>
   // <<<< >>>>
   // read input file
-  if (!config["Zone"]) {
-    std::cerr << "Error: Zone information is not provided.\n";
-    exit(1);
-  }
-  auto n = config["Zone"]["Zones"].as<size_t>();
-  if (n == 0) {
-    std::cerr << "Error: Require at least one zone to define particles.\n";
-    exit(1);
-  }
+  if (isMultiParticle()) {
+    if (!config["Zone"]) {
+      std::cerr << "Error: Zone information is not provided.\n";
+      exit(1);
+    }
+    auto n = config["Zone"]["Zones"].as<size_t>();
+    if (n == 0) {
+      std::cerr << "Error: Require at least one zone to define particles.\n";
+      exit(1);
+    }
 
-  d_particleDeck_p->d_zoneVec.resize(n);
-  d_particleDeck_p->d_particleZones.resize(n);
-  d_particleDeck_p->d_zoneToParticleORWallDeck.resize(n);
+    d_particleDeck_p->d_zoneVec.resize(n);
+    d_particleDeck_p->d_particleZones.resize(n);
+    d_particleDeck_p->d_zoneToParticleORWallDeck.resize(n);
 
-  // read zone and particle information
-  for (size_t z = 1; z <= n; z++) {
+    // read zone and particle information
+    for (size_t z = 1; z <= n; z++) {
 
-    std::string read_zone = "Zone_";
-    read_zone.append(std::to_string(z));
+      std::string read_zone = "Zone_";
+      read_zone.append(std::to_string(z));
 
-    auto e = config["Zone"][read_zone];
+      auto e = config["Zone"][read_zone];
 
-    // <<<< >>>>
-    // <<<< STEP 2.1 - Read this zone information >>>>
-    // <<<< >>>>
+      // <<<< >>>>
+      // <<<< STEP 2.1 - Read this zone information >>>>
+      // <<<< >>>>
+      auto zone_data = inp::Zone();
+      zone_data.d_zoneId = z - 1;
+      setZoneData({"Zone", read_zone}, &zone_data);
+
+      // store zone data
+      d_particleDeck_p->d_zoneVec[z - 1] = zone_data;
+
+      // <<<< >>>>
+      // <<<< STEP 2.2 - Read particle information in this zone >>>>
+      // <<<< >>>>
+      auto particle_data = inp::ParticleZone();
+      particle_data.d_zone = zone_data;
+      particle_data.d_isWall = false;
+      if (e["Is_Wall"])
+        particle_data.d_isWall = e["Is_Wall"].as<bool>();
+
+      setParticleData(read_zone, &particle_data);
+
+      // <<<< >>>>
+      // <<<< STEP 2.3 - Read mesh and reference particle information >>>>
+      // <<<< >>>>
+      setZoneMeshDeck({"Mesh", read_zone}, &(particle_data.d_meshDeck));
+
+      // <<<< >>>>
+      // <<<< STEP 2.4 - Read material properties of this zone >>>>
+      // <<<< >>>>
+      setZoneMaterialDeck({"Material", read_zone}, &(particle_data.d_matDeck),
+                          z);
+
+      // add to the list
+      d_particleDeck_p->d_particleZones[z - 1] = particle_data;
+
+      // update zone to particle/wall deck map
+      d_particleDeck_p->d_zoneToParticleORWallDeck[z - 1] =
+              std::make_pair(particle_data.d_isWall ? "wall" : "particle",
+                             z - 1);
+    } // read zone and particle information
+  } // if isMultiParticle()
+  else {
+
+    // STEP 1 - Create default zone
+    size_t n = 1; // single zone
+    d_particleDeck_p->d_zoneVec.resize(n);
+    d_particleDeck_p->d_particleZones.resize(n);
+    d_particleDeck_p->d_zoneToParticleORWallDeck.resize(n);
+
+    size_t z = 1; // one zone
     auto zone_data = inp::Zone();
     zone_data.d_zoneId = z - 1;
-    setZoneData({"Zone", read_zone}, &zone_data);
+    d_particleDeck_p->d_zoneVec[z - 1] = zone_data;
 
-    // store zone data
-    d_particleDeck_p->d_zoneVec[z-1] = zone_data;
-
-    // <<<< >>>>
-    // <<<< STEP 2.2 - Read particle information in this zone >>>>
-    // <<<< >>>>
+    // STEP 2 - Create default particle zone
     auto particle_data = inp::ParticleZone();
     particle_data.d_zone = zone_data;
     particle_data.d_isWall = false;
-    if (e["Is_Wall"])
-      particle_data.d_isWall = e["Is_Wall"].as<bool>();
 
-    setParticleData(read_zone, &particle_data);
+    // create particle geometry from container which if not specified will be NullGeomObject
+    d_particleDeck_p->copyContainerGeometry(
+            particle_data.d_geomName,
+            particle_data.d_geomParams,
+            particle_data.d_geomComplexInfo,
+            particle_data.d_geom_p);
 
-    // <<<< >>>>
-    // <<<< STEP 2.3 - Read mesh and reference particle information >>>>
-    // <<<< >>>>
-    setZoneMeshDeck({"Mesh", read_zone}, &(particle_data.d_meshDeck));
+    // create reference particle geometry also from container geometry
+    d_particleDeck_p->copyContainerGeometry(
+            particle_data.d_refParticleGeomName,
+            particle_data.d_refParticleGeomParams,
+            particle_data.d_refParticleGeomComplexInfo,
+            particle_data.d_refParticleGeom_p);
 
-    // <<<< >>>>
-    // <<<< STEP 2.4 - Read material properties of this zone >>>>
-    // <<<< >>>>
-    setZoneMaterialDeck({"Material", read_zone}, &(particle_data.d_matDeck),
-                        z);
+    // STEP 3 - Read Mesh data for default particle; this is where we need to read mesh from a Mesh block without any zones
+    setZoneMeshDeck({"Mesh"}, &(particle_data.d_meshDeck));
+
+    // STEP 4 - Read material data
+    setZoneMaterialDeck({"Material"}, &(particle_data.d_matDeck), z);
 
     // add to the list
-    d_particleDeck_p->d_particleZones[z-1] = particle_data;
+    d_particleDeck_p->d_particleZones[z - 1] = particle_data;
 
     // update zone to particle/wall deck map
     d_particleDeck_p->d_zoneToParticleORWallDeck[z - 1] =
-            std::make_pair(particle_data.d_isWall ? "wall" : "particle", z - 1);
-  } // read zone and particle information
+            std::make_pair(particle_data.d_isWall ? "wall" : "particle",
+                           z - 1);
+
+  } // else isMultiParticle()
 
   // <<<< >>>>
   // <<<< STEP 3 - Read neighbor search data >>>>
@@ -370,51 +438,11 @@ void inp::Input::setParticleDeck() {
       d_particleDeck_p->d_pNeighDeck.d_neighUpdateInterval =
               ne["Search_Interval"].as<size_t>();
 
-    for (auto p : d_particleDeck_p->d_particleZones) {
-
-      // if particle is actually a wall then we do it differently
-      double tol_check = 0.;
-      if (p.d_isWall) {
-
-        // check if wall has geometry object and it is not a null object
-        if (p.d_geom_p->d_name != "null" and !p.d_geom_p->d_name.empty()) {
-          if (p.d_geomParams.empty()) {
-            std::cerr
-                    << "Error: Cannot set neighbor list data as the geometrical "
-                       "parameter for the particle/wall is missing.\n";
-            exit(EXIT_FAILURE);
-          }
-          tol_check = p.d_geomParams[0];
-        } else {
-          // use container geometry or zone geometry to get the tolerance parameter
-          if (p.d_zone.d_geomParams.empty()) {
-            std::cerr
-                    << "Error: Cannot set neighbor list data as the geometrical "
-                       "parameter the zone this wall/particle belongs to is missing.\n";
-            exit(EXIT_FAILURE);
-          }
-          tol_check = p.d_zone.d_geomParams[0];
-        } // if else for wall geometry
-      } else {
-        if (p.d_geomParams.empty()) {
-          std::cerr
-                  << "Error: Cannot set neighbor list data as the geometrical "
-                     "parameter for the particle is missing.\n";
-          exit(EXIT_FAILURE);
-        }
-        tol_check = p.d_geomParams[0];
-      }
-
-      if (util::isGreater(tol_check, d_particleDeck_p->d_pNeighDeck.d_sTol))
-        d_particleDeck_p->d_pNeighDeck.d_sTol = tol_check;
-    }
-
-    // multiply by the search factor
-    d_particleDeck_p->d_pNeighDeck.d_sTol *=
-        d_particleDeck_p->d_pNeighDeck.d_sFactor;
   } else {
-    std::cerr << "Error: Need neighbor list information.\n";
-    exit(1);
+    if (isMultiParticle()) {
+      std::cerr << "Error: Need neighbor list information.\n";
+      exit(1);
+    }
   }
 
   // <<<< >>>>
@@ -488,58 +516,25 @@ void inp::Input::setParticleDeck() {
       // check if region is provided
       if (e["Region"]) {
 
-        if (e["Region"]["Rectangle"]) {
+        // Read geometry details
+        if (e["Region"]["Geometry"]) {
 
-          std::vector<double> locs;
-          for (auto f : e["Region"]["Rectangle"])
-            locs.push_back(f.as<double>());
+          auto ce = e["Region"]["Geometry"];
 
-          util::geometry::checkParamForGeometry(locs.size(), "rectangle");
+          readGeometry(ce,
+                       tag + "->" + read_set + "->Region->Geometry",
+                       bc_deck.d_regionGeomName,
+                       bc_deck.d_regionGeomParams,
+                       bc_deck.d_regionGeomComplexInfo);
 
-          // create rectangle object
-          bc_deck.d_regionGeom_p = std::make_shared<util::geometry::Rectangle>(
-              util::Point(locs[0], locs[1], locs[2]),
-              util::Point(locs[3], locs[4], locs[5]));
-        } else if (e["Region"]["Circle"]) {
-
-          std::vector<double> locs;
-          for (auto f : e["Region"]["Circle"])
-            locs.push_back(f.as<double>());
-
-          util::geometry::checkParamForGeometry(locs.size(), "circle");
-
-          // create rectangle object
-          bc_deck.d_regionGeom_p = std::make_shared<util::geometry::Circle>(
-              locs[0], util::Point(locs[1], locs[2], locs[3]));
-        } else if (e["Region"]["Cuboid"]) {
-          std::vector<double> locs;
-          for (auto f : e["Region"]["Cuboid"])
-            locs.push_back(f.as<double>());
-
-          util::geometry::checkParamForGeometry(locs.size(), "cuboid");
-
-          // create cuboid object
-          bc_deck.d_regionGeom_p = std::make_shared<util::geometry::Cuboid>(
-              util::Point(locs[0], locs[1], locs[2]),
-              util::Point(locs[3], locs[4], locs[5]));
-        } else if (e["Region"]["Sphere"]) {
-
-          std::vector<double> locs;
-          for (auto f : e["Region"]["Sphere"])
-            locs.push_back(f.as<double>());
-
-          if (locs.size() != 4) {
-            std::cerr << "Error: Data " << tag << "->Set_" << s
-                      << "Region->Sphere is not correct in size. We "
-                         "require radius and coordinates (three numbers) of "
-                         "center of sphere/circle\n";
-            exit(1);
-          }
-
-          // create rectangle object
-          bc_deck.d_regionGeom_p = std::make_shared<util::geometry::Sphere>(
-              locs[0], util::Point(locs[1], locs[2], locs[3]));
-        }
+          util::geometry::createGeomObject(
+                  bc_deck.d_regionGeomName,
+                  bc_deck.d_regionGeomParams,
+                  bc_deck.d_regionGeomComplexInfo.first,
+                  bc_deck.d_regionGeomComplexInfo.second,
+                  bc_deck.d_regionGeom_p,
+                  d_modelDeck_p->d_dim);
+        } // if geometry in config
       } // if region
 
       // check if particle list is provided
@@ -586,8 +581,7 @@ void inp::Input::setParticleDeck() {
         bc_deck.d_isDisplacementZero = e["Zero_Displacement"].as<bool>();
 
       if (!bc_deck.d_regionGeom_p)
-        bc_deck.d_regionGeom_p = std::make_shared<util::geometry::GeomObject>
-            ("dummy_region");
+        bc_deck.d_regionGeom_p = std::make_shared<util::geometry::NullGeomObject>();
 
       // add data
       if (tag == "Displacement_BC")
@@ -614,8 +608,14 @@ void inp::Input::setParticleDeck() {
 
       // get particle ids
       d_particleDeck_p->d_icDeck.d_pList.clear();
-      for (auto e : config["IC"]["Constant_Velocity"]["Particle_List"])
-        d_particleDeck_p->d_icDeck.d_pList.push_back(e.as<size_t>());
+      if (isMultiParticle()) {
+        for (auto e: config["IC"]["Constant_Velocity"]["Particle_List"])
+          d_particleDeck_p->d_icDeck.d_pList.push_back(e.as<size_t>());
+      }
+      else {
+        // the only particle in Single_Particle Simulation is particle 0
+        d_particleDeck_p->d_icDeck.d_pList.push_back(0);
+      }
     }
   }
 
@@ -675,6 +675,10 @@ void inp::Input::setContactDeck() {
   for (size_t i = 0; i < n; i++)
     d_contactDeck_p->d_data[i].resize(n);
 
+  if (!isMultiParticle()) {
+    return;
+  }
+
   for (size_t z = 1; z <= n; z++) {
     for (size_t zz = z; zz <= n; zz++) {
       std::string read_zone = "Zone_" + std::to_string(z) + std::to_string(zz);
@@ -722,7 +726,8 @@ void inp::Input::setContactDeck() {
         // copy to the data
         d_contactDeck_p->d_data[z - 1][zz - 1] = cd;
         d_contactDeck_p->d_data[zz - 1][z - 1] = cd;
-      } else {
+      }
+      else {
 
         auto cd = inp::ContactPairDeck();
         //if (z == zz) {
@@ -1199,10 +1204,13 @@ void inp::Input::setZoneData(std::vector<std::string> s_config,
   if (s_config.size() > 2)
     e = config[s_config[0]][s_config[1]][s_config[2]];
 
-  if (!e) {
-    std::cerr << "Error: Can not read zone properties for given zone.\n";
-    exit(1);
-  }
+  // Do not issue error if there is no zone data as zone data do not play critical role
+  // and it is in our interest to not force providing this data in input file to keep
+  // input file lite.
+  //  if (!e) {
+  //    std::cerr << "Error: Can not read zone properties for given zone.\n";
+  //    exit(1);
+  //  }
 
   // read zone information
   if (e["Type"]) {

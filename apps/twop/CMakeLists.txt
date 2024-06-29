@@ -15,9 +15,6 @@ target_link_libraries(twop PUBLIC Inp Model)
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Copying apps/twop example directory to build directory")
 endif()
-add_custom_command(
-        TARGET twop POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-        ${CMAKE_CURRENT_SOURCE_DIR}/example/
-        ${EXECUTABLE_OUTPUT_PATH}/example/
-)
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/example/
+        DESTINATION ${EXECUTABLE_OUTPUT_PATH}/example/)
