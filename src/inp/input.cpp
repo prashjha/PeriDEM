@@ -298,12 +298,14 @@ void inp::Input::setParticleDeck() {
             d_modelDeck_p->d_dim);
     //std::cout << d_particleDeck_p->d_contGeom_p->printStr(0, 0) << std::flush;
   }
-  //  else {
-  //    if (d_modelDeck_p->d_particleSimType == "Multi_Particle") {
-  //      std::cerr << "Error: Need particle container information.\n";
-  //      exit(1);
-  //    }
-  //  }
+  else {
+    //    if (d_modelDeck_p->d_particleSimType == "Multi_Particle") {
+    //      std::cerr << "Error: Need particle container information.\n";
+    //      exit(1);
+    //    }
+    d_particleDeck_p->d_contGeom_p =
+            std::make_shared<util::geometry::NullGeomObject>();
+  }
 
   // <<<< >>>>
   // <<<< STEP 2 - Read Zone data >>>>
@@ -345,31 +347,31 @@ void inp::Input::setParticleDeck() {
       // <<<< >>>>
       // <<<< STEP 2.2 - Read particle information in this zone >>>>
       // <<<< >>>>
-      auto particle_data = inp::ParticleZone();
-      particle_data.d_zone = zone_data;
-      particle_data.d_isWall = false;
+      auto particle_zone = inp::ParticleZone();
+      particle_zone.d_zone = zone_data;
+      particle_zone.d_isWall = false;
       if (e["Is_Wall"])
-        particle_data.d_isWall = e["Is_Wall"].as<bool>();
+        particle_zone.d_isWall = e["Is_Wall"].as<bool>();
 
-      setParticleData(read_zone, &particle_data);
+      setParticleData(read_zone, &particle_zone);
 
       // <<<< >>>>
       // <<<< STEP 2.3 - Read mesh and reference particle information >>>>
       // <<<< >>>>
-      setZoneMeshDeck({"Mesh", read_zone}, &(particle_data.d_meshDeck));
+      setZoneMeshDeck({"Mesh", read_zone}, &(particle_zone.d_meshDeck));
 
       // <<<< >>>>
       // <<<< STEP 2.4 - Read material properties of this zone >>>>
       // <<<< >>>>
-      setZoneMaterialDeck({"Material", read_zone}, &(particle_data.d_matDeck),
+      setZoneMaterialDeck({"Material", read_zone}, &(particle_zone.d_matDeck),
                           z);
 
       // add to the list
-      d_particleDeck_p->d_particleZones[z - 1] = particle_data;
+      d_particleDeck_p->d_particleZones[z - 1] = particle_zone;
 
       // update zone to particle/wall deck map
       d_particleDeck_p->d_zoneToParticleORWallDeck[z - 1] =
-              std::make_pair(particle_data.d_isWall ? "wall" : "particle",
+              std::make_pair(particle_zone.d_isWall ? "wall" : "particle",
                              z - 1);
     } // read zone and particle information
   } // if isMultiParticle()
@@ -387,36 +389,36 @@ void inp::Input::setParticleDeck() {
     d_particleDeck_p->d_zoneVec[z - 1] = zone_data;
 
     // STEP 2 - Create default particle zone
-    auto particle_data = inp::ParticleZone();
-    particle_data.d_zone = zone_data;
-    particle_data.d_isWall = false;
+    auto particle_zone = inp::ParticleZone();
+    particle_zone.d_zone = zone_data;
+    particle_zone.d_isWall = false;
 
     // create particle geometry from container which if not specified will be NullGeomObject
     d_particleDeck_p->copyContainerGeometry(
-            particle_data.d_geomName,
-            particle_data.d_geomParams,
-            particle_data.d_geomComplexInfo,
-            particle_data.d_geom_p);
+            particle_zone.d_geomName,
+            particle_zone.d_geomParams,
+            particle_zone.d_geomComplexInfo,
+            particle_zone.d_geom_p);
 
     // create reference particle geometry also from container geometry
     d_particleDeck_p->copyContainerGeometry(
-            particle_data.d_refParticleGeomName,
-            particle_data.d_refParticleGeomParams,
-            particle_data.d_refParticleGeomComplexInfo,
-            particle_data.d_refParticleGeom_p);
+            particle_zone.d_refParticleGeomName,
+            particle_zone.d_refParticleGeomParams,
+            particle_zone.d_refParticleGeomComplexInfo,
+            particle_zone.d_refParticleGeom_p);
 
     // STEP 3 - Read Mesh data for default particle; this is where we need to read mesh from a Mesh block without any zones
-    setZoneMeshDeck({"Mesh"}, &(particle_data.d_meshDeck));
+    setZoneMeshDeck({"Mesh"}, &(particle_zone.d_meshDeck));
 
     // STEP 4 - Read material data
-    setZoneMaterialDeck({"Material"}, &(particle_data.d_matDeck), z);
+    setZoneMaterialDeck({"Material"}, &(particle_zone.d_matDeck), z);
 
     // add to the list
-    d_particleDeck_p->d_particleZones[z - 1] = particle_data;
+    d_particleDeck_p->d_particleZones[z - 1] = particle_zone;
 
     // update zone to particle/wall deck map
     d_particleDeck_p->d_zoneToParticleORWallDeck[z - 1] =
-            std::make_pair(particle_data.d_isWall ? "wall" : "particle",
+            std::make_pair(particle_zone.d_isWall ? "wall" : "particle",
                            z - 1);
 
   } // else isMultiParticle()

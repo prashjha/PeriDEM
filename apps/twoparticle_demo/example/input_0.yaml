@@ -3,8 +3,8 @@ Model:
   Discretization_Type:
     Spatial: finite_difference
     Time: central_difference
-  Final_Time: 4.000000e-02
-  Time_Steps: 400000
+  Final_Time: 5.000000e-03
+  Time_Steps: 50000
   Particle_Sim_Type: Multi_Particle
 Container:
   Geometry:
@@ -115,10 +115,10 @@ Output:
     - Boundary_Node_Flag
     - Strain_Stress
     - Theta
-  Output_Interval: 4000
+  Output_Interval: 5000
   Compress_Type: zlib
   Perform_FE_Out: true
   Perform_Out: true
-  Test_Output_Interval: 400
+  Test_Output_Interval: 500
   Debug: 2
   Tag_PP: 0

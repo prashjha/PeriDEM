@@ -467,7 +467,7 @@ void model::DEMModel::computeForces() {
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(
-    (std::size_t) 0, d_x.size(), (std::size_t) 1, 
+    (std::size_t) 0, d_x.size(), (std::size_t) 1,
       [this](std::size_t i) { this->d_f[i] = util::Point(); }
   ); // for_each
 
@@ -744,9 +744,8 @@ void model::DEMModel::computePeridynamicForces() {
 
       } // peridynamic force
 
-      // update force (combines clearing of previous force and addition of
-      // internal force if compute force loop over nodes end of parallel
-      // for loop)
+      // update force (we remove any force from
+      // previous steps and add peridynamics force)
       this->d_f[i] = force_i;
 
       this->d_Z[i] = Zi;

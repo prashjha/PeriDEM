@@ -200,7 +200,7 @@ if(${Enable_Apps})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Building apps")
     endif()
-    add_subdirectory(apps/twop)
+    add_subdirectory(apps)
 endif()
 
 #----------------------------------#

@@ -1,4 +1,4 @@
-# testparallelcomp 
+# parallelcomp 
 
 Test MPI communication and partitioning of mesh for nonlocal interaction. 
 

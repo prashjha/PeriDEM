@@ -8,9 +8,9 @@
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 
-add_executable(twop main.cpp)
+add_executable(TwoParticle_Demo main.cpp)
 
-target_link_libraries(twop PUBLIC Inp Model)
+target_link_libraries(TwoParticle_Demo PUBLIC Inp Model)
 
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Copying apps/twop example directory to build directory")

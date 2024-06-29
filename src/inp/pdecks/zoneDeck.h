@@ -84,7 +84,8 @@ struct Zone {
           << util::io::printStr(d_geomComplexInfo.second, 0)
           << "]" << std::endl;
     }
-    oss << d_geom_p->printStr(nt+1, lvl);
+    if (d_geom_p != nullptr)
+      oss << d_geom_p->printStr(nt+1, lvl);
 
     return oss.str();
   }

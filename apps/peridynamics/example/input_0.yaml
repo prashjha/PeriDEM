@@ -1,0 +1,68 @@
+Model:
+  Dimension: 2
+  Discretization_Type:
+    Spatial: finite_difference
+    Time: central_difference
+  Final_Time: 1.000000e-02
+  Time_Steps: 20000
+  Particle_Sim_Type: Single_Particle
+Mesh:
+  File: ./example/mesh_cir_1_0.msh
+Material:
+  Type: PDState
+  Horizon: 6.000000e-04
+  Density: 1.200000e+03
+  Compute_From_Classical: true
+  K: 2.160000e+04
+  G: 1.296000e+04
+  Gc: 5.000000e+01
+  Influence_Function:
+    Type: 1
+Displacement_BC:
+  Sets: 2
+  Set_1:
+    Region:
+      Geometry:
+        Type: rectangle
+        Parameters: [-0.001, -0.001, 0, -0.0005, -0.0005, 0]
+    Direction: [1,2]
+    Time_Function:
+      Type: constant
+      Parameters:
+        - 0.0
+    Spatial_Function:
+      Type: constant
+    Zero_Displacement: true
+  Set_2:
+    Region:
+      Geometry:
+        Type: rectangle
+        Parameters: [0.0005, 0.0005, 0, 0.001, 0.001, 0]
+    Direction: [1,2]
+    Time_Function:
+      Type: linear
+      Parameters:
+        - 0.005
+    Spatial_Function:
+      Type: constant
+Output:
+  Path: ./example/
+  Tags:
+    - Displacement
+    - Velocity
+    - Force
+    - Force_Density
+    - Damage_Z
+    - Damage
+    - Nodal_Volume
+    - Zone_ID
+    - Particle_ID
+    - Fixity
+    - Force_Fixity
+    - Theta
+  Output_Interval: 1000
+  Compress_Type: zlib
+  Perform_FE_Out: true
+  Perform_Out: true
+  Debug: 3
+  Tag_PP: 0

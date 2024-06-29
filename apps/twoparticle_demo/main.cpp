@@ -42,13 +42,26 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-namespace twop {
+/*!
+ * @brief Namespace to define demo app for two-particle tests
+ */
+namespace twoparticle_demo {
 using util::io::log;
 
+/*!
+ * @brief Main model class to handle demo two-particle test implementation. Goal is to
+ * show that it is easy to specialize the DEMModel class for different scenarios.
+ */
 class Model : public model::DEMModel {
 
 public:
-  explicit Model(inp::Input *deck) : model::DEMModel(deck, "twop::Model") {
+
+  /*!
+   * @brief Constructor
+   *
+   * @param deck Input deck
+   */
+  explicit Model(inp::Input *deck) : model::DEMModel(deck, "twoparticle_demo::Model") {
 
     if (d_ppFile.is_open())
       d_ppFile.close();
@@ -60,10 +73,16 @@ public:
                 "cont_area_r_ideal, s_loc_ideal, s_val_ideal" << std::flush;
   }
 
+  /*!
+   * @brief Runs simulation by executing steps such as init(), integrate(), and close().
+   *
+   * @param deck Input deck
+   */
   void run(inp::Input *deck) override {
 
-    log(d_name + ": Running twop app \n");
+    log(d_name + ": Running TwoParticle_Demo app \n");
 
+    // initialize data
     init();
 
     // check if init() successfully created quadrature data which we need for postprocessing
@@ -100,9 +119,16 @@ public:
       }
     }
 
+    // integrate in time
     integrate();
+
+    // close
+    close();
   }
 
+  /*!
+   * @brief Perform time step integration
+   */
   void integrate() override {
     // perform output at the beginning
     if (d_n == 0 && d_outputDeck_p->d_performOut) {
@@ -161,7 +187,9 @@ public:
     } // loop over time steps
   }
 
-  // compute location of maximum shear stress and penetration length
+  /*!
+   * @brief Handles postprocessing for two-particle test
+   */
   void twoParticleTest() {
 
     bool continue_dt = false;
@@ -184,6 +212,9 @@ public:
              << std::endl;
   }
 
+  /*!
+   * @brief Computes penetration distance of top particle into bottom particle
+   */
   void twoParticleTestPenetrationDist() {
 
     // get alias for particles
@@ -244,6 +275,9 @@ public:
     }
   }
 
+  /*!
+   * @brief Computes maximum shear stress and its location in particle
+   */
   void twoParticleTestMaxShearStress() {
 
     // compute maximum shear stress and where it occurs
@@ -306,25 +340,42 @@ public:
 
 public:
 
+  /*! @brief Penetration distance of top particle into bottom particle */
   double d_penDist = 0.;
+
+  /*! @brief Contact area radius */
   double d_contactAreaRadius = 0.;
+
+  /*! @brief Maximum vertical distance of top particle in initial configuration */
   double d_maxDist = 0.;
+
+  /*! @brief Maximum stress */
   double d_maxStress = 0.;
+
+  /*! @brief Maximum stress location in reference configuration */
   double d_maxStressLocRef = 0.;
+
+  /*! @brief Maximum stress location in current configuration */
   double d_maxStressLocCur = 0.;
 
+  /*! @brief Current maximum vertical distance of top particle */
   double d_maxY = 0.;
 
+  /*! @brief Ideal contact area radius from Hertz theory */
   double d_contactAreaRadiusIdeal = 0.;
+
+  /*! @brief Ideal maximum stress */
   double d_maxStressIdeal = 0.;
+
+  /*! @brief Ideal maximum stress location location in reference configuration */
   double d_maxStressLocRefIdeal = 0.;
 };
-} // namespace twop
+} // namespace twoparticle_demo
 
 int main(int argc, char *argv[]) {
 
   // print program version
-  std::cout << "twop (PeriDEM)"
+  std::cout << "TwoParticle_Demo (PeriDEM)"
             << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION << "."
             << UPDATE_VERSION << ")" << std::endl << std::flush;
 
@@ -332,8 +383,8 @@ int main(int argc, char *argv[]) {
 
   if (input.cmdOptionExists("-h")) {
     // print help
-    std::cout << "Syntax to run the app: ./twop -i <input file> -nThreads <number of threads>";
-    std::cout << "Example: ./twop -i input.yaml -nThreads 4";
+    std::cout << "Syntax to run the app: ./TwoParticle_Demo -i <input file> -nThreads <number of threads>";
+    std::cout << "Example: ./TwoParticle_Demo -i input.yaml -nThreads 2";
   }
 
   // read input arguments
@@ -341,7 +392,7 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = 2;
-    util::io::print(fmt::format("Running twop with number of threads = {}\n", nThreads));
+    util::io::print(fmt::format("Running TwoParticle_Demo with number of threads = {}\n", nThreads));
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
@@ -352,7 +403,7 @@ int main(int argc, char *argv[]) {
     filename = input.getCmdOption("-i");
   else {
     filename = "./example/input_0.yaml";
-    util::io::print(fmt::format("Running twop with example input file = {}\n", filename));
+    util::io::print(fmt::format("Running TwoParticle_Demo with example input file = {}\n", filename));
   }
 
   // current time
@@ -367,7 +418,7 @@ int main(int argc, char *argv[]) {
     deck->getModelDeck()->d_populateElementNodeConnectivity = true;
 
     // simulate model
-    twop::Model dem(deck);
+    twoparticle_demo::Model dem(deck);
     dem.run(deck);
   }
 
