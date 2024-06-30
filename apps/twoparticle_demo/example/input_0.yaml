@@ -1,0 +1,124 @@
+Model:
+  Dimension: 2
+  Discretization_Type:
+    Spatial: finite_difference
+    Time: central_difference
+  Final_Time: 5.000000e-03
+  Time_Steps: 50000
+  Particle_Sim_Type: Multi_Particle
+Container:
+  Geometry:
+    Type: rectangle
+    Parameters: [0.000000e+00, 0.000000e+00, 0.000000e+00, 6.000000e-03, 9.000000e-03, 0.000000e+00]
+Zone:
+  Zones: 2
+Particle:
+  Test_Name: two_particle
+  Zone_1:
+    Type: circle
+    Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_2:
+    Type: circle
+    Parameters: [1.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+Particle_Generation:
+  From_File: ./example/particle_locations_0.csv
+  File_Data_Type: loc_rad_orient
+Mesh:
+  Zone_1:
+    File: ./example/mesh_cir_1_0.msh 
+  Zone_2:
+    File: ./example/mesh_cir_2_0.msh 
+Contact:
+  Zone_11:
+    Contact_Radius_Factor: 9.500000e-01
+    Friction_On: false
+    Kn: 1.473657e+26
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 1.0
+    Beta_n_Factor: 1.000000e+02
+  Zone_12:
+    Contact_Radius_Factor: 9.500000e-01
+    Friction_On: false
+    Kn: 3.149089e+24
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 1.0
+    Beta_n_Factor: 1.000000e+02
+  Zone_22:
+    Contact_Radius_Factor: 9.500000e-01
+    Friction_On: false
+    Kn: 1.591549e+24
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 1.0
+    Beta_n_Factor: 1.000000e+02
+Neighbor:
+  Update_Criteria: simple_all
+  Search_Factor: 1e+01
+  Search_Interval: 100
+Material:
+  Zone_1:
+    Type: PDState
+    Horizon: 6.000000e-04
+    Density: 1.200000e+03
+    Compute_From_Classical: true
+    K: 2.000000e+09
+    G: 1.200000e+09
+    Gc: 5.000000e+02
+    Influence_Function:
+      Type: 1
+  Zone_2:
+    Type: PDState
+    Horizon: 6.000000e-04
+    Density: 1.200000e+03
+    Compute_From_Classical: true
+    K: 2.160000e+07
+    G: 1.296000e+07
+    Gc: 5.000000e+01
+    Influence_Function:
+      Type: 1
+Force_BC:
+  Gravity: [0.000000e+00, -1.000000e+01, 0.000000e+00]
+IC:
+  Constant_Velocity:
+    Velocity_Vector: [0.000000e+00, -8.944272e-02, 0.000000e+00]
+    Particle_List: [1]
+Displacement_BC:
+  Sets: 1
+  Set_1:
+    Particle_List: [0]
+    Direction: [1,2]
+    Time_Function:
+      Type: constant
+      Parameters:
+        - 0.0
+    Spatial_Function:
+      Type: constant
+    Zero_Displacement: true
+Output:
+  Path: ./example/
+  Tags:
+    - Displacement
+    - Velocity
+    - Force
+    - Force_Density
+    - Damage_Z
+    - Damage
+    - Nodal_Volume
+    - Zone_ID
+    - Particle_ID
+    - Fixity
+    - Force_Fixity
+    - Contact_Nodes
+    - No_Fail_Node
+    - Boundary_Node_Flag
+    - Strain_Stress
+    - Theta
+  Output_Interval: 5000
+  Compress_Type: zlib
+  Perform_FE_Out: true
+  Perform_Out: true
+  Test_Output_Interval: 500
+  Debug: 2
+  Tag_PP: 0
