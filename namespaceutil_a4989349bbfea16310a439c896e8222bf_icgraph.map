@@ -1,8 +1,0 @@
-<map id="util::angle" name="util::angle">
-<area shape="rect" id="node1" title="Computes angle between two vectors." alt="" coords="339,81,417,108"/>
-<area shape="rect" id="node2" href="$namespaceutil.html#a61e14a30b244c6b3764234fd024a35c8" title="Computes angle between two vectors." alt="" coords="158,5,237,32"/>
-<area shape="rect" id="node3" href="$namespaceutil.html#a40d4628247bdf3fdd57b068d4a322c95" title="Compute distance between planes." alt="" coords="104,56,291,83"/>
-<area shape="rect" id="node4" href="$namespaceutil.html#a250e0cd1a3e9c62d9ebad16c69e63635" title="Do lines intersect." alt="" coords="126,107,269,133"/>
-<area shape="rect" id="node5" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="125,157,269,184"/>
-<area shape="rect" id="node6" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,157,56,184"/>
-</map>

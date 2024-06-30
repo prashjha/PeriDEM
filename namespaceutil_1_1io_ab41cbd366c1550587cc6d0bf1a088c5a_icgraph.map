@@ -1,7 +1,0 @@
-<map id="util::io::removeExtensionFromFile" name="util::io::removeExtensionFromFile">
-<area shape="rect" id="node1" title="Remove extension from the filename Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="327,23,493,65"/>
-<area shape="rect" id="node2" href="$namespacetest.html#a6934db7b63923b70a56ab8e9c7159202" title="Tests metis partitioning of graph from a 2&#45;D mesh with nonlocal interaction." alt="" coords="104,5,279,32"/>
-<area shape="rect" id="node4" href="$namespacetest.html#af0964e1ea010ded3d98df70e7d5326ca" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="142,56,241,83"/>
-<area shape="rect" id="node3" href="$testMeshPartitioning_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,56,32"/>
-<area shape="rect" id="node5" href="$testParallelComp_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,56,56,83"/>
-</map>

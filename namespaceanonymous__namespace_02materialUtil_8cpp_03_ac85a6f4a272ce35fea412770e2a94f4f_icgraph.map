@@ -1,7 +1,0 @@
-<map id="anonymous_namespace{materialUtil::cpp}::computeStateMxI" name="anonymous_namespace{materialUtil::cpp}::computeStateMxI">
-<area shape="rect" id="node1" title=" " alt="" coords="696,5,859,61"/>
-<area shape="rect" id="node2" href="$namespacematerial.html#a3d863a3738051cdc61931186eede7edd" title="Computes the moment &#160;term in state&#45;based peridynamic formulation." alt="" coords="473,20,648,47"/>
-<area shape="rect" id="node3" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members." alt="" coords="271,20,425,47"/>
-<area shape="rect" id="node4" href="$classtwop_1_1Model.html#a8e7a374cd93c0070be4c04c57d21fcc0" title="Main driver to simulate." alt="" coords="104,20,223,47"/>
-<area shape="rect" id="node5" href="$apps_2twop_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,20,56,47"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="discretize_circle_dense.discretize_circle" name="discretize_circle_dense.discretize_circle">
-<area shape="rect" id="node1" title=" " alt="" coords="5,23,224,65"/>
-<area shape="rect" id="node2" href="$namespacediscretize__circle__dense.html#a87485189661519c83371b0afee042062" title=" " alt="" coords="272,23,459,65"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054" title="Prints formatted information." alt="" coords="507,31,597,57"/>
-<area shape="rect" id="node4" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="645,5,793,32"/>
-<area shape="rect" id="node6" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="666,56,773,83"/>
-<area shape="rect" id="node5" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="841,5,976,32"/>
-<area shape="rect" id="node7" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="852,56,965,83"/>
-</map>

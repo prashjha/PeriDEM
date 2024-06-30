@@ -1,8 +1,0 @@
-<map id="fe::Mesh::readElementData" name="fe::Mesh::readElementData">
-<area shape="rect" id="node1" title="Reads element&#45;node connectivity data from file. This function is meant for cases when mesh was create..." alt="" coords="5,81,188,108"/>
-<area shape="rect" id="node2" href="$namespaceutil_1_1io.html#a6588c46813adf0cb86b795880f1a2ec7" title="Get extension from the filename." alt="" coords="236,5,428,32"/>
-<area shape="rect" id="node3" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="291,56,373,83"/>
-<area shape="rect" id="node5" href="$namespacerw_1_1reader.html#abe0906e8d7c2ca5530b20648bbfec2fd" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="237,107,427,133"/>
-<area shape="rect" id="node6" href="$namespacerw_1_1reader.html#a79098cecf3c77855498e8322ec1bf3a8" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="240,157,424,184"/>
-<area shape="rect" id="node4" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="476,56,605,83"/>
-</map>
