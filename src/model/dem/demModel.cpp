@@ -14,7 +14,7 @@
 #include "particle/baseParticle.h"
 #include "material/materialUtil.h"
 #include "util/function.h"
-#include "util/geomObjects.h"
+#include "util/geomObjectsUtil.h"
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
@@ -1101,8 +1101,8 @@ void model::DEMModel::createParticles() {
     }
 
     // get representative particle for this zone
-    auto &rep_geom_p = pz.d_geom_p;
-    auto rep_geom_params = pz.d_geomParams;
+    auto &rep_geom_p = pz.d_particleGeomData.d_geom_p;
+    auto rep_geom_params = pz.d_particleGeomData.d_geomParams;
 
     // read mesh data
     log(d_name + ": Creating mesh for reference particle in zone = " +
@@ -1236,8 +1236,8 @@ void model::DEMModel::createParticlesFromFile(
                     util::io::printStr(centers)), 2);
 
   // get representative particle for this zone
-  const auto &rep_geom_p = pz.d_geom_p;
-  auto rep_geom_params = pz.d_geomParams;
+  const auto &rep_geom_p = pz.d_particleGeomData.d_geom_p;
+  auto rep_geom_params = pz.d_particleGeomData.d_geomParams;
 
   // get zone bounding box
   std::pair<util::Point, util::Point> box = rep_geom_p->box();
@@ -1384,6 +1384,37 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
   util::geometry::createGeomObject(rep_geom_p->d_name, params, vec_geom_type,
                                    vec_geom_flag, p_geom,
                                    d_modelDeck_p->d_dim, false);
+}
+
+void model::DEMModel::updateGeometryObjectsPostInit() {
+
+  for (auto &p: d_particlesListTypeAll) {
+    if (p->d_geom_p->d_name == "null" or
+        util::methods::isTagInList("copy_from_container", p->d_geom_p->d_tags)) {
+      // update geometry of particle based on bounding box
+      auto bbox = p->getMeshP()->getBoundingBox();
+
+      std::string geom_name = "rectangle";
+      if ( p->getMeshP()->getDimension() == 3)
+        geom_name = "cuboid";
+
+      std::vector<double> geom_params(6, 0.);
+      for (size_t i=0; i<3; i++) {
+        geom_params[i] = bbox.first[i];
+        geom_params[i+3] = bbox.second[i];
+      }
+
+      std::vector<std::string> vec_type;
+      std::vector<std::string> vec_flag;
+
+      util::geometry::createGeomObject(geom_name,
+                                       geom_params,
+                                       vec_type,
+                                       vec_flag,
+                                       p->d_geom_p,
+                                       p->getMeshP()->getDimension());
+    }
+  }
 }
 
 void model::DEMModel::setupContact() {
@@ -1866,8 +1897,13 @@ void model::DEMModel::output() {
   } // end of debug
 
   size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
-  auto writer = rw::writer::VtkParticleWriter(
-      d_outputDeck_p->d_path + "output_" + std::to_string(d_n / dt_out));
+  std::string out_filename = d_outputDeck_p->d_path + "output_";
+  if (d_outputDeck_p->d_tagPPFile.empty())
+    out_filename = out_filename + std::to_string(d_n / dt_out);
+  else
+    out_filename = out_filename + d_outputDeck_p->d_tagPPFile + "_" + std::to_string(d_n / dt_out);
+
+  auto writer = rw::writer::VtkParticleWriter(out_filename);
   if (d_outputDeck_p->d_performFEOut)
     writer.appendMesh(this, d_outputDeck_p->d_outTags);
   else
@@ -1912,9 +1948,13 @@ void model::DEMModel::output() {
       } // for loop over particles
     } // compute strain/stress block
 
-    auto writer1 = rw::writer::VtkParticleWriter(d_outputDeck_p->d_path +
-                                                 "output_strain_" +
-                                                 std::to_string(d_n / dt_out));
+    out_filename = d_outputDeck_p->d_path + "output_strain_";
+    if (d_outputDeck_p->d_tagPPFile.empty())
+      out_filename = out_filename + std::to_string(d_n / dt_out);
+    else
+      out_filename = out_filename + d_outputDeck_p->d_tagPPFile + "_" + std::to_string(d_n / dt_out);
+
+    auto writer1 = rw::writer::VtkParticleWriter(out_filename);
     writer1.appendStrainStress(this);
     writer1.addTimeStep(d_time);
     writer1.close();
@@ -1924,8 +1964,14 @@ void model::DEMModel::output() {
   if (util::methods::isTagInList("Particle_Locations",
                                  d_outputDeck_p->d_outTags)) {
 
-    std::ofstream oss(d_outputDeck_p->d_path + "particle_locations_" +
-                      std::to_string(d_n / dt_out) + ".csv");
+    out_filename = d_outputDeck_p->d_path + "particle_locations_";
+    if (d_outputDeck_p->d_tagPPFile.empty())
+      out_filename = out_filename + std::to_string(d_n / dt_out) + ".csv";
+    else
+      out_filename = out_filename + d_outputDeck_p->d_tagPPFile
+                      + "_" + std::to_string(d_n / dt_out) + ".csv";
+
+    std::ofstream oss(out_filename);
     oss << "i, x, y, z, r\n";
     for (const auto &p : d_particlesListTypeAll) {
       auto xc = p->getXCenter();
@@ -2071,9 +2117,10 @@ std::string model::DEMModel::ppCompressiveTest() {
   if (use_static_file) {
     if (!d_ppFile.is_open()) {
 
+      std::string tag_pp_file = d_outputDeck_p->d_tagPPFile.empty() ? "0" : d_outputDeck_p->d_tagPPFile;
       std::string filename = d_outputDeck_p->d_path + "pp_" +
                              d_pDeck_p->d_testName + "_" +
-                             d_outputDeck_p->d_tagPPFile + ".csv";
+                             tag_pp_file + ".csv";
       d_ppFile.open(filename.c_str(), std::ofstream::out | std::ofstream::app);
 
       d_ppFile << "t, delta, force \n";

@@ -16,15 +16,18 @@ Particle:
   # optional
   Test_Name: test_peridynamics
   Zone_1:
-    Type: circle
-    Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+    Type: rectangle
+    Parameters: [0, 0, 0, 0.01, 0.01, 0]
 Mesh:
   Zone_1:
-    File: ./example/mesh_cir_1_0.msh
+    CreateMesh:
+      Flag: true
+      Info: uniform
+    Mesh_Size: 0.0001
 Material:
   Zone_1:
     Type: PDState
-    Horizon: 6.000000e-04
+    Horizon: 0.00032
     Density: 1.200000e+03
     Compute_From_Classical: true
     K: 2.160000e+05
@@ -38,7 +41,7 @@ Displacement_BC:
     Region:
       Geometry:
         Type: rectangle
-        Parameters: [-0.001, -0.001, 0, -0.0005, -0.0005, 0]
+        Parameters: [0, 0, 0, 0.002, 0.002, 0]
     Direction: [1,2]
     Time_Function:
       Type: constant
@@ -51,7 +54,7 @@ Displacement_BC:
     Region:
       Geometry:
         Type: rectangle
-        Parameters: [0.0005, 0.0005, 0, 0.001, 0.001, 0]
+        Parameters: [0.008, 0.008, 0.01, 0.01, 0]
     Direction: [1,2]
     Time_Function:
       Type: linear
@@ -79,4 +82,4 @@ Output:
   Perform_FE_Out: true
   Perform_Out: true
   Debug: 3
-  Tag_PP: 0
+  Tag_PP: 1

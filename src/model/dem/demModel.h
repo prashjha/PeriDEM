@@ -184,6 +184,9 @@ public:
                                     const std::shared_ptr<util::geometry::GeomObject> &rep_geom_p,
                                     std::shared_ptr<util::geometry::GeomObject> &p_geom);
 
+  /*! @brief Update varioud geometry objects associated with container, particles, and reference particles */
+  virtual void updateGeometryObjectsPostInit();
+
   /*! @brief Update neighborlist for contact */
   virtual void updateContactNeighborlist();
 

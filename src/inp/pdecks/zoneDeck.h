@@ -13,8 +13,7 @@
 
 #include "inp/decks/materialDeck.h"
 #include "inp/decks/meshDeck.h"
-#include "util/geomObjects.h" // geometrical objects
-#include "util/io.h"
+#include "util/geomObjectsUtil.h"
 #include <memory>
 
 namespace inp {
@@ -27,17 +26,8 @@ namespace inp {
 /*! @brief User-input data for zones */
 struct Zone {
 
-  /*! @brief Zone type */
-  std::string d_geomName;
-
-  /*! @brief Zone parameters */
-  std::vector<double> d_geomParams;
-
-  /*! @brief Zone geometry */
-  std::shared_ptr<util::geometry::GeomObject> d_geom_p;
-
-  /*! @brief Zone geometry info if it is a complex type */
-  std::pair<std::vector<std::string>, std::vector<std::string>> d_geomComplexInfo;
+  /*! @brief Zone geometry data */
+  util::geometry::GeomData d_zoneGeomData;
 
   /*! @brief Specify zone to which this particle belongs to */
   size_t d_zoneId;
@@ -45,7 +35,7 @@ struct Zone {
   /*!
    * @brief Constructor
    */
-  Zone() : d_geom_p(nullptr){};
+  Zone() : d_zoneGeomData(){};
 
   /*!
    * @brief Constructor
@@ -53,11 +43,8 @@ struct Zone {
    * @param z Another zone object
    */
   Zone(const Zone &z)
-      : d_geomName(z.d_geomName),
-        d_geomParams(z.d_geomParams),
-        d_geom_p(z.d_geom_p),
-        d_zoneId(z.d_zoneId),
-        d_geomComplexInfo(z.d_geomComplexInfo){};
+      : d_zoneGeomData(z.d_zoneGeomData),
+        d_zoneId(z.d_zoneId) {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -71,21 +58,9 @@ struct Zone {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- Zone --------" << std::endl << std::endl;
-    oss << tabS << "Type = " << d_geomName << ", Zone id = " << d_zoneId
-        << std::endl;
-    oss << tabS << "Parameters = [" << util::io::printStr<double>(d_geomParams, 0)
-        << "]" << std::endl;
-    if (!d_geomComplexInfo.first.empty()) {
-      oss << tabS << "Vec type for complex geometry = ["
-          << util::io::printStr(d_geomComplexInfo.first, 0)
-          << "]" << std::endl;
-
-      oss << tabS << "Vec flag for complex geometry = ["
-          << util::io::printStr(d_geomComplexInfo.second, 0)
-          << "]" << std::endl;
-    }
-    if (d_geom_p != nullptr)
-      oss << d_geom_p->printStr(nt+1, lvl);
+    oss << tabS << "Zone id = " << d_zoneId << std::endl;
+    oss << tabS << "Zone geometry data: " << std::endl;
+    oss << d_zoneGeomData.printStr(nt+1, lvl);
 
     return oss.str();
   }
@@ -97,24 +72,6 @@ struct Zone {
    * @param lvl Information level (higher means more information)
    */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
-
-  /*!
-   * @brief Copies the geometry details
-   *
-   * @param name Name of geometry
-   * @param params Parameters
-   * @param complexInfo Pair of vector of geometry names and flags for complex geometry
-   * @param geom Pointer to geometry object
-   */
-  void copyContainerGeometry(std::string &name,
-                             std::vector<double> &params,
-                             std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo,
-                             std::shared_ptr<util::geometry::GeomObject> &geom) {
-    name = d_geomName;
-    params = d_geomParams;
-    complexInfo = d_geomComplexInfo;
-    geom = d_geom_p;
-  }
 };
 
 /*! @brief User-input data for particle zone */
@@ -132,26 +89,11 @@ struct ParticleZone {
   /*! @brief Is this particle actually a wall? */
   bool d_isWall;
 
-  /*!
-   * @brief geometry of particle. Currently, we only support circle (2-d)
-   * and sphere (3-d).
-   *
-   *  For wall, geometry can be "flat", "circular", "spherical" etc.
-   */
-  std::shared_ptr<util::geometry::GeomObject> d_geom_p;
+  /*! @brief Geometry of details of particle */
+  util::geometry::GeomData d_particleGeomData;
 
-  /*! @brief Particle geometry type */
-  std::string d_geomName;
-
-  /*! @brief Particle parameters
-   *
-   * In case of circle, sphere, cylinder, the first parameter must be
-   * radius.
-   */
-  std::vector<double> d_geomParams;
-
-  /*! @brief Particle geometry info if it is a complex type */
-  std::pair<std::vector<std::string>, std::vector<std::string>> d_geomComplexInfo;
+  /*! @brief Geometry of details of reference particle */
+  util::geometry::GeomData d_refParticleGeomData;
 
   /*!
    * @brief Particle generation method
@@ -174,24 +116,6 @@ struct ParticleZone {
 
   /*! @brief Read particle from a file */
   std::string d_particleFile;
-
-  /*!
-   * @brief Reference particle information
-   */
-  std::shared_ptr<util::geometry::GeomObject> d_refParticleGeom_p;
-
-  /*! @brief Particle geometry type */
-  std::string d_refParticleGeomName;
-
-  /*! @brief Reference particle parameters
-   *
-   * In case of circle, sphere, cylinder, the first parameter must be
-   * radius.
-   */
-  std::vector<double> d_refParticleGeomParams;
-
-  /*! @brief Particle geometry info if it is a complex type */
-  std::pair<std::vector<std::string>, std::vector<std::string>> d_refParticleGeomComplexInfo;
 
   /*! @brief Store material information */
   inp::MaterialDeck d_matDeck;
@@ -224,14 +148,13 @@ struct ParticleZone {
       : d_zone(inp::Zone()),
         d_particleDescription(""),
         d_isWall(false),
-        d_geom_p(nullptr),
+        d_particleGeomData(),
+        d_refParticleGeomData(),
         d_genMethod(""),
         d_particleFileDataType(""),
         d_particleFile(""),
-        d_refParticleGeom_p(nullptr),
-        d_refParticleGeomParams(),
-        d_matDeck(inp::MaterialDeck()),
-        d_meshDeck(inp::MeshDeck()),
+        d_matDeck(),
+        d_meshDeck(),
         d_meshFlag(true),
         d_allDofsConstrained(false),
         d_nearBdNodesTol(0.5),
@@ -247,17 +170,11 @@ struct ParticleZone {
       : d_zone(pz.d_zone),
         d_particleDescription(pz.d_particleDescription),
         d_isWall(pz.d_isWall),
-        d_geom_p(pz.d_geom_p),
-        d_geomName(pz.d_geomName),
-        d_geomParams(pz.d_geomParams),
-        d_geomComplexInfo(pz.d_geomComplexInfo),
+        d_particleGeomData(pz.d_particleGeomData),
+        d_refParticleGeomData(pz.d_refParticleGeomData),
         d_genMethod(pz.d_genMethod),
         d_particleFileDataType(pz.d_particleFileDataType),
         d_particleFile(pz.d_particleFile),
-        d_refParticleGeom_p(pz.d_refParticleGeom_p),
-        d_refParticleGeomName(pz.d_refParticleGeomName),
-        d_refParticleGeomParams(pz.d_refParticleGeomParams),
-        d_refParticleGeomComplexInfo(pz.d_refParticleGeomComplexInfo),
         d_matDeck(pz.d_matDeck),
         d_meshDeck(pz.d_meshDeck),
         d_meshFlag(pz.d_meshFlag),
@@ -286,34 +203,10 @@ struct ParticleZone {
     oss << tabS << "Mesh flag = " << d_meshFlag << std::endl;
     oss << tabS << "All dofs constrained = " << d_allDofsConstrained << std::endl;
     oss << tabS << "d_createParticleUsingParticleZoneGeomObject = " << d_createParticleUsingParticleZoneGeomObject << std::endl;
-    oss << tabS << "Particle geometry info: " << std::endl;
-    oss << tabS << "Geometry name = " << d_geomName << std::endl;
-    oss << tabS << "Geometry parameters = [" << util::io::printStr<double>(d_geomParams, 0)
-        << "]" << std::endl;
-    if (!d_geomComplexInfo.first.empty()) {
-      oss << tabS << "Geometry vec type for complex geometry = ["
-          << util::io::printStr(d_geomComplexInfo.first, 0)
-          << "]" << std::endl;
-
-      oss << tabS << "Geometry vec flag for complex geometry = ["
-          << util::io::printStr(d_geomComplexInfo.second, 0)
-          << "]" << std::endl;
-    }
-    oss << d_geom_p->printStr(nt + 1, lvl);
-    oss << tabS << "Reference particle geometry info: " << std::endl;
-    oss << tabS << "Geometry name = " << d_refParticleGeomName << std::endl;
-    oss << tabS << "Geometry parameters = [" << util::io::printStr<double>(d_refParticleGeomParams, 0)
-        << "]" << std::endl;
-    if (!d_refParticleGeomComplexInfo.first.empty()) {
-      oss << tabS << "Geometry vec type for complex geometry = ["
-          << util::io::printStr(d_refParticleGeomComplexInfo.first, 0)
-          << "]" << std::endl;
-
-      oss << tabS << "Geometry vec flag for complex geometry = ["
-          << util::io::printStr(d_refParticleGeomComplexInfo.second, 0)
-          << "]" << std::endl;
-    }
-    oss << d_refParticleGeom_p->printStr(nt + 1, lvl);
+    oss << tabS << "Particle geometry details: " << std::endl;
+    oss << d_particleGeomData.printStr(nt+1, lvl);
+    oss << tabS << "Reference rarticle geometry details: " << std::endl;
+    oss << d_refParticleGeomData.printStr(nt+1, lvl);
     oss << d_matDeck.printStr(nt+1, lvl);
     oss << d_meshDeck.printStr(nt+1, lvl);
     oss << std::endl;
@@ -328,34 +221,6 @@ struct ParticleZone {
    * @param lvl Information level (higher means more information)
    */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
-
-  /*!
-   * @brief Copies the geometry details
-   *
-   * @param name Name of geometry
-   * @param params Parameters
-   * @param complexInfo Pair of vector of geometry names and flags for complex geometry
-   * @param geom Pointer to geometry object
-   */
-  void copyContainerGeometry(std::string &name,
-                             std::vector<double> &params,
-                             std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo,
-                             std::shared_ptr<util::geometry::GeomObject> &geom,
-                             bool copy_ref = false) {
-
-    if (!copy_ref) {
-      name = d_geomName;
-      params = d_geomParams;
-      complexInfo = d_geomComplexInfo;
-      geom = d_geom_p;
-    }
-    else {
-      name = d_refParticleGeomName;
-      params = d_refParticleGeomParams;
-      complexInfo = d_refParticleGeomComplexInfo;
-      geom = d_refParticleGeom_p;
-    }
-  }
 };
 
 } // namespace inp

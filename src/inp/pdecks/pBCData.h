@@ -11,9 +11,7 @@
 #ifndef INP_P_BCDATA_H
 #define INP_P_BCDATA_H
 
-#include "util/geomObjects.h" // geometrical objects
-#include "util/io.h"
-#include <memory>
+#include "util/geomObjectsUtil.h"
 
 namespace inp {
 
@@ -36,17 +34,15 @@ struct PBCData {
    */
   std::string d_selectionType;
 
+  /*!
+   * @brief Flag that indicates if region-based application of boundary condition is active.
+   * So cases of 'region', 'region_with_include_list', 'region_with_exclude_list', and
+   * 'region_with_include_list_with_exclude_list' will have region-based application of boundary condition.
+   */
+  bool d_isRegionActive;
+
   /*! @brief Region geometry (if any) */
-  std::shared_ptr<util::geometry::GeomObject> d_regionGeom_p;
-
-  /*! @brief Region geometry name */
-  std::string d_regionGeomName;
-
-  /*! @brief Region geometry parameters */
-  std::vector<double> d_regionGeomParams;
-
-  /*! @brief Region geometry info if it is a complex type */
-  std::pair<std::vector<std::string>, std::vector<std::string>> d_regionGeomComplexInfo;
+  util::geometry::GeomData d_regionGeomData;
 
   /*! @brief List of particles (if any) */
   std::vector<size_t> d_pList;
@@ -101,7 +97,8 @@ struct PBCData {
   /*!
    * @brief Constructor
    */
-  PBCData() : d_regionGeom_p(nullptr), d_isDisplacementZero(false){};
+  PBCData() :
+          d_isRegionActive(false), d_regionGeomData(), d_isDisplacementZero(false){};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -116,24 +113,10 @@ struct PBCData {
     std::ostringstream oss;
     oss << tabS << "------- PBCData --------" << std::endl << std::endl;
     oss << tabS << "Selection type  = " << d_selectionType << std::endl;
-    if (d_regionGeom_p != nullptr) {
-      oss << tabS << "Region geometry name  = " << d_regionGeomName << std::endl;
-      oss << tabS << "Region parameters list = ["
-          << util::io::printStr(d_regionGeomParams, 0) << "]" << std::endl;
-      if (!d_regionGeomComplexInfo.first.empty()) {
-        oss << tabS << "Region complex type data = ";
-        for (size_t i=0; i<d_regionGeomComplexInfo.first.size(); i++) {
-          oss << "(" << d_regionGeomComplexInfo.first[i]
-              << ", " << d_regionGeomComplexInfo.second[i]
-              << ")";
-          if (i == d_regionGeomComplexInfo.first.size() - 1)
-            oss << "\n";
-          else
-            oss << "; ";
-        }
-      }
-
-      oss << d_regionGeom_p->printStr(nt + 1, lvl);
+    oss << tabS << "Is region active  = " << d_isRegionActive << std::endl;
+    if (d_regionGeomData.d_geom_p != nullptr) {
+      oss << tabS << "Region geometry info: " << std::endl;
+      oss << d_regionGeomData.printStr(nt+1, lvl);
     }
     if (!d_pList.empty())
       oss << tabS << "Particle list = ["

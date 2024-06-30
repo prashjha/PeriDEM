@@ -103,7 +103,7 @@ struct OutputDeck {
   OutputDeck()
       : d_outFormat("vtu"), d_path("./"), d_dtOut(0), d_dtOutOld(0), d_debug(0),
         d_performFEOut(true), d_dtOutCriteria(0), d_performOut(true),
-        d_dtTestOut(0), d_tagPPFile("0") {};
+        d_dtTestOut(0), d_tagPPFile("") {};
 
   /*!
    * @brief Returns the string containing printable information about the object

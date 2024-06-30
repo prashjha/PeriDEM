@@ -188,6 +188,7 @@ public:
    * @brief Create single particle with given information in the input deck
    */
   void createParticles() override {
+
     d_particlesListTypeParticle.resize(0);
     d_particlesListTypeAll.resize(0);
     d_particlesListTypeWall.resize(0);
@@ -228,44 +229,77 @@ public:
       // read mesh data
       log(d_name + ": Creating mesh for reference particle in zone = " +
           std::to_string(z_id) + "\n");
-      auto mesh = std::make_shared<fe::Mesh>(&pz.d_meshDeck);
+      std::shared_ptr<fe::Mesh> mesh;
+      if (!pz.d_meshDeck.d_createMesh) {
+        mesh = std::make_shared<fe::Mesh>(&pz.d_meshDeck);
+      }
+      else {
+        const auto &geomData = pz.d_meshDeck.d_createMeshGeomData;
+        if (pz.d_meshDeck.d_createMeshInfo == "uniform"
+            and geomData.d_geomName == "rectangle") {
+
+          // get the geometrical details
+          std::pair<std::vector<double>, std::vector<double>> box;
+          std::vector<size_t> nGrid(3, 0);
+
+          for (size_t i=0; i<3; i++) {
+            box.first.push_back(geomData.d_geomParams[i]);
+            box.second.push_back(geomData.d_geomParams[i+3]);
+
+            nGrid[i] = size_t((geomData.d_geomParams[i+3] - geomData.d_geomParams[i])/pz.d_meshDeck.d_h);
+
+            std::cout << fmt::format("box.first[i] = {}, "
+                                     "box.second[i] = {}, "
+                                     "nGrid[i] = {}\n",
+                                     box.first[i],
+                                     box.second[i],
+                                     nGrid[i]);
+          }
+          fe::Mesh temp_mesh;
+          fe::createUniformMesh(&temp_mesh,
+                               d_modelDeck_p->d_dim,
+                               box,
+                               nGrid);
+          mesh = std::make_shared<fe::Mesh>(temp_mesh);
+        }
+        else {
+         std::cerr << "Error: Currently, we can only support in-built uniform mesh for rectangles.\n";
+         exit(EXIT_FAILURE);
+        }
+      }
 
       // create the reference particle
       log(d_name + ": Creating reference particle in zone = " +
           std::to_string(z_id) + "\n");
 
       // get representative particle for this zone
-      std::shared_ptr<util::geometry::GeomObject> rep_geom_p;
-      std::vector<double> rep_geom_params;
+      util::geometry::GeomData rep_geom_data;
 
-      if (pz.d_geom_p->d_name == "null") {
+      if (pz.d_particleGeomData.d_geom_p->d_name == "null") {
         // create geometry based on mesh bounding box
         auto mesh_bbox = mesh->getBoundingBox();
         for (auto a : mesh_bbox.first)
-          rep_geom_params.push_back(a);
+          rep_geom_data.d_geomParams.push_back(a);
         for (auto a : mesh_bbox.second)
-          rep_geom_params.push_back(a);
+          rep_geom_data.d_geomParams.push_back(a);
 
-        std::string rep_geom_name = "rectangle";
+        rep_geom_data.d_geomName = "rectangle";
         if (d_modelDeck_p->d_dim == 3)
-          rep_geom_name = "cuboid";
+          rep_geom_data.d_geomName = "cuboid";
 
-        util::geometry::createGeomObject(rep_geom_name,
-                                         rep_geom_params,
-                                         pz.d_geomComplexInfo.first,
-                                         pz.d_geomComplexInfo.second,
-                                         rep_geom_p,
+        rep_geom_data.d_geomComplexInfo = pz.d_particleGeomData.d_geomComplexInfo;
+
+        util::geometry::createGeomObject(rep_geom_data,
                                          d_modelDeck_p->d_dim);
       }
       else {
-        rep_geom_p = pz.d_geom_p;
-        rep_geom_params = pz.d_geomParams;
+        pz.d_particleGeomData.copyGeometry(rep_geom_data, d_modelDeck_p->d_dim);
       }
 
       auto ref_p = std::make_shared<particle::RefParticle>(
               d_referenceParticles.size(),
               static_cast<std::shared_ptr<ModelData>>(this),
-              rep_geom_p,
+              rep_geom_data.d_geom_p,
               mesh);
 
       d_referenceParticles.emplace_back(ref_p);
@@ -415,7 +449,7 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-i"))
     filename = input.getCmdOption("-i");
   else {
-    filename = "./example/input_0.yaml";
+    filename = "./example/input_1.yaml";
     util::io::print(fmt::format("Running Peridynamics with example input file = {}\n", filename));
   }
 
