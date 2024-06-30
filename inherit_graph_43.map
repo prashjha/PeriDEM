@@ -1,0 +1,31 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,358,188,383"/>
+<area shape="rect" id="Node000001" href="$classutil_1_1geometry_1_1AnnulusGeomObject.html" title="Defines annulus rectangle." alt="" coords="239,5,429,45"/>
+<area shape="poly" id="edge18_Node000000_Node000001" title=" " alt="" coords="100,344,113,285,137,208,155,167,177,126,203,89,234,55,252,43,255,48,238,59,207,92,182,129,160,169,142,210,118,287,105,345"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1Circle.html" title="Defines circle." alt="" coords="263,70,405,95"/>
+<area shape="poly" id="edge19_Node000000_Node000002" title=" " alt="" coords="102,344,117,294,143,229,182,163,206,132,234,106,261,91,264,96,238,110,210,136,186,166,148,231,122,295,107,346"/>
+<area shape="rect" id="Node000003" href="$classutil_1_1geometry_1_1ComplexGeomObject.html" title="Defines complex geometrical object." alt="" coords="236,120,432,160"/>
+<area shape="poly" id="edge20_Node000000_Node000003" title=" " alt="" coords="107,344,126,306,154,259,190,211,234,170,255,158,257,162,238,174,194,215,158,262,131,308,111,347"/>
+<area shape="rect" id="Node000004" href="$classutil_1_1geometry_1_1Cube.html" title="Defines cube." alt="" coords="264,185,404,210"/>
+<area shape="poly" id="edge21_Node000000_Node000004" title=" " alt="" coords="111,345,161,282,195,248,235,219,263,207,265,212,237,224,199,252,165,285,116,348"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1geometry_1_1Cuboid.html" title="Defines cuboid." alt="" coords="259,234,409,259"/>
+<area shape="poly" id="edge22_Node000000_Node000005" title=" " alt="" coords="120,347,171,307,235,268,266,257,268,262,237,273,174,311,123,351"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1geometry_1_1Cylinder.html" title="Defines cylinder." alt="" coords="255,283,413,309"/>
+<area shape="poly" id="edge23_Node000000_Node000006" title=" " alt="" coords="142,350,235,317,276,306,278,311,237,323,143,355"/>
+<area shape="rect" id="Node000007" href="$classutil_1_1geometry_1_1Drum2D.html" title="Defines Drum2D." alt="" coords="255,333,413,358"/>
+<area shape="poly" id="edge24_Node000000_Node000007" title=" " alt="" coords="201,357,254,351,255,356,202,362"/>
+<area shape="rect" id="Node000008" href="$classutil_1_1geometry_1_1Hexagon.html" title="Defines Hexagon." alt="" coords="253,382,415,407"/>
+<area shape="poly" id="edge25_Node000000_Node000008" title=" " alt="" coords="202,379,253,384,253,389,202,384"/>
+<area shape="rect" id="Node000009" href="$classutil_1_1geometry_1_1Line.html" title="Defines Line." alt="" coords="267,431,401,457"/>
+<area shape="poly" id="edge26_Node000000_Node000009" title=" " alt="" coords="146,386,237,416,282,429,280,434,235,421,144,391"/>
+<area shape="rect" id="Node000010" href="$classutil_1_1geometry_1_1NullGeomObject.html" title="Defines null (empty) geom object." alt="" coords="251,481,417,521"/>
+<area shape="poly" id="edge27_Node000000_Node000010" title=" " alt="" coords="125,390,176,428,237,466,267,479,265,484,235,470,173,432,122,394"/>
+<area shape="rect" id="Node000011" href="$classutil_1_1geometry_1_1Rectangle.html" title="Defines Rectangle." alt="" coords="250,546,418,571"/>
+<area shape="poly" id="edge28_Node000000_Node000011" title=" " alt="" coords="114,394,163,463,198,500,237,531,264,544,262,548,235,536,194,504,159,466,110,397"/>
+<area shape="rect" id="Node000012" href="$classutil_1_1geometry_1_1Sphere.html" title="Defines sphere." alt="" coords="259,595,409,621"/>
+<area shape="poly" id="edge29_Node000000_Node000012" title=" " alt="" coords="110,395,128,436,155,487,192,538,214,561,237,580,261,593,259,598,235,585,210,564,188,541,151,489,123,439,105,397"/>
+<area shape="rect" id="Node000013" href="$classutil_1_1geometry_1_1Square.html" title="Defines Square." alt="" coords="259,645,409,670"/>
+<area shape="poly" id="edge30_Node000000_Node000013" title=" " alt="" coords="107,396,122,446,148,509,186,575,210,604,238,630,260,642,257,647,234,634,206,608,182,578,143,512,117,447,102,397"/>
+<area shape="rect" id="Node000014" href="$classutil_1_1geometry_1_1Triangle.html" title="Defines Triangle." alt="" coords="257,694,411,719"/>
+<area shape="poly" id="edge31_Node000000_Node000014" title=" " alt="" coords="104,396,117,455,141,532,159,572,181,611,207,648,238,679,258,692,255,696,234,683,203,651,176,614,154,575,136,534,112,457,99,397"/>
+</map>

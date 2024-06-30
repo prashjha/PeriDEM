@@ -1,0 +1,5 @@
+<map id="util::parallel::initMpi" name="util::parallel::initMpi">
+<area shape="rect" id="Node000001" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="5,5,140,31"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="188,5,360,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,15,174,15,174,21,140,21"/>
+</map>
