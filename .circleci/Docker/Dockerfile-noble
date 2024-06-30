@@ -7,14 +7,14 @@
 # file LICENSE)
 
 # base ubuntu image with essentials and vtk
-FROM prashjha/peridem-base-bionic:latest
+FROM prashjha/peridem-base-noble:latest
 
 # Set metadata
 LABEL maintainer="Prashant K. Jha <pjha.sci@gmail.com>"
 LABEL description="PeriDEM docker image"
 
 ## build command
-## docker build -t prashjha/peridem-bionic:latest -f ./Dockerfile-bionic . 2>&1 | tee log-peridem-bionic.txt
+## docker build -t prashjha/peridem-noble:latest -f ./Dockerfile-noble . 2>&1 | tee log-peridem-noble.txt
 
 # -----------------------
 # setup user (for mpi tests)
