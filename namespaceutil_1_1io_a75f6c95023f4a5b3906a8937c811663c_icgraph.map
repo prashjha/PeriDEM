@@ -1,7 +1,0 @@
-<map id="util::io::initLogger" name="util::io::initLogger">
-<area shape="rect" id="Node000001" title="Initializes the logger." alt="" coords="256,31,377,56"/>
-<area shape="rect" id="Node000002" href="$classmodel_1_1DEMModel.html#a1baac4ac6fa032c7779f00da838472ea" title="Constructor." alt="" coords="5,5,208,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="242,37,208,33,208,28,243,32"/>
-<area shape="rect" id="Node000003" href="$testParallelComp_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="81,55,132,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="243,54,132,67,132,62,242,49"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="problem_setup.generate_particle_gmsh_input" name="problem_setup.generate_particle_gmsh_input">
-<area shape="rect" id="Node000001" title=" " alt="" coords="215,37,376,77"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="330,26,318,19,295,16,275,18,263,23,259,29,261,36,256,38,254,28,260,18,274,13,295,11,320,14,333,21"/>
-<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#a021c61bf44d7c968582474d32605a1ad" title=" " alt="" coords="5,5,167,45"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="200,46,166,40,167,35,201,40"/>
-<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#ac5b70eb483dcc46be564cfc382ca08ef" title=" " alt="" coords="9,69,163,109"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="201,74,163,80,163,75,200,69"/>
-</map>

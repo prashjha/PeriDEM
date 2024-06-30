@@ -1,7 +1,0 @@
-<map id="util::geometry::Rectangle" name="util::geometry::Rectangle">
-<area shape="rect" id="Node000001" title="Defines Rectangle." alt="" coords="97,713,257,1419"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,180,651"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,664,139,713,134,713,128,665"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="205,35,319,621"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="231,621,222,698,217,697,226,621"/>
-</map>
