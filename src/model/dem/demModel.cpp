@@ -152,8 +152,10 @@ void model::DEMModel::init() {
   d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
 
   // setup contact
-  log(d_name + ": Setting up contact.\n");
-  setupContact();
+  if (d_input_p->isMultiParticle()) {
+    log(d_name + ": Setting up contact.\n");
+    setupContact();
+  }
 
   // setup element-node connectivity data if needed
   log(d_name + ": Setting up element-node connectivity data for strain/stress.\n");
@@ -176,13 +178,15 @@ void model::DEMModel::init() {
   t2 = steady_clock::now();
   appendKeyData("peridynamics_neigh_update_time", util::methods::timeDiff(t1, t2));
 
-  log(d_name + ": Creating neighborlist for contact.\n");
-  d_contNeighUpdateInterval = d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval;
-  d_contNeighSearchRadius = d_pDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
-  t1 = steady_clock::now();
-  updateContactNeighborlist();
-  t2 = steady_clock::now();
-  appendKeyData("contact_neigh_update_time", util::methods::timeDiff(t1, t2));
+  if (d_input_p->isMultiParticle()) {
+    log(d_name + ": Creating neighborlist for contact.\n");
+    d_contNeighUpdateInterval = d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval;
+    d_contNeighSearchRadius = d_pDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
+    t1 = steady_clock::now();
+    updateContactNeighborlist();
+    t2 = steady_clock::now();
+    appendKeyData("contact_neigh_update_time", util::methods::timeDiff(t1, t2));
+  }
 
   // create peridynamic bonds
   log(d_name + ": Creating peridynamics bonds.\n");
@@ -481,19 +485,26 @@ void model::DEMModel::computeForces() {
   appendKeyData("pd_compute_time", pd_time);
   appendKeyData("avg_peridynamics_force_time", pd_time/d_infoN);
 
-  // update contact neighborlist
-  t1 = steady_clock::now();
-  updateContactNeighborlist();
-  auto current_contact_neigh_update_time = util::methods::timeDiff(t1, steady_clock::now());
-  appendKeyData("contact_neigh_update_time", current_contact_neigh_update_time);
-  appendKeyData("avg_contact_neigh_update_time", current_contact_neigh_update_time/d_infoN);
+  float current_contact_neigh_update_time = 0;
+  float contact_time = 0;
+  if (d_input_p->isMultiParticle()) {
+    // update contact neighborlist
+    t1 = steady_clock::now();
+    updateContactNeighborlist();
+    auto current_contact_neigh_update_time = util::methods::timeDiff(t1,
+                                                                     steady_clock::now());
+    appendKeyData("contact_neigh_update_time",
+                  current_contact_neigh_update_time);
+    appendKeyData("avg_contact_neigh_update_time",
+                  current_contact_neigh_update_time / d_infoN);
 
-  // compute contact forces between particles
-  t1 = steady_clock::now();
-  computeContactForces();
-  auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
-  appendKeyData("contact_compute_time", contact_time);
-  appendKeyData("avg_contact_force_time", contact_time/d_infoN);
+    // compute contact forces between particles
+    t1 = steady_clock::now();
+    computeContactForces();
+    auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
+    appendKeyData("contact_compute_time", contact_time);
+    appendKeyData("avg_contact_force_time", contact_time / d_infoN);
+  }
 
   // Compute external forces
   t1 = steady_clock::now();
@@ -504,39 +515,58 @@ void model::DEMModel::computeForces() {
 
   // output avg time info
   if (dbg_condition) {
-    log(fmt::format("    Avg time (ms): \n"
-                    "      {:48s} = {:8d}\n"
-                    "      {:48s} = {:8d}\n"
-                    "      {:48s} = {:8d}\n"
-                    "      {:48s} = {:8d}\n"
-                    "      {:48s} = {:8d}\n"
-                    "      {:48s} = {:8d}\n",
-                    "tree update", size_t(getKeyData("avg_tree_update_time")),
-                    "contact neigh update", size_t(getKeyData("avg_contact_neigh_update_time")),
-                    "contact force", size_t(getKeyData("avg_contact_force_time")),
-                    "total contact", size_t(getKeyData("avg_tree_update_time")
-                          + getKeyData("avg_contact_neigh_update_time")
-                          + getKeyData("avg_contact_force_time")),
-                    "peridynamics force", size_t(getKeyData("avg_peridynamics_force_time")),
-                    "external force", size_t(getKeyData("avg_extf_compute_time")/d_infoN)),
-        2, dbg_condition, 3);
+    if (d_input_p->isMultiParticle()) {
+      log(fmt::format("    Avg time (ms): \n"
+                      "      {:48s} = {:8d}\n"
+                      "      {:48s} = {:8d}\n"
+                      "      {:48s} = {:8d}\n"
+                      "      {:48s} = {:8d}\n"
+                      "      {:48s} = {:8d}\n"
+                      "      {:48s} = {:8d}\n",
+                      "tree update", size_t(getKeyData("avg_tree_update_time")),
+                      "contact neigh update",
+                      size_t(getKeyData("avg_contact_neigh_update_time")),
+                      "contact force",
+                      size_t(getKeyData("avg_contact_force_time")),
+                      "total contact", size_t(getKeyData("avg_tree_update_time")
+                                              + getKeyData(
+                          "avg_contact_neigh_update_time")
+                                              + getKeyData(
+                          "avg_contact_force_time")),
+                      "peridynamics force",
+                      size_t(getKeyData("avg_peridynamics_force_time")),
+                      "external force",
+                      size_t(getKeyData("avg_extf_compute_time") / d_infoN)),
+          2, dbg_condition, 3);
 
-    appendKeyData("avg_tree_update_time", 0.);
-    appendKeyData("avg_contact_neigh_update_time", 0.);
-    appendKeyData("avg_contact_force_time", 0.);
-    appendKeyData("avg_peridynamics_force_time", 0.);
-    appendKeyData("avg_extf_compute_time", 0.);
+      appendKeyData("avg_tree_update_time", 0.);
+      appendKeyData("avg_contact_neigh_update_time", 0.);
+      appendKeyData("avg_contact_force_time", 0.);
+      appendKeyData("avg_peridynamics_force_time", 0.);
+      appendKeyData("avg_extf_compute_time", 0.);
+    }
+    else {
+      log(fmt::format("    Avg time (ms): \n"
+                      "      {:48s} = {:8d}\n"
+                      "      {:48s} = {:8d}\n",
+                      "peridynamics force", size_t(getKeyData("avg_peridynamics_force_time")),
+                      "external force", size_t(getKeyData("avg_extf_compute_time")/d_infoN)),
+          2, dbg_condition, 3);
+
+      appendKeyData("avg_peridynamics_force_time", 0.);
+      appendKeyData("avg_extf_compute_time", 0.);
+    }
   }
-
-  log(fmt::format("    {:50s} = {:8d} \n",
-                  "Point cloud update time (ms)",
-                  size_t(getKeyData("pt_cloud_update_time"))
-      ),
-      2, dbg_condition, 3);
 
   log(fmt::format("    {:50s} = {:8d} \n",
                   "Force reset time (ms)",
                   size_t(force_reset_time)
+      ),
+      2, dbg_condition, 3);
+
+  log(fmt::format("    {:50s} = {:8d} \n",
+                  "External force time (ms)",
+                  size_t(extf_time)
       ),
       2, dbg_condition, 3);
 
@@ -546,23 +576,26 @@ void model::DEMModel::computeForces() {
       ),
       2, dbg_condition, 3);
 
-  log(fmt::format("    {:50s} = {:8d} \n",
-                  "Contact neighborlist update time (ms)",
-                  size_t(current_contact_neigh_update_time)
-      ),
-      2, dbg_condition, 3);
+  if (d_input_p->isMultiParticle()) {
 
-  log(fmt::format("    {:50s} = {:8d} \n",
-                  "Contact force time (ms)",
-                  size_t(contact_time)
-      ),
-      2, dbg_condition, 3);
+    log(fmt::format("    {:50s} = {:8d} \n",
+                    "Point cloud update time (ms)",
+                    size_t(getKeyData("pt_cloud_update_time"))
+        ),
+        2, dbg_condition, 3);
 
-  log(fmt::format("    {:50s} = {:8d} \n",
-                  "External force time (ms)",
-                  size_t(extf_time)
-      ),
-      2, dbg_condition, 3);
+    log(fmt::format("    {:50s} = {:8d} \n",
+                    "Contact neighborlist update time (ms)",
+                    size_t(current_contact_neigh_update_time)
+        ),
+        2, dbg_condition, 3);
+
+    log(fmt::format("    {:50s} = {:8d} \n",
+                    "Contact force time (ms)",
+                    size_t(contact_time)
+        ),
+        2, dbg_condition, 3);
+  }
 
 }
 
@@ -1100,18 +1133,55 @@ void model::DEMModel::createParticles() {
       exit(EXIT_FAILURE);
     }
 
-    // get representative particle for this zone
-    auto &rep_geom_p = pz.d_particleGeomData.d_geom_p;
-    auto rep_geom_params = pz.d_particleGeomData.d_geomParams;
-
     // read mesh data
     log(d_name + ": Creating mesh for reference particle in zone = " +
-                  std::to_string(z_id) + "\n");
-    auto mesh = std::make_shared<fe::Mesh>(&pz.d_meshDeck);
+        std::to_string(z_id) + "\n");
+    std::shared_ptr<fe::Mesh> mesh;
+    if (!pz.d_meshDeck.d_createMesh) {
+      mesh = std::make_shared<fe::Mesh>(&pz.d_meshDeck);
+    }
+    else {
+      const auto &geomData = pz.d_meshDeck.d_createMeshGeomData;
+      if (pz.d_meshDeck.d_createMeshInfo == "uniform"
+          and geomData.d_geomName == "rectangle") {
+
+        // get the geometrical details
+        std::pair<std::vector<double>, std::vector<double>> box;
+        std::vector<size_t> nGrid(3, 0);
+
+        for (size_t i=0; i<3; i++) {
+          box.first.push_back(geomData.d_geomParams[i]);
+          box.second.push_back(geomData.d_geomParams[i+3]);
+
+          nGrid[i] = size_t((geomData.d_geomParams[i+3] - geomData.d_geomParams[i])/pz.d_meshDeck.d_h);
+
+          std::cout << fmt::format("box.first[i] = {}, "
+                                   "box.second[i] = {}, "
+                                   "nGrid[i] = {}\n",
+                                   box.first[i],
+                                   box.second[i],
+                                   nGrid[i]);
+        }
+        fe::Mesh temp_mesh;
+        fe::createUniformMesh(&temp_mesh,
+                              d_modelDeck_p->d_dim,
+                              box,
+                              nGrid);
+        mesh = std::make_shared<fe::Mesh>(temp_mesh);
+      }
+      else {
+        std::cerr << "Error: Currently, we can only support in-built uniform mesh for rectangles.\n";
+        exit(EXIT_FAILURE);
+      }
+    }
 
     // create the reference particle
     log(d_name + ": Creating reference particle in zone = " +
-                  std::to_string(z_id) + "\n");
+        std::to_string(z_id) + "\n");
+
+    // get representative particle for this zone
+    auto &rep_geom_p = pz.d_particleGeomData.d_geom_p;
+    auto rep_geom_params = pz.d_particleGeomData.d_geomParams;
 
     auto ref_p = std::make_shared<particle::RefParticle>(
             d_referenceParticles.size(),
@@ -1129,7 +1199,7 @@ void model::DEMModel::createParticles() {
       createParticlesFromFile(z, ref_p);
     }
     else {
-      if (pz.d_createParticleUsingParticleZoneGeomObject) {
+      if (pz.d_createParticleUsingParticleZoneGeomObject or !d_input_p->isMultiParticle()) {
         createParticleUsingParticleZoneGeomObject(z, ref_p);
       }
       else {

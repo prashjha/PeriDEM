@@ -115,79 +115,89 @@ endif ()
 #<<<<<<<<<< PeriDEM tests >>>>>>>>>>#
 #----------------------------------#
 #if (BASH_PROGRAM)
-add_test(NAME test_twop_circ
+add_test(NAME test_peridem_twop_circ
         COMMAND ${BASH_PROGRAM} ./run.sh
         WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_circ
         )
 
-add_test(NAME test_attrition_mix_particles_small_set
+add_test(NAME test_peridem_attrition_mix_particles_small_set
         COMMAND ${BASH_PROGRAM} ./run.sh
         WORKING_DIRECTORY ${Test_Data_Path}/peridem/attrition_mix_particles_small_set
 )
 
-add_test(NAME test_compression_small_set
+add_test(NAME test_peridem_compression_small_set
         COMMAND ${BASH_PROGRAM} ./run.sh
         WORKING_DIRECTORY ${Test_Data_Path}/peridem/compression_small_set
 )
 
+add_test(NAME test_peridem_single_particle_circle
+        COMMAND ${BASH_PROGRAM} ./run.sh
+        WORKING_DIRECTORY ${Test_Data_Path}/peridem/single_particle_circle
+)
+
+add_test(NAME test_peridem_single_particle_rectangle_inbuilt_mesh
+        COMMAND ${BASH_PROGRAM} ./run.sh
+        WORKING_DIRECTORY ${Test_Data_Path}/peridem/single_particle_rectangle_inbuilt_mesh
+)
+
 if (${Enable_High_Load_Tests})
 
-    add_test(NAME test_twop_concave_and_hex
+    add_test(NAME test_peridem_twop_concave_and_hex
             COMMAND ${BASH_PROGRAM} ./run.sh
             WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_concave_and_hex
             )
 
-    add_test(NAME test_twop_wall_concave_diff_material_diff_size
+    add_test(NAME test_peridem_twop_wall_concave_diff_material_diff_size
             COMMAND ${BASH_PROGRAM} ./run.sh
             WORKING_DIRECTORY ${Test_Data_Path}/twop_wall_concave_diff_material_diff_size
     )
 
-    add_test(NAME test_attrition_mix_particles_large_set
+    add_test(NAME test_peridem_attrition_mix_particles_large_set
             COMMAND ${BASH_PROGRAM} ./run.sh
             WORKING_DIRECTORY ${Test_Data_Path}/attrition_mix_particles_large_set
     )
 
-    add_test(NAME test_compression_large_set
+    add_test(NAME test_peridem_compression_large_set
             COMMAND ${BASH_PROGRAM} ./run.sh
             WORKING_DIRECTORY ${Test_Data_Path}/compression_large_set
     )
 
-    #add_test(NAME test_twop_concave
+    #add_test(NAME test_peridem_twop_concave
     #        COMMAND ${BASH_PROGRAM} ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_concave
     #        )
 
-    #add_test(NAME test_twop_circ_diff_radius
+    #add_test(NAME test_peridem_twop_circ_diff_radius
     #        COMMAND ${BASH_PROGRAM} ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ_diff_radius
     #        )
 
-    #add_test(NAME test_twop_circ_diff_material
+    #add_test(NAME test_peridem_twop_circ_diff_material
     #        COMMAND ${BASH_PROGRAM} ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ_diff_material
     #        )
 
-    #add_test(NAME test_twop_circ_diff_radius_diff_material
+    #add_test(NAME test_peridem_twop_circ_diff_radius_diff_material
     #        COMMAND ${BASH_PROGRAM} ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ_diff_radius_diff_material
     #        )
 
-    #add_test(NAME test_twop_sphere
+    #add_test(NAME test_peridem_twop_sphere
     #        COMMAND ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_sphere
     #        )
 
-    #    add_test(NAME test_compressive_n25
+    #    add_test(NAME test_peridem_compressive_n25
     #            COMMAND ${BASH_PROGRAM} ./run.sh
     #            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n25
     #            )
 
-    #add_test(NAME test_compressive_n51
+    #add_test(NAME test_peridem_compressive_n51
     #        COMMAND ${BASH_PROGRAM} ./run.sh
     #        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n51
     #        )
 
-    #    add_test(NAME test_compressive_n51_restart
+    #    add_test(NAME test_peridem_compressive_n51_restart
     #            COMMAND ./run.sh
     #            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compressive_n51_restart
     #            )
@@ -203,12 +213,12 @@ endif() # high load tests
 if (${Enable_Apps})
     message(STATUS "Building tests for apps")
 
-    add_test(NAME test_twoparticle_apps_demo
+    add_test(NAME test_apps_twoparticle_demo
             COMMAND ${Apps_Path}/twoparticle_demo/TwoParticle_Demo -i ./example/input_0.yaml -nThreads 2
             WORKING_DIRECTORY ${Apps_Path}/twoparticle_demo
     )
 
-    add_test(NAME test_peridynamics
+    add_test(NAME test_apps_peridynamics
             COMMAND ${Apps_Path}/peridynamics/Peridynamics -i ./example/input_0.yaml -nThreads 2
             WORKING_DIRECTORY ${Apps_Path}/peridynamics
     )

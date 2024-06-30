@@ -23,11 +23,11 @@ Mesh:
     CreateMesh:
       Flag: true
       Info: uniform
-    Mesh_Size: 0.0001
+    Mesh_Size: 0.0005
 Material:
   Zone_1:
     Type: PDState
-    Horizon: 0.00032
+    Horizon: 0.0015
     Density: 1.200000e+03
     Compute_From_Classical: true
     K: 2.160000e+05
@@ -63,7 +63,7 @@ Displacement_BC:
     Spatial_Function:
       Type: constant
 Output:
-  Path: ./example/
+  Path: ../out/
   Tags:
     - Displacement
     - Velocity
@@ -82,4 +82,4 @@ Output:
   Perform_FE_Out: true
   Perform_Out: true
   Debug: 3
-  Tag_PP: 1
+  Tag_PP: 0
