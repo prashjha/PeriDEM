@@ -13,6 +13,7 @@
 
 #include "util/point.h"
 #include "util/matrix.h"
+#include "util/methods.h"
 #include "material/mparticle/material.h"
 #include "inp/input.h"
 #include "loading/particleFLoading.h"
@@ -22,6 +23,9 @@
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
 #include <vector>
+#include <map>
+#include <fstream>
+#include <iostream>
 
 typedef nsearch::NFlannSearchKd<3> NSearch;
 
@@ -30,7 +34,6 @@ namespace particle {
 class BaseParticle;
 class RefParticle;
 class Particle;
-class Wall;
 }
 
 namespace model {
@@ -131,6 +134,35 @@ public:
    * @param id Particle id to set
    */
   void setPtId(size_t i, const size_t &id) { d_ptId[i] = id; };
+
+
+  /*!
+   * @brief Get data for a key
+   *
+   * @param key Key to access the data
+   * @return data Value of data
+   */
+  double getKeyData(std::string key, bool issue_err = false) {
+    return util::methods::getKeyData<double>(key, d_dbgData, issue_err);
+  };
+
+  /*!
+   * @brief Append value to data associated with key
+   *
+   * @param key Key to append the data to
+   */
+  void appendKeyData(std::string key, double data, bool issue_err = false) {
+    util::methods::appendKeyData<double>(key, data, d_dbgData, issue_err);
+  };
+
+  /*!
+   * @brief Set value to data associated with key
+   *
+   * @param key Key to append the data to
+   */
+  void setKeyData(std::string key, double data, bool issue_err = false) {
+    util::methods::setKeyData<double>(key, data, d_dbgData, issue_err);
+  };
 
   /**
    * @name Get and set reference coordinate
@@ -507,6 +539,12 @@ public:
   /*! @brief Print log step interval */
   size_t d_infoN;
 
+  /*! @brief Debug data */
+  std::map<std::string, double> d_dbgData;
+
+  /*! @brief File stream to output information */
+  std::ofstream d_ppFile;
+
   /*! @brief Pointer to Input object */
   inp::Input *d_input_p;
 
@@ -558,6 +596,12 @@ public:
 
   /*! @brief List of walls */
   std::vector<particle::BaseParticle*> d_particlesListTypeWall;
+
+  /*!
+   * @brief List of particle material data. Only populated if
+   * needed for calculation of stress or other quantities
+   */
+  std::vector<inp::MatData> d_particlesMatDataList;
 
   /*! @brief Maximum velocity among all nodes in the particle for each particle */
   std::vector<double> d_maxVelocityParticlesListTypeAll;

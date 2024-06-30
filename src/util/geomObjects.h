@@ -25,63 +25,6 @@ namespace util {
 /*! @brief Provides geometrical methods such as point inside rectangle */
     namespace geometry {
 
-/*! @brief List of acceptable geometries for particles in PeriDEM */
-        const std::vector<std::string> acceptable_geometries = {"circle",
-                                                                "square",
-                                                                "rectangle",
-                                                                "hexagon",
-                                                                "triangle",
-                                                                "drum2d",
-                                                                "sphere",
-                                                                "cube",
-                                                                "cuboid"};
-
-/*! @brief Returns list of acceptable geometries for PeriDEM simulation */
-        inline const std::vector<std::string> &getAcceptableGeometries() {
-          return acceptable_geometries;
-        };
-
-/*!
-* @brief Defines simple rectangle domain
-*/
-        struct BoxPartition {
-
-            util::Point d_xc; // centroid of box
-            std::pair<util::Point, util::Point> d_box; // two corner points
-            double d_r; // radius of circle inscribing box
-            std::vector<size_t> d_nodes; // id of nodes in this box
-
-            BoxPartition() : d_xc(util::Point()),
-                             d_box({util::Point(), util::Point()}),
-                             d_r(0.) {}
-
-            bool isNear(const BoxPartition &box, const double &tol) const {
-              auto dx = d_xc - box.d_xc;
-              return dx.length() < d_r + box.d_r + tol;
-            }
-
-            bool isNear(const util::Point &x, const double &tol) const {
-
-              if (util::isLess(x.d_x, d_box.first.d_x - tol) or
-                  util::isLess(x.d_y, d_box.first.d_y - tol) or
-                  util::isLess(x.d_z, d_box.first.d_z - tol) or
-                  util::isGreater(x.d_x, d_box.second.d_x + tol) or
-                  util::isGreater(x.d_y, d_box.second.d_y + tol) or
-                  util::isGreater(x.d_z, d_box.second.d_z + tol))
-                return false;
-
-              return true;
-            }
-
-            void addNode(const size_t &i) {
-              for (const auto &j: d_nodes)
-                if (j == i)
-                  return;
-
-              d_nodes.push_back(i);
-            }
-        };
-
 /*!
  * @brief Defines abstract geometrical domain
  */
@@ -282,6 +225,9 @@ namespace util {
 
             /*! @brief Further description of object */
             const std::string d_description;
+
+            /*! @brief Tags/attributes about the object */
+            std::vector<std::string> d_tags;
         };
 
 /*!
@@ -293,7 +239,7 @@ namespace util {
             /*!
              * @brief Constructor
              */
-            NullGeomObject() : GeomObject("null", "") {};
+            NullGeomObject(std::string description = "") : GeomObject("null", description) {};
 
             /*!
              * @copydoc GeomObject::printStr(int nt, int lvl) const
@@ -360,7 +306,8 @@ namespace util {
              * @param x Center point
              * @param description Description of object (e.g., further classification or any tag)
              */
-            Line(double L, util::Point x = util::Point(), std::string description = "")
+            Line(double L, util::Point x = util::Point(),
+                 std::string description = "")
                     : GeomObject("line", description),
                       d_L(L),
                       d_r(0.5 * L),
@@ -1974,7 +1921,8 @@ namespace util {
              * @param x Center
              * @param description Description of object (e.g., further classification or any tag)
              */
-            Circle(double r, util::Point x = util::Point(), std::string description = "")
+            Circle(double r, util::Point x = util::Point(),
+                   std::string description = "")
                     : GeomObject("circle", description),
                       d_x(x),
                       d_r(r) {};
@@ -2126,7 +2074,8 @@ namespace util {
              * @param x Center
              * @param description Description of object (e.g., further classification or any tag)
              */
-            Sphere(double r, util::Point x = util::Point(), std::string description = "")
+            Sphere(double r, util::Point x = util::Point(),
+                   std::string description = "")
                     : GeomObject("sphere", description),
                       d_x(x),
                       d_r(r) {};
@@ -2785,82 +2734,6 @@ namespace util {
             /*! @brief Dimension objects live in */
             size_t d_dim;
         };
-
-/*!
-* @brief Get num params required for creation of object
-*
-* @param geom_type Geometry type of object
-* @return n Number of parameters required
-*/
-        std::vector<size_t> getNumParamsRequired(std::string geom_type);
-
-/*!
-* @brief Check parameter data for validity
-*
-* @param n Number of parameters available
-* @param geom_type Geometry type of object
-* @return bool True if number of parameter is incorrect so require further checks
-*/
-        bool checkParamForGeometry(size_t n, std::string geom_type);
-
-/*!
-* @brief Ascertain if number of parameters are correct for the given geometry
-*
-* @param n Number of parameters available
-* @param geom_type Geometry type of object
-* @return bool True if number of parameter is correct
-*/
-        bool isNumberOfParamForGeometryValid(size_t n, std::string geom_type);
-
-/*!
-* @brief Check parameter data for validity
-*
-* @param n Number of parameters available
-* @param geom_type Geometry type of object
-* @param vec_type For complex objects, specify types of sub-objects
-* @return bool True if number of parameter is incorrect so require further checks
-*/
-        bool checkParamForComplexGeometry(size_t n, std::string geom_type,
-                                          std::vector<std::string> vec_type);
-
-/*!
-* @brief Ascertain if number of parameters are correct for the given geometry
-*
-* @param n Number of parameters available
-* @param geom_type Geometry type of object
-* @param vec_type For complex objects, specify types of sub-objects
-* @return bool True if number of parameter is correct
-*/
-        bool
-        isNumberOfParamForComplexGeometryValid(size_t n, std::string geom_type,
-                                               std::vector<std::string> vec_type);
-
-/*!
-* @brief Create geometrical object from the given data
-*
-* @param type Type of object
-* @param params Vector of parameters
-* @param vec_type Sub-types of complex object
-* @param vec_flag Flags of sub-types of complex object
-* @param obj Pointer to object to which new object will be associated
-* @param dim Dimension
-* @param perform_check Perform check for sufficient parameters
-*/
-        void createGeomObjectOld(const std::string &type,
-                              const std::vector<double> &params,
-                              const std::vector<std::string> &vec_type,
-                              const std::vector<std::string> &vec_flag,
-                              std::shared_ptr<util::geometry::GeomObject> &obj,
-                              const size_t &dim,
-                              bool perform_check = true);
-
-        void createGeomObject(const std::string &geom_type,
-                              const std::vector<double> &params,
-                              const std::vector<std::string> &vec_type,
-                              const std::vector<std::string> &vec_flag,
-                              std::shared_ptr<util::geometry::GeomObject> &obj,
-                              const size_t &dim,
-                              bool perform_check = true);
 
     } // namespace geometry
 

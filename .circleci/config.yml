@@ -10,7 +10,7 @@ version: 2.1
 parameters:
   docker-img-os:
     type: string
-    default: focal
+    default: noble
   cmake-include-dirs:
     type: string
     default: -DVTK_DIR=/usr/local/lib/cmake/vtk-9.3 -DMETIS_DIR=/usr/lib

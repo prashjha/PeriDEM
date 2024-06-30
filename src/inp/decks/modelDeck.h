@@ -62,8 +62,13 @@ struct ModelDeck {
   /*! @brief Order of quadrature approximation for strain and stress computation (default is 1) */
   size_t d_quadOrder;
 
-  /*! @brief Specify if this is PeriDEM simulation */
-  bool d_isPeriDEM;
+  /*! @brief Specify if this is single or multi particle simulation
+   * Expected value is either 'Single_Particle' or 'Multi_Particle'.
+   *
+   * This flag is used to populate input deck data. For the case when
+   * we consider single particle and its deformation, one do not have to specify data such as zones and contact.
+   * */
+  std::string d_particleSimType;
 
   /*! @brief Dimension */
   size_t d_dim;
@@ -99,7 +104,7 @@ struct ModelDeck {
   ModelDeck()
       : d_dim(0), d_isRestartActive(false), d_populateElementNodeConnectivity(false),
         d_tFinal(0.), d_dt(0.), d_Nt(0),
-        d_horizon(0.), d_rh(0), d_h(0.), d_isPeriDEM(false), d_seed(1), d_quadOrder(1) {};
+        d_horizon(0.), d_rh(0), d_h(0.), d_particleSimType(""), d_seed(1), d_quadOrder(1) {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -121,7 +126,7 @@ struct ModelDeck {
               << std::endl;
     oss << tabS << "Time discretization type = " << d_timeDiscretization
               << std::endl;
-    oss << tabS << "Is it peri-dem simulation = " << d_isPeriDEM << std::endl;
+    oss << tabS << "Particle simulation type = " << d_particleSimType << std::endl;
     oss << tabS << "Dimension = " << d_dim << std::endl;
     oss << tabS << "Final time = " << d_tFinal << std::endl;
     oss << tabS << "Time step size = " << d_dt << std::endl;

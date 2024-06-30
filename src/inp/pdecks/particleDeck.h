@@ -15,6 +15,7 @@
 #include "pNeighborDeck.h"
 #include "pBCData.h"
 #include "pICDeck.h"
+#include "util/geomObjectsUtil.h"
 #include <memory>
 
 namespace inp {
@@ -42,16 +43,7 @@ struct ParticleDeck {
    * @brief Geometry of container in which all particles reside. Currently,
    * we only support rectangle (2-d) and cuboid (3-d)
    */
-  std::shared_ptr<util::geometry::GeomObject> d_contGeom_p;
-
-  /*! @brief Container geometry name */
-  std::string d_contGeomName;
-
-  /*! @brief Container geometry parameters */
-  std::vector<double> d_contGeomParams;
-
-  /*! @brief Container geometry info if it is a complex type */
-  std::pair<std::vector<std::string>, std::vector<std::string>> d_contGeomComplexInfo;
+  util::geometry::GeomData d_contGeomData;
 
   /*! @brief Neighbor search data */
   inp::PNeighborDeck d_pNeighDeck;
@@ -84,8 +76,8 @@ struct ParticleDeck {
    * @brief Constructor
    */
   ParticleDeck()
-      : d_contGeom_p(nullptr),
-        d_pNeighDeck(inp::PNeighborDeck()),
+      : d_contGeomData(),
+        d_pNeighDeck(),
         d_gravityActive(false),
         d_gravity(),
         d_icDeck(),
@@ -111,21 +103,8 @@ struct ParticleDeck {
       oss << tabS << "Particle data for zone = " << i << std::endl;
       oss << d_particleZones[i].printStr(nt + 1, lvl);
     }
-    oss << tabS << "Container geometry info:" << std::endl;
-    oss << tabS << "Container geometry name = " << d_contGeomName << std::endl;
-    oss << tabS << "Container geometry parameters = ["
-        << util::io::printStr<double>(d_contGeomParams, 0)
-        << "]" << std::endl;
-    if (!d_contGeomComplexInfo.first.empty()) {
-      oss << tabS << "Container geometry vec type for complex geometry = ["
-          << util::io::printStr(d_contGeomComplexInfo.first, 0)
-          << "]" << std::endl;
-
-      oss << tabS << "Container geometry vec flag for complex geometry = ["
-          << util::io::printStr(d_contGeomComplexInfo.second, 0)
-          << "]" << std::endl;
-    }
-    oss << d_contGeom_p->printStr(nt+1, lvl);
+    oss << tabS << "Container geometry details:" << std::endl;
+    oss << d_contGeomData.printStr(nt+1, lvl);
     oss << tabS << "Neighbor data:" << std::endl;
     oss << d_pNeighDeck.printStr(nt+1, lvl);
     oss << tabS << "Gravity: Status = " << d_gravityActive
@@ -160,24 +139,6 @@ struct ParticleDeck {
    * @param lvl Information level (higher means more information)
    */
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
-
-  /*!
-   * @brief Copies the geometry details
-   *
-   * @param name Name of geometry
-   * @param params Parameters
-   * @param complexInfo Pair of vector of geometry names and flags for complex geometry
-   * @param geom Pointer to geometry object
-   */
-  void copyContainerGeometry(std::string &name,
-         std::vector<double> &params,
-         std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo,
-         std::shared_ptr<util::geometry::GeomObject> &geom) {
-    name = d_contGeomName;
-    params = d_contGeomParams;
-    complexInfo = d_contGeomComplexInfo;
-    geom = d_contGeom_p;
-  }
 };
 
 /** @}*/

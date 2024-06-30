@@ -42,22 +42,26 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-namespace {
-steady_clock::time_point clock_begin = steady_clock::now();
-steady_clock::time_point clock_end = steady_clock::now();
-
-std::ostringstream oss;
-}
-
-namespace twop {
+/*!
+ * @brief Namespace to define demo app for two-particle tests
+ */
+namespace twoparticle_demo {
 using util::io::log;
 
+/*!
+ * @brief Main model class to handle demo two-particle test implementation. Goal is to
+ * show that it is easy to specialize the DEMModel class for different scenarios.
+ */
 class Model : public model::DEMModel {
 
 public:
-  explicit Model(inp::Input *deck) : model::DEMModel(deck) {
 
-    d_quadOrder = deck->getModelDeck()->d_quadOrder;
+  /*!
+   * @brief Constructor
+   *
+   * @param deck Input deck
+   */
+  explicit Model(inp::Input *deck) : model::DEMModel(deck, "twoparticle_demo::Model") {
 
     if (d_ppFile.is_open())
       d_ppFile.close();
@@ -69,10 +73,16 @@ public:
                 "cont_area_r_ideal, s_loc_ideal, s_val_ideal" << std::flush;
   }
 
+  /*!
+   * @brief Runs simulation by executing steps such as init(), integrate(), and close().
+   *
+   * @param deck Input deck
+   */
   void run(inp::Input *deck) override {
 
-    log("twop::Model: Running twop app \n");
+    log(d_name + ": Running TwoParticle_Demo app \n");
 
+    // initialize data
     init();
 
     // check if init() successfully created quadrature data which we need for postprocessing
@@ -109,12 +119,23 @@ public:
       }
     }
 
+    // integrate in time
     integrate();
+
+    // close
+    close();
   }
 
+  /*!
+   * @brief Perform time step integration
+   */
   void integrate() override {
     // perform output at the beginning
-    if (d_n == 0 && d_outputDeck_p->d_performOut) output();
+    if (d_n == 0 && d_outputDeck_p->d_performOut) {
+      log(fmt::format("{}: Output step = {}, time = {:.6f} \n", d_name, d_n, d_time),
+          2);
+      output();
+    }
 
     // apply initial condition
     if (d_n == 0) applyInitialCondition();
@@ -125,18 +146,22 @@ public:
 
     for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 
-      if (d_n % 100 == 0)
-        log(fmt::format("twop::Model: time step: {} \n", i));
+      log(fmt::format("{}: Time step: {}, time: {:8.6f}, steps completed = {}%\n",
+                      d_name,
+                      i,
+                      d_time,
+                      float(i) * 100. / d_modelDeck_p->d_Nt),
+          2, d_n % d_infoN == 0, 3);
 
       // NOTE: If there is need for different time-stepping scheme, one can
       // define another function similar to these two below
-      clock_begin = steady_clock::now();
+      auto t1 = steady_clock::now();
       integrateStep();
+      double integrate_time =
+              util::methods::timeDiff(t1, steady_clock::now());
 
-      if (d_n % 100 == 0)
-        log(fmt::format(
-            "  Integration time: {} \n",
-            util::methods::timeDiff(clock_begin, steady_clock::now())));
+      log(fmt::format("  Integration time (ms) = {}\n", integrate_time),
+          2, d_n % d_infoN == 0, 3);
 
       if (d_pDeck_p->d_testName == "two_particle") {
         // NOTE: The purpose of this app 'twop' is to show that if we have
@@ -152,11 +177,7 @@ public:
       // handle general output
       if ((d_n % d_outputDeck_p->d_dtOut == 0) &&
           (d_n >= d_outputDeck_p->d_dtOut) && d_outputDeck_p->d_performOut) {
-        clock_begin = steady_clock::now();
         output();
-        log(fmt::format(
-            "   Output time: {} \n",
-            util::methods::timeDiff(clock_begin, steady_clock::now())));
       }
 
       // check for stop (we may want to terminate the simulation early if the
@@ -166,7 +187,9 @@ public:
     } // loop over time steps
   }
 
-  // compute location of maximum shear stress and penetration length
+  /*!
+   * @brief Handles postprocessing for two-particle test
+   */
   void twoParticleTest() {
 
     bool continue_dt = false;
@@ -185,14 +208,18 @@ public:
     d_ppFile << d_time << ", " << -d_penDist << ", " << d_contactAreaRadius
              << ", " << d_maxStressLocRef << ", " << d_maxStress << ", "
              << d_maxDist << ", " << d_contactAreaRadiusIdeal << ", "
-             << d_maxStressLocRefIdeal << ", " << d_maxStressIdeal << std::flush;
+             << d_maxStressLocRefIdeal << ", " << d_maxStressIdeal
+             << std::endl;
   }
 
+  /*!
+   * @brief Computes penetration distance of top particle into bottom particle
+   */
   void twoParticleTestPenetrationDist() {
 
     // get alias for particles
-    const auto &p0 = this->d_particles[0];
-    const auto &p1 = this->d_particles[1];
+    const auto &p0 = this->d_particlesListTypeAll[0];
+    const auto &p1 = this->d_particlesListTypeAll[1];
 
     // get penetration distance
     const auto &xc0 = p0->getXCenter();
@@ -223,7 +250,7 @@ public:
     if (util::isLess(d_maxY, max_y_loc))
       d_maxY = max_y_loc;
 
-    log(fmt::format("max y: {} \n", d_maxY));
+    log(fmt::format("max y: {} \n", d_maxY), 2, d_n % d_infoN == 0, 3);
 
     // compute ideal values
     static int contact_pp_ideal = -1;
@@ -248,6 +275,9 @@ public:
     }
   }
 
+  /*!
+   * @brief Computes maximum shear stress and its location in particle
+   */
   void twoParticleTestMaxShearStress() {
 
     // compute maximum shear stress and where it occurs
@@ -255,30 +285,45 @@ public:
     auto max_stress_loc_cur_t = util::Point();
     auto max_stress_loc_ref_t = util::Point();
 
-    // compute stress and strain
-    for (auto &p: d_particles) {
-      auto p_mat_data = p->getMaterial()->computeMaterialProperties(
-              p->d_rp_p->getMeshP()->getDimension());
+    // if particle mat data is not computed, compute them
+    if (d_particlesMatDataList.empty()) {
+      for (auto &p: d_particlesListTypeAll) {
+        d_particlesMatDataList.push_back(p->getMaterial()->computeMaterialProperties(
+                p->getMeshP()->getDimension()));
+      }
+    }
 
-      fe::getCurrentQuadPoints(p->d_rp_p->getMeshP(), d_xRef, d_u, d_xQuadCur,
-                               p->d_globStart, p->d_globQuadStart,
-                               d_quadOrder);
-      fe::getStrainStress(p->d_rp_p->getMeshP(), d_xRef, d_u,
-                          d_input_p->getMaterialDeck()->d_isPlaneStrain,
+    // compute stress and strain
+    for (auto &p: d_particlesListTypeAll) {
+
+      const auto particle_mesh_p = p->getMeshP();
+
+      fe::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
+                               p->d_globStart,
+                               p->d_globQuadStart,
+                               d_modelDeck_p->d_quadOrder);
+
+      auto p_z_id = p->d_zoneId;
+      auto isPlaneStrain = d_pDeck_p->d_particleZones[p_z_id].d_matDeck.d_isPlaneStrain;
+      fe::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
+                          isPlaneStrain,
                           d_strain, d_stress,
-                          p->d_globStart, p->d_globQuadStart,
-                          p_mat_data.d_nu, p_mat_data.d_lambda,
-                          p_mat_data.d_mu,
-                          true, d_quadOrder);
+                          p->d_globStart,
+                          p->d_globQuadStart,
+                          d_particlesMatDataList[p->getId()].d_nu,
+                          d_particlesMatDataList[p->getId()].d_lambda,
+                          d_particlesMatDataList[p->getId()].d_mu,
+                          true,
+                          d_modelDeck_p->d_quadOrder);
 
       double p_max_stress = 0.;
       auto p_max_stress_loc_cur = util::Point();
       auto p_max_stress_loc_ref = util::Point();
-      fe::getMaxShearStressAndLoc(p->d_rp_p->getMeshP(), d_xRef, d_u, d_stress,
+      fe::getMaxShearStressAndLoc(p->getMeshP().get(), d_xRef, d_u, d_stress,
                                   p_max_stress,
                                   p_max_stress_loc_ref,
                                   p_max_stress_loc_cur,
-                                  p->d_globStart, p->d_globQuadStart, d_quadOrder);
+                                  p->d_globStart, p->d_globQuadStart, d_modelDeck_p->d_quadOrder);
 
       if (util::isGreater(p_max_stress, max_stress_t)) {
         max_stress_t = p_max_stress;
@@ -294,29 +339,43 @@ public:
   }
 
 public:
-  std::ofstream d_ppFile;
 
+  /*! @brief Penetration distance of top particle into bottom particle */
   double d_penDist = 0.;
+
+  /*! @brief Contact area radius */
   double d_contactAreaRadius = 0.;
+
+  /*! @brief Maximum vertical distance of top particle in initial configuration */
   double d_maxDist = 0.;
+
+  /*! @brief Maximum stress */
   double d_maxStress = 0.;
+
+  /*! @brief Maximum stress location in reference configuration */
   double d_maxStressLocRef = 0.;
+
+  /*! @brief Maximum stress location in current configuration */
   double d_maxStressLocCur = 0.;
 
+  /*! @brief Current maximum vertical distance of top particle */
   double d_maxY = 0.;
 
+  /*! @brief Ideal contact area radius from Hertz theory */
   double d_contactAreaRadiusIdeal = 0.;
-  double d_maxStressIdeal = 0.;
-  double d_maxStressLocRefIdeal = 0.;
 
-  size_t d_quadOrder = 1;
+  /*! @brief Ideal maximum stress */
+  double d_maxStressIdeal = 0.;
+
+  /*! @brief Ideal maximum stress location location in reference configuration */
+  double d_maxStressLocRefIdeal = 0.;
 };
-} // namespace twop
+} // namespace twoparticle_demo
 
 int main(int argc, char *argv[]) {
 
   // print program version
-  std::cout << "twop (PeriDEM)"
+  std::cout << "TwoParticle_Demo (PeriDEM)"
             << " (Version " << MAJOR_VERSION << "." << MINOR_VERSION << "."
             << UPDATE_VERSION << ")" << std::endl << std::flush;
 
@@ -324,8 +383,8 @@ int main(int argc, char *argv[]) {
 
   if (input.cmdOptionExists("-h")) {
     // print help
-    std::cout << "Syntax to run the app: ./twop -i <input file> -nThreads <number of threads>";
-    std::cout << "Example: ./twop -i input.yaml -nThreads 4";
+    std::cout << "Syntax to run the app: ./TwoParticle_Demo -i <input file> -nThreads <number of threads>";
+    std::cout << "Example: ./TwoParticle_Demo -i input.yaml -nThreads 2";
   }
 
   // read input arguments
@@ -333,7 +392,7 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = 2;
-    util::io::print(fmt::format("Running twop with number of threads = {}\n", nThreads));
+    util::io::print(fmt::format("Running TwoParticle_Demo with number of threads = {}\n", nThreads));
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
@@ -344,7 +403,7 @@ int main(int argc, char *argv[]) {
     filename = input.getCmdOption("-i");
   else {
     filename = "./example/input_0.yaml";
-    util::io::print(fmt::format("Running twop with example input file = {}\n", filename));
+    util::io::print(fmt::format("Running TwoParticle_Demo with example input file = {}\n", filename));
   }
 
   // current time
@@ -359,7 +418,7 @@ int main(int argc, char *argv[]) {
     deck->getModelDeck()->d_populateElementNodeConnectivity = true;
 
     // simulate model
-    twop::Model dem(deck);
+    twoparticle_demo::Model dem(deck);
     dem.run(deck);
   }
 

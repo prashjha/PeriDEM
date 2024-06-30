@@ -4,7 +4,9 @@ MY_PWD=$(pwd)
 (
 if [[ $# -gt 0 ]]; then n_threads="$1"; else n_threads="2"; fi 
 
-cd "inp" && python3 -B problem_setup.py
+mkdir -p out
+
+cd "inp" 
 
 peridem="../../../../../bin/PeriDEM"
 $peridem -i input_0.yaml -nThreads $n_threads

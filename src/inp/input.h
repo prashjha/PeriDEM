@@ -116,12 +116,16 @@ public:
   std::shared_ptr<inp::ContactDeck> getContactDeck();
 
   /*!
-   * @brief Specify if this is PeriDEM simulation
-   *
-   * @return True If it is PeriDEM simulation
+   * @brief Get particle simulation type
+   * @return bool True if Multi_Particle else false
+   */
+  bool isMultiParticle();
+
+  /*!
+   * @brief Specify if PeriDEM model should be run
+   * @return bool True if PeriDEM is active
    */
   bool isPeriDEM();
-
   /** @}*/
 
 private:

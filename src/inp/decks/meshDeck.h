@@ -12,6 +12,7 @@
 #define INP_MESHDECK_H
 
 #include "util/io.h"
+#include "util/geomObjectsUtil.h"
 #include <string>
 
 namespace inp {
@@ -62,9 +63,27 @@ struct MeshDeck {
   double d_h;
 
   /*!
+   * @brief Specify if we create mesh using in-built gmsh
+   * or in-built routine for uniform discretization of rectangle/cuboid
+   */
+  bool d_createMesh;
+
+  /*!
+   * @brief Information that will be used when creating a mesh using in-built routines
+   */
+  std::string d_createMeshInfo;
+
+  /*!
+   * @brief Information that will be used when creating a mesh using in-built routines
+   */
+  util::geometry::GeomData d_createMeshGeomData;
+
+  /*!
    * @brief Constructor
    */
-  MeshDeck() : d_dim(0), d_computeMeshSize(false), d_h(0.){};
+  MeshDeck() : d_dim(0), d_computeMeshSize(false),
+               d_h(0.), d_createMesh(false),
+               d_createMeshGeomData() {};
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -86,6 +105,10 @@ struct MeshDeck {
     oss << tabS << "Filename = " << d_filename << std::endl;
     oss << tabS << "Compute mesh size = " << d_computeMeshSize << std::endl;
     oss << tabS << "Mesh size = " << d_h << std::endl;
+    oss << tabS << "Create mesh = " << d_createMesh << std::endl;
+    oss << tabS << "Create mesh info = " << d_createMeshInfo << std::endl;
+    oss << tabS << "Create mesh geometry details: " << std::endl;
+    oss << d_createMeshGeomData.printStr(nt+1, lvl);
     oss << tabS << std::endl;
 
     return oss.str();

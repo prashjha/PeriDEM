@@ -55,24 +55,29 @@ bool loading::ParticleFLoading::needToProcessParticle(size_t id, const inp::PBCD
 bool loading::ParticleFLoading::needToComputeDof(const util::Point &x,
                                                  size_t id,
                                                  const inp::PBCData &bc) {
-  if (bc.d_selectionType == "region" && bc.d_regionGeom_p->isInside(x))
-    return true;
-  else if (bc.d_selectionType == "region_with_include_list" &&
-           bc.d_regionGeom_p->isInside(x) &&
-           isInList(id, bc.d_pList))
-    return true;
-  else if (bc.d_selectionType == "region_with_exclude_list" &&
-           bc.d_regionGeom_p->isInside(x) &&
-           !isInList(id, bc.d_pNotList))
-    return true;
-  else if (bc.d_selectionType == "region_with_include_list_with_exclude_list" &&
-           bc.d_regionGeom_p->isInside(x) &&
-           isInList(id, bc.d_pList) &&
-           !isInList(id, bc.d_pNotList))
-    return true;
-  else if (bc.d_selectionType == "particle" &&
-           isInList(id, bc.d_pList))
-    return true;
+
+  if (!bc.d_isRegionActive) {
+    if (bc.d_selectionType == "particle" &&
+        isInList(id, bc.d_pList))
+      return true;
+  }
+  else {
+    if (bc.d_selectionType == "region" && bc.d_regionGeomData.d_geom_p->isInside(x))
+      return true;
+    else if (bc.d_selectionType == "region_with_include_list" &&
+             bc.d_regionGeomData.d_geom_p->isInside(x) &&
+             isInList(id, bc.d_pList))
+      return true;
+    else if (bc.d_selectionType == "region_with_exclude_list" &&
+             bc.d_regionGeomData.d_geom_p->isInside(x) &&
+             !isInList(id, bc.d_pNotList))
+      return true;
+    else if (bc.d_selectionType == "region_with_include_list_with_exclude_list" &&
+             bc.d_regionGeomData.d_geom_p->isInside(x) &&
+             isInList(id, bc.d_pList) &&
+             !isInList(id, bc.d_pNotList))
+      return true;
+  }
 
   return false;
 }
@@ -89,8 +94,8 @@ void loading::ParticleFLoading::apply(const double &time,
     if (!needToProcessParticle(particle->getId(), bc))
       continue;
 
-    // get bounding box
-    auto box = bc.d_regionGeom_p->box();
+    // get bounding box (quite possibly be generic)
+    auto reg_box = bc.d_regionGeomData.d_geom_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
     tf::Executor executor(util::parallel::getNThreads());
@@ -98,10 +103,16 @@ void loading::ParticleFLoading::apply(const double &time,
 
     taskflow.for_each_index(
             (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1,
-            [time, &particle, bc, box, this](std::size_t i) {
+            [time, &particle, bc, reg_box, this](std::size_t i) {
 
                 const auto x = particle->getXRefLocal(i);
                 double fmax = 1.0;
+
+                auto box = reg_box;
+                if (!bc.d_isRegionActive) {
+                  // get box from particle
+                  box = particle->d_geom_p->box();
+                }
 
                 if (needToComputeDof(x, particle->getId(), bc)) {
 

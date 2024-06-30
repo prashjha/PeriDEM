@@ -39,6 +39,7 @@ loading::ParticleULoading::ParticleULoading(
 }
 
 bool loading::ParticleULoading::needToProcessParticle(size_t id, const inp::PBCData &bc) {
+
   // if there is a list, and if particle is not in the list, skip
   bool skip_condition1 = (bc.d_selectionType == "particle"
                           || bc.d_selectionType == "region_with_include_list")
@@ -59,24 +60,29 @@ bool loading::ParticleULoading::needToProcessParticle(size_t id, const inp::PBCD
 bool loading::ParticleULoading::needToComputeDof(const util::Point &x,
                                                  size_t id,
                                                  const inp::PBCData &bc) {
-  if (bc.d_selectionType == "region" && bc.d_regionGeom_p->isInside(x))
-    return true;
-  else if (bc.d_selectionType == "region_with_include_list" &&
-           bc.d_regionGeom_p->isInside(x) &&
-           isInList(id, bc.d_pList))
-    return true;
-  else if (bc.d_selectionType == "region_with_exclude_list" &&
-           bc.d_regionGeom_p->isInside(x) &&
-           !isInList(id, bc.d_pNotList))
-    return true;
-  else if (bc.d_selectionType == "region_with_include_list_with_exclude_list" &&
-           bc.d_regionGeom_p->isInside(x) &&
-           isInList(id, bc.d_pList) &&
-           !isInList(id, bc.d_pNotList))
-    return true;
-  else if (bc.d_selectionType == "particle" &&
-           isInList(id, bc.d_pList))
-    return true;
+
+  if (!bc.d_isRegionActive) {
+    if (bc.d_selectionType == "particle" &&
+        isInList(id, bc.d_pList))
+      return true;
+  }
+  else {
+    if (bc.d_selectionType == "region" && bc.d_regionGeomData.d_geom_p->isInside(x))
+      return true;
+    else if (bc.d_selectionType == "region_with_include_list" &&
+             bc.d_regionGeomData.d_geom_p->isInside(x) &&
+             isInList(id, bc.d_pList))
+      return true;
+    else if (bc.d_selectionType == "region_with_exclude_list" &&
+             bc.d_regionGeomData.d_geom_p->isInside(x) &&
+             !isInList(id, bc.d_pNotList))
+      return true;
+    else if (bc.d_selectionType == "region_with_include_list_with_exclude_list" &&
+             bc.d_regionGeomData.d_geom_p->isInside(x) &&
+             isInList(id, bc.d_pList) &&
+             !isInList(id, bc.d_pNotList))
+      return true;
+  }
 
   return false;
 }
@@ -91,9 +97,6 @@ void loading::ParticleULoading::setFixity(particle::BaseParticle *particle) {
     // check if we need to process this particle
     if (!needToProcessParticle(particle->getId(), bc))
       continue;
-
-    // get bounding box
-    auto box = bc.d_regionGeom_p->box();
 
     for (size_t i = 0; i < particle->getNumNodes(); i++) {
 
@@ -130,8 +133,8 @@ void loading::ParticleULoading::apply(const double &time,
     if (!needToProcessParticle(particle->getId(), bc))
       continue;
 
-    // get bounding box
-    auto box = bc.d_regionGeom_p->box();
+    // get bounding box (quite possibly be generic)
+    auto reg_box = bc.d_regionGeomData.d_geom_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
     tf::Executor executor(util::parallel::getNThreads());
@@ -139,7 +142,7 @@ void loading::ParticleULoading::apply(const double &time,
 
     taskflow.for_each_index(
             (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1,
-            [time, &particle, bc, box, this] (std::size_t i) {
+            [time, &particle, bc, reg_box, this] (std::size_t i) {
 
                 const auto x = particle->getXRefLocal(i);
 
@@ -147,10 +150,24 @@ void loading::ParticleULoading::apply(const double &time,
                 double du = 0.;
                 double dv = 0.;
 
+                auto box = reg_box;
+                if (!bc.d_isRegionActive) {
+                  // get box from particle
+                  box = particle->d_geom_p->box();
+                }
+
                 if (needToComputeDof(x, particle->getId(), bc)) {
 
                   // apply spatial function
-                  if (bc.d_spatialFnType == "sin_x") {
+                  if (bc.d_spatialFnType == "hat_x") {
+                    umax = bc.d_spatialFnParams[0] *
+                           util::hatFunction(x.d_x, box.first.d_x,
+                                             box.second.d_x);
+                  } else if (bc.d_spatialFnType == "hat_y") {
+                    umax = bc.d_spatialFnParams[0] *
+                           util::hatFunction(x.d_y, box.first.d_y,
+                                             box.second.d_y);
+                  } else if (bc.d_spatialFnType == "sin_x") {
                     double a = M_PI * bc.d_spatialFnParams[0];
                     umax = umax * std::sin(a * x.d_x);
                   } else if (bc.d_spatialFnType == "sin_y") {

@@ -220,6 +220,18 @@ fe::getCurrentQuadPoints(const fe::Mesh *mesh_p,
         && "Number of elements in xQuad data can not be less than "
            "total number of quadrature points.\n");
 
+  //  std::cout << fmt::format("num_elems = {}, "
+  //                           "iNodeStart = {}, "
+  //                           "numQuadPointsTotal = {}, "
+  //                           "iQuadStart = {}, "
+  //                           "xQuadCur.size() = {}",
+  //                           num_elems,
+  //                           iNodeStart,
+  //                           numQuadPointsTotal,
+  //                           iQuadStart,
+  //                           xQuadCur.size())
+  //           << std::endl;
+
 
   // compute current position of quad points
   tf::Executor executor(util::parallel::getNThreads());
@@ -233,8 +245,14 @@ fe::getCurrentQuadPoints(const fe::Mesh *mesh_p,
           auto id_nds = mesh_p->getElementConnectivity(e);
           auto e_nds_start = iNodeStart + mesh_p->d_eNumVertex * e;
           auto e_nds_end = e_nds_start + mesh_p->d_eNumVertex;
-          std::vector<util::Point> nds(xRef.begin() + e_nds_start, xRef
-          .begin() + e_nds_end);
+
+          //assert( (e_nds_end <= xRef.size()) && "e_nds_end bigger than size of xRef\n" );
+
+          //std::vector<util::Point> nds(xRef.begin() + e_nds_start,
+          //                             xRef.begin() + e_nds_end);
+          std::vector<util::Point> nds;
+          for (const auto &i : id_nds)
+            nds.push_back(xRef[i + iNodeStart]);
 
           auto qds = elem->getQuadDatas(nds);
 
@@ -339,8 +357,11 @@ void fe::getStrainStress(const fe::Mesh *mesh_p,
               auto id_nds = mesh_p->getElementConnectivity(e);
               auto e_nds_start = iNodeStart + mesh_p->d_eNumVertex * e;
               auto e_nds_end = e_nds_start + mesh_p->d_eNumVertex;
-              std::vector<util::Point> nds(xRef.begin() + e_nds_start,
-                                           xRef.begin() + e_nds_end);
+              //std::vector<util::Point> nds(xRef.begin() + e_nds_start,
+              //                             xRef.begin() + e_nds_end);
+              std::vector<util::Point> nds;
+              for (const auto &i : id_nds)
+                nds.push_back(xRef[i + iNodeStart]);
 
               auto qds = elem->getQuadDatas(nds);
 

@@ -17,6 +17,7 @@
 #include <chrono>
 #include <numeric>      // std::iota
 #include <algorithm>    // std::sort, std::stable_sort
+#include <map>
 
 using namespace std::chrono;
 
@@ -280,6 +281,20 @@ inline bool isTagInList(const std::string &tag, const std::vector<std::string> &
 };
 
 /*!
+ * @brief Add element to the list
+ * @param i Item to add
+ * @param list Vector of elements
+ */
+template <typename T>
+inline void addToList(const T &i, std::vector<T> &list) {
+  for (const auto &j : list)
+    if (j == i)
+      return;
+
+  list.emplace_back(i);
+};
+
+/*!
  * @brief Returns difference between two times
  * @param begin Beginning time
  * @param end Ending time
@@ -299,6 +314,68 @@ inline float timeDiff(std::chrono::steady_clock::time_point begin,
         exit(EXIT_FAILURE);
       }
 };
+
+/*!
+ * @brief Get data for a key
+ *
+ * @param key Key to access the data
+ * @return data Value of data
+ */
+template <typename T_out>
+inline T_out getKeyData(std::string key, std::map<std::string, T_out> &data_map, bool issue_err = false) {
+
+  if (issue_err) {
+    if (data_map.find(key) == data_map.end()) {
+      std::cerr << "Error: key = " << key << " does not exist in data map.\n";
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  return data_map[key];
+};
+
+
+/*!
+ * @brief Append value to data associated with key
+ *
+ * @param key Key to append the data to
+ */
+template <typename T_out>
+inline void appendKeyData(std::string key, T_out data, std::map<std::string, T_out> &data_map, bool issue_err = false) {
+
+  if (data_map.find(key) == data_map.end()) {
+    if (issue_err) {
+      std::cerr << "Error: key = " << key << " does not exist in data map.\n";
+      exit(EXIT_FAILURE);
+    }
+    else {
+      data_map[key] = data;
+    }
+  }
+  else {
+    data_map[key] = data_map[key] + data;
+  }
+};
+
+/*!
+ * @brief Set value to data associated with key
+ *
+ * @param key Key to append the data to
+ */
+template <typename T_out>
+inline void setKeyData(std::string key, T_out data, std::map<std::string, T_out> &data_map, bool issue_err = false) {
+
+  if (data_map.find(key) == data_map.end()) {
+    if (issue_err) {
+      std::cerr << "Error: key = " << key << " does not exist in data map.\n";
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  data_map[key] = data;
+};
+
+
 
 } // namespace methods
 

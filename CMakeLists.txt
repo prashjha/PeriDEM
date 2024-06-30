@@ -6,7 +6,7 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.10)
 
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.5)
 project(PeriDEM LANGUAGES CXX C)
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
-set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamically enhanced DEM model for granular media")
+set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamics-based high-fidelity model for granular media")
 
 # version
 set(VERSION_MAJOR 0)
@@ -26,7 +26,8 @@ set(VERSION_UPDATE 0)
 #----------------------------------#
 
 # config files
-configure_file("${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in" "${PROJECT_SOURCE_DIR}/src/PeriDEMConfig.h")
+configure_file("${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in"
+        "${PROJECT_SOURCE_DIR}/src/PeriDEMConfig.h")
 
 # executable directory
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
@@ -57,6 +58,25 @@ endif()
 #cmake_policy(SET CMP0023 OLD)
 
 #----------------------------------#
+#<<<<<<<<<< Compiler flags >>>>>>>>>>#
+#----------------------------------#
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread -fPIC")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
+endif ()
+
+# set standard to 17
+set(CMAKE_CXX_STANDARD 20)
+
+if (${Enable_CMAKE_Debug_Build})
+    message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
+    message(STATUS "CMAKE_EXE_LINKER_FLAGS = ${CMAKE_EXE_LINKER_FLAGS}")
+    message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
+    message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
+endif()
+
+#----------------------------------#
 #<<<<<<<<<< New CMAKE variables >>>>>>>>>>#
 #----------------------------------#
 set(Enable_CMAKE_Debug_Build TRUE CACHE BOOL "Output important information during cmake")
@@ -65,6 +85,9 @@ set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if O
 set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
 set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
 set(Enable_Apps FALSE CACHE BOOL "Build applications if ON")
+set(Test_Exec_Path "${CMAKE_CURRENT_BINARY_DIR}/test/bin")
+set(Test_Data_Path "${CMAKE_CURRENT_BINARY_DIR}/test/test_data/")
+set(Apps_Path "${CMAKE_CURRENT_BINARY_DIR}/apps/")
 
 #----------------------------------#
 #<<<<<<<<<< Rpath setting >>>>>>>>>>#
@@ -79,6 +102,8 @@ if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Enable_Tests = ${Enable_Tests}")
     message(STATUS "Enable_High_Load_Tests = ${Enable_High_Load_Tests}")
     message(STATUS "Disable_Docker_MPI_Tests = ${Disable_Docker_MPI_Tests}")
+    message(STATUS "Test_Exec_Path = ${Test_Exec_Path}")
+    message(STATUS "Test_Data_Path = ${Test_Data_Path}")
 endif()
 enable_testing()
 
@@ -129,31 +154,6 @@ if(${Enable_Documentation})
 endif()
 
 #----------------------------------#
-#<<<<<<<<<< Compiler flags >>>>>>>>>>#
-#----------------------------------#
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lpthread -fPIC")
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
-endif ()
-
-# set gnu standard to 17
-if (CMAKE_VERSION VERSION_LESS "3.1")
-    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-        set(CMAKE_CXX_FLAGS "--std=gnu++17 ${CMAKE_CXX_FLAGS}")
-    endif ()
-else ()
-    set(CMAKE_CXX_STANDARD 17)
-endif ()
-
-if (${Enable_CMAKE_Debug_Build})
-    message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
-    message(STATUS "CMAKE_EXE_LINKER_FLAGS = ${CMAKE_EXE_LINKER_FLAGS}")
-    message(STATUS "CMAKE_CXX_FLAGS = ${CMAKE_CXX_FLAGS}")
-    message(STATUS "CMAKE_CXX_STANDARD = ${CMAKE_CXX_STANDARD}")
-endif()
-
-#----------------------------------#
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
 if (${Enable_CMAKE_Debug_Build})
@@ -186,7 +186,6 @@ if(${Enable_Tests})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Building test")
     endif()
-    add_subdirectory(test/test_exec)
     add_subdirectory(test)
 endif()
 
@@ -205,7 +204,7 @@ if(${Enable_Apps})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Building apps")
     endif()
-    add_subdirectory(apps/twop)
+    add_subdirectory(apps)
 endif()
 
 #----------------------------------#
@@ -223,9 +222,8 @@ if(${Enable_Tests})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Copying test directory to build directory")
     endif()
-    add_custom_command(
-            TARGET ${PROJECT_NAME} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_directory
+    file(COPY
             ${CMAKE_SOURCE_DIR}/test/test_data/
+            DESTINATION
             ${PROJECT_BINARY_DIR}/test/test_data/)
 endif()
