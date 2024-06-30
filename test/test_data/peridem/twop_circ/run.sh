@@ -12,4 +12,4 @@ $peridem -i input_0.yaml -nThreads $n_threads
 
 # check if we have produced 'output_10.vtu' file
 cd $MY_PWD
-if [[ -f "out/output_10.vtu" ]]; then exit 0; else exit 1; fi
+if [[ -f "out/output_0_10.vtu" ]]; then exit 0; else exit 1; fi

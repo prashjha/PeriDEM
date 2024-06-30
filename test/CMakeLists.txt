@@ -7,6 +7,20 @@
 # file LICENSE)
 
 #----------------------------------#
+#<<<<<<<<<< set exec path >>>>>>>>>>#
+#----------------------------------#
+set(EXECUTABLE_OUTPUT_PATH "${Test_Exec_Path}")
+
+if (${Enable_CMAKE_Debug_Build})
+    message(STATUS "Test binary directory = ${EXECUTABLE_OUTPUT_PATH}")
+endif()
+
+#----------------------------------#
+#<<<<<<<<<< test exec >>>>>>>>>>#
+#----------------------------------#
+add_subdirectory(test_exec)
+
+#----------------------------------#
 #<<<<<<<<<< Lib tests >>>>>>>>>>#
 #----------------------------------#
 
@@ -46,7 +60,7 @@ add_test(NAME test_util
 
 # fe lib
 add_test(NAME test_fe
-    COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestFE -i ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/fe
+    COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestFE -i ${Test_Data_Path}/fe
     WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
@@ -69,12 +83,12 @@ add_test(NAME test_meshpartitioning_simple
 
 add_test(NAME test_meshpartitioning_builtinmesh
         COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 1 -p 4 -m 4 -n 50
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
+        WORKING_DIRECTORY ${Test_Data_Path}/meshpartitioning
 )
 
 add_test(NAME test_meshpartitioning_usermesh
         COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestMeshPartitioning -o 2 -p 4 -m 4 -f ../common_data/mesh.msh
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/meshpartitioning
+        WORKING_DIRECTORY ${Test_Data_Path}/meshpartitioning
 )
 
 # parallel computation test
@@ -89,11 +103,11 @@ else ()
     message(STATUS "Building MPI tests testparallelcomp_builtinmesh_mpi and testparallelcomp_usermesh_mpi")
     add_test(NAME test_parallelcomp_builtinmesh_mpi
             COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -m 4 -n 50
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/parallelcomp
+            WORKING_DIRECTORY ${Test_Data_Path}/parallelcomp
     )
     add_test(NAME test_parallelcomp_usermesh_mpi
             COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -m 4 -f ../common_data/mesh.msh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/parallelcomp
+            WORKING_DIRECTORY ${Test_Data_Path}/parallelcomp
     )
 endif ()
 
@@ -103,39 +117,39 @@ endif ()
 #if (BASH_PROGRAM)
 add_test(NAME test_twop_circ
         COMMAND ${BASH_PROGRAM} ./run.sh
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_circ
+        WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_circ
         )
 
 add_test(NAME test_attrition_mix_particles_small_set
         COMMAND ${BASH_PROGRAM} ./run.sh
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/attrition_mix_particles_small_set
+        WORKING_DIRECTORY ${Test_Data_Path}/peridem/attrition_mix_particles_small_set
 )
 
 add_test(NAME test_compression_small_set
         COMMAND ${BASH_PROGRAM} ./run.sh
-        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compression_small_set
+        WORKING_DIRECTORY ${Test_Data_Path}/peridem/compression_small_set
 )
 
 if (${Enable_High_Load_Tests})
 
     add_test(NAME test_twop_concave_and_hex
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_concave_and_hex
+            WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_concave_and_hex
             )
 
     add_test(NAME test_twop_wall_concave_diff_material_diff_size
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/twop_wall_concave_diff_material_diff_size
+            WORKING_DIRECTORY ${Test_Data_Path}/twop_wall_concave_diff_material_diff_size
     )
 
     add_test(NAME test_attrition_mix_particles_large_set
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/attrition_mix_particles_large_set
+            WORKING_DIRECTORY ${Test_Data_Path}/attrition_mix_particles_large_set
     )
 
     add_test(NAME test_compression_large_set
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../test/test_data/peridem/compression_large_set
+            WORKING_DIRECTORY ${Test_Data_Path}/compression_large_set
     )
 
     #add_test(NAME test_twop_concave
@@ -190,12 +204,12 @@ if (${Enable_Apps})
     message(STATUS "Building tests for apps")
 
     add_test(NAME test_twoparticle_apps_demo
-            COMMAND ${EXECUTABLE_OUTPUT_PATH}/../apps/twoparticle_demo/TwoParticle_Demo -i ./example/input_0.yaml -nThreads 2
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../apps/twoparticle_demo
+            COMMAND ${Apps_Path}/twoparticle_demo/TwoParticle_Demo -i ./example/input_0.yaml -nThreads 2
+            WORKING_DIRECTORY ${Apps_Path}/twoparticle_demo
     )
 
     add_test(NAME test_peridynamics
-            COMMAND ${EXECUTABLE_OUTPUT_PATH}/../apps/peridynamics/Peridynamics -i ./example/input_0.yaml -nThreads 2
-            WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}/../apps/peridynamics
+            COMMAND ${Apps_Path}/peridynamics/Peridynamics -i ./example/input_0.yaml -nThreads 2
+            WORKING_DIRECTORY ${Apps_Path}/peridynamics
     )
 endif ()

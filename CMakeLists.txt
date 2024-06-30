@@ -85,6 +85,9 @@ set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if O
 set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
 set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
 set(Enable_Apps FALSE CACHE BOOL "Build applications if ON")
+set(Test_Exec_Path "${CMAKE_CURRENT_BINARY_DIR}/test/bin")
+set(Test_Data_Path "${CMAKE_CURRENT_BINARY_DIR}/test/test_data/")
+set(Apps_Path "${CMAKE_CURRENT_BINARY_DIR}/apps/")
 
 #----------------------------------#
 #<<<<<<<<<< Rpath setting >>>>>>>>>>#
@@ -99,6 +102,8 @@ if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Enable_Tests = ${Enable_Tests}")
     message(STATUS "Enable_High_Load_Tests = ${Enable_High_Load_Tests}")
     message(STATUS "Disable_Docker_MPI_Tests = ${Disable_Docker_MPI_Tests}")
+    message(STATUS "Test_Exec_Path = ${Test_Exec_Path}")
+    message(STATUS "Test_Data_Path = ${Test_Data_Path}")
 endif()
 enable_testing()
 
@@ -181,7 +186,6 @@ if(${Enable_Tests})
     if (${Enable_CMAKE_Debug_Build})
         message(STATUS "Building test")
     endif()
-    add_subdirectory(test/test_exec)
     add_subdirectory(test)
 endif()
 

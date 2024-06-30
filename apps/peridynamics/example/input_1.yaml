@@ -59,7 +59,7 @@ Displacement_BC:
     Time_Function:
       Type: linear
       Parameters:
-        - 0.005
+        - 0.01
     Spatial_Function:
       Type: constant
 Output:
