@@ -1,9 +1,0 @@
-<map id="model::DEMModel::run" name="model::DEMModel::run">
-<area shape="rect" id="Node000001" title="Main driver to simulate." alt="" coords="279,31,435,56"/>
-<area shape="rect" id="Node000002" href="$apps_2peridynamics_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="142,5,193,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="265,34,192,24,193,19,265,28"/>
-<area shape="rect" id="Node000003" href="$namespacetest.html#ae165316fc718590c70e7cdc08a093568" title="Tests PeriDEM model class." alt="" coords="104,55,231,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="265,58,231,62,230,57,264,52"/>
-<area shape="rect" id="Node000004" href="$testPeriDEM_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,55,56,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="90,70,56,70,56,65,90,65"/>
-</map>
