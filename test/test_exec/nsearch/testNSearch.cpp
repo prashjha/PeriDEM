@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     // print help
     std::cout << argv[0] << " (Version " << MAJOR_VERSION << "."
               << MINOR_VERSION << "." << UPDATE_VERSION
-              << ") -i <num-points> -o <select-test; 0 - test with different lattice, 1 - profile nanoflann>" << std::endl;
+              << ") -i <num-points> -o <select-test; 0 - test with different lattice, 1 - profile nanoflann, 2 - test closest point search>" << std::endl;
     //exit(EXIT_FAILURE);
   }
 
@@ -177,6 +177,42 @@ int main(int argc, char *argv[]) {
         }
       }
     }
+  }
+  else if (testSelect == 2) {
+    // test 2
+    std::cout << "\n\nTesting closest point search for different lattice sizes\n\n";
+
+    //    L_test = {1.};
+    //    dL_test = {0.2};
+    for (auto L: L_test) {
+      for (auto dL: dL_test) {
+        for (auto seed: seeds) {
+          for (auto n: N_test) {
+
+              std::string msg;
+              test::testNSearchData data;
+              data.d_dim = 3;
+              data.d_numTags = numTags[0];
+              data.d_leafMaxSize = leafMaxSizes[0];
+
+              std::cout << "\n**** Test number = " << test_count++ << " ****\n";
+              std::cout << fmt::format("Test parameters: L = {}, lattice "
+                                       "perturbation = {}, seed = {}, "
+                                       "N = {}, leafMaxSize = {}, num_tags = {}"
+                                       "\n\n",
+                                       L, dL * L, seed, n,
+                                       data.d_leafMaxSize,
+                                       data.d_numTags);
+
+
+              msg = test::testNanoflannClosestPoint(n, L, dL * L, seed);
+
+              std::cout << msg;
+
+          } // loop N
+        } // loop seed
+      } // loop dL
+    } // loop L
   }
 
   return EXIT_SUCCESS;
