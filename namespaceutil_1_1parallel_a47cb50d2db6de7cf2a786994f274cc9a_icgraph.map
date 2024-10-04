@@ -1,0 +1,47 @@
+<map id="util::parallel::initMpiStatus" name="util::parallel::initMpiStatus">
+<area shape="rect" id="Node000001" title="Initializes MpiStatus struct." alt="" coords="957,157,1129,182"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="775,157,909,182"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="944,172,910,172,910,167,944,167"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#a836a5bd06aa09111f66f69f97c1f093c" title="Returns pointer to MpiStatus struct." alt="" coords="553,157,726,182"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="761,172,726,172,726,167,761,167"/>
+<area shape="rect" id="Node000004" href="$testParticle_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="214,157,265,182"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="825,147,786,92,758,66,725,45,676,26,631,14,590,9,552,10,513,17,471,29,376,67,338,87,304,112,254,159,250,155,300,108,335,82,374,62,470,24,511,12,551,5,591,3,632,8,677,21,728,41,761,61,790,89,829,144"/>
+<area shape="rect" id="Node000005" href="$src_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="414,106,465,132"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="776,157,726,147,578,130,465,123,465,117,578,125,727,142,777,151"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1parallel.html#a4377dccc92c8b2a1896685fc54fd1a0b" title="Function to check if MPI is enabled." alt="" coords="552,308,727,333"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="827,195,786,247,759,274,728,297,701,310,699,305,725,293,755,270,782,243,823,192"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1parallel.html#af2fa5cf1aed1855e05ae530704c37763" title="Get MPI comm." alt="" coords="561,357,717,382"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="833,196,818,230,795,271,765,312,728,347,705,359,702,355,725,342,761,308,790,268,813,228,828,194"/>
+<area shape="rect" id="Node000008" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="565,258,713,284"/>
+<area shape="poly" id="edge9_Node000002_Node000008" title=" " alt="" coords="804,191,667,261,665,256,802,186"/>
+<area shape="rect" id="Node000020" href="$namespaceutil_1_1parallel.html#ad67dcfb56bf70d082e443e849c832c00" title="Get size (number) of processors." alt="" coords="568,56,711,81"/>
+<area shape="poly" id="edge24_Node000002_Node000020" title=" " alt="" coords="809,151,725,103,679,84,681,79,728,98,812,147"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="539,172,265,172,265,167,539,167"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="575,156,464,128,465,123,576,151"/>
+<area shape="poly" id="edge11_Node000008_Node000004" title=" " alt="" coords="574,258,264,178,266,173,576,252"/>
+<area shape="poly" id="edge12_Node000008_Node000005" title=" " alt="" coords="609,252,456,134,459,130,612,248"/>
+<area shape="rect" id="Node000009" href="$classutil_1_1io_1_1Logger.html#ab95e172506a16ded8973ae57cf5bd18c" title="Log the message." alt="" coords="375,258,504,284"/>
+<area shape="poly" id="edge10_Node000008_Node000009" title=" " alt="" coords="551,274,504,274,504,268,551,268"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1io.html#ad31db27dc1655d5860f349726f7cc90f" title="Prints formatted information." alt="" coords="394,308,485,333"/>
+<area shape="poly" id="edge13_Node000008_Node000010" title=" " alt="" coords="575,290,486,312,485,307,574,284"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1io.html#af5daf741ebf110f38d4ad05a552ecb39" title="Prints formatted information." alt="" coords="394,357,485,382"/>
+<area shape="poly" id="edge14_Node000008_Node000011" title=" " alt="" coords="565,291,553,297,539,309,530,321,520,333,506,347,481,359,479,355,502,342,517,330,526,318,535,305,551,293,563,286"/>
+<area shape="rect" id="Node000012" href="$namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054" title="Prints formatted information." alt="" coords="394,505,485,530"/>
+<area shape="poly" id="edge15_Node000008_Node000012" title=" " alt="" coords="558,293,554,297,537,321,529,345,528,369,530,393,532,418,531,444,523,469,506,496,487,509,484,505,502,492,518,467,525,443,526,418,524,394,522,369,524,344,532,318,550,293,554,289"/>
+<area shape="rect" id="Node000018" href="$namespaceutil_1_1io.html#ad1fd573c2dc219e1d7eb039ae184ccdb" title="Prints formatted string for output." alt="" coords="383,406,496,432"/>
+<area shape="poly" id="edge22_Node000008_Node000018" title=" " alt="" coords="560,292,554,297,543,309,536,320,530,345,524,371,517,384,506,397,489,408,486,404,502,393,513,381,519,369,525,344,531,318,538,305,550,293,557,288"/>
+<area shape="rect" id="Node000019" href="$namespaceutil_1_1io.html#aafa73b940789a70da4253d44a4ff36d1" title="Prints formatted string for output." alt="" coords="383,456,496,481"/>
+<area shape="poly" id="edge23_Node000008_Node000019" title=" " alt="" coords="558,293,554,297,540,315,533,332,530,369,527,407,520,427,506,446,491,458,488,453,502,442,515,424,522,406,525,369,527,331,535,312,550,293,555,289"/>
+<area shape="poly" id="edge18_Node000012_Node000004" title=" " alt="" coords="380,502,373,495,350,449,312,357,243,184,248,182,317,355,355,447,377,492,383,497"/>
+<area shape="rect" id="Node000013" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#a4d39e968562ef414dc37d135b277b056" title=" " alt="" coords="152,401,327,456"/>
+<area shape="poly" id="edge16_Node000012_Node000013" title=" " alt="" coords="389,503,374,496,325,471,299,458,302,453,328,466,376,491,391,498"/>
+<area shape="rect" id="Node000014" href="$namespacetest.html#af0964e1ea010ded3d98df70e7d5326ca" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="5,498,104,524"/>
+<area shape="poly" id="edge20_Node000012_Node000014" title=" " alt="" coords="405,540,368,557,327,570,278,579,239,583,200,580,151,570,106,550,70,526,73,522,108,545,153,564,201,575,239,578,277,574,326,564,367,552,403,535"/>
+<area shape="rect" id="Node000016" href="$apps_2peridynamics_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="214,480,265,505"/>
+<area shape="poly" id="edge19_Node000012_Node000016" title=" " alt="" coords="380,513,265,498,265,493,380,508"/>
+<area shape="rect" id="Node000017" href="$namespacetest.html#ad42bc7bd3da5dce5ed3624b8fca7585f" title="Perform test on taskflow." alt="" coords="176,529,303,554"/>
+<area shape="poly" id="edge21_Node000012_Node000017" title=" " alt="" coords="381,527,303,537,302,531,380,522"/>
+<area shape="poly" id="edge17_Node000013_Node000014" title=" " alt="" coords="166,464,85,501,83,496,164,459"/>
+<area shape="poly" id="edge25_Node000020_Node000004" title=" " alt="" coords="555,70,467,77,420,85,375,96,342,110,310,126,259,159,256,155,307,122,340,105,374,91,419,79,466,72,554,65"/>
+<area shape="poly" id="edge26_Node000020_Node000005" title=" " alt="" coords="576,87,465,115,464,110,575,82"/>
+</map>
