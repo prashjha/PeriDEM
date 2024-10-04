@@ -1,0 +1,5 @@
+<map id="util::io::checkAndCreateNewFilename" name="util::io::checkAndCreateNewFilename">
+<area shape="rect" id="Node000001" title="Check for extension and if possible create new filename from a given filename and a given extension." alt="" coords="5,5,168,45"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a6588c46813adf0cb86b795880f1a2ec7" title="Get extension from the filename." alt="" coords="216,13,408,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,23,203,23,203,28,168,28"/>
+</map>

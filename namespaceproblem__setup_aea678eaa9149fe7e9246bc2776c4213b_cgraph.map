@@ -1,0 +1,16 @@
+<map id="problem_setup.particle_locations" name="problem_setup.particle_locations">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,120,159,160"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#a940f98fd749d846836ab2cb4c62cc8be" title=" " alt="" coords="207,5,412,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="107,118,152,86,205,55,222,48,224,53,208,60,154,91,110,122"/>
+<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#a994bc08b964e2a925cf8160befb6d215" title=" " alt="" coords="229,70,390,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="158,118,206,105,243,96,244,101,207,111,160,123"/>
+<area shape="rect" id="Node000004" href="$namespaceproblem__setup.html#aff4594201e815ccb4330bbe21584f3a9" title=" " alt="" coords="234,120,385,160"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="159,137,220,137,220,143,159,143"/>
+<area shape="rect" id="Node000006" href="$namespaceproblem__setup.html#afdb4a08aeffd3f2335ddf0cc8a0cad00" title=" " alt="" coords="234,184,385,224"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="155,158,225,178,224,183,153,163"/>
+<area shape="rect" id="Node000007" href="$namespaceproblem__setup.html#acb67d3097eb783b92c758558193b6de3" title=" " alt="" coords="234,248,385,288"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="106,158,151,196,208,234,222,240,220,245,205,238,148,201,103,162"/>
+<area shape="rect" id="Node000005" href="$namespaceproblem__setup.html#a985dacfd6be0ac3572b15624d629e2b7" title=" " alt="" coords="460,159,604,185"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="386,148,447,157,446,162,385,153"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="385,191,446,182,447,187,386,196"/>
+</map>
