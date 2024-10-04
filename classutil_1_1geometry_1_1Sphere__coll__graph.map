@@ -1,0 +1,7 @@
+<map id="util::geometry::Sphere" name="util::geometry::Sphere">
+<area shape="rect" id="Node000001" title="Defines sphere." alt="" coords="105,713,248,1339"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,180,651"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,664,142,713,136,713,131,665"/>
+<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="205,35,319,621"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="229,621,220,697,214,696,224,620"/>
+</map>
