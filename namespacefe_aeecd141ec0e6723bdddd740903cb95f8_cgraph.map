@@ -1,0 +1,17 @@
+<map id="fe::getCurrentQuadPoints" name="fe::getCurrentQuadPoints">
+<area shape="rect" id="Node000001" title="Get current location of quadrature points of elements in the mesh. This function expects mesh has ele..." alt="" coords="5,153,176,179"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1Mesh.html#a8cfebeb2d96199744d0c7de324a0066a" title="Get the connectivity of element." alt="" coords="224,5,444,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="100,151,148,97,183,66,223,40,238,33,240,37,225,44,186,70,152,101,104,155"/>
+<area shape="rect" id="Node000003" href="$classfe_1_1Mesh.html#a55b3e75c83f467a678b3f775a6ac0dec" title="Get the type of element in mesh." alt="" coords="247,55,421,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="109,151,159,120,223,89,246,81,248,86,225,94,162,125,112,156"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="249,104,419,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="153,151,257,130,258,135,155,156"/>
+<area shape="rect" id="Node000005" href="$classfe_1_1Mesh.html#ab168daf41aec75099948a519d1a252ad" title="Get the number of elements." alt="" coords="243,153,425,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="176,163,229,163,229,169,176,169"/>
+<area shape="rect" id="Node000006" href="$classfe_1_1Mesh.html#aac3df3472139b865eda7406c1d1c3d77" title="Get the number of nodes." alt="" coords="251,203,417,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="155,176,258,197,257,202,153,181"/>
+<area shape="rect" id="Node000007" href="$classfe_1_1BaseElem.html#a96fb54d9aca45e987c163e95242ceb8f" title="Get number of quadrature points in the data." alt="" coords="241,253,427,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="113,177,163,206,225,237,247,246,246,251,223,242,161,211,111,181"/>
+<area shape="rect" id="Node000008" href="$classfe_1_1BaseElem.html#a845050a671a67d9dc61d294bd11ef16d" title="Get vector of quadrature data." alt="" coords="237,317,431,343"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="102,177,149,238,185,273,225,302,242,310,239,315,223,307,181,277,145,241,98,180"/>
+</map>

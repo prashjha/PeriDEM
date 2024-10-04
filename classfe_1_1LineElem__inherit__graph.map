@@ -1,0 +1,5 @@
+<map id="fe::LineElem" name="fe::LineElem">
+<area shape="rect" id="Node000001" title="A class for mapping and quadrature related operations for linear 2&#45;node line element." alt="" coords="5,439,160,704"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,5,160,391"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="85,405,85,438,80,438,80,405"/>
+</map>
