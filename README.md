@@ -358,7 +358,7 @@ If this library was useful in your work, we recommend citing the following artic
 
 You can also cite the PeriDEM using zenodo doi:
 
-> http://doi.org/10.5281/zenodo.4733259
+> Prashant K., J. (2024). Peridynamics-based discrete element method (PeriDEM) model of granular systems. Zenodo. https://doi.org/10.5281/zenodo.13888588
 
 ## Developers
   - [Prashant K. Jha](https://prashjha.github.io/) 
