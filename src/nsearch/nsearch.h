@@ -151,6 +151,18 @@ public:
             const size_t &searchPointTag,
             const std::vector<size_t> &dataTags) = 0;
 
+
+    /*!
+     * @brief Find the closest points to the specified point
+     * @param searchPoint Point near which we want neighbors
+     * @param foundNeigh Index of point in neighborhood
+     * @param sqrDistNeigh Squared distance of neighboring point from search point
+     */
+      virtual void closestPoint(
+              const util::Point &searchPoint,
+              size_t &neigh,
+              double &sqrDistNeigh) = 0;
+
 public:
   /*! @brief control the verbosity */
   size_t d_debug;
@@ -377,6 +389,23 @@ public:
       }
 
       return N;
+    };
+
+    /*!
+     * @copydoc BaseNSearch::closestPoint(
+            const util::point &searchPoint,
+            int &neigh,
+            float &sqrDistNeigh) = 0
+     */
+    void closestPoint(
+            const util::Point &searchPoint,
+            size_t &neigh,
+            double &sqrDistNeigh) override {
+
+      double query_pt[3] = {searchPoint[0], searchPoint[1], searchPoint[2]};
+      unsigned int neigh_temp = 0;
+      d_tree.knnSearch(&query_pt[0], 1, &neigh_temp, &sqrDistNeigh);
+      neigh = neigh_temp;
     };
 
 public:

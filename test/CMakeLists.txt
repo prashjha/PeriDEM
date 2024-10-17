@@ -70,6 +70,11 @@ add_test(NAME test_nsearch
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
 )
 
+add_test(NAME test_nsearch_closest_point
+        COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 10 -o 2
+        WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}
+)
+
 add_test(NAME test_nsearch_profilenanoflann
         COMMAND ${EXECUTABLE_OUTPUT_PATH}/TestNSearch -i 10 -o 1
         WORKING_DIRECTORY ${EXECUTABLE_OUTPUT_PATH}

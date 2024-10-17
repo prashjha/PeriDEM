@@ -331,6 +331,80 @@ double neighSearchBruteExcludeInclude(const std::vector<util::Point> &x,
   return util::methods::timeDiff(t1, t2, "microseconds");
 }
 
+
+template <class NSearch>
+double neighSearchTreeClosestPointSizet(const std::vector<util::Point> &x,
+                            const std::unique_ptr<NSearch> &nsearch,
+                            const int &seed,
+                            const double &L,
+                            const double &dL,
+                            std::vector<util::Point> &search_points,
+                            std::vector<size_t> &err_points,
+                            std::vector<double> &err_dist) {
+
+  search_points.resize(x.size());
+  err_points.resize(x.size());
+  err_dist.resize(x.size());
+
+  // set perturbation length much smaller than the dL
+  double dx_perturb = dL/100;
+
+  // random number generator
+  RandGenerator gen(util::get_rd_gen(seed));
+  UniformDistribution dist(-dx_perturb, dx_perturb);
+
+  for (size_t i=0; i<x.size(); i++) {
+    const auto &xi = x[i];
+
+    // get a query point that is close to xi
+    auto xi_perturb = xi;
+    for (size_t k=0; k<3; k++)
+      xi_perturb[k] += dist(gen);
+
+    search_points[i] = xi_perturb;
+  }
+
+  auto t1 = steady_clock::now();
+
+  tf::Executor executor(util::parallel::getNThreads());
+  tf::Taskflow taskflow;
+
+  taskflow.for_each_index((std::size_t) 0, x.size(), (std::size_t) 1, [&x,
+                                                                       &search_points,
+                                                                       &err_points, &err_dist, &nsearch](std::size_t i) {
+
+      const auto &xi = x[i];
+
+      // get a query point that is close to xi
+      const auto &xi_perturb = search_points[i];
+
+      // set true values
+      size_t true_neigh = i;
+      double true_dist = (xi - xi_perturb).length();
+
+      size_t found_neigh;
+      double found_dist = 0.;
+
+      // find closest neighbor using nsearch
+      nsearch->closestPoint(xi_perturb, found_neigh, found_dist);
+
+      if (true_neigh != found_neigh) {
+        err_points[i] = found_neigh;
+        err_dist[i] = true_dist - found_dist;
+      }
+      else {
+        err_points[i] = -1;
+        err_dist[i] = 0.;
+      }
+    }
+  ); // for_each
+
+  executor.run(taskflow).get();
+
+  auto t2 = steady_clock::now();
+  return util::methods::timeDiff(t1, t2, "microseconds");
+}
+
 std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
                             const std::vector<std::vector<size_t>> &neigh2,
                             std::vector<std::string> tags,
@@ -382,6 +456,38 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
                        error_neighs) +
            composs.str();
 }
+
+    std::string compare_closest_point_results(
+            const std::vector<util::Point> &x,
+            const std::vector<util::Point> &search_points,
+            const std::vector<size_t> &err_points,
+            const std::vector<double> &err_dist,
+            bool only_err_count = false) {
+
+      size_t error_size = 0;
+      std::ostringstream composs;
+
+      for (size_t i = 0; i < err_points.size(); i++) {
+
+        if (err_points[i] != -1) {
+          composs << fmt::format("    Node = {} at location = {}, "
+                                 "Search point = {}, closest point id = {} at"
+                                 " location = {}. True dist = {}, found "
+                                 "dist = {}\n",
+                                 i, x[i].printStr(), search_points[i]
+                                 .printStr(), err_points[i], x[err_points[i]]
+                                 .printStr(), (x[i] - search_points[i])
+                                 .length(), err_dist[i]);
+          error_size++;
+        }
+      }
+
+      if (only_err_count)
+        return fmt::format("    error_size = {}\n", error_size);
+      else
+        return fmt::format("    error_size = {}\n", error_size) +
+               composs.str();
+    }
 } // namespace
 
 template <int dim>
@@ -668,6 +774,50 @@ std::string test::testNanoflannExcludeInclude(size_t N, double L,
                      data.d_includeNFlannSearchTime);
 
   return msg.str();
+
+
+}
+
+std::string test::testNanoflannClosestPoint(size_t N, double L, double dL, int seed) {
+
+  // create 3D lattice and perturb each lattice point
+  size_t Nx, Ny, Nz;
+  Nx = Ny = Nz = N;
+  size_t N_tot = Nx * Ny * Nz;
+
+  std::vector<util::Point> x(N_tot, util::Point());
+  lattice(L, Nx, Ny, Nz, dL, seed, x, 3);
+  std::cout << "Total points = " << x.size() << "\n";
+
+  // nanoflann tree search
+  auto nflann_nsearch
+          = std::make_unique<nsearch::NFlannSearchKd<3>>(x, 0);
+
+  auto nflann_tree_set_time = nflann_nsearch->setInputCloud();
+
+  std::vector<size_t> err_points;
+  std::vector<util::Point> search_points;
+  std::vector<double> err_dist;
+  auto nsearch_search_time = neighSearchTreeClosestPointSizet(
+          x, nflann_nsearch, seed, L, dL, search_points, err_points, err_dist);
+
+    // Compare search results
+    auto nflann_compare = compare_closest_point_results(x,
+                                                              search_points,
+                                                              err_points,
+                                                              err_dist, false);
+
+    std::ostringstream msg;
+    msg << fmt::format("  Setup times (microseconds): \n"
+                       "    nflann_tree_set_time = {}\n",
+                       nflann_tree_set_time);
+
+    msg << fmt::format("  Comparison results: \n"
+                       "    nflann_compare: \n{}\n",
+                       nflann_compare);
+
+    return msg.str();
+
 
 
 }
