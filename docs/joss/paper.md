@@ -22,15 +22,15 @@ bibliography: paper.bib
 
 # Summary
 
-Granular materials plays a crucial role in wide range of sectors including geotechnical, manufacturing, and mining. Predictive modeling of these materials under large loading becomes a challenging task due to deformation and breakage of particles and complex contact mechanism between complex-shaped particles undergoing considerable deformation. Focusing on the scenarios when particle deformation and breakage are crucial, PeriDEM model introduced in [@jha2021peridynamics] is implemented in the PeriDEM library. The underlying idea is that individual particles are modeled as deformable solid using peridynamics theory, and the contact between two deforming particles are applied at locally at the contact region allowing modeling of complex-shaped particles. The integration of peridynamics within discrete element method (DEM) provides a flexible, hybrid framework that handles the contact mechanics at the particle boundary while accounting for the internal material response, including deformation and fracture. This opens up new avenues for exploring the interactions in granular systems, including developing constitutive laws for phenomenological continuum models, understanding effective behavior when subjected to large loading, and impact of particle shape on particle dynamics. 
+Granular materials are crucial in various sectors, including geotechnical, manufacturing, and mining. Predictive modeling of these materials under extensive loading becomes challenging due to the deformation and breakage of particles and the complex contact mechanisms between complex-shaped particles undergoing considerable deformation. Focusing on the scenarios when particle deformation and breakage are crucial, the PeriDEM model introduced in [@jha2021peridynamics] is implemented in the PeriDEM library. The underlying idea is that individual particles are modeled as deformable solids using peridynamics theory, and the contact between two deforming particles is applied locally at the contact region, allowing the modeling of complex-shaped particles. Integrating peridynamics within the discrete element method (DEM) provides a flexible, hybrid framework that handles the contact mechanics at the particle boundary while accounting for the internal material response, including deformation and fracture. This opens up new avenues for exploring the interactions in granular systems, including developing constitutive laws for phenomenological continuum models, understanding effective behavior when subjected to extensive loading, and the impact of particle shape on particle dynamics. 
 
 # Statement of Need
 
-Granular materials are prevalent in numerous industrial sectors, including geotechnical, manufacturing, and mining. Current modeling techniques such as DEM struggle with accurately capturing the behavior of granular materials under extreme conditions, especially when dealing with complex geometries and deformable particles. PeriDEM overcomes the challenges and implements a high-fidelity framework combining DEM and peridynamics to allow for accurate simulations of granular systems under extreme loading conditions. PeriDEM library makes the implementation of high-fidelity approach transparent. The library depends on very limited external libraries and is easier to build on ubuntu and mac systems allowing quick testing and extension to user specific needs. 
+Granular materials are prevalent in numerous industrial sectors, including geotechnical, manufacturing, and mining. Current modeling techniques, such as DEM, struggle with accurately capturing the behavior of granular materials under extreme conditions, especially when dealing with complex geometries and deformable particles. PeriDEM overcomes the challenges and implements a high-fidelity framework combining DEM and peridynamics to allow for accurate simulations of granular systems under extreme loading conditions. PeriDEM library makes the implementation of the high-fidelity approach transparent. The library depends on limited external libraries and is easier to build on Ubuntu and Mac systems, allowing quick testing and extension to user-specific needs. 
 
 # Background
 
-PeriDEM model was introduced in [@jha2021peridynamics], where it demonstrated the ability to model both inter-particle contact and intra-particle fracture for arbitrarily shaped particles. The model is briefly described next.
+The PeriDEM model was introduced in [@jha2021peridynamics], demonstrating its ability to model inter-particle contact and intra-particle fracture for arbitrarily shaped particles. It is briefly described next.
 
 ## Brief Introduction to PeriDEM Model
 
@@ -38,11 +38,9 @@ PeriDEM model was introduced in [@jha2021peridynamics], where it demonstrated th
 
 Suppose a fixed frame of reference and $\{\boldsymbol{e}_i\}_{i=1}^d$ are orthonormal bases. Consider a collection of $N_P$ particles ${\Omega}^{(p)}_0$, $1\leq p \leq N_P$, where ${\Omega}^{(p)}_0 \subset \mathbb{R}^d$ with $d=2,3$ represents the initial configuration of particle $p$. Suppose $\Omega_0 \supset \cup_{p=1}^{N_P} {\Omega}^{(p)}_0$ is the domain containing all particles; see \autoref{fig:schemMultiParticles}. The particles in $\Omega_0$ are dynamically evolving due to external boundary conditions and internal interactions; let ${\Omega}^{(p)}_t$ denote the configuration of particle $p$ at time $t\in (0, t_F]$, and $\Omega_t \supset \cup_{p=1}^{N_P} {\Omega}^{(p)}_t$ domain containing all particles at that time. The motion ${\boldsymbol{x}}^{(p)} = {\boldsymbol{x}}^{(p)}({\boldsymbol{X}}^{(p)}, t)$ takes point ${\boldsymbol{X}}^{(p)}\in {\Omega}^{(p)}_0$ to ${\boldsymbol{x}}^{(p)}\in {\Omega}^{(p)}_t$, and collectively, the motion is given by $\boldsymbol{x} = \boldsymbol{x}(\boldsymbol{X}, t) \in \Omega_t$ for $\boldsymbol{X} \in \Omega_0$. We assume the media is dry and not influenced by factors other than mechanical loading (e.g., moisture and temperature are not considered). The configuration of particles in $\Omega_t$ at time $t$ depends on various factors, such as material and geometrical properties, contact mechanism, and external loading. 
 Essentially, there are two types of interactions present in the media:
-\begin{itemize}
-    \item[(1.)] {\it Intra-particle interaction} that models the deformation and internal forces in the particle and
-    \item[(2.)] {\it Inter-particle interaction} that accounts for the contact between particles and the boundary of the domain the particles are contained in.
-\end{itemize}
-In DEM, the first interaction is ignored, assuming particle deformation is insignificant compared to the inter-particle interaction. On the other hand, PeriDEM, accounts for both interactions.
+- *Intra-particle interaction* that models the deformation and internal forces in the particle and
+- *Inter-particle interaction* that accounts for the contact between particles and the boundary of the domain in which the particles are contained.
+In DEM, the first interaction is ignored, assuming particle deformation is insignificant compared to the inter-particle interaction. On the other hand, PeriDEM accounts for both interactions.
 
 The balance of linear momentum for particle $p$, $1\leq p\leq N_P$, takes the form:
 \begin{equation}
@@ -106,18 +104,18 @@ else ${\boldsymbol{f}}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) = \boldsymbol
 
 # Implementation
 
-PeriDEM is implemented as an open-source library in GitHub; see [PeriDEM](https://github.com/prashjha/PeriDEM). It is based on C++, and uses only handful external libraries which are included in the library in the `external` folder, allowing the code to be built and tested in ubuntu and mac systems relatively easily. Taskflow [@huang2021taskflow] is used for asyncrhonous multithreaded computation and Nanoflann [@blanco2014nanoflann] for tree search to calculate neighbors for contact forces. MPI and metis [@karypis1997metis] have recently been integrated to implement the distributed parallelism in near future. VTK is used to output the simulation files which can be visualized using paraview. 
+PeriDEM is implemented as an open-source library in GitHub; see [PeriDEM](https://github.com/prashjha/PeriDEM). It is based on C++ and uses only a handful of external libraries, which are included in the library in the `external` folder, allowing the code to be built and tested in Ubuntu and Mac systems relatively quickly. Specifically, we use taskflow [@huang2021taskflow] for asynchronous multithreaded computation, nanoflann [@blanco2014nanoflann] for tree search to calculate neighbors for contact forces, and VTK for output. MPI and metis [@karypis1997metis] have recently been integrated to implement distributed parallelism in the near future. 
 
 ## Features
 - Hybrid modeling using peridynamics and DEM for intra-particle and inter-particle interactions.
 - Support for complex shaped particles, allowing for realistic simulation scenarios.
-- MPI will be used for distributed computing in near future.
+- MPI will be used for distributed computing in the near future.
 - Future work includes developing an adaptive modeling approach to enhance efficiency without compromising accuracy.
 
 ## Brief implementation details
-The main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/tree/main/src/model/dem). 
+The primary implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/tree/main/src/model/dem). 
 The model is implemented in class [DEMModel](https://github.com/prashjha/PeriDEM/tree/main/src/model/dem/demModel.cpp). 
-Function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more details:
+The function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more detail:
 
 ### DEMModel::run()
 This function does three tasks:
@@ -136,7 +134,7 @@ void model::DEMModel::run(inp::Input *deck) {
 ```
 
 In `DEMModel::init()`, the simulation is prepared by reading the input 
-files (such as `.yaml`, `.msh`, `particle_locations.csv` files). 
+files (such as `.yaml`, `.msh`, `particle_locations.csv`). 
 
 ### DEMModel::integrate()
 Key steps in  `DEMModel::integrate()` are 
@@ -212,7 +210,7 @@ In this function, we compute internal and external forces at each node of a part
 and also account for the external boundary conditions. This function looks like
 ```cpp
 void model::DEMModel::computeForces() {
-    // update the point cloud (make sure that d_x is updated along with displacment)
+    // update the point cloud (make sure that d_x is updated along with displacement)
     auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
     pt_cloud_update_time += d_nsearch_p->setInputCloud();
     
@@ -230,15 +228,14 @@ void model::DEMModel::computeForces() {
 ```
 
 ### Further reading
-Above gives the basic idea of simulation steps. For more thorough understanding of 
-the implementation, interested readers can look at 
+The above gives the basic idea of implementation. For a closer look, interested readers can look at 
 [demModel.cpp](https://github.com/prashjha/PeriDEM/tree/main/src/model/dem/demModel.cpp).
 
 ## Examples
 
 ![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=80%}
 
-Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/tree/main/examples/README.md) of the library. One of the key result is the compression of 502 circular and hexagon particles in a rectangular container by moving the top wall. The stress on the moving wall as a function of wall penetration becomes increasingly nonlinear, and media shows signs of yielding as the damage becomes extensive; see \autoref{fig:peridemSummary}a. Preliminary compute time analysis with an increasing number of particles shows an exponential increase in compute time of contact and peridynamics forces, which is unsurprising as both computations are nonlocal. Demonstration examples also include attrition of various non-circular particles in a rotating cylinder \autoref{fig:peridemSummary}c. 
+Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/tree/main/examples/README.md) of the library. One key result is the compression of 502 circular and hexagon particles in a rectangular container by moving the top wall. The stress on the moving wall as a function of wall penetration becomes increasingly nonlinear, and media shows signs of yielding as the damage becomes extensive; see \autoref{fig:peridemSummary}a. Preliminary compute time analysis with an increasing number of particles shows an exponential increase in compute time of contact and peridynamics forces, which is unsurprising as both computations are nonlocal. Demonstration examples also include attrition of various non-circular particles in a rotating cylinder \autoref{fig:peridemSummary}c. 
 
 
 
