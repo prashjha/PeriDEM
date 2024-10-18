@@ -75,6 +75,9 @@ where
 In the above, $J: [0, \infty) \to \mathbb{R}$ is the influence function, $\kappa, G, \mathcal{G}_c$ are bulk and shear moduli and critical energy release rate, respectively. These parameters, including nonlocal length scale $\epsilon$, could depend on the particle $p$.
 
 ### DEM-inspired contact forces
+
+![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles.\label{fig:peridemContact}](./files/perdem-contact.png){width=60%}
+
 The external force density ${\boldsymbol{f}}^{(p)}_{ext}$ is generally expressed as
 \begin{equation}
     {\boldsymbol{f}}^{(p)}_{ext} = {\rho}^{(p)}\boldsymbol{b} + \boldsymbol{f}^{\Omega_0, (p)} + \sum_{q\neq p} {\boldsymbol{f}}^{(q),(p)}\,,
@@ -233,7 +236,7 @@ the implementation, interested readers can look at
 
 ## Examples
 
-![Nonlinear response under compression, {\bf b} exponential growth of compute time due to nonlocality of internal and contact forces, and {\bf c} rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=70%}
+![Nonlinear response under compression, {\bf b} exponential growth of compute time due to nonlocality of internal and contact forces, and {\bf c} rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=80%}
 
 Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/tree/main/examples/README.md) of the library. One of the key result is the compression of 502 circular and hexagon particles in a rectangular container by moving the top wall. The stress on the moving wall as a function of wall penetration becomes increasingly nonlinear, and media shows signs of yielding as the damage becomes extensive; see \autoref{fig:peridemSummary}a. Preliminary compute time analysis with an increasing number of particles shows an exponential increase in compute time of contact and peridynamics forces, which is unsurprising as both computations are nonlocal. Demonstration examples also include attrition of various non-circular particles in a rotating cylinder \autoref{fig:peridemSummary}c. 
 
