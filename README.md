@@ -217,7 +217,7 @@ void model::DEMModel::computeForces() {
 ### Further reading
 Above gives the basic idea of simulation steps. For more thorough understanding of 
 the implementation, interested readers can look at 
-[demModel.cpp](.n/src/model/dem/demModel.cpp).
+[demModel.cpp](./src/model/dem/demModel.cpp).
 
 ## [Installation](./tools/README.md)
 
