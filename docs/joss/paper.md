@@ -76,7 +76,7 @@ In the above, $J: [0, \infty) \to \mathbb{R}$ is the influence function, $\kappa
 
 ### DEM-inspired contact forces
 
-![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles.\label{fig:peridemContact}](./files/perdem-contact.png){width=60%}
+![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles.\label{fig:peridemContact}](./files/peridem-contact.png){width=60%}
 
 The external force density ${\boldsymbol{f}}^{(p)}_{ext}$ is generally expressed as
 \begin{equation}
@@ -110,9 +110,9 @@ PeriDEM is implemented as an open-source library in GitHub; see [PeriDEM](https:
 
 ## Features
 - Hybrid modeling using peridynamics and DEM for intra-particle and inter-particle interactions.
-- Support for arbitrarily shaped particles, allowing for realistic simulation scenarios.
+- Support for complex shaped particles, allowing for realistic simulation scenarios.
+- MPI will be used for distributed computing in near future.
 - Future work includes developing an adaptive modeling approach to enhance efficiency without compromising accuracy.
-- Open-source implementation with support for HPC environments, leveraging modern multi-threading techniques for scalability.
 
 ## Brief implementation details
 The main implementation of the model is carried out in the model directory [dem](https://github.com/prashjha/PeriDEM/tree/main/src/model/dem). 
