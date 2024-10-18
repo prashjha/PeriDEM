@@ -15,6 +15,8 @@ authors:
 affiliations:
  - name: Department of Mechanical Engineering, South Dakota School of Mines and Technology, Rapid City, SD 57701, USA
    index: 1
+header-includes:
+   - \usepackage{amsfonts,amssymb,amsmath}
 date: 17 October 2024
 bibliography: paper.bib
 
