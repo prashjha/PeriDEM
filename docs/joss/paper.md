@@ -107,7 +107,7 @@ Here, ${\kappa}^{(q),(p)}_N, {\beta}^{(q),(p)}_N, {\mu}^{(q),(p)}_T$ are coeffic
 
 # Implementation
 
-[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in GitHub. It is based on C++ and uses only a handful of external libraries, which are included in the library in the `external` folder, allowing the code to be built and tested in Ubuntu and Mac systems relatively quickly. Specifically, we use taskflow [@huang2021taskflow] for asynchronous multithreaded computation, nanoflann [@blanco2014nanoflann] for tree search to calculate neighbors for contact forces, and VTK for output. MPI and metis [@karypis1997metis] have recently been integrated to implement distributed parallelism in the near future. 
+[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in GitHub. It is based on C++ and uses only a handful of external libraries, which are included in the library in the `external` folder, allowing the code to be built and tested in Ubuntu and Mac systems relatively quickly. Specifically, we use taskflow [@huang2021taskflow] for asynchronous multithreaded computation, nanoflann [@blanco2014nanoflann] for tree search to calculate neighbors for contact forces, and VTK for output. MPI and metis [@karypis1997metis] have recently been integrated to implement distributed parallelism in the near future. This work is based on the previous research on analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @lipton2019complex].
 
 ## Features
 - Hybrid modeling using peridynamics and DEM for intra-particle and inter-particle interactions.
