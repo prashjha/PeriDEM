@@ -20,8 +20,6 @@ bibliography: paper.bib
 
 ---
 
-![PeriDEM logo.\label{fig:logo}](../assets/logo/joss_logo.png){ width=80% }
-
 # Summary
 
 Modeling dynamics of deformning and breaking particles interacting with each other is a challenging task from both mechanistic modeling and simulation point of views. The PeriDEM library implements a hybrid approach combining peridynamics and the discrete element method (DEM), providing a means to simulate the intricate behaviors of granular systems involving arbitrarily shaped particles and particle breakage. The PeriDEM framework integrates the strengths of DEM, which effectively captures inter-particle contact forces, with peridynamics, which can model intra-particle deformation and fracture. This hybrid approach is particularly suited for scenarios involving extreme conditions such as high-stress environments where particle deformation and breakage play significant roles.
@@ -36,7 +34,8 @@ PeriDEM model was introduced in [@jha2021peridynamics], where it demonstrated th
 
 ## Brief Introduction to PeriDEM Model
 
-![Motion of particle system.\label{fig:schemMultiParticles}](./files/multi-particle.png)
+![Motion of particle system.\label{fig:schemMultiParticles}](./files/multi-particle.png){width=30%}
+
 Suppose a fixed frame of reference and $\{\boldsymbol{e}_i\}_{i=1}^d$ are orthonormal bases. Consider a collection of $N_P$ particles ${\Omega}^{(p)}_0$, $1\leq p \leq N_P$, where ${\Omega}^{(p)}_0 \subset \mathbb{R}^d$ with $d=2,3$ represents the initial configuration of particle $p$. Suppose $\Omega_0 \supset \cup_{p=1}^{N_P} {\Omega}^{(p)}_0$ is the domain containing all particles; see \autoref{fig:schemMultiParticles}. The particles in $\Omega_0$ are dynamically evolving due to external boundary conditions and internal interactions; let ${\Omega}^{(p)}_t$ denote the configuration of particle $p$ at time $t\in (0, t_F]$, and $\Omega_t \supset \cup_{p=1}^{N_P} {\Omega}^{(p)}_t$ domain containing all particles at that time. The motion ${\boldsymbol{x}}^{(p)} = {\boldsymbol{x}}^{(p)}({\boldsymbol{X}}^{(p)}, t)$ takes point ${\boldsymbol{X}}^{(p)}\in {\Omega}^{(p)}_0$ to ${\boldsymbol{x}}^{(p)}\in {\Omega}^{(p)}_t$, and collectively, the motion is given by $\boldsymbol{x} = \boldsymbol{x}(\boldsymbol{X}, t) \in \Omega_t$ for $\boldsymbol{X} \in \Omega_0$. We assume the media is dry and not influenced by factors other than mechanical loading (e.g., moisture and temperature are not considered). The configuration of particles in $\Omega_t$ at time $t$ depends on various factors, such as material and geometrical properties, contact mechanism, and external loading. 
 Essentially, there are two types of interactions present in the media:
 \begin{itemize}
@@ -94,12 +93,10 @@ Then the force on particle $p$ due to contact with particle $q$ can be written a
 \end{equation}
 with normal and tangential forces following [@jha2021peridynamics, @desai2019rheometry] given by
 \begin{equation}
-    {\boldsymbol{f}}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) = \begin{cases}
-        0\,, & \quad \text{if } {\Delta}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X}) \geq 0\,, \\
-        \left[ {\kappa}^{(q),(p)}_N {\Delta}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X}) - {\beta}^{(q),(p)}_N {\dot{\Delta}}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X})  \right] {\boldsymbol{e}}^{(q),(p)}_N\,, & \quad \text{otherwise}\,,
-    \end{cases}
+    {\boldsymbol{f}}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) = 
+        \left[ {\kappa}^{(q),(p)}_N {\Delta}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X}) - {\beta}^{(q),(p)}_N {\dot{\Delta}}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X})  \right]\,, 
 \end{equation}
-and
+if ${\Delta}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X}) < 0$ else ${\boldsymbol{f}}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) = \boldsymbol{0}$, and
 \begin{equation}
     {\boldsymbol{f}}^{(q),(p)}_T(\boldsymbol{Y}, \boldsymbol{X}) = -{\mu}^{(q),(p)}_T \, \vert {\boldsymbol{f}}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) \vert\, {\boldsymbol{e}}^{(q),(p)}_T\,.
 \end{equation}
@@ -115,12 +112,11 @@ PeriDEM is implemented as an open-source library available in GitHub; see [PeriD
 - Open-source implementation with support for HPC environments, leveraging modern multi-threading techniques for scalability.
 
 ## Examples
-PeriDEM is suitable for modeling the mechanical behavior of granular materials in applications such as construction (e.g., cement and ballast), mining (e.g., ore handling), and pharmaceutical (e.g., tablet formation). The model has already been employed to study the compressive strength of particle assemblies and to investigate particle breakage due to high-velocity impacts, demonstrating its capability in simulating realistic industrial scenarios.
-
 
 ### Key results
 
-![Nonlinear response under compression, {\bf b} exponential growth of compute time due to nonlocality of internal and contact forces, and {\bf c} rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png)
+![Nonlinear response under compression, {\bf b} exponential growth of compute time due to nonlocality of internal and contact forces, and {\bf c} rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=40%}
+
 The main result from PeriDEM is the compression of 502 circular and hexagon particles in a rectangular container by moving the top wall. The stress on the moving wall as a function of wall penetration becomes increasingly nonlinear, and media shows signs of yielding as the damage becomes extensive; see \autoref{fig:peridemSummary}a. Preliminary compute time analysis with an increasing number of particles shows an exponential increase in compute time of contact and peridynamics forces, which is unsurprising as both computations are nonlocal. Demonstration examples also include attrition of various non-circular particles in a rotating cylinder \autoref{fig:peridemSummary}c. 
 
 
