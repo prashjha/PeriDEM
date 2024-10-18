@@ -94,7 +94,7 @@ Then the force on particle $p$ due to contact with particle $q$ can be written a
 \end{equation}
 with normal and tangential forces following [@jha2021peridynamics, @desai2019rheometry] given by
 \begin{equation}
-    {\bff}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) = \begin{cases}
+    {\boldsymbol{f}}^{(q),(p)}_N(\boldsymbol{Y}, \boldsymbol{X}) = \begin{cases}
         0\,, & \quad \text{if } {\Delta}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X}) \geq 0\,, \\
         \left[ {\kappa}^{(q),(p)}_N {\Delta}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X}) - {\beta}^{(q),(p)}_N {\dot{\Delta}}^{(q),(p)}(\boldsymbol{Y}, \boldsymbol{X})  \right] {\boldsymbol{e}}^{(q),(p)}_N\,, & \quad \text{otherwise}\,,
     \end{cases}
