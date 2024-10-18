@@ -1,3 +1,5 @@
+`PeriDEM` folder contains examples for multi-particle simulation and `Peridynamics` provides examples for single particle deformation.
+
 # PeriDEM: Examples
 
 We next highlight some key examples. For more details, look at the `create_input_file()` 
@@ -162,3 +164,22 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
 - Lastly, when the `Damage_Z` is very high at few nodes, you may want to rescale
   the data to the range, say `[0,2]` or `[0,10]`, so that it is easier to identify
   regions with elastic deformation and region with fracture.
+
+
+# Single particle deformation
+
+In [Peridynamics/circle](./Peridynamics/circle/), circular-shaped particle is deformed by clamping one part of the circle and specifying displacement in the other part. To run the example, you can either run using `PeriDEM` executible or the `Peridynamics` app which only handle single particle deformation:
+```sh
+# assuming you are in Peridynamics/circle directory
+mkdir -p out
+# use PeriDEM
+<path to PeriDEM>/PeriDEM -i input_0.yaml -nThreads 4
+# or use Peridynamics in apps
+<path to Peridynamics app>/Peridynamics -i input_0.yaml -nThreads 4
+```
+
+The example in [Peridynamics/rectangle](./Peridynamics/rectangle/) is similar to the above example. It uses the in-built mesh for rectangle. 
+
+|  <img src="./Peridynamics/circle/out/view.png" width="200">  | <img src="./Peridynamics/rectangle/out/view.png" width="200"> |
+|:-----------------------------------------------------------------:|:------------------------------------------------------------:|
+| [Circle deformation](./Peridynamics/circle/)  | [Rectangle deformation](./Peridynamics/rectangle/) |
