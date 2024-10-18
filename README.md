@@ -19,6 +19,8 @@
   - [Running simulations](#Running-simulations)
     * [Two-particle with wall](#Two-particle-with-wall)
     * [Compressive test](#Compressive-test)
+    * [Attrition tests](#Attrition-tests)
+    * [Single particle deformation](#Single-particle-deformation)
   - [Visualizing results](#Visualizing-results)
   - [Developers](#Developers)
 
@@ -88,7 +90,7 @@ yielding of the system. For more details, we refer to
 |              Compressive test simulation              | 
 
 
-### Attrition tests - Particles in a rotating container
+### Attrition tests
 We consider mix of different particles in a rotating container. Particles considered include circular, triangular, hexagonal, and drum shaped. Particles come in large and small shapes (their sizes are purturbed randomly). In order to to introduce diversity of material properties, we considered large particles to be tougher compared to the smaller ones. Setup files are in [examples/PeriDEM/attrition_tests](./examples/PeriDEM/attrition_tests)
 
 |                                         <img src="./assets/attrition_test_sim1.gif" width="250">                                         |                                                                              <img src="./assets/attrition_test_sim2.gif" width="250">                                                                               | 
@@ -98,6 +100,9 @@ We consider mix of different particles in a rotating container. Particles consid
 Complex container geometries can be considered as well. For example, the image below is from [attrition_tests](./examples/PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container) and includes rotating rectangle with opening and internal groves of different shapes. The rotating container with particles inside is contained within another rectangle which is fixed in its place. 
 
 <img src="./examples/PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container/init_view.png" width="600">
+
+### Single particle deformation
+We can use `PeriDEM` executable or `Peridynamics` executable in `apps` directory to simulate the deformation of single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
 
 ## Brief implementation details
 The main implementation of the model is carried out in the model directory [dem](./src/model/dem). 
@@ -362,4 +367,4 @@ You can also cite the PeriDEM using zenodo doi:
 
 ## Developers
   - [Prashant K. Jha](https://prashjha.github.io/) 
-    (pjha.sci@gmail.com, prashant.jha@austin.utexas.edu, prashant.jha@port.ac.uk)
+    (pjha.sci@gmail.com, prashant.jha@sdsmt.edu)

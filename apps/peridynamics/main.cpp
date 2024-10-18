@@ -43,7 +43,7 @@
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
 /*!
- * @brief Namespace to define peridynamics apps that is meant to simulate single particle deformation.
+ * @brief Namespace to define peridynamics app for single particle deformation.
  */
 namespace peridynamics {
 
