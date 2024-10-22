@@ -154,17 +154,17 @@ if (${Enable_High_Load_Tests})
 
     add_test(NAME test_peridem_twop_wall_concave_diff_material_diff_size
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${Test_Data_Path}/twop_wall_concave_diff_material_diff_size
+            WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_wall_concave_diff_material_diff_size
     )
 
     add_test(NAME test_peridem_attrition_mix_particles_large_set
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${Test_Data_Path}/attrition_mix_particles_large_set
+            WORKING_DIRECTORY ${Test_Data_Path}/peridem/attrition_mix_particles_large_set
     )
 
     add_test(NAME test_peridem_compression_large_set
             COMMAND ${BASH_PROGRAM} ./run.sh
-            WORKING_DIRECTORY ${Test_Data_Path}/compression_large_set
+            WORKING_DIRECTORY ${Test_Data_Path}/peridem/compression_large_set
     )
 
     #add_test(NAME test_peridem_twop_concave
