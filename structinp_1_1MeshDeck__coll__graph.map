@@ -1,5 +1,0 @@
-<map id="inp::MeshDeck" name="inp::MeshDeck">
-<area shape="rect" id="Node000001" title="Structure to read and store mesh related input data." alt="" coords="5,313,247,579"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1geometry_1_1GeomData.html" title="Input data for geometrical objects." alt="" coords="43,5,209,251"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="129,251,129,297,123,297,123,251"/>
-</map>
