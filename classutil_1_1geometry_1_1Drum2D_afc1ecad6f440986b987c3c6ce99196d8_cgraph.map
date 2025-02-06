@@ -1,9 +1,0 @@
-<map id="util::geometry::Drum2D::isNear" name="util::geometry::Drum2D::isNear">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="5,23,164,63"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a09ac00ed5485b655c317c2fe46b1d740" title="Returns true if point is inside box." alt="" coords="212,31,357,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,41,198,41,198,46,165,46"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="405,5,505,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="357,30,392,25,392,30,358,35"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="413,55,498,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="358,51,400,57,399,62,357,56"/>
-</map>
