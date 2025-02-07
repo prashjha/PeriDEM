@@ -1,15 +1,15 @@
 #!/bin/bash
 MY_PWD=$(pwd)
 
-declare -a dirs=("two_particles/circ_damp" \
-								 "two_particles/circ_damp_diff_radius" \
-								 "two_particles/circ_diff_material" \
-								 "two_particles/circ_diff_radius_diff_material" \
-								 "two_particles/circ_no_damp" \
-								 "two_particles_wall/concave_diff_material_diff_size" \
-								 "compressive_test/n500_circ_hex/init_config") # \
-								 #"compressive_test/n500_circ_hex/run1" \
-								 #"compressive_test/n500_circ_hex/run2")
+declare -a dirs=( "attrition_tests/attrition_mix_particles_large_set" \
+				  "attrition_tests/attrition_mix_particles_small_set" \
+				  "compressive_test/compression_large_set" \
+				  "compressive_test/compression_small_set" \
+				  "single_particle/single_particle_circle" \
+				  "single_particle/single_particle_rectangle_inbuilt_mesh" \
+				  "two_particles/twop_circ" \
+				  "two_particles/twop_concave_and_hex" \
+				  "two_particles/twop_wall_concave_diff_material_diff_size")
 
 # loop over directories
 for d in ${dirs[@]}; do

@@ -337,7 +337,7 @@ def create_input_file(inp_dir, pp_tag):
   num_steps = 160000
   # final_time = 0.00002
   # num_steps = 2
-  num_outputs = 10
+  num_outputs = 20
   dt_out_n = num_steps / num_outputs
   perform_out = True
 
