@@ -215,6 +215,11 @@ add_executable(PeriDEM src/main.cpp)
 target_link_libraries(PeriDEM PUBLIC Model)
 
 #----------------------------------#
+#<<<<<<<<<< PeriDEM install >>>>>>>>>>#
+#----------------------------------#
+install(TARGETS PeriDEM DESTINATION bin)
+
+#----------------------------------#
 #<<<<<<<<<< Post build operations >>>>>>>>>>#
 #----------------------------------#
 # test directory
