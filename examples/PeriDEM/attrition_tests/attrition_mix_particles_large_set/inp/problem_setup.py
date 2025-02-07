@@ -839,11 +839,11 @@ def create_input_file(inp_dir, pp_tag):
   large_hex = large_circle
 
   ## time 
-  final_time = 0.05
-  num_steps = 20000
+  final_time = 0.1
+  num_steps = 40000
   # final_time = 0.00002
   # num_steps = 2
-  num_outputs = 10
+  num_outputs = 40
   dt_out_n = num_steps / num_outputs
   test_dt_out_n = dt_out_n / 10
   perform_out = True

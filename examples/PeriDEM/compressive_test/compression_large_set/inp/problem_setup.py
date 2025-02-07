@@ -1222,11 +1222,11 @@ def create_input_file(inp_dir, pp_tag):
 
 
   ## time 
-  final_time = 0.1
-  num_steps = 40000
+  final_time = 0.025
+  num_steps = 10000
   # final_time = 0.00002
   # num_steps = 2000
-  num_outputs = 40
+  num_outputs = 20
   dt_out_n = num_steps / num_outputs
   test_dt_out_n = dt_out_n / 10
   perform_out = True
