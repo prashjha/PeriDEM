@@ -45,7 +45,7 @@ We have created channels on various platforms:
 - [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * Gitter is absolutely open and easy to join.
 - [PeriDEM on slack](peridem.slack.com)
-  * Send us an email if interested in joining the workspace.
+  * Email us if interested in joining the workspace.
 
 ## Documentation
 [Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
@@ -275,7 +275,7 @@ We are moving in following key directions:
 - MPI parallelism for PeriDEM simulations. Issue is distributing particles to different 
   processors and performing communication efficiently
 - Asynchronous parallelism within MPI? Currently, we use `Taskflow` to perform 
-  parallel for loops in a non-mpi simulation. In future, we will be interested in using 
+  parallel for loops in a non-mpi simulation. In the future, we will be interested in using 
   multithreading combined with MPI to further speed-up the simulations
 - GPU parallelism?
 
@@ -296,7 +296,7 @@ able to compile PeriDEM in ubuntu (>= 18.04) and mac.
 Feel free to reach out or open an issue. For more open 
 discussion of issues and ideas, contact via 
 [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) 
-or [PeriDEM on slack](peridem.slack.com) (for slack, send us an email to join). 
+or [PeriDEM on slack](peridem.slack.com) (for slack, email us to join). 
 If you like some help, want to contribute, extend the code, or discuss new ideas, 
 please do reach out to us.
 
