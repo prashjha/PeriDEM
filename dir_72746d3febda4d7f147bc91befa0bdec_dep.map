@@ -1,0 +1,12 @@
+<map id="/home/user/project/examples/PeriDEM/attrition_tests" name="/home/user/project/examples/PeriDEM/attrition_tests">
+<area shape="rect" id="node2" href="dir_1d51755220180d3a428706849c9f82c2.html" title="attrition_mix_particles\l_large_set" alt="" coords="1485,85,1635,125"/>
+<area shape="rect" id="node3" href="dir_231ae3f440d6fae9e4478a46ea196e9e.html" title="attrition_mix_particles\l_small_set" alt="" coords="1312,85,1461,125"/>
+<area shape="rect" id="node4" href="dir_6420a8bc9dab770b5dd903da339b97dc.html" title="sim1_multi_particle\l_circ_tri_drum_with\l_rotating_cylinder_with\l_protrusion" alt="" coords="1133,70,1288,139"/>
+<area shape="rect" id="node5" href="dir_41016a32fe76d821767a359ffd6768ac.html" title="sim1_multi_particle\l_circ_tri_drum_with\l_rotating_cylinder_with\l_protrusion_increased_Kn_factor" alt="" coords="898,70,1110,139"/>
+<area shape="rect" id="node6" href="dir_1165006fd78b937904295711caad603f.html" title="sim2_multi_particle\l_circ_tri_drum_hex_with\l_rotating_cylinder_with\l_protrusion" alt="" coords="711,70,873,139"/>
+<area shape="rect" id="node7" href="dir_69d8b49c72f04edd51a59489f4cc8123.html" title="sim2_multi_particle\l_circ_tri_drum_hex_with\l_rotating_cylinder_with\l_protrusion_thin_container\l_and_change_rotation_rate" alt="" coords="508,63,687,147"/>
+<area shape="rect" id="node8" href="dir_781523c24a6737af662aba910b5bd2dd.html" title="sim3_multi_particle\l_circ_tri_drum_hex_with\l_rotating_rectangle_container\l_with_protrusion_and_opening" alt="" coords="287,70,484,139"/>
+<area shape="rect" id="node9" href="dir_239bde52a8e37bdc18a38a745a8e5dad.html" title="sim4_multi_particle\l_circ_tri_drum_hex_with\l_rotating_rectangle_container\l_with_protrusion_and_opening\l_within_bigger_rectangle_container" alt="" coords="37,63,262,147"/>
+<area shape="rect" id="clust2" href="dir_72746d3febda4d7f147bc91befa0bdec.html" alt="" coords="27,52,1771,157"/>
+<area shape="rect" id="clust1" href="dir_d360f464e308f3de0461f5af2c5fdf24.html" title="PeriDEM" alt="" coords="16,16,1781,168"/>
+</map>

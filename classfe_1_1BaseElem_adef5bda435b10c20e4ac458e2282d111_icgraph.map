@@ -1,0 +1,5 @@
+<map id="fe::BaseElem::elemSize" name="fe::BaseElem::elemSize">
+<area shape="rect" id="Node000001" title="Returns the size of element (length in 1&#45;d, area in 2&#45;d, volume in 3&#45;d element)" alt="" coords="203,5,365,31"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1Mesh.html#ad8e7d706e7378a729c22842bfbf6af3b" title="Compute the nodal volume." alt="" coords="5,5,155,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,21,155,21,155,15,189,15"/>
+</map>

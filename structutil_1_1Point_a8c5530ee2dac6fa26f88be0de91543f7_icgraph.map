@@ -1,0 +1,31 @@
+<map id="util::Point::cross" name="util::Point::cross">
+<area shape="rect" id="Node000001" title="Computes the cross product between this vector and given vector." alt="" coords="553,189,671,214"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a61e14a30b244c6b3764234fd024a35c8" title="Computes angle between two vectors." alt="" coords="426,163,505,189"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="539,191,505,185,505,180,540,186"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="425,213,505,238"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="540,216,506,222,505,216,539,211"/>
+<area shape="rect" id="Node000004" href="$structparticle_1_1ParticleTransform.html#ac84e7ec4803c9231dfb15bc181a2dc4f" title="Returns the transformed vector. We assume that the passed vector passes through origin." alt="" coords="203,5,377,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="427,206,423,202,411,182,405,163,401,127,396,93,389,76,375,59,361,48,364,43,379,55,393,74,401,92,406,127,410,162,416,180,427,198,431,202"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1geometry_1_1Drum2D.html#ae52988df0193b9586813e0ee1d490828" title="Constructor." alt="" coords="211,69,369,109"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="428,206,423,202,408,180,400,160,392,142,376,123,358,112,360,107,379,119,396,139,405,158,413,178,427,198,432,202"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a49cf9c01906d3b382dcf78354ee99d38" title=" " alt="" coords="209,134,371,159"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="431,207,376,173,345,162,347,157,378,168,434,203"/>
+<area shape="rect" id="Node000009" href="$namespaceutil.html#a9727d0b43b41e8cb001ddb232e6b9100" title=" " alt="" coords="213,183,367,209"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="411,219,366,211,366,206,412,214"/>
+<area shape="rect" id="Node000011" href="$classutil_1_1geometry_1_1Hexagon.html#a87fcb9a61198f2194e1090757efa8f38" title="Constructor." alt="" coords="209,233,371,273"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="412,236,371,243,371,238,411,231"/>
+<area shape="rect" id="Node000012" href="$classutil_1_1geometry_1_1Drum2D.html#a3e79daf6f2dd929bf236004a72ad5b70" title="Checks if point is inside this object." alt="" coords="211,297,369,337"/>
+<area shape="poly" id="edge11_Node000003_Node000012" title=" " alt="" coords="439,249,379,288,352,300,350,295,376,283,436,244"/>
+<area shape="rect" id="Node000013" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="218,362,362,387"/>
+<area shape="poly" id="edge12_Node000003_Node000013" title=" " alt="" coords="455,252,426,302,404,329,379,352,355,364,352,360,376,347,400,325,421,299,451,249"/>
+<area shape="rect" id="Node000015" href="$classutil_1_1geometry_1_1Triangle.html#ad4c6d901cf3f4f6a0e9777a90c4fb67b" title="Constructor." alt="" coords="213,412,367,452"/>
+<area shape="poly" id="edge14_Node000003_Node000015" title=" " alt="" coords="460,252,450,286,433,326,410,366,379,402,362,414,359,410,376,398,405,363,428,323,444,284,455,251"/>
+<area shape="rect" id="Node000005" href="$classparticle_1_1BaseParticle.html#a11031d2f24d3e51fd73466a80a45a582" title="Constructor." alt="" coords="7,5,153,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="189,28,154,28,154,23,189,23"/>
+<area shape="rect" id="Node000008" href="$namespaceutil.html#afb3aed715d268f29ca19de6dafa84389" title=" " alt="" coords="15,120,145,160"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="195,146,145,145,145,139,196,141"/>
+<area shape="rect" id="Node000010" href="$namespaceutil.html#a9f86631e8894112cf4f102929af2cfae" title=" " alt="" coords="5,184,155,224"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="200,202,155,204,155,198,200,197"/>
+<area shape="rect" id="Node000014" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="55,362,105,387"/>
+<area shape="poly" id="edge13_Node000013_Node000014" title=" " alt="" coords="204,377,106,377,106,372,204,372"/>
+</map>
