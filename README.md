@@ -360,6 +360,12 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
   - Lastly, when the `Damage_Z` is very high at few nodes, you may want to rescale 
     the data to the range, say `[0,2]` or `[0,10]`, so that it is easier to identify 
     regions with elastic deformation and region with fracture.
+
+## Contributing
+We welcome contributions to the code. In `Future plans` section above, some 
+potential directions are listed.
+Please fork this repository, make changes, and make a pull request to the 
+source branch.  
  
 ## Citations
 If this library was useful in your work, we recommend citing the following article:
