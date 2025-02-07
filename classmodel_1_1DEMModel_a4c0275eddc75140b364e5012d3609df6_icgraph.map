@@ -1,0 +1,5 @@
+<map id="model::DEMModel::computePeridynamicForces" name="model::DEMModel::computePeridynamicForces">
+<area shape="rect" id="Node000001" title="Computes peridynamic forces." alt="" coords="196,5,384,45"/>
+<area shape="rect" id="Node000002" href="$classperidynamics_1_1Model.html#a12ba5443520b3c6adff0b1ffaae58633" title="Compute forces." alt="" coords="5,5,148,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="182,28,148,28,148,23,182,23"/>
+</map>
