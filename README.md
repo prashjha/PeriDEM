@@ -257,6 +257,15 @@ cmake   -DEnable_Documentation=OFF
 make -j 4
 ```
 
+> :exclamation: `cmake` and `make` commands should be run inside the `build` 
+directory. You can create the `build` directory either inside or outside the 
+repository. 
+
+> :exclamation: As of now, we can only build the library and not install it. 
+ This means you will have to build the package in the `build` directory, and 
+ use the `build/bin/PeriDEM` executable. We plan to provide the method to `install` 
+ the library in the future.  
+
 We refer to [tools/README.md](./tools/README.md) for further details about installing dependencies and building the library in different ubuntu releases.
 
 ### Future plans
