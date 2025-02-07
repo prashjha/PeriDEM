@@ -306,7 +306,7 @@ Navigate to the example directory [examples/PeriDEM/two_particles/twop_wall_conc
 and run the example as follows
 ```sh
 # manually
-examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
+cd examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
 mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 2
 
