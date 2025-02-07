@@ -1,9 +1,0 @@
-<map id="util::geometry::Line::isInside" name="util::geometry::Line::isInside">
-<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,47,139,87"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a9ccabde99187d658896793ba141c6d51" title="Computes the dot product between matrix and vector." alt="" coords="204,5,269,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="138,45,190,29,192,34,140,50"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="187,55,287,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="139,65,173,65,173,70,139,70"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="194,104,279,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="140,85,182,98,180,103,138,90"/>
-</map>
