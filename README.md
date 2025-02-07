@@ -45,7 +45,7 @@ We have created channels on various platforms:
 - [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * Gitter is absolutely open and easy to join.
 - [PeriDEM on slack](peridem.slack.com)
-  * Send us an email if interested in joining the workspace.
+  * Email us if interested in joining the workspace.
 
 ## Documentation
 [Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
@@ -245,17 +245,26 @@ Following dependencies are included in the `PeriDEM` library in `external` folde
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
 commands for building the PeriDEM code is as simple as
 ```sh
-cmake   -DEnable_Documentation=OFF # or ON \
+cmake   -DEnable_Documentation=OFF
         -DEnable_Tests=ON \
-        -DEnable_High_Load_Tests=OFF # ON if you want ctest to include high-load tests \
-        -DDisable_Docker_MPI_Tests=ON # only for docker; OFF if you can run MPI in docker\
-        -DVTK_DIR="${VTK_DIR}" # e.g., /usr/local/lib/cmake/vtk-9.3 \
-        -DMETIS_DIR="${METIS_DIR}" # e.g., /usr/lib \
+        -DEnable_High_Load_Tests=OFF \
+        -DDisable_Docker_MPI_Tests=ON \
+        -DVTK_DIR="${VTK_DIR}" \
+        -DMETIS_DIR="${METIS_DIR}" \
         -DCMAKE_BUILD_TYPE=Release \
         <PeriDEM source directory>
         
 make -j 4
 ```
+
+> :exclamation: `cmake` and `make` commands should be run inside the `build` 
+directory. You can create the `build` directory either inside or outside the 
+repository. 
+
+> :exclamation: As of now, we can only build the library and not install it. 
+ This means you will have to build the package in the `build` directory, and 
+ use the `build/bin/PeriDEM` executable. We plan to provide the method to `install` 
+ the library in the future.  
 
 We refer to [tools/README.md](./tools/README.md) for further details about installing dependencies and building the library in different ubuntu releases.
 
@@ -266,7 +275,7 @@ We are moving in following key directions:
 - MPI parallelism for PeriDEM simulations. Issue is distributing particles to different 
   processors and performing communication efficiently
 - Asynchronous parallelism within MPI? Currently, we use `Taskflow` to perform 
-  parallel for loops in a non-mpi simulation. In future, we will be interested in using 
+  parallel for loops in a non-mpi simulation. In the future, we will be interested in using 
   multithreading combined with MPI to further speed-up the simulations
 - GPU parallelism?
 
@@ -287,7 +296,7 @@ able to compile PeriDEM in ubuntu (>= 18.04) and mac.
 Feel free to reach out or open an issue. For more open 
 discussion of issues and ideas, contact via 
 [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link) 
-or [PeriDEM on slack](peridem.slack.com) (for slack, send us an email to join). 
+or [PeriDEM on slack](peridem.slack.com) (for slack, email us to join). 
 If you like some help, want to contribute, extend the code, or discuss new ideas, 
 please do reach out to us.
 
@@ -306,7 +315,7 @@ Navigate to the example directory [examples/PeriDEM/two_particles/twop_wall_conc
 and run the example as follows
 ```sh
 # manually
-examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
+cd examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
 mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 2
 
@@ -360,6 +369,12 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
   - Lastly, when the `Damage_Z` is very high at few nodes, you may want to rescale 
     the data to the range, say `[0,2]` or `[0,10]`, so that it is easier to identify 
     regions with elastic deformation and region with fracture.
+
+## Contributing
+We welcome contributions to the code. In `Future plans` section above, some 
+potential directions are listed.
+Please fork this repository, make changes, and make a pull request to the 
+source branch.  
  
 ## Citations
 If this library was useful in your work, we recommend citing the following article:

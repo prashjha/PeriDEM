@@ -17,25 +17,32 @@ and particle locations file. Typically, the input files consists of:
     * `r` - radius of the particle 
     * `o` - orientation in radians. This is used to give particle (particle mesh) a rotation
   - `mesh.msh` - mesh file for the reference particle or wall. For example, 
-    in [compressive test](./PeriDEM/compressive_test/n500_circ_hex/init_config/inp) example, 
-    there are four mesh files: one each for the circular and hexagon-shaped particle 
-    and one each for the fixed and mobile wall.
+    in [compressive test](./PeriDEM/compressive_test/compression_small_set
+    /inp) example, running `python3 -B 
+    problem_setup.py` will generate following `.msh` files: 
+    `mesh_cir_large_0.msh`, `mesh_cir_small_0.msh`, `mesh_drum2d_large_0.
+    msh`, `mesh_drum2d_small_0.msh`, `mesh_fixed_container_0.msh`, 
+    `mesh_hex_large_0.msh`, `mesh_hex_small_0.msh`, `mesh_moving_container_0.
+    msh`, `mesh_tri_large_0.msh`, `mesh_tri_small_0.msh`.
 
 ### Two-particle tests
 
+The examples below are for demonstration. Similar results can be obtained by 
+modifying and running examples in `PeriDEM/examples/PeriDEM/two_particles/`.
+
 |  <img src="../assets/two_particle_circ_no_damp.gif" width="200">  | <img src="../assets/two_particle_circ_damp.gif" width="200"> |
 |:-----------------------------------------------------------------:|:------------------------------------------------------------:|
-| [Circular without damping](./PeriDEM/two_particles/circ_no_damp/) | [Circular with damping](./PeriDEM/two_particles/circ_damp/)  |
+| Circular without damping | Circular with damping  |
 
-| <img src="../assets/two_particle_circ_diff_material.gif" width="200"> |  <img src="../assets/two_particle_circ_damp_diff_radius.gif" width="200">  |       <img src="../assets/two_particle_circ_diff_radius_diff_material.gif" width="200">        |
-|:---------------------------------------------------------------------:|:--------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------:|
-|  [Different materials](./PeriDEM/two_particles/circ_diff_material/)   |     [Different radius](./PeriDEM/two_particles/circ_damp_diff_radius/)     | [Different radius different material](./PeriDEM/two_particles/circ_diff_radius_diff_material/) |
+| <img src="../assets/two_particle_circ_diff_material.gif" width="200"> | <img src="../assets/two_particle_circ_damp_diff_radius.gif" width="200">  |       <img src="../assets/two_particle_circ_diff_radius_diff_material.gif" width="200">        |
+|:---------------------------------------------------------------------:|:-------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------:|
+|   Different materials   |     Different radius     | Different radius different material |
 
 ### Two-particle with wall test
 
 |  <img src="../assets/two_particle_wall_concave_diff_material_diff_size.gif" width="400">   | 
 |:------------------------------------------------------------------------------------------:| 
-|     [Concave particles](./PeriDEM/two_particles_wall/concave_diff_material_diff_size/)     |
+|     Concave particles     |
 
 ### Compressive tests
 Setup for this test consists of 502 circular and hexagonal-shaped particles of varying 
@@ -48,9 +55,9 @@ in individual particles, especially those connected by force chains, resulting i
 yielding of the system. For more details, we refer to 
 [Jha et al. 2021](https://prashjha.github.io/publication/jha-2020-peridem/)
 
-|     <img src="../assets/compressive_test_cir_hex_n500.jpg" width="600">     | 
-|:---------------------------------------------------------------------------:| 
-|     [Compressive test setup](./PeriDEM/compressive_test/n500_circ_hex/)     |
+|    <img src="../assets/compressive_test_cir_hex_n500.jpg" width="600">     | 
+|:--------------------------------------------------------------------------:| 
+|     Compressive test setup     |
 
 |                                                                            <img src="../assets/compressive_test_reaction_force_n500.jpg" width="600">                                                                             | 
 |:---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:| 
@@ -60,6 +67,7 @@ yielding of the system. For more details, we refer to
 |:------------------------------------------------------:| 
 |              Compressive test simulation               | 
 
+Examples similar to above can be found in `PeriDEM/examples/PeriDEM/compressive_test/`.
 
 ### Attrition tests - Particles in a rotating container
 We consider mix of different particles in a rotating container. Particles considered include circular, triangular, hexagonal, and drum shaped. Particles come in large and small shapes (their sizes are purturbed randomly). In order to to introduce diversity of material properties, we considered large particles to be tougher compared to the smaller ones. Setup files are in [PeriDEM/attrition_tests](./PeriDEM/attrition_tests)
@@ -83,21 +91,24 @@ with paths are correctly provided in `input.yaml`, we will run the problem (usin
 Some examples are listed below.
 
 ### Two-particle with wall
-Navigate to the example directory [PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp](./PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp)
+Navigate to the example directory [PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp](./PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp)
 and run the example as follows
 ```sh
+# manually
+cd PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
 mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 2
+
+# or call run.sh script
+cd PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size
+./run.sh 4 # with 4 threads
 ```
 
-You may also use the included [problem_setup.py](./PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp/problem_setup.py)
+You may also use the included [problem_setup.py](./PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp/problem_setup.py)
 to modify simulation parameters and run the simulation using
-[run.sh](./PeriDEM/two_particles_wall/concave_diff_material_diff_size/run.sh)
-(in directoy [PeriDEM/two_particles_wall/concave_diff_material_diff_size](PeriDEM/two_particles_wall/concave_diff_material_diff_size)).
-`run.sh` shows how different input files are created for the simulation.
+[run.sh](./PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/run.sh).
 
 > :exclamation: You may need to modify the path of `PeriDEM` executable in `run.sh` file.
-
 
 > In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`.
 > Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
@@ -118,16 +129,19 @@ Except geometrical parameters of walls and particles, rest of the parameters in
 > all aspects of the simulation.
 
 ### Compressive test
-Navigate to the example directory [PeriDEM/compressive_test/n500_circ_hex/run1/inp](./PeriDEM/compressive_test/n500_circ_hex/run1/inp)
+Navigate to the example directory [PeriDEM/compressive_test/compression_large_set/inp](./PeriDEM/compressive_test/compression_large_set/inp)
 and run the example as follows (note that this is a computationally expensive example)
 ```sh
+cd PeriDEM/compressive_test/compression_large_set/inp
 mkdir ../out 
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 12
+
+# or you can use the run.sh script in the path PeriDEM/compressive_test/compression_large_set/
 ```
 
 As before:
-- you can modify [problem_setup.py](./PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings
-- run the simulation using [run.sh](./PeriDEM/compressive_test/n500_circ_hex/run1/run.sh) (in directory [PeriDEM/compressive_test/n500_circ_hex/run1](./PeriDEM/compressive_test/n500_circ_hex/run1)).
+- you can modify [problem_setup.py](./PeriDEM/compressive_test/compression_large_set/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings
+- run the simulation using [run.sh](./PeriDEM/compressive_test/compression_large_set//run.sh).
 
 ### Compute times for various examples (From old version of the code!)
 For reference, we list the compute times for various examples.

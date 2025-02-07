@@ -51,12 +51,12 @@ Additional dependencies for running the examples:
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
 commands for building the PeriDEM code is as simple as
 ```sh
-cmake   -DEnable_Documentation=OFF # or ON \
+cmake   -DEnable_Documentation=OFF
         -DEnable_Tests=ON \
-        -DEnable_High_Load_Tests=OFF # ON if you want ctest to include high-load tests \
-        -DDisable_Docker_MPI_Tests=ON # only for docker; OFF if you can run MPI in docker\
-        -DVTK_DIR="${VTK_DIR}" # e.g., /usr/local/lib/cmake/vtk-9.3 \
-        -DMETIS_DIR="${METIS_DIR}" # e.g., /usr/lib \
+        -DEnable_High_Load_Tests=OFF \
+        -DDisable_Docker_MPI_Tests=ON \
+        -DVTK_DIR="${VTK_DIR}" \
+        -DMETIS_DIR="${METIS_DIR}" \
         -DCMAKE_BUILD_TYPE=Release \
         <PeriDEM source directory>
         
@@ -66,6 +66,9 @@ ctest --verbose
 ```
 
 ## Installing dependencies
+
+> :exclamation: There are some libraries (e.g., tbb) below that are required by our dependencies. 
+
 ### Mac
 Brew can be used to install all dependencies in mac as follows
 ```shell
