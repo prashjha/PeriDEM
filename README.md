@@ -47,7 +47,7 @@ We have created channels on various platforms:
 - [PeriDEM on slack](peridem.slack.com)
   * Send us an email if interested in joining the workspace.
 
-## [Documentation](https://prashjha.github.io/PeriDEM/)
+## Documentation
 [Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
 
 ## Tutorial
@@ -55,24 +55,24 @@ We explain the setting-up of simulations in further details in [tutorial](./tuto
 We consider `two-particle` test setup with non-circular particles and `compressive-test` to 
 discuss the various aspects of simulations.
 
-## [Examples](./examples/README.md)
+## Examples
 We next highlight some key examples. Further details are available in [examples/README.md](./examples/README.md). 
 
 ### Two-particle tests
 
-|       <img src="./assets/two_particle_circ_no_damp.gif" width="200">       |     <img src="./assets/two_particle_circ_damp.gif" width="200">      |
-|:--------------------------------------------------------------------------:|:--------------------------------------------------------------------:|
-| [Circular without damping](./examples/PeriDEM/two_particles/circ_no_damp/) | [Circular with damping](./examples/PeriDEM/two_particles/circ_damp/) |
+|      <img src="./assets/two_particle_circ_no_damp.gif" width="200">       |     <img src="./assets/two_particle_circ_damp.gif" width="200">      |
+|:-------------------------------------------------------------------------:|:--------------------------------------------------------------------:|
+| Circular without damping | Circular with damping |
 
-|    <img src="./assets/two_particle_circ_diff_material.gif" width="200">     |   <img src="./assets/two_particle_circ_damp_diff_radius.gif" width="200">   |            <img src="./assets/two_particle_circ_diff_radius_diff_material.gif" width="200">             |
-|:---------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------:|
-| [Different materials](./examples/PeriDEM/two_particles/circ_diff_material/) | [Different radius](./examples/PeriDEM/two_particles/circ_damp_diff_radius/) | [Different radius different material](./examples/PeriDEM/two_particles/circ_diff_radius_diff_material/) |
+|    <img src="./assets/two_particle_circ_diff_material.gif" width="200">    |   <img src="./assets/two_particle_circ_damp_diff_radius.gif" width="200">   |            <img src="./assets/two_particle_circ_diff_radius_diff_material.gif" width="200">            |
+|:--------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------:|
+| Different materials | Different radius | Different radius different material |
 
 ### Two-particle with wall test
 
-|   <img src="./assets/two_particle_wall_concave_diff_material_diff_size.gif" width="400">    | 
-|:-------------------------------------------------------------------------------------------:| 
-| [Concave particles](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/) |
+|   <img src="./assets/two_particle_wall_concave_diff_material_diff_size.gif" width="400">   | 
+|:------------------------------------------------------------------------------------------:| 
+| Concave particles |
 
 ### Compressive tests
 Setup for this test consists of 502 circular and hexagonal-shaped particles of varying 
@@ -224,7 +224,7 @@ Above gives the basic idea of simulation steps. For more thorough understanding 
 the implementation, interested readers can look at 
 [demModel.cpp](.n/src/model/dem/demModel.cpp).
 
-## [Installation](./tools/README.md)
+## Installation
 
 ### Dependencies
 Core dependencies are:
@@ -302,18 +302,22 @@ with paths are correctly provided in `input.yaml`, we will run the problem (usin
 Some examples are listed below.
 
 ### Two-particle with wall
-Navigate to the example directory [examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp) 
+Navigate to the example directory [examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp](.examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp) 
 and run the example as follows
 ```sh
+# manually
+examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
 mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 2
+
+# or call run.sh script
+cd examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size
+./run.sh 4 # with 4 threads
 ```
 
-You may also use the included [problem_setup.py](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/inp/problem_setup.py) 
+You may also use the included [problem_setup.py](./examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp/problem_setup.py) 
 to modify simulation parameters and run the simulation using 
-[run.sh](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size/run.sh) 
-(in directory [examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size](./examples/PeriDEM/two_particles_wall/concave_diff_material_diff_size)). 
-`run.sh` shows how different input files are created for the simulation.
+[run.sh](./examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/run.sh).
 
 > :exclamation: You may need to modify the path of `PeriDEM` executable in `run.sh` file. 
 
@@ -321,23 +325,26 @@ to modify simulation parameters and run the simulation using
 > Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
 ### Compressive test
-Navigate to the example directory [examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp) 
+Navigate to the example directory [examples/PeriDEM/compressive_test/compression_large_set/inp](./examples/PeriDEM/compressive_test/compression_large_set/inp) 
 and run the example as follows (note that this is a computationally expensive example)
 ```sh
+cd examples/PeriDEM/compressive_test/compression_large_set/inp
 mkdir ../out 
 <peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 12
+
+# or you can use the run.sh script in the path examples/PeriDEM/compressive_test/compression_large_set/
 ```
 
 As before:
-  - you can modify [problem_setup.py](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
-  - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/n500_circ_hex/run1/run.sh).
+  - you can modify [problem_setup.py](./examples/PeriDEM/compressive_test/compression_large_set/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
+  - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/compression_large_set//run.sh).
 
 ## Visualizing results
 Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) 
  or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit). 
 
 By default, in all tests and examples, we only output the particle mesh, i.e., 
-pair of nodal coordinate and nodal volume, and not the finite element mesh 
+a pair of nodal coordinate and nodal volume, and not the finite element mesh 
 (it can be enabled by setting `Perform_FE_Out: true` within `Output` block in the input `yaml` file). 
 After loading the file in ParaView, the first thing to do is to change the plot 
 type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do are:
