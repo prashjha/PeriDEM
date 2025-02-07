@@ -1,5 +1,0 @@
-<map id="twoparticle_demo::Model::run" name="twoparticle_demo::Model::run">
-<area shape="rect" id="Node000001" title="Runs simulation by executing steps such as init(), integrate(), and close()." alt="" coords="104,5,297,31"/>
-<area shape="rect" id="Node000002" href="$apps_2twoparticle__demo_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,56,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,21,56,21,56,15,91,15"/>
-</map>
