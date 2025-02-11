@@ -1321,7 +1321,7 @@ void model::DEMModel::createParticlesFromFile(
 
     // create geometrical object
     std::shared_ptr<util::geometry::GeomObject> p_geom;
-    createGeometryAtSite(particle_radius,
+    auto scale = createGeometryAtSite(particle_radius,
                          particle_orient,
                          site,
                          rep_geom_params,
@@ -1331,7 +1331,7 @@ void model::DEMModel::createParticlesFromFile(
     // create transform
     auto p_transform = particle::ParticleTransform(
             site, util::Point(0., 0., 1.), particle_orient,
-            particle_radius / ref_p->getParticleRadius());
+            scale); //particle_radius / ref_p->getParticleRadius());
 
     if (p_transform.d_scale < 1.E-8) {
       std::cerr << "Error: check scale in transform. "
@@ -1374,7 +1374,7 @@ void model::DEMModel::createParticlesFromFile(
   }
 }
 
-void model::DEMModel::createGeometryAtSite(const double &particle_radius,
+double model::DEMModel::createGeometryAtSite(const double &particle_radius,
                                            const double &particle_orient,
                                            const util::Point &site,
                                            const std::vector<double> &rep_geom_params,
@@ -1383,6 +1383,9 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
   std::vector<double> params;
   for (auto x : rep_geom_params)
     params.push_back(x);
+
+  // scale to be used in transforming the geometry of representative particle to get this particle
+  double scale = 1.;
 
   if (util::methods::isTagInList(rep_geom_p->d_name,
                                  util::geometry::acceptable_geometries)) {
@@ -1401,6 +1404,8 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
       params[0] = particle_radius;
       for (int dof = 0; dof < 3; dof++)
         params[dof + 1] = site[dof];
+
+      scale = particle_radius / rep_geom_params[0];
     }
     else if (rep_geom_p->d_name == "drum2d") {
 
@@ -1410,10 +1415,12 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
       if (params.size() < num_params)
         params.resize(num_params);
 
-      params[0] = particle_radius; // biggger length along x-direction
+      params[0] = particle_radius; // bigger length along x-direction
       params[1] = particle_radius * rep_geom_params[1] / rep_geom_params[0]; // neck length along x-direction
       for (int dof = 0; dof < 3; dof++)
         params[dof + 2] = site[dof];
+
+      scale = params[0] / rep_geom_params[0];
     }
     else if (rep_geom_p->d_name == "rectangle") {
 
@@ -1427,6 +1434,8 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
       params[1] = particle_radius * rep_geom_params[1] / rep_geom_params[0]; // length along y-direction
       for (int dof = 0; dof < 3; dof++)
         params[dof + 2] = site[dof];
+
+      scale = params[0] / rep_geom_params[0];
     }
     else if (rep_geom_p->d_name == "cuboid") {
 
@@ -1435,11 +1444,24 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
       if (params.size() < 6)
         params.resize(6);
 
-      params[0] = particle_radius; // length is x-direction
-      params[1] = particle_radius * rep_geom_params[1] / rep_geom_params[0]; // length in y-direction
-      params[2] = particle_radius * rep_geom_params[2] / rep_geom_params[0]; // length in z-direction
-      for (int dof = 0; dof < 3; dof++)
-        params[dof + 2] = site[dof];
+
+      // reference geom object length
+      const auto ref_Lx = rep_geom_params[3] - rep_geom_params[0];
+      const auto ref_Ly = rep_geom_params[2] - rep_geom_params[1];
+      const auto ref_Lz = rep_geom_params[4] - rep_geom_params[2];
+
+      const auto Lx = particle_radius; // length is x-direction
+      const auto Ly = particle_radius * ref_Ly / ref_Lx; // length in y-direction
+      const auto Lz = particle_radius * ref_Lz / ref_Lx; // length in z-direction
+
+      params[0] = site[0] - 0.5*Lx;
+      params[1] = site[1] - 0.5*Ly;
+      params[2] = site[2] - 0.5*Lz;
+      params[3] = site[0] + 0.5*Lx;
+      params[4] = site[1] + 0.5*Ly;
+      params[5] = site[2] + 0.5*Lz;
+
+      scale = params[0] / rep_geom_params[0];
     }
   } else {
     std::cerr << fmt::format("Error: PeriDEM supports following type "
@@ -1454,6 +1476,8 @@ void model::DEMModel::createGeometryAtSite(const double &particle_radius,
   util::geometry::createGeomObject(rep_geom_p->d_name, params, vec_geom_type,
                                    vec_geom_flag, p_geom,
                                    d_modelDeck_p->d_dim, false);
+
+  return scale;
 }
 
 void model::DEMModel::updateGeometryObjectsPostInit() {
