@@ -177,7 +177,7 @@ public:
                                        std::shared_ptr<particle::RefParticle> ref_p);
 
   /*! @brief Creates geometrical object for a particle given particle radius, orientation, and site location */
-  virtual void createGeometryAtSite(const double &particle_radius,
+  virtual double createGeometryAtSite(const double &particle_radius,
                                     const double &particle_orient,
                                     const util::Point &site,
                                     const std::vector<double> &rep_geom_params,
