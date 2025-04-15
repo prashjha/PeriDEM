@@ -1,0 +1,5 @@
+<map id="util::geometry::Square" name="util::geometry::Square">
+<area shape="rect" id="Node000001" title="Defines Square." alt="" coords="21,699,164,1404"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,180,651"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,664,95,698,90,698,90,664"/>
+</map>
