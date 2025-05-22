@@ -18,21 +18,18 @@
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
-#include "inp/pdecks/contactDeck.h"
+#include "inp/input.h"
 #include "rw/reader.h"
 #include "util/function.h"
 #include "util/geom.h"
 #include "util/methods.h"
 #include "util/randomDist.h"
 #include "util/parallelUtil.h"
-#include "inp/decks/materialDeck.h"
-#include "inp/decks/modelDeck.h"
-#include "inp/decks/outputDeck.h"
-#include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
 #include "rw/vtkParticleReader.h"
 #include "fe/elemIncludes.h"
 #include "fe/meshUtil.h"
+#include "loading/particleIC.h"
 
 #include <fmt/format.h>
 #include <random>
@@ -41,7 +38,7 @@
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
 
-model::DEMModel::DEMModel(inp::Input *deck, std::string modelName)
+model::DEMModel::DEMModel(std::shared_ptr<inp::Input> & deck, std::string modelName)
   : ModelData(deck),
     d_name(modelName) {
 
@@ -180,8 +177,8 @@ void model::DEMModel::init() {
 
   if (d_input_p->isMultiParticle()) {
     log(d_name + ": Creating neighborlist for contact.\n");
-    d_contNeighUpdateInterval = d_pDeck_p->d_pNeighDeck.d_neighUpdateInterval;
-    d_contNeighSearchRadius = d_pDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
+    d_contNeighUpdateInterval = d_particleDeck_p->d_pNeighDeck.d_neighUpdateInterval;
+    d_contNeighSearchRadius = d_particleDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
     t1 = steady_clock::now();
     updateContactNeighborlist();
     t2 = steady_clock::now();
@@ -199,13 +196,13 @@ void model::DEMModel::init() {
   // initialize loading class
   log(d_name + ": Initializing displacement loading object.\n");
   d_uLoading_p =
-      std::make_unique<loading::ParticleULoading>(d_pDeck_p->d_dispDeck);
+      std::make_unique<loading::ParticleULoading>(d_bcDeck_p->d_dispDeck);
   for (auto &p : d_particlesListTypeAll)
     d_uLoading_p->setFixity(p);
 
   log(d_name + ": Initializing force loading object.\n");
   d_fLoading_p =
-      std::make_unique<loading::ParticleFLoading>(d_pDeck_p->d_forceDeck);
+      std::make_unique<loading::ParticleFLoading>(d_bcDeck_p->d_forceDeck);
 
   // if all dofs of particle is fixed, then mark it so that we do not
   // compute force
@@ -215,7 +212,7 @@ void model::DEMModel::init() {
 
   // if this is a two-particle test, we set the force calculation off in
   // first particle
-  if (d_pDeck_p->d_testName == "two_particle") {
+  if (d_testDeck_p->d_testName == "two_particle") {
     d_particlesListTypeAll[0]->d_computeForce = false;
   }
 
@@ -301,13 +298,13 @@ void model::DEMModel::integrate() {
 
     log(fmt::format("  Integration time (ms) = {}\n", integrate_time), 2, d_n % d_infoN == 0, 3);
 
-    if (d_pDeck_p->d_testName == "two_particle") {
+    if (d_testDeck_p->d_testName == "two_particle") {
 
       // compute location of maximum shear stress and also compute
       // penetration length
       auto msg = ppTwoParticleTest();
       log(msg, 2, d_n % d_infoN == 0, 3);
-    } else if (d_pDeck_p->d_testName == "compressive_test") {
+    } else if (d_testDeck_p->d_testName == "compressive_test") {
       auto msg = ppCompressiveTest();
       log(msg, 2, d_n % d_infoN == 0, 3);
     }
@@ -491,7 +488,7 @@ void model::DEMModel::computeForces() {
     // update contact neighborlist
     t1 = steady_clock::now();
     updateContactNeighborlist();
-    auto current_contact_neigh_update_time = util::methods::timeDiff(t1,
+    current_contact_neigh_update_time = util::methods::timeDiff(t1,
                                                                      steady_clock::now());
     appendKeyData("contact_neigh_update_time",
                   current_contact_neigh_update_time);
@@ -501,7 +498,7 @@ void model::DEMModel::computeForces() {
     // compute contact forces between particles
     t1 = steady_clock::now();
     computeContactForces();
-    auto contact_time = util::methods::timeDiff(t1, steady_clock::now());
+    contact_time = util::methods::timeDiff(t1, steady_clock::now());
     appendKeyData("contact_compute_time", contact_time);
     appendKeyData("avg_contact_force_time", contact_time / d_infoN);
   }
@@ -792,7 +789,7 @@ void model::DEMModel::computeExternalForces() {
 
   log("    Computing external force \n", 3);
 
-  auto gravity = d_pDeck_p->d_gravity;
+  auto gravity = d_bcDeck_p->d_gravity;
 
   if (gravity.length() > 1.0E-8) {
     tf::Executor executor(util::parallel::getNThreads());
@@ -874,7 +871,7 @@ void model::DEMModel::computeContactForces() {
 
                                       // apply particle-particle or particle-wall contact here
                                       const auto &contact =
-                                              d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+                                              d_particleDeck_p->d_contactDeck.getContact(pi->d_zoneId, pj->d_zoneId);
 
                                       if (util::isLess(Rji, contact.d_contactR)) {
 
@@ -954,7 +951,7 @@ void model::DEMModel::computeContactForces() {
         auto xc_ji = pj->getXCenter() - pi_xc;
         auto dist_xcji = xc_ji.length();
 
-        const auto &contact = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+        const auto &contact = d_particleDeck_p->d_contactDeck.getContact(pi->d_zoneId, pj->d_zoneId);
 
         if (util::isLess(dist_xcji, Rj + Ri + 1.01 * contact.d_contactR)) {
 
@@ -1007,7 +1004,7 @@ void model::DEMModel::computeContactForces() {
           double Rjk = (this->d_x[k_id] - yj).length();
 
           const auto &contact =
-                  d_cDeck_p->getContact(pi->d_zoneId, pk->d_zoneId);
+              d_particleDeck_p->d_contactDeck.getContact(pi->d_zoneId, pk->d_zoneId);
 
           if (util::isLess(Rjk, contact.d_contactR))
             util::methods::addToList(k_id, d_neighWallNodesCondensed[pi_id]);
@@ -1027,7 +1024,7 @@ void model::DEMModel::computeContactForces() {
       //auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
 
       const auto &contact
-              = d_cDeck_p->getContact(pi->d_zoneId, pj->d_zoneId);
+              = d_particleDeck_p->d_contactDeck.getContact(pi->d_zoneId, pj->d_zoneId);
 
       // beta_n
       auto beta_n = contact.d_betan *
@@ -1068,30 +1065,8 @@ void model::DEMModel::computeContactForces() {
 void model::DEMModel::applyInitialCondition() {
 
   log("Applying initial condition \n", 3);
-
-  if (!d_pDeck_p->d_icDeck.d_icActive)
-    return;
-
-  const auto ic_v = d_pDeck_p->d_icDeck.d_icVec;
-  const auto ic_p_list = d_pDeck_p->d_icDeck.d_pList;
-
-  // add specified velocity to particle
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  taskflow.for_each_index((std::size_t) 0,
-                          ic_p_list.size(),
-                          (std::size_t) 1,
-                          [this, ic_v, ic_p_list](std::size_t i) {
-      auto &p = this->d_particlesListTypeAll[ic_p_list[i]];
-
-      // velocity
-      for (size_t j = 0; j < p->getNumNodes(); j++)
-        p->setVLocal(j, ic_v);
-    } // loop over particles
-  ); // for_each
-
-  executor.run(taskflow).get();
+  for (auto &p : d_particlesListTypeAll)
+    loading::applyIC(p, d_bcDeck_p->d_icDeck); // applied in parallel
 }
 
 void model::DEMModel::createParticles() {
@@ -1102,58 +1077,37 @@ void model::DEMModel::createParticles() {
   d_referenceParticles.clear();
 
   // loop over all particle zones
-  for (size_t z = 0; z < d_pDeck_p->d_particleZones.size(); z++) {
-
-    // does this particle zone correspond to particle or wall
-    bool is_wall = d_pDeck_p->d_particleZones[z].d_isWall;
-    std::string particle_type = d_pDeck_p->d_zoneToParticleORWallDeck[z].first;
-    if (is_wall and particle_type != "wall") {
-      std::cerr << fmt::format("Error: String d_zoneToParticleORWallDeck[z].first for zone z = {} "
-                               "should be 'wall'.\n", z);
-      exit(EXIT_FAILURE);
-    }
-    if (!is_wall and particle_type != "particle") {
-      std::cerr << fmt::format("Error: String d_zoneToParticleORWallDeck[z].first for zone z = {} "
-                               "should be 'particle'.\n", z);
-      exit(EXIT_FAILURE);
-    }
+  for (size_t z = 0; z < d_particleDeck_p->d_pMeshVec.size(); z++) {
 
     // get current size of particles data
     auto psize = d_particlesListTypeAll.size();
 
-    // get particle zone
-    auto &pz = d_pDeck_p->d_particleZones[z];
+    // get particle mesh
+    auto &zmeshDeck = d_particleDeck_p->d_pMeshVec[z];
 
-    // get zone id
-    auto z_id = pz.d_zone.d_zoneId;
-    if (z_id != z) {
-      std::cerr << fmt::format("Error: d_zoneId = {} in ParticleZone for "
-                               "z = {} should be equal to z = {}.\n",
-                               z_id, z, z);
-      exit(EXIT_FAILURE);
-    }
+    // get geometry of particle in this group (use geometry from mesh block if available)
+    auto &zgeomDeck = zmeshDeck.d_createMeshGeomData.d_geomName == "" ? d_particleDeck_p->d_pGeomVec[z] : zmeshDeck.d_createMeshGeomData;
 
     // read mesh data
-    log(d_name + ": Creating mesh for reference particle in zone = " +
-        std::to_string(z_id) + "\n");
+    log(d_name + ": Creating mesh for reference particle in mesh group = " +
+        std::to_string(z) + "\n");
     std::shared_ptr<fe::Mesh> mesh;
-    if (!pz.d_meshDeck.d_createMesh) {
-      mesh = std::make_shared<fe::Mesh>(&pz.d_meshDeck);
+    if (!zmeshDeck.d_createMesh) {
+      mesh = std::make_shared<fe::Mesh>(&zmeshDeck);
     }
     else {
-      const auto &geomData = pz.d_meshDeck.d_createMeshGeomData;
-      if (pz.d_meshDeck.d_createMeshInfo == "uniform"
-          and geomData.d_geomName == "rectangle") {
+      if (zmeshDeck.d_createMeshInfo == "uniform"
+          and zgeomDeck.d_geomName == "rectangle") {
 
         // get the geometrical details
         std::pair<std::vector<double>, std::vector<double>> box;
         std::vector<size_t> nGrid(3, 0);
 
         for (size_t i=0; i<3; i++) {
-          box.first.push_back(geomData.d_geomParams[i]);
-          box.second.push_back(geomData.d_geomParams[i+3]);
+          box.first.push_back(zgeomDeck.d_geomParams[i]);
+          box.second.push_back(zgeomDeck.d_geomParams[i+3]);
 
-          nGrid[i] = size_t((geomData.d_geomParams[i+3] - geomData.d_geomParams[i])/pz.d_meshDeck.d_h);
+          nGrid[i] = size_t((zgeomDeck.d_geomParams[i+3] - zgeomDeck.d_geomParams[i])/zmeshDeck.d_h);
 
           std::cout << fmt::format("box.first[i] = {}, "
                                    "box.second[i] = {}, "
@@ -1176,12 +1130,12 @@ void model::DEMModel::createParticles() {
     }
 
     // create the reference particle
-    log(d_name + ": Creating reference particle in zone = " +
-        std::to_string(z_id) + "\n");
+    log(d_name + ": Creating reference particle in mesh group = " +
+        std::to_string(z) + "\n");
 
-    // get representative particle for this zone
-    auto &rep_geom_p = pz.d_particleGeomData.d_geom_p;
-    auto rep_geom_params = pz.d_particleGeomData.d_geomParams;
+    // get representative particle for this mesh group
+    auto &rep_geom_p = zgeomDeck.d_geom_p;
+    auto rep_geom_params = zgeomDeck.d_geomParams;
 
     auto ref_p = std::make_shared<particle::RefParticle>(
             d_referenceParticles.size(),
@@ -1192,18 +1146,18 @@ void model::DEMModel::createParticles() {
     d_referenceParticles.emplace_back(ref_p);
 
     // check the particle generation method
-    log(d_name + ": Creating particles in zone = " +
-                  std::to_string(z_id) + "\n");
+    log(d_name + ": Creating particles in mesh group = " +
+                  std::to_string(z) + "\n");
 
-    if (pz.d_genMethod == "From_File") {
+    if (d_particleDeck_p->d_pGenDeck.d_genMethod == "From_File") {
       createParticlesFromFile(z, ref_p);
     }
     else {
-      if (pz.d_createParticleUsingParticleZoneGeomObject or !d_input_p->isMultiParticle()) {
+      if (!d_input_p->isMultiParticle()) {
         createParticleUsingParticleZoneGeomObject(z, ref_p);
       }
       else {
-        std::cerr << "Error: Particle generation method = " << pz.d_genMethod <<
+        std::cerr << "Error: Particle generation method = " << d_particleDeck_p->d_pGenDeck.d_genMethod <<
                   " not recognized.\n";
         exit(1);
       }
@@ -1211,9 +1165,6 @@ void model::DEMModel::createParticles() {
 
     // get new size of data
     auto psize_new = d_particlesListTypeAll.size();
-
-    // store this in zone-info
-    d_zInfo.emplace_back(std::vector<size_t>{psize, psize_new, z_id});
   }
 }
 
@@ -1223,26 +1174,18 @@ void model::DEMModel::createParticleUsingParticleZoneGeomObject(
 
   log(d_name + ": Creating particle using Particle Zone Geometry Object\n", 1);
 
-  // get particle zone
-  auto &pz = d_pDeck_p->d_particleZones[z];
-
-  // get zone id
-  auto z_id = pz.d_zone.d_zoneId;
-
   // ref_p has geometry and mesh which will be used in creating this particle
   // we need to create identity transform
   auto p_transform = particle::ParticleTransform();
 
+  std::map<std::string, size_t> p_group({{"geom_id", 0}, {"mat_id", 0}, {"mesh_id", 0}, {"contact_id", 0}});
+
   // create particle
-  auto p = new particle::BaseParticle(
-          pz.d_isWall ? "wall" : "particle",
-          d_particlesListTypeAll.size(),
-          pz.d_isWall ? d_particlesListTypeWall.size() : d_particlesListTypeParticle.size(),
-          z_id,
+  auto p = new particle::BaseParticle(d_particlesListTypeAll.size(),
+          false,
           ref_p->getDimension(),
-          pz.d_particleDescription,
-          pz.d_isWall,
-          pz.d_allDofsConstrained,
+          p_group,
+          false,
           ref_p->getNumNodes(),
           0.,
           static_cast<std::shared_ptr<ModelData>>(this),
@@ -1250,17 +1193,13 @@ void model::DEMModel::createParticleUsingParticleZoneGeomObject(
           ref_p->getGeomP(),
           p_transform,
           ref_p->getMeshP(),
-          pz.d_matDeck,
+          d_particleDeck_p->d_pMaterialVec[0],
           true);
 
   // push p to list
-  if (pz.d_isWall)
-    d_particlesListTypeWall.push_back(p);
-  else
-    d_particlesListTypeParticle.push_back(p);
+  d_particlesListTypeParticle.push_back(p);
 
   d_particlesListTypeAll.push_back(p);
-
 }
 
 void model::DEMModel::createParticlesFromFile(

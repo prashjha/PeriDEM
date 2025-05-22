@@ -1,0 +1,350 @@
+Model:
+  Dimension: 2
+  Discretization_Type:
+    Spatial: finite_difference
+    Time: central_difference
+  Final_Time: 1.000000e-01
+  Time_Steps: 1000000
+Container:
+  Geometry:
+    Type: rectangle
+    Parameters: [8.627500e-02, 8.627500e-02, -3.650000e-02, -3.500000e-02, 0.000000e+00]
+Zone:
+  Zones: 10
+  Zone_1:
+    Is_Wall: false
+  Zone_2:
+    Is_Wall: false
+  Zone_3:
+    Is_Wall: false
+  Zone_4:
+    Is_Wall: false
+  Zone_5:
+    Is_Wall: false
+  Zone_6:
+    Is_Wall: false
+  Zone_7:
+    Is_Wall: false
+  Zone_8:
+    Is_Wall: false
+  Zone_9:
+    Is_Wall: true
+  Zone_10:
+    Is_Wall: true
+Particle:
+  Test_Name: multi_particle_attrition
+  Zone_1:
+    Type: circle
+    Parameters: [1.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_2:
+    Type: triangle
+    Parameters: [1.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_3:
+    Type: drum2d
+    Parameters: [1.000000e-03, 4.000000e-04, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_4:
+    Type: hexagon
+    Parameters: [1.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_5:
+    Type: circle
+    Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_6:
+    Type: triangle
+    Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_7:
+    Type: drum2d
+    Parameters: [3.000000e-03, 1.200000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_8:
+    Type: hexagon
+    Parameters: [3.000000e-03, 0.000000e+00, 0.000000e+00, 0.000000e+00]
+  Zone_9:
+    Is_Wall: true
+    Type: rectangle
+    Parameters: [8.627500e-02, 8.627500e-02, -3.650000e-02, -3.500000e-02, 0.000000e+00]
+    All_Dofs_Constrained: true
+    Create_Particle_Using_ParticleZone_GeomObject: true
+  Zone_10:
+    Is_Wall: true
+    Type: rectangle_minus_rectangle
+    Parameters: [-7.963750e-02, -7.813750e-02, 0.000000e+00, 6.637500e-03, 8.137500e-03, 0.000000e+00, -7.888750e-02, -7.738750e-02, 0.000000e+00, 5.887500e-03, 7.387500e-03, 0.000000e+00]
+    All_Dofs_Constrained: true
+    Create_Particle_Using_ParticleZone_GeomObject: true
+Particle_Generation:
+  From_File: particle_locations_0.csv
+  File_Data_Type: loc_rad_orient
+Mesh:
+  Zone_1:
+    File: mesh_cir_small_0.msh
+  Zone_2:
+    File: mesh_tri_small_0.msh
+  Zone_3:
+    File: mesh_drum2d_small_0.msh
+  Zone_4:
+    File: mesh_hex_small_0.msh
+  Zone_5:
+    File: mesh_cir_large_0.msh
+  Zone_6:
+    File: mesh_tri_large_0.msh
+  Zone_7:
+    File: mesh_drum2d_large_0.msh
+  Zone_8:
+    File: mesh_hex_large_0.msh
+  Zone_9:
+    File: mesh_rect_protrsn_opening_container_0.msh
+  Zone_10:
+    File: mesh_rect_container_0.msh
+Contact:
+  Zone_11:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 1.173418e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_12:
+    Copy_Contact_Data: [1, 1]
+  Zone_13:
+    Copy_Contact_Data: [1, 1]
+  Zone_14:
+    Copy_Contact_Data: [1, 1]
+  Zone_15:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 1.955696e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_16:
+    Copy_Contact_Data: [1, 5]
+  Zone_17:
+    Copy_Contact_Data: [1, 5]
+  Zone_18:
+    Copy_Contact_Data: [1, 5]
+  Zone_19:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 1.955696e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_110:
+    Contact_Radius_Factor: 9.500000e-01
+    Friction_On: false
+    Kn: 1.955696e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_22:
+    Copy_Contact_Data: [1, 1]
+  Zone_23:
+    Copy_Contact_Data: [1, 1]
+  Zone_24:
+    Copy_Contact_Data: [1, 1]
+  Zone_25:
+    Copy_Contact_Data: [1, 5]
+  Zone_26:
+    Copy_Contact_Data: [1, 5]
+  Zone_27:
+    Copy_Contact_Data: [1, 5]
+  Zone_28:
+    Copy_Contact_Data: [1, 5]
+  Zone_29:
+    Copy_Contact_Data: [1, 9]
+  Zone_210:
+    Copy_Contact_Data: [1, 10]
+  Zone_33:
+    Copy_Contact_Data: [1, 1]
+  Zone_34:
+    Copy_Contact_Data: [1, 1]
+  Zone_35:
+    Copy_Contact_Data: [1, 5]
+  Zone_36:
+    Copy_Contact_Data: [1, 5]
+  Zone_37:
+    Copy_Contact_Data: [1, 5]
+  Zone_38:
+    Copy_Contact_Data: [1, 5]
+  Zone_39:
+    Copy_Contact_Data: [1, 9]
+  Zone_310:
+    Copy_Contact_Data: [1, 10]
+  Zone_44:
+    Copy_Contact_Data: [1, 1]
+  Zone_45:
+    Copy_Contact_Data: [1, 5]
+  Zone_46:
+    Copy_Contact_Data: [1, 5]
+  Zone_47:
+    Copy_Contact_Data: [1, 5]
+  Zone_48:
+    Copy_Contact_Data: [1, 5]
+  Zone_49:
+    Copy_Contact_Data: [1, 9]
+  Zone_410:
+    Copy_Contact_Data: [1, 10]
+  Zone_55:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 5.867088e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_56:
+    Copy_Contact_Data: [5, 5]
+  Zone_57:
+    Copy_Contact_Data: [5, 5]
+  Zone_58:
+    Copy_Contact_Data: [5, 5]
+  Zone_59:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 5.867088e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_510:
+    Contact_Radius_Factor: 9.500000e-01
+    Friction_On: false
+    Kn: 5.867088e+22
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_66:
+    Copy_Contact_Data: [5, 5]
+  Zone_67:
+    Copy_Contact_Data: [5, 5]
+  Zone_68:
+    Copy_Contact_Data: [5, 5]
+  Zone_69:
+    Copy_Contact_Data: [5, 9]
+  Zone_610:
+    Copy_Contact_Data: [5, 10]
+  Zone_77:
+    Copy_Contact_Data: [5, 5]
+  Zone_78:
+    Copy_Contact_Data: [5, 5]
+  Zone_79:
+    Copy_Contact_Data: [5, 9]
+  Zone_710:
+    Copy_Contact_Data: [5, 10]
+  Zone_88:
+    Copy_Contact_Data: [5, 5]
+  Zone_89:
+    Copy_Contact_Data: [5, 9]
+  Zone_810:
+    Copy_Contact_Data: [5, 10]
+  Zone_99:
+    Contact_Radius_Factor: 9.500000e-01
+    Damping_On: false
+    Friction_On: false
+    Kn: 0.000000e+00
+    Epsilon: 9.500000e-01
+    Friction_Coeff: 5.000000e-01
+    Kn_Factor: 5.000000e+00
+    Beta_n_Factor: 1.000000e+02
+  Zone_910:
+    Copy_Contact_Data: [9, 9]
+  Zone_1010:
+    Copy_Contact_Data: [9, 9]
+Neighbor:
+  Update_Criteria: simple_all
+  Search_Factor: 1e+01
+  Search_Interval: 40
+Material:
+  Zone_1:
+    Type: PDState
+    Horizon: 2.500000e-04
+    Density: 1.200000e+03
+    Compute_From_Classical: true
+    K: 2.000000e+03
+    G: 1.200000e+03
+    Gc: 5.000000e+01
+    Influence_Function:
+      Type: 1
+  Zone_2:
+    Copy_Material_Data: 1
+  Zone_3:
+    Copy_Material_Data: 1
+  Zone_4:
+    Copy_Material_Data: 1
+  Zone_5:
+    Type: PDState
+    Horizon: 2.500000e-04
+    Density: 1.200000e+03
+    Compute_From_Classical: true
+    K: 1.000000e+04
+    G: 6.000000e+03
+    Gc: 1.000000e+02
+    Influence_Function:
+      Type: 1
+  Zone_6:
+    Copy_Material_Data: 5
+  Zone_7:
+    Copy_Material_Data: 5
+  Zone_8:
+    Copy_Material_Data: 5
+  Zone_9:
+    Type: PDState
+    Horizon: 2.500000e-04
+    Density: 1.200000e+03
+    Compute_From_Classical: true
+    K: 1.000000e+04
+    G: 6.000000e+03
+    Gc: 1.000000e+02
+    Influence_Function:
+      Type: 1
+  Zone_10:
+    Copy_Material_Data: 9
+Force_BC:
+  Gravity: [0.000000e+00, -1.000000e+01, 0.000000e+00]
+Displacement_BC:
+  Sets: 2
+  Set_1:
+    Particle_List: [52]
+    Direction: [1,2]
+    Time_Function:
+      Type: rotation
+      Parameters: [-9.424778e+01, 5.887500e-03, 7.387500e-03, 0.000000e+00]
+    Spatial_Function:
+      Type: rotation
+    Zero_Displacement: false
+  Set_2:
+    Particle_List: [53]
+    Direction: [1,2]
+    Zero_Displacement: true
+Output:
+  Path: ./out/
+  Tags:
+    - Displacement
+    - Velocity
+    - Force
+    - Force_Density
+    - Damage_Z
+    - Damage
+    - Nodal_Volume
+    - Zone_ID
+    - Particle_ID
+    - Fixity
+    - Force_Fixity
+    - Contact_Nodes
+    - No_Fail_Node
+    - Boundary_Node_Flag
+  Output_Interval: 2500
+  Compress_Type: zlib
+  Perform_FE_Out: false
+  Perform_Out: true
+  Test_Output_Interval: 25
+  Debug: 3
+  Tag_PP: 0

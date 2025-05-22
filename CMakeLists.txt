@@ -66,8 +66,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif ()
 
-# set standard to 17
-set(CMAKE_CXX_STANDARD 20)
+# set standard to 23
+set(CMAKE_CXX_STANDARD 23)
 
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")

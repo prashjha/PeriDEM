@@ -35,28 +35,7 @@ public:
    * @brief Constructor
    * @param bc_data Boundary condition data
    */
-  ParticleFLoading(std::vector<inp::PBCData> &bc_data);
-
-  /*!
-   * @brief Function that checks if given particle with id = id needs to be processed
-   * within boundary condition data bc
-   * @param id Id of particle in all particle list
-   * @param bc Boundary condition data
-   * @return bool True if particle should be processed further
-   */
-  bool needToProcessParticle(size_t id,
-                             const inp::PBCData &bc);
-
-  /*!
-   * @brief Function that checks if we need to do computation at a given point x within a particle with id = id
-   * @param x Coordinates of a point within particle (reference coordinate)
-   * @param id Id of particle in all particle list
-   * @param bc Boundary condition data
-   * @return bool True if we compute at x
-   */
-  bool needToComputeDof(const util::Point &x,
-                        size_t id,
-                        const inp::PBCData &bc);
+  ParticleFLoading(std::vector<inp::BCBaseDeck> &bc_data);
 
   /*!
    * @brief Applies force boundary condition

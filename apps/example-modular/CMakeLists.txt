@@ -6,8 +6,8 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-AUX_SOURCE_DIRECTORY(./ SOURCES)
+set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 
-add_library(Util ${SOURCES})
+add_executable(Example_Modular main.cpp)
 
-target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} fmt::fmt-header-only Threads::Threads MPI::MPI_CXX )
+target_link_libraries(Example_Modular PUBLIC Inp)

@@ -8,3 +8,4 @@
 
 add_subdirectory(twoparticle_demo)
 add_subdirectory(peridynamics)
+add_subdirectory(example-modular)

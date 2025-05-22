@@ -24,3 +24,8 @@
 - project page - [https://github.com/taskflow/taskflow](https://github.com/taskflow/taskflow)
 - current version - v3.7.0
 - download link (current version) - [https://github.com/taskflow/taskflow/releases/tag/v3.7.0](https://github.com/taskflow/taskflow/releases/tag/v3.7.0)
+
+## nlohmann_json
+- project page - [https://github.com/nlohmann/json](https://github.com/nlohmann/json)
+- current version - 3.12.0
+- download link (current version) - [https://github.com/nlohmann/json/releases/tag/v3.12.0](https://github.com/nlohmann/json/releases/tag/v3.12.0)

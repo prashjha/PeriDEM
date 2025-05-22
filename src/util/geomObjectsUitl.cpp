@@ -116,7 +116,6 @@ namespace util {
                                           const std::vector<std::string> &vec_type,
                                           const std::vector<std::string> &vec_flag,
                                           std::shared_ptr<util::geometry::GeomObject> &obj,
-                                          const size_t &dim,
                                           bool perform_check) {
 
       // for any of the objects below, issue error if number of parameters not
@@ -406,7 +405,7 @@ namespace util {
                               params[11]));
 
           obj = std::make_shared<util::geometry::AnnulusGeomObject>
-                  (rin, rout, 2);
+                  (rin, rout);
         } else {
           std::cerr << "Error: need at least " << 12
                     << " parameters for creating rectangle_minus_rectangle. "
@@ -433,7 +432,7 @@ namespace util {
                               params[11]));
 
           obj = std::make_shared<util::geometry::AnnulusGeomObject>
-                  (rin, rout, 3);
+                  (rin, rout);
         } else {
           std::cerr << "Error: need at least " << 12
                     << " parameters for creating cuboid_minus_cuboid. "
@@ -464,7 +463,7 @@ namespace util {
 
             // create geom object
             createGeomObject(geom_type, geom_param, std::vector<std::string>(),
-                             std::vector<std::string>(), vec_obj[i], dim);
+                             std::vector<std::string>(), vec_obj[i]);
 
             param_start += num_params;
           }
@@ -472,8 +471,7 @@ namespace util {
           // create complex geom object
           ///std::cout << "creating complex object\n";
           obj = std::make_shared<util::geometry::ComplexGeomObject>(vec_obj,
-                                                                    vec_flag,
-                                                                    dim);
+                                                                    vec_flag);
           //obj->print();
         } else {
           std::cerr << "Error: Not enough parameters for creating complex. "
@@ -491,7 +489,6 @@ namespace util {
                                           const std::vector<std::string> &vec_type,
                                           const std::vector<std::string> &vec_flag,
                                           std::shared_ptr<util::geometry::GeomObject> &obj,
-                                          const size_t &dim,
                                           bool perform_check) {
 
       std::vector<size_t> num_params_needed;
@@ -794,7 +791,7 @@ namespace util {
                       util::Point(params[9], params[10], params[11]));
 
               obj = std::make_shared<util::geometry::AnnulusGeomObject>
-                      (rin, rout, 2);
+                      (rin, rout);
 
               return;
             }
@@ -817,7 +814,7 @@ namespace util {
                       util::Point(params[9], params[10], params[11]));
 
               obj = std::make_shared<util::geometry::AnnulusGeomObject>
-                      (rin, rout, 3);
+                      (rin, rout);
 
               return;
             }
@@ -876,13 +873,13 @@ namespace util {
             obj_flags[i] = vec_flag[i];
             util::geometry::createGeomObject(
                     geom_type_temp, params_temp, vec_type_temp, vec_flag_temp,
-                    objs[i], dim, perform_check);
+                    objs[i], perform_check);
 
             param_start += params_level[i];
           } // loop over objects
 
           // now create a composite object
-          obj = std::make_shared<util::geometry::ComplexGeomObject>(objs, obj_flags, dim);
+          obj = std::make_shared<util::geometry::ComplexGeomObject>(objs, obj_flags);
 
           return;
         } // if params.size() == n
@@ -898,16 +895,15 @@ namespace util {
     }
 
     void util::geometry::createGeomObject(util::geometry::GeomData &geomData,
-                                          const size_t &dim,
                                           bool perform_check) {
 
       createGeomObject(geomData.d_geomName, geomData.d_geomParams,
                        geomData.d_geomComplexInfo.first,
                        geomData.d_geomComplexInfo.second,
-                       geomData.d_geom_p, dim, perform_check);
+                       geomData.d_geom_p, perform_check);
     }
 
-    void util::geometry::GeomData::copyGeometry(util::geometry::GeomData &z, size_t dim) {
+    void util::geometry::GeomData::copyGeometry(util::geometry::GeomData &z) {
       z.d_geomName = d_geomName;
       z.d_geomParams = d_geomParams;
       z.d_geomComplexInfo = d_geomComplexInfo;
@@ -921,15 +917,14 @@ namespace util {
                 std::make_shared<util::geometry::GeomObject>(
                         d_geom_p->d_name, d_geom_p->d_description);
       } else {
-        util::geometry::createGeomObject(z, dim);
+        util::geometry::createGeomObject(z);
       }
     }
 
     void util::geometry::GeomData::copyGeometry(std::string &name,
                                                 std::vector<double> &params,
                                                 std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo,
-                                                std::shared_ptr<util::geometry::GeomObject> &geom,
-                                                size_t dim) {
+                                                std::shared_ptr<util::geometry::GeomObject> &geom) {
       name = d_geomName;
       params = d_geomParams;
       complexInfo = d_geomComplexInfo;
@@ -947,8 +942,51 @@ namespace util {
                                          params,
                                          complexInfo.first,
                                          complexInfo.second,
-                                         geom, dim);
+                                         geom);
       }
     }
 
 }// Utility functions
+
+// read and write geometry from json object
+namespace util {
+namespace geometry {
+
+  void writeGeometry(json &j, const util::geometry::GeomData &geomData) {
+    j["Type"] = geomData.d_geomName;
+
+    if (geomData.d_geomName == "complex") {
+      j["Vec_type"] = geomData.d_geomComplexInfo.first;
+      j["Vec_flag"] = geomData.d_geomComplexInfo.second;
+    }
+
+    j["Parameters"] = geomData.d_geomParams;
+  }
+
+  void readGeometry(const json &j, util::geometry::GeomData &geomData) {
+
+    if (j.find("Type") == j.end()) {
+      std::cerr << "Error: Geometry type not found in json file.\n";
+      exit(1);
+    }
+    geomData.d_geomName = j.at("Type");
+
+    if (geomData.d_geomName == "complex") {
+      if ((j.find("Vec_type") == j.end()) or (j.find("Vec_Flag") == j.end())) {
+        std::cerr << "Error: Geometry type and/or flag not found in json file.\n";
+        exit(1);
+      }
+      geomData.d_geomComplexInfo.first = j.at("Vec_type");
+      geomData.d_geomComplexInfo.second = j.at("Vec_flag");
+    }
+
+    if (j.find("Parameters") == j.end()) {
+      std::cerr << "Error: Geometry parameters not found in json file.\n";
+      exit(1);
+    }
+
+    for (auto a: j.at("Parameters"))
+      geomData.d_geomParams.push_back(a);
+  }
+}
+}

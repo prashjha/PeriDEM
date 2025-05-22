@@ -18,6 +18,7 @@
 #include "inp/input.h"
 #include "loading/particleFLoading.h"
 #include "loading/particleULoading.h"
+#include "loading/particleIC.h"
 #include "nsearch/nsearch.h"
 #include "geometry/fracture.h"
 #include <cstdint> // uint8_t type
@@ -51,16 +52,18 @@ public:
    * @brief Constructor
    * @param deck Input deck
    */
-  ModelData(inp::Input *deck)
+  ModelData(std::shared_ptr<inp::Input> & deck)
       : d_n(0),
         d_time(0.),
         d_currentDt(0.),
         d_infoN(1),
         d_input_p(deck),
-        d_modelDeck_p(deck->getModelDeck()),
-        d_restartDeck_p(deck->getRestartDeck()),
-        d_outputDeck_p(deck->getOutputDeck()),
-        d_pDeck_p(deck->getParticleDeck()), d_cDeck_p(deck->getContactDeck()),
+        d_modelDeck_p(deck->d_modelDeck_p),
+        d_outputDeck_p(deck->d_outputDeck_p),
+        d_restartDeck_p(deck->d_restartDeck_p),
+        d_testDeck_p(deck->d_testDeck_p),
+        d_bcDeck_p(deck->d_bcDeck_p),
+        d_particleDeck_p(deck->d_particleDeck_p),
         d_stop(false), d_hMax(0.), d_hMin(0.), d_maxContactR(0.),
         d_contNeighUpdateInterval(0),
         d_contNeighTimestepCounter(0),
@@ -546,23 +549,25 @@ public:
   std::ofstream d_ppFile;
 
   /*! @brief Pointer to Input object */
-  inp::Input *d_input_p;
+  std::shared_ptr<inp::Input> d_input_p;
 
-  /*! @brief Model deck */
+  /*! @brief Pointer to deck holding problem related data */
   std::shared_ptr<inp::ModelDeck> d_modelDeck_p;
 
-  /*! @brief Restart deck */
-  std::shared_ptr<inp::RestartDeck> d_restartDeck_p;
-
-  /*! @brief Output deck */
+  /*! @brief Pointer to deck holding output related data */
   std::shared_ptr<inp::OutputDeck> d_outputDeck_p;
 
-  /*! @brief Particle deck */
-  std::shared_ptr<inp::ParticleDeck> d_pDeck_p;
+  /*! @brief Pointer to deck holding restart related data */
+  std::shared_ptr<inp::RestartDeck> d_restartDeck_p;
 
-  /*! @brief Contact deck */
-  std::shared_ptr<inp::ContactDeck> d_cDeck_p;
+  /*! @brief Test deck */
+  std::shared_ptr<inp::TestDeck> d_testDeck_p;
 
+  /*! @brief Boundary condition deck */
+  std::shared_ptr<inp::BCDeck> d_bcDeck_p;
+
+  /*! @brief Pointer to deck holding particle related data */
+  std::shared_ptr<inp::ParticleDeck> d_particleDeck_p;
 
   /*! @brief flag to stop the simulation midway */
   bool d_stop;

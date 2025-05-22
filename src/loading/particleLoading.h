@@ -13,7 +13,7 @@
 
 #include <string>
 #include <vector>
-#include "inp/pdecks/particleDeck.h"
+#include "inp/bcBaseDeck.h"
 
 /*!
  * @brief Collection of methods and database related to loading
@@ -39,7 +39,7 @@ public:
 
 protected:
   /*! @brief List of displacement bcs */
-  std::vector<inp::PBCData> d_bcData;
+  std::vector<inp::BCBaseDeck> d_bcData;
 };
 
 } // namespace loading

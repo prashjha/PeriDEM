@@ -27,22 +27,56 @@ struct PNeighborDeck {
    * radius of particle) */
   double d_sFactor;
 
-  /*!
-   * @brief Neighbor search tolerance
-   */
-  double d_sTol;
-
   /*! @brief Neighbor update time interval (for contact) */
   size_t d_neighUpdateInterval;
+
+  /*! @brief Specify how deep we search for nodes near boundary for contact calculations */
+  double d_nearBdNodesTol;
 
   /*!
    * @brief Constructor
    */
-  PNeighborDeck()
+  PNeighborDeck(const json &j = json({}))
       : d_updateCriteria("simple_all"),
         d_sFactor(1.),
-        d_sTol(0.),
-        d_neighUpdateInterval(1) {};
+        d_neighUpdateInterval(1),
+        d_nearBdNodesTol(0.5) {
+    readFromJson(j);
+  };
+
+  /*!
+   * @brief Constructor
+   */
+  PNeighborDeck(std::string updateCriteria, double sFactor = 1.,
+                size_t neighUpdateInterval = 1, double nearBdNodesTol = 0.5)
+      : d_updateCriteria(updateCriteria),
+        d_sFactor(sFactor),
+        d_neighUpdateInterval(neighUpdateInterval),
+        d_nearBdNodesTol(nearBdNodesTol) {};
+
+  /*!
+   * @brief Returns example JSON object for ModelDeck configuration
+   * @return JSON object with example configuration
+   */
+  static json getExampleJson(std::string updateCriteria = "simple_all", double sFactor = 1.,
+                             size_t neighUpdateInterval = 1, double nearBdNodesTol = 0.5) {
+
+    return json({{"Update_Criteria", updateCriteria}, {"Search_Factor", sFactor},
+      {"Search_Interval", neighUpdateInterval}, {"Near_Bd_Nodes_Tol", nearBdNodesTol}});
+  }
+
+  /*!
+ * @brief Reads from json object
+ */
+  void readFromJson(const json &j) {
+    if (j.empty())
+      return;
+
+    d_updateCriteria = j.value("Update_Criteria", std::string("simple_all"));
+    d_sFactor = j.value("Search_Factor", 1.);
+    d_neighUpdateInterval = j.value("Search_Interval", size_t(1));
+    d_nearBdNodesTol = j.value("Near_Bd_Nodes_Tol", 0.5);
+  }
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -58,8 +92,8 @@ struct PNeighborDeck {
     oss << tabS << "------- PNeighborDeck --------" << std::endl << std::endl;
     oss << tabS << "Update criteria  = " << d_updateCriteria << std::endl;
     oss << tabS << "Search factor = " << d_sFactor << std::endl;
-    oss << tabS << "Search tolerance = " << d_sTol << std::endl;
     oss << tabS << "Search update interval = " << d_neighUpdateInterval << std::endl;
+    oss << tabS << "Near_Bd_Nodes_Tol = " << d_nearBdNodesTol << std::endl;
     oss << tabS << std::endl;
 
     return oss.str();

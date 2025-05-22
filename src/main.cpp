@@ -14,6 +14,7 @@
 #include <iostream>
 #include <algorithm>
 #include <ctime>
+#include <filesystem>
 
 // PeriDEM includes
 #include "inp/input.h"                          // Input class
@@ -60,9 +61,14 @@ int main(int argc, char *argv[]) {
 
   // read input data
   std::string filename = input.getCmdOption("-i");
-  auto *deck = new inp::Input(filename);
+  if (!std::filesystem::exists(filename)) {
+    throw std::runtime_error(fmt::format("Input file {} does not exist.", filename));
+  }
+  std::ifstream f(filename);
+  auto j = json::parse(f);
+  auto deck = std::make_shared<inp::Input>(j);
 
-  // check which model to run
+  // run model
   if (deck->isPeriDEM()) {
     model::DEMModel dem(deck);
     dem.run(deck);

@@ -76,6 +76,23 @@ struct MatData {
         d_lambda(md.d_lambda), d_mu(md.d_mu), d_KIc(md.d_KIc), d_Gc(md.d_Gc){};
 
   /*!
+   * @brief Reads from json object
+   */
+  void readFromJson(const json &j) {
+    if (j.empty())
+      return;
+
+    d_E = j.value("E", -1.);
+    d_G = j.value("G", -1.);
+    d_K = j.value("K", -1.);
+    d_lambda = j.value("Lambda", -1.);
+    d_mu = j.value("Mu", -1.);
+    d_nu = j.value("Poisson_Ratio", -1.);
+    d_Gc = j.value("Gc", -1.);
+    d_KIc = j.value("KIc", -1.);
+  }
+
+  /*!
    * @brief Returns the string containing printable information about the object
    *
    * @param nt Number of tabs to append before printing
@@ -293,12 +310,34 @@ struct MaterialDeck {
   /*!
    * @brief Constructor
    */
-  MaterialDeck()
-      : d_isPlaneStrain(false), d_bondPotentialType(0), d_statePotentialType(0),
+  MaterialDeck(const json &j = json({}))
+      : d_materialType(""),
+        d_isPlaneStrain(false), d_bondPotentialType(0), d_statePotentialType(0),
         d_influenceFnType(0), d_irreversibleBondBreak(true),
         d_stateContributionFromBrokenBond(true), d_checkScFactor(1.),
         d_computeParamsFromElastic(true), d_matData(inp::MatData()),
-        d_density(1.), d_horizon(-1.), d_horizonMeshRatio(-1.){};
+        d_density(1.), d_horizon(-1.), d_horizonMeshRatio(-1.) {
+    readFromJson(j);
+  };
+
+  /*!
+   * @brief Constructor
+   */
+  MaterialDeck(std::string materialType, bool isPlainStrain = false,
+               double horizon = -1., double horizonMeshRatio = -1., double density = 1.,
+               double K = 0., double G = 0., double Gc = 0., bool computeParamsFromElastic = true,
+               size_t influenceFnType = 0)
+      : d_materialType(materialType),
+        d_isPlaneStrain(isPlainStrain), d_bondPotentialType(0), d_statePotentialType(0),
+        d_influenceFnType(influenceFnType), d_irreversibleBondBreak(true),
+        d_stateContributionFromBrokenBond(true), d_checkScFactor(1.),
+        d_computeParamsFromElastic(computeParamsFromElastic), d_matData(inp::MatData()),
+        d_density(density), d_horizon(horizon), d_horizonMeshRatio(horizonMeshRatio) {
+
+    d_matData.d_K = K;
+    d_matData.d_G = G;
+    d_matData.d_Gc = Gc;
+  };
 
   /*!
    * @brief Copy constructor
@@ -306,8 +345,8 @@ struct MaterialDeck {
    * @param md Another MaterialDeck object
    */
   MaterialDeck(const MaterialDeck &md)
-      : d_isPlaneStrain(md.d_isPlaneStrain),
-        d_materialType(md.d_materialType),
+      : d_materialType(md.d_materialType),
+        d_isPlaneStrain(md.d_isPlaneStrain),
         d_bondPotentialType(md.d_bondPotentialType),
         d_statePotentialType(md.d_statePotentialType),
         d_influenceFnType(md.d_influenceFnType),
@@ -320,6 +359,63 @@ struct MaterialDeck {
         d_computeParamsFromElastic(md.d_computeParamsFromElastic),
         d_matData(md.d_matData), d_density(md.d_density),
         d_horizon(md.d_horizon), d_horizonMeshRatio(md.d_horizonMeshRatio){};
+
+  /*!
+   * @brief Returns example JSON object for ModelDeck configuration
+   * @return JSON object with example configuration
+   */
+  static json getExampleJson(std::string materialType = "PDState", bool isPlainStrain = false,
+    double horizon = -1., double horizonMeshRatio = -1., double density = 1.,
+    double K = 0., double G = 0., double Gc = 0., bool computeParamsFromElastic = true,
+    size_t influenceFnType = 0) {
+
+    auto j = json({});
+
+    if (isPlainStrain)
+      j["Is_Plane_Strain"] = isPlainStrain;
+
+    j["Type"] = materialType;
+    j["Density"] = density;
+    if (horizon > 0.)
+      j["Horizon"] = horizon;
+    if (horizonMeshRatio > 0)
+      j["Horizon_Mesh_Ratio"] = horizonMeshRatio;
+
+    j["Compute_From_Classical"] = computeParamsFromElastic;
+    j["K"] = K;
+    j["G"] = G;
+    j["Gc"] = Gc;
+
+    j["Influence_Function"] = {{"Type", influenceFnType}};
+
+    return j;
+  }
+
+  /*!
+   * @brief Reads from json object
+   */
+  void readFromJson(const json &j) {
+    if (j.empty())
+      return;
+
+    // read mat data
+    d_matData.readFromJson(j);
+
+    d_computeParamsFromElastic = j.value("Compute_From_Classical", true);
+    d_isPlaneStrain = j.value("Is_Plain_Strain", false);
+    d_materialType = j.value("Type", "");
+    d_density = j.value("Density", 1.);
+    d_horizon = j.value("Horizon", -1.);
+    d_horizonMeshRatio = j.value("Horizon_Mesh_Ratio", -1.);
+    if (d_horizon < 0. and d_horizonMeshRatio < 0.) {
+      throw std::runtime_error("Horizon and Horizon Mesh Ratio both are invalid.");
+      return;
+    }
+    if (j.find("Influence_Function") != j.end()) {
+      d_influenceFnType = j.at("Influence_Function").value("Type", 0);
+      d_influenceFnParams = j.at("Influence_Function").value("Parameters", std::vector<double>());
+    }
+  }
 
   /*!
    * @brief Returns the string containing printable information about the object

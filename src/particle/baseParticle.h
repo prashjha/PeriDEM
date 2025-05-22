@@ -34,9 +34,9 @@ public:
   /*!
    * @brief Constructor
    *
-   * @param particle_type Type of the particle (e.g. particle or wall)
+   * @param id Id of this object in list of all base particle objects
    */
-  BaseParticle(std::string particle_type = "none");
+  BaseParticle(size_t id = 0);
 
   /*!
    * @brief Constructor
@@ -58,13 +58,10 @@ public:
    * @param populate_data Modify global model data to add the properties of
    * this object
    */
-  BaseParticle(std::string particle_type,
-               size_t id,
-               size_t particle_type_id,
-               size_t zone_id,
+  BaseParticle(size_t id,
+               bool isWall,
                size_t dim,
-               std::string particle_description,
-               bool is_particle_a_wall,
+               std::map<std::string, size_t> groups,
                bool are_all_dofs_constrained,
                size_t num_nodes,
                double h,
@@ -876,31 +873,14 @@ public:
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
 public:
-
-  /*! @brief particle type, e.g., particle or wall */
-  std::string d_type;
-
-  /*!
-   * @brief Particle information. E.g., "rigid".
-   * If nothing specific is available, value will be empty string
-   */
-  std::string d_particleDescription;
-
   /*! Integer-based particle identity. 0 means it is a particle and 1 means it is a wall */
-  int d_typeIndex; // string - int map
-
-  /*! @brief Is this particle actually a wall? */
   bool d_isWall;
 
   /*! @brief Id of this particle in all particles list */
   size_t d_id;
 
-  /*! @brief Id of this particle in the category (for example if this is a
-   * wall, what is its id in vector of walls) */
-  size_t d_typeId;
-
-  /*! @brief Specify zone to which this particle belongs to */
-  size_t d_zoneId;
+  /*! @brief Map that provides different groups of this particle */
+  std::map<std::string, size_t> d_groups;
 
   /*! @brief Dimension of this particle */
   size_t d_dim;

@@ -13,7 +13,7 @@
 
 #include "fe/mesh.h"
 #include "geometry/fracture.h"
-#include "inp/pdecks/particleDeck.h"
+#include "inp/particleDeck.h"
 #include "material/mparticle/material.h"
 #include "util/geomObjects.h"
 #include "util/matrix.h" // definition of Matrix3

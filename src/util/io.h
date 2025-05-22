@@ -12,28 +12,26 @@
 #define UTILS_UTIL_IO_H
 
 #include "point.h"
-#include "parallelUtil.h" // to make prints MPI aware
+#include "constants.h"
+#include "logger.h"
+#include <nlohmann_json/json.hpp>
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <algorithm>
+
+// includes for files that include this file
+#include "inputParser.h"
+
+using json = nlohmann::ordered_json;
 
 namespace util {
 
 /*! @brief Provides geometrical methods such as point inside rectangle */
 namespace io {
 
-/*! @brief Default value of tab used in outputting formatted information */
-const int print_default_tab = 0;
-
-/*! @brief Default mpi rank in printing information */
-const int print_default_mpi_rank = 0;
-
-/*! @brief Default debug level for logger */
-const int logger_default_debug_lvl = 5;
-
 /*!
- * @brief Returns tab spaces of given size
+ * @brief Returns tab spaces of a given size
  * @param nt Number of tabs
  * @return string Tab spaces
  */
@@ -98,6 +96,27 @@ template <> inline std::string printStr(const std::vector<util::Point> &list,
 
   return oss.str();
 };
+
+/*!
+ * @brief Returns formatted string for output
+ * @param map List of objects
+ * @param nt Number of tabs to prefix
+ * @return string Formatted string
+ */
+  template <typename T, typename U> inline std::string printStr(const std::map<T, U> &map,
+                                                 int nt = print_default_tab) {
+
+    auto tabS = getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS;
+    for (const auto &l : map) {
+      oss << "{" << l.first << " : " << l.second << "}";
+      if (std::next(&l) != map.cend())
+        oss << ", ";
+    }
+
+    return oss.str();
+  };
 
 /*!
  * @brief Prints formatted information
@@ -212,114 +231,6 @@ inline void printBox(const std::pair<std::vector<double>, std::vector<double>> &
 };
 
 /*!
- * @brief Deck to store log parameters
- */
-struct LoggerDeck {
-
-  /*! @brief Debug level */
-  int d_debugLevel;
-
-  /*! @brief Filename to print log */
-  std::string d_filename;
-
-  /*! @brief Print to std::cout? */
-  bool d_printScreen;
-
-  /*! @brief Print to file? */
-  bool d_printFile;
-
-  /*!
-   * @brief Constructor
-   */
-  LoggerDeck() : d_debugLevel(5), d_printScreen(true), d_printFile(false) {}
-
-  /*!
-   * @brief Constructor
-   *
-   * @param debug_level Specify debug level/verbosity
-   * @param filename Specify log filename
-   */
-  LoggerDeck(int debug_level, std::string filename)
-      : d_debugLevel(debug_level), d_filename(filename), d_printScreen
-      (d_debugLevel > 0), d_printFile(!d_filename.empty()) {}
-};
-
-
-/*!
- * @brief Prints log to std::cout and also write to the file
- */
-class Logger {
-
-public:
-
-  /*!
-   * @brief Constructor
-   *
-   * @param deck Logger deck
-   */
-  Logger(LoggerDeck *deck = nullptr) : d_deck_p(deck) {
-
-    if (d_deck_p == nullptr)
-      d_deck_p = new LoggerDeck();
-  }
-
-  /*!
-   * @brief Destructor
-   */
-  ~Logger() {
-
-    if (d_deck_p->d_printFile)
-      d_logFile.close();
-  }
-
-  /*!
-   * @brief Log the message
-   *
-   * @param oss Message
-   * @param screen_out Specify if it goes to std::cout as well
-   * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
-   */
-  void log(std::ostringstream &oss, bool screen_out = false,
-           int printMpiRank = print_default_mpi_rank) {
-
-    log(oss.str(), screen_out, printMpiRank);
-
-    // reset oss
-    oss.str("");
-    oss.clear();
-  };
-
-  /*!
-   * @brief Log the message
-   *
-   * @param str Message
-   * @param screen_out Specify if it goes to std::cout as well
-   * @param printMpiRank MPI rank to do log/print. Negative value means all ranks log.
-   */
-  void log(const std::string &str, bool screen_out = false,
-           int printMpiRank = print_default_mpi_rank) {
-
-    if (printMpiRank < 0 or util::parallel::mpiRank() == printMpiRank) {
-      if (d_deck_p->d_printScreen || screen_out)
-        std::cout << str << std::flush;
-
-      // log
-      if (d_deck_p->d_printFile) {
-        d_logFile.open(d_deck_p->d_filename, std::ios_base::app);
-        d_logFile << str;
-        d_logFile.close();
-      }
-    }
-  };
-
-  /*! @brief Pointer to logger deck */
-  LoggerDeck *d_deck_p;
-
-  /*! @brief Filestream for logging */
-  std::ofstream d_logFile;
-};
-
-/*!
  * @brief Initializes the logger
  * @param debug_level Specify debug level/verbosity
  * @param filename Specify filename for logs
@@ -345,53 +256,6 @@ void log(std::ostringstream &oss, bool screen_out = false,
  */
 void log(const std::string &str, bool screen_out = false,
          int printMpiRank = print_default_mpi_rank);
-
-/*!
- * @brief Input command line argument parser
- *
- * source - https://stackoverflow.com/a/868894
- * @author iain
- */
-class InputParser {
-public:
-  /*!
-   * @brief Constructor
-   * @param argc Number of arguments
-   * @param argv Strings
-   */
-  InputParser(int &argc, char **argv) {
-    for (int i = 1; i < argc; ++i)
-    this->tokens.push_back(std::string(argv[i]));
-  }
-
-  /*!
-   * @brief Get value of argument specified by key
-   * @param option Argument name/key
-   * @return string Value of argument
-   */
-  const std::string &getCmdOption(const std::string &option) const {
-    std::vector<std::string>::const_iterator itr;
-    itr = std::find(this->tokens.begin(), this->tokens.end(), option);
-    if (itr != this->tokens.end() && ++itr != this->tokens.end())
-      return *itr;
-
-    static const std::string empty_string("");
-    return empty_string;
-  }
-
-  /*!
-   * @brief Check if argument exists
-   * @param option Argument name/key
-   * @return bool True if argument exists
-   */
-  bool cmdOptionExists(const std::string &option) const {
-    return std::find(this->tokens.begin(), this->tokens.end(), option) != this->tokens.end();
-  }
-
-private:
-  /*! @brief Tokens */
-  std::vector<std::string> tokens;
-};
 
 /*!
  * @brief Get filename removing path from the string

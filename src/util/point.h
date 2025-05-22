@@ -112,6 +112,12 @@ struct Point {
   void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
 
   /*!
+   * @brief Returns coordinate in stl form
+   * @return Vector STL-format coordinates
+   */
+  std::vector<double> toVec() const { return std::vector<double>({d_x, d_y, d_z}); }
+
+  /*!
    * @brief Computes the Euclidean length of the vector
    * @return Length Euclidean length of the vector
    */

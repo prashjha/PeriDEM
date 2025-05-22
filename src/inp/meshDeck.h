@@ -25,34 +25,6 @@ namespace inp {
 /*! @brief Structure to read and store mesh related input data */
 struct MeshDeck {
 
-  /*! @brief Dimension */
-  size_t d_dim;
-
-  /*!
-   * @brief Tag for spatial discretization
-   *
-   * @note Value of this variable is equal to @ModelDeck::d_spatialDiscretization
-   *
-   * List of allowed values are:
-   * - \a finite_difference
-   * - \a weak_finite_element
-   * - \a nodal_finite_element
-   * - \a truss_finite_element
-   */
-  std::string d_spatialDiscretization;
-
-  /*!
-   * @brief Flag to indicate if we should populate element-node connectivity data in meshes
-   * @note Value of this variable is equal to @ModelDeck::d_populateElementNodeConnectivity
-   */
-  bool d_populateElementNodeConnectivity;
-
-  /*!
-   * @brief Order of quadrature approximation for strain and stress computation (default is 1)
-   * @note Value of this variable is equal to @ModelDeck::d_quadOrder
-   */
-  size_t d_quadOrder;
-
   /*! @brief Filename to read mesh data */
   std::string d_filename;
 
@@ -78,12 +50,88 @@ struct MeshDeck {
    */
   util::geometry::GeomData d_createMeshGeomData;
 
+  /*! @brief Use particle geometry in 'Particle' json block to create mesh? */
+  bool d_useParticleGeomToCreateMesh;
+
   /*!
    * @brief Constructor
    */
-  MeshDeck() : d_dim(0), d_computeMeshSize(false),
-               d_h(0.), d_createMesh(false),
-               d_createMeshGeomData() {};
+  MeshDeck(const json &j = json({})) : d_computeMeshSize(false),
+               d_h(0.), d_createMesh(false), d_useParticleGeomToCreateMesh(false) {
+    readFromJson(j);
+  };
+
+  /*!
+   * @brief Constructor
+   */
+  MeshDeck(std::string filename, double h = -1.)
+    : d_createMesh(false), d_filename(filename), d_useParticleGeomToCreateMesh(false) {
+
+    if (h <= 0)
+      d_computeMeshSize = true;
+    else {
+      d_h = h;
+      d_computeMeshSize = false;
+    }
+  };
+
+  /*!
+   * @brief Returns example JSON object for ModelDeck configuration
+   * @return JSON object with example configuration
+   */
+  static json getExampleJson(std::string filename = "", double h = -1.) {
+
+    auto j = json({});
+    if (!filename.empty()) j["File"] = filename;
+    if (h > 0)
+      j["Mesh_Size"] = h;
+
+    // TODO Add create mesh block
+
+    return j;
+  }
+
+  /*!
+   * @brief Reads from json object
+   */
+  void readFromJson(const json &j) {
+    if (j.empty())
+      return;
+
+    d_filename = j.value("File", std::string());
+    if (j.find("Mesh_Size") != j.end()) {
+      d_computeMeshSize = false;
+      d_h = j.at("Mesh_Size").get<double>();
+    } else {
+      d_computeMeshSize = true;
+    }
+
+    if (d_filename.empty()) {
+      if (j.find("CreateMesh") != j.end()) {
+        d_createMesh = j.at("CreateMesh").value("Flag", false);
+        d_createMeshInfo = j.at("CreateMesh").value("Info", std::string("uniform"));
+
+        // geometry?
+        if (j.find("Geometry") != j.end()) {
+          util::geometry::readGeometry(j.at("Geometry"), d_createMeshGeomData);
+          // create a geometry object based on the data
+          util::geometry::createGeomObject(d_createMeshGeomData);
+        } else {
+          // create mesh using particle geometry
+          d_useParticleGeomToCreateMesh = true;
+        }
+
+        // mesh size is needed
+        if (j.find("Mesh_Size") == j.end())
+          throw std::runtime_error("Need Mesh_Size to create mesh using inbuilt function.");
+      }
+    }
+
+    if (d_filename.empty()) {
+      throw std::runtime_error("Mesh filename = " + d_filename + " can not be empty.");
+      return;
+    }
+  }
 
   /*!
    * @brief Returns the string containing printable information about the object
@@ -97,15 +145,11 @@ struct MeshDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- MeshDeck --------" << std::endl << std::endl;
-    oss << tabS << "Dimension = " << d_dim << std::endl;
-    oss << tabS << "Populate element-node connectivity data = " << d_populateElementNodeConnectivity << std::endl;
-    oss << tabS << "Order of quad approximation = " << d_quadOrder << std::endl;
-    oss << tabS << "Spatial discretization type = " << d_spatialDiscretization
-        << std::endl;
     oss << tabS << "Filename = " << d_filename << std::endl;
     oss << tabS << "Compute mesh size = " << d_computeMeshSize << std::endl;
     oss << tabS << "Mesh size = " << d_h << std::endl;
     oss << tabS << "Create mesh = " << d_createMesh << std::endl;
+    oss << tabS << "Create mesh using particle geometry in Particle block? = " << d_useParticleGeomToCreateMesh << std::endl;
     oss << tabS << "Create mesh info = " << d_createMeshInfo << std::endl;
     oss << tabS << "Create mesh geometry details: " << std::endl;
     oss << d_createMeshGeomData.printStr(nt+1, lvl);

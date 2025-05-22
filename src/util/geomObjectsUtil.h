@@ -11,6 +11,8 @@
 #pragma once
 
 #include "geomObjects.h"
+#include <nlohmann_json/json.hpp>
+using json = nlohmann::ordered_json;
 
 namespace util {
 
@@ -63,9 +65,8 @@ void createNullGeomObject(std::string description = "") {
  * @brief Copies the geometry details
  *
  * @param z Another GeomData object that will be modified
- * @param dim Dimension of the object
  */
-void copyGeometry(GeomData &z, size_t dim);
+void copyGeometry(GeomData &z);
 
 /*!
 * @brief Copies the geometry details
@@ -74,13 +75,11 @@ void copyGeometry(GeomData &z, size_t dim);
 * @param params Parameters
 * @param complexInfo Pair of vector of geometry names and flags for complex geometry
 * @param geom Pointer to geometry object
-* @param dim Dimension of the object
 */
 void copyGeometry(std::string &name,
                   std::vector<double> &params,
                   std::pair<std::vector<std::string>, std::vector<std::string>> &complexInfo,
-                  std::shared_ptr<util::geometry::GeomObject> &geom,
-                  size_t dim);
+                  std::shared_ptr<util::geometry::GeomObject> &geom);
 
 /*!
  * @brief Returns the string containing printable information about the object
@@ -136,10 +135,14 @@ const std::vector<std::string> acceptable_geometries = {"circle",
                                                     "cube",
                                                     "cuboid"};
 
-/*! @brief Returns list of acceptable geometries for PeriDEM simulation */
+
+
+  /*! @brief Returns list of acceptable geometries for PeriDEM simulation */
 inline const std::vector<std::string> &getAcceptableGeometries() {
 return acceptable_geometries;
 };
+
+
 
 /*!
 * @brief Defines simple rectangle domain
@@ -239,7 +242,6 @@ isNumberOfParamForComplexGeometryValid(size_t n, std::string geom_type,
 * @param vec_type Sub-types of complex object
 * @param vec_flag Flags of sub-types of complex object
 * @param obj Pointer to object to which new object will be associated
-* @param dim Dimension
 * @param perform_check Perform check for sufficient parameters
 */
 void createGeomObjectOld(const std::string &type,
@@ -247,7 +249,6 @@ void createGeomObjectOld(const std::string &type,
                      const std::vector<std::string> &vec_type,
                      const std::vector<std::string> &vec_flag,
                      std::shared_ptr<util::geometry::GeomObject> &obj,
-                     const size_t &dim,
                      bool perform_check = true);
 
 void createGeomObject(const std::string &geom_type,
@@ -255,13 +256,16 @@ void createGeomObject(const std::string &geom_type,
                   const std::vector<std::string> &vec_type,
                   const std::vector<std::string> &vec_flag,
                   std::shared_ptr<util::geometry::GeomObject> &obj,
-                  const size_t &dim,
                   bool perform_check = true);
 
 
 void createGeomObject(GeomData &geomData,
-                  const size_t &dim,
                   bool perform_check = true);
+
+
+void readGeometry(const json &j, util::geometry::GeomData &geomData);
+
+void writeGeometry(json &j, const util::geometry::GeomData &geomData);
 
 } // namespace geometry
 

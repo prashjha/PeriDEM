@@ -9,7 +9,7 @@
  */
 
 #include "particleFLoading.h"
-#include "inp/pdecks/particleDeck.h"
+#include "particleLoadingUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/parallelUtil.h"
@@ -29,57 +29,9 @@ bool isInList(const size_t &i, const std::vector<size_t> &list) {
 } // namespace
 
 loading::ParticleFLoading::ParticleFLoading(
-    std::vector<inp::PBCData> &bc_data) {
+    std::vector<inp::BCBaseDeck> &bc_data) {
 
   d_bcData = bc_data;
-}
-
-bool loading::ParticleFLoading::needToProcessParticle(size_t id, const inp::PBCData &bc) {
-  // if there is a list, and if particle is not in the list, skip
-  bool skip_condition1 = (bc.d_selectionType == "particle"
-                          || bc.d_selectionType == "region_with_include_list")
-                         && !isInList(id, bc.d_pList);
-  // if there is an exclusion list, and if particle is in the list, skip
-  bool skip_condition2 = (bc.d_selectionType == "region_with_exclude_list")
-                         && isInList(id, bc.d_pNotList);
-  // if there is a inclusion and an exclusion list,
-  // and if particle is either in the exclusion list or not in the inclusion list, skip
-  bool skip_condition3 = (bc.d_selectionType == "region_with_include_list_with_exclude_list")
-                         && (isInList(id, bc.d_pNotList) ||
-                             !isInList(id, bc.d_pList));
-
-  bool skip = skip_condition1 or skip_condition2 or skip_condition3;
-  return !skip;
-}
-
-bool loading::ParticleFLoading::needToComputeDof(const util::Point &x,
-                                                 size_t id,
-                                                 const inp::PBCData &bc) {
-
-  if (!bc.d_isRegionActive) {
-    if (bc.d_selectionType == "particle" &&
-        isInList(id, bc.d_pList))
-      return true;
-  }
-  else {
-    if (bc.d_selectionType == "region" && bc.d_regionGeomData.d_geom_p->isInside(x))
-      return true;
-    else if (bc.d_selectionType == "region_with_include_list" &&
-             bc.d_regionGeomData.d_geom_p->isInside(x) &&
-             isInList(id, bc.d_pList))
-      return true;
-    else if (bc.d_selectionType == "region_with_exclude_list" &&
-             bc.d_regionGeomData.d_geom_p->isInside(x) &&
-             !isInList(id, bc.d_pNotList))
-      return true;
-    else if (bc.d_selectionType == "region_with_include_list_with_exclude_list" &&
-             bc.d_regionGeomData.d_geom_p->isInside(x) &&
-             isInList(id, bc.d_pList) &&
-             !isInList(id, bc.d_pNotList))
-      return true;
-  }
-
-  return false;
 }
 
 void loading::ParticleFLoading::apply(const double &time,

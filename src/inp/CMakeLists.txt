@@ -7,8 +7,6 @@
 # file LICENSE)
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
-AUX_SOURCE_DIRECTORY(./decks SOURCES)
-AUX_SOURCE_DIRECTORY(./pdecks SOURCES)
 
 #include_directories(${YAML_CPP_INCLUDE})
 #add_hpx_library(Inp SOURCES ${SOURCES} DEPENDENCIES ${YAML_CPP_LIB} Util)
@@ -17,4 +15,4 @@ AUX_SOURCE_DIRECTORY(./pdecks SOURCES)
 
 add_library(Inp ${SOURCES})
 
-target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})
+target_link_libraries(Inp PUBLIC Util) # PRIVATE nlohmann_json::nlohmann_json)

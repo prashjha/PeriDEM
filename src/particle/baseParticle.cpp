@@ -19,15 +19,10 @@
 #include "util/geom.h"
 #include <iostream>
 
-particle::BaseParticle::BaseParticle(std::string particle_type)
-:     d_type(particle_type),
-      d_typeIndex(-1),
-      d_id(0),
-      d_typeId(0),
-      d_zoneId(0),
+particle::BaseParticle::BaseParticle(size_t id)
+:     d_isWall(false),
+      d_id(id),
       d_dim(0),
-      d_particleDescription(""),
-      d_isWall(false),
       d_numNodes(0),
       d_h(0.),
       d_horizon(0.),
@@ -45,25 +40,12 @@ particle::BaseParticle::BaseParticle(std::string particle_type)
       d_rp_p(nullptr),
       d_geom_p(nullptr),
       d_tform(particle::ParticleTransform()),
-      d_mesh_p(nullptr) {
+      d_mesh_p(nullptr) {}
 
-  if (particle_type == "particle") {
-    d_typeIndex = 0;
-    d_isWall = false;
-  }
-  else if (particle_type == "wall") {
-    d_typeIndex = 1;
-    d_isWall = true;
-  }
-}
-
-particle::BaseParticle::BaseParticle(std::string particle_type,
-                                     size_t id,
-                                     size_t particle_type_id,
-                                     size_t zone_id,
+particle::BaseParticle::BaseParticle(size_t id,
+                                     bool isWall,
                                      size_t dim,
-                                     std::string particle_description,
-                                     bool is_particle_a_wall,
+                                     std::map<std::string, size_t> groups,
                                      bool are_all_dofs_constrained,
                                      size_t num_nodes,
                                      double h,
@@ -74,14 +56,10 @@ particle::BaseParticle::BaseParticle(std::string particle_type,
                                      std::shared_ptr<fe::Mesh> mesh,
                                      inp::MaterialDeck &material_deck,
                                      bool populate_data)
-        : d_type(particle_type),
-          d_typeIndex(-1),
-          d_id(id),
-          d_typeId(particle_type_id),
-          d_zoneId(zone_id),
+        : d_id(id),
           d_dim(dim),
-          d_particleDescription(particle_description),
-          d_isWall(is_particle_a_wall),
+          d_isWall(isWall),
+          d_groups(groups),
           d_numNodes(num_nodes),
           d_h(h),
           d_horizon(0),
@@ -102,22 +80,7 @@ particle::BaseParticle::BaseParticle(std::string particle_type,
           d_mesh_p(mesh),
           d_pRadius(geom->boundingRadius()) {
 
-  if (d_type == "particle")
-    d_typeIndex = 0;
-  else if (d_type == "wall")
-    d_typeIndex = 1;
-
   d_computeForce = !d_allDofsConstrained;
-
-  // check
-  if (d_type == "particle" and d_isWall) {
-    std::cerr << "Error: Can not have d_type = 'particle' and d_isWall = true.\n";
-    exit(EXIT_FAILURE);
-  }
-  if (d_type == "wall" and !d_isWall) {
-    std::cerr << "Error: Can not have d_type = 'wall' and d_isWall = false.\n";
-    exit(EXIT_FAILURE);
-  }
 
   if (populate_data) {
 
@@ -195,14 +158,10 @@ std::string particle::BaseParticle::printStr(int nt, int lvl) const {
   oss << tabS << "------- BaseParticle --------" << std::endl
       << std::endl;
 
-  oss << tabS << "d_type = " << d_type << std::endl;
-  oss << tabS << "d_particleDescription = " << d_particleDescription << std::endl;
-  oss << tabS << "d_typeIndex = " << d_typeIndex << std::endl;
   oss << tabS << "d_isWall = " << d_isWall << std::endl;
   oss << tabS << "d_id = " << d_id << std::endl;
-  oss << tabS << "d_typeId = " << d_typeId << std::endl;
-  oss << tabS << "d_zoneId = " << d_zoneId << std::endl;
   oss << tabS << "d_dim = " << d_dim << std::endl;
+  //oss << tabS << "d_groups = " << util::io::printStr<std::string, size_t>(d_groups) << std::endl;
   oss << tabS << "d_numNodes = " << d_numNodes << std::endl;
   oss << tabS << "d_pRadius = " << d_pRadius << std::endl;
   oss << tabS << "d_h = " << d_h << std::endl;

@@ -11,6 +11,7 @@
 #ifndef INP_INPUT_H
 #define INP_INPUT_H
 
+#include "deckIncludes.h"
 #include <string>
 #include <vector>
 #include <memory>
@@ -32,18 +33,19 @@
  */
 namespace inp {
 
-// forward declarations of decks
-struct MaterialDeck;
-struct MeshDeck;
-struct ModelDeck;
-struct OutputDeck;
-struct RestartDeck;
-struct ParticleDeck;
-struct ParticleZone;
-struct WallZone;
-struct Zone;
-struct ContactDeck;
-struct ContactPairDeck;
+// // forward declarations of decks
+// struct MaterialDeck;
+// struct MeshDeck;
+// struct ModelDeck;
+// struct OutputDeck;
+// struct RestartDeck;
+// struct ParticleDeck;
+// struct ParticleZone;
+// struct WallZone;
+// struct Zone;
+// struct ContactDeck;
+// struct ContactPairDeck;
+// struct TestDeck;
 
 /**
  * \defgroup Input Input
@@ -64,9 +66,8 @@ public:
   /*!
    * @brief Constructor
    * @param filename Filename of input file
-   * @param createDefault If true creates default objects if filename is empty
    */
-  explicit Input(std::string filename = "", bool createDefault = false);
+  explicit Input(const json &j = json({}));
 
   /**
    * @name Accessor methods
@@ -74,159 +75,79 @@ public:
   /**@{*/
 
   /*!
-   * @brief Get the pointer to material deck
-   * @return Pointer to MaterialDeck
-   */
-  std::shared_ptr<inp::MaterialDeck> getMaterialDeck();
-
-  /*!
-   * @brief Get the pointer to mesh deck
-   * @return Pointer to GeometryDeck
-   */
-  std::shared_ptr<inp::MeshDeck> getMeshDeck();
-
-  /*!
    * @brief Get the pointer to model deck
    * @return Pointer to ModelDeck
    */
-  std::shared_ptr<inp::ModelDeck> getModelDeck();
+  std::shared_ptr<inp::ModelDeck> getModelDeck() {return d_modelDeck_p;};
 
   /*!
    * @brief Get the pointer to output deck
    * @return Pointer to OutputDeck
    */
-  std::shared_ptr<inp::OutputDeck> getOutputDeck();
+  std::shared_ptr<inp::OutputDeck> getOutputDeck() {return d_outputDeck_p;};
 
   /*!
    * @brief Get the pointer to restart deck
    * @return Pointer to RestartDeck
    */
-  std::shared_ptr<inp::RestartDeck> getRestartDeck();
+  std::shared_ptr<inp::RestartDeck> getRestartDeck() {return d_restartDeck_p;};
 
   /*!
    * @brief Get the pointer to particle deck
    * @return Pointer to ParticleDeck
    */
-  std::shared_ptr<inp::ParticleDeck> getParticleDeck();
+  std::shared_ptr<inp::ParticleDeck> getParticleDeck() {return d_particleDeck_p;};
 
-  /*!
-   * @brief Get the pointer to contact deck
-   * @return Pointer to ContactDeck
-   */
-  std::shared_ptr<inp::ContactDeck> getContactDeck();
+  std::shared_ptr<inp::TestDeck> getTestDeck() {return d_testDeck_p;};
+
+  std::shared_ptr<inp::BCDeck> getBCDeck() {return d_bcDeck_p;};
 
   /*!
    * @brief Get particle simulation type
    * @return bool True if Multi_Particle else false
    */
-  bool isMultiParticle();
+  bool isMultiParticle() {return d_modelDeck_p->d_particleSimType == "Multi_Particle";};
 
   /*!
    * @brief Specify if PeriDEM model should be run
    * @return bool True if PeriDEM is active
    */
-  bool isPeriDEM();
-  /** @}*/
+  bool isPeriDEM() {
+    if (d_modelDeck_p->d_particleSimType == "Multi_Particle" or
+        d_modelDeck_p->d_particleSimType == "Single_Particle")
+      return true;
 
-private:
-  /**
-   * @name Setter methods
+    return false;
+  };
+
+  /*!
+  * @brief Returns the string containing printable information about the object
+  *
+  * @param nt Number of tabs to append before printing
+  * @param lvl Information level (higher means more information)
+  * @return string String containing printable information about the object
+  */
+  std::string printStr(int nt = 0, int lvl = 0) const {
+    auto tabS = util::io::getTabS(nt);
+    std::ostringstream oss;
+    oss << tabS << "------- Input --------" << std::endl << std::endl;
+    oss << tabS << "Particle sim type = " << d_modelDeck_p->d_particleSimType << std::endl;
+    oss << tabS << d_modelDeck_p->printStr(nt+1, lvl) << std::endl;
+    oss << tabS << d_outputDeck_p->printStr(nt+1, lvl) << std::endl;
+    oss << tabS << d_restartDeck_p->printStr(nt+1, lvl) << std::endl;
+    oss << tabS << d_testDeck_p->printStr(nt+1, lvl) << std::endl;
+    oss << tabS << d_bcDeck_p->printStr(nt+1, lvl) << std::endl;
+    oss << tabS << d_particleDeck_p->printStr(nt+1, lvl) << std::endl;
+    return oss.str();
+  }
+
+  /*!
+   * @brief Prints the information about the object
    *
-   * Reads input file into the respective decks
+   * @param nt Number of tabs to append before printing
+   * @param lvl Information level (higher means more information)
    */
-  /**@{*/
-
-  /*!
-   * @brief Create default input configuration
-   */
-  void createDefaultInputConfiguration();
-
-
-  /*!
-   * @brief Read data into material deck and store its pointer
-   */
-  void setMaterialDeck();
-
-  /*!
-   * @brief Read data into mesh deck and store its pointer
-   */
-  void setMeshDeck();
-
-  /*!
-   * @brief Read data into model deck and store its pointer
-   */
-  void setModelDeck();
-
-  /*!
-   * @brief Read data into output deck and store its pointer
-   */
-  void setOutputDeck();
-
-  /*!
-   * @brief Read data into restart deck and store its pointer
-   */
-  void setRestartDeck();
-
-  /*!
-   * @brief Read data into particle deck and store its pointer
-   */
-  void setParticleDeck();
-
-  /*!
-   * @brief Read data into material deck and store its pointer
-   *
-   * @param s_config Config file to read data
-   * @param m_deck Pointer to material deck
-   * @param zone_id Id of zone
-   */
-  void setZoneMaterialDeck(std::vector<std::string> s_config,
-      inp::MaterialDeck *m_deck, size_t zone_id);
-
-  /*!
-   * @brief Read data into mesh deck and store its pointer
-   *
-   * @param s_config Config file to read data
-   * @param mesh_deck Pointer to mesh deck
-   */
-  void setZoneMeshDeck(std::vector<std::string> s_config,
-                       inp::MeshDeck *mesh_deck);
-
-  /*!
-   * @brief Read zone data
-   *
-   * @param s_config Config file to read data
-   * @param zone_data Pointer to Zone object
-   */
-  void setZoneData(std::vector<std::string> s_config,
-                               inp::Zone *zone_data);
-
-  /*!
-   * @brief Read particle data
-   *
-   * @param string_zone String associated with zone to get the data from YAML file
-   * @param particle_data Pointer to particle data
-   */
-  void setParticleData(std::string string_zone,
-                                   inp::ParticleZone *particle_data);
-
-  /*!
-   * @brief Read data into particle deck and store its pointer
-   */
-  void setContactDeck();
-
-  /** @}*/
-
-  /**
-   * @name Internal data
-   */
-  /**@{*/
-
-  /*! @brief Name of input file */
-  std::string d_inputFilename;
-
-  /*! @brief Specify if create defaul objects in Input */
-  bool d_createDefault;
-
+  void print(int nt = 0, int lvl = 0) const { std::cout << printStr(nt, lvl); }
   /** @}*/
 
   /**
@@ -234,56 +155,23 @@ private:
    */
   /**@{*/
 
-  /*!
-   * @brief Pointer to deck holding material related data
-   *
-   * E.g. type of material, influence function information, parameters, etc
-   */
-  std::shared_ptr<inp::MaterialDeck> d_materialDeck_p;
-
-  /*!
-   * @brief Pointer to deck holding geometry related data
-   *
-   * E.g. dimension, discretization type, mesh file, etc
-   */
-  std::shared_ptr<inp::MeshDeck> d_meshDeck_p;
-
-  /*!
-   * @brief Pointer to deck holding problem related data
-   *
-   * E.g. type of simulation (central-difference, velocity-verlet, implicit)
-   * etc
-   */
+  /*! @brief Pointer to deck holding problem related data */
   std::shared_ptr<inp::ModelDeck> d_modelDeck_p;
 
-  /*!
-   * @brief Pointer to deck holding output related data
-   *
-   * E.g. output frequency, output file format, output element-node
-   * connectivity flag, etc
-   */
+  /*! @brief Pointer to deck holding output related data */
   std::shared_ptr<inp::OutputDeck> d_outputDeck_p;
 
-  /*!
-   * @brief Pointer to deck holding restart related data such as restart
-   * filename and restart time step
-   */
+  /*! @brief Pointer to deck holding restart related data */
   std::shared_ptr<inp::RestartDeck> d_restartDeck_p;
 
-  /*!
-   * @brief Pointer to deck holding particle related data
-   *
-   * E.g. particle geometry, size, initial arrangement of particle, etc
-   */
+  /*! @brief Test deck */
+  std::shared_ptr<inp::TestDeck> d_testDeck_p;
+
+  /*! @brief Boundary condition deck */
+  std::shared_ptr<inp::BCDeck> d_bcDeck_p;
+
+  /*! @brief Pointer to deck holding particle related data */
   std::shared_ptr<inp::ParticleDeck> d_particleDeck_p;
-
-  /*!
-   * @brief Pointer to deck holding particle related data
-   *
-   * E.g. particle geometry, size, initial arrangement of particle, etc
-   */
-  std::shared_ptr<inp::ContactDeck> d_contactDeck_p;
-
   /** @}*/
 };
 
@@ -291,4 +179,4 @@ private:
 
 } // namespace inp
 
-#endif // INPUT_H
+#endif // INP_INPUT_H
