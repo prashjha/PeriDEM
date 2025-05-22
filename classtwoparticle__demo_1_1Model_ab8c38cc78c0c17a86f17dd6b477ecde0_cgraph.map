@@ -1,0 +1,44 @@
+<map id="twoparticle_demo::Model::twoParticleTestMaxShearStress" name="twoparticle_demo::Model::twoParticleTestMaxShearStress">
+<area shape="rect" id="Node000001" title="Computes maximum shear stress and its location in particle." alt="" coords="5,237,223,277"/>
+<area shape="rect" id="Node000002" href="$namespacefe.html#aeecd141ec0e6723bdddd740903cb95f8" title="Get current location of quadrature points of elements in the mesh. This function expects mesh has ele..." alt="" coords="285,169,456,195"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,234,270,203,300,195,301,201,271,209,174,239"/>
+<area shape="rect" id="Node000010" href="$namespacefe.html#a09527ce4f52ec0da5f9cf970ac08f542" title="Get location where maximum of specified component of stress occurs in this particle." alt="" coords="271,268,471,293"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="223,264,257,267,257,273,222,269"/>
+<area shape="rect" id="Node000013" href="$namespacefe.html#a7beb694686b61d7cda5b67aa4bc01104" title="Strain and stress at quadrature points in the mesh." alt="" coords="305,219,436,244"/>
+<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="222,243,291,236,291,242,223,249"/>
+<area shape="rect" id="Node000014" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="321,317,421,343"/>
+<area shape="poly" id="edge28_Node000001_Node000014" title=" " alt="" coords="179,274,271,302,308,312,307,317,270,307,177,279"/>
+<area shape="rect" id="Node000003" href="$classfe_1_1Mesh.html#a8cfebeb2d96199744d0c7de324a0066a" title="Get the connectivity of element." alt="" coords="519,219,739,244"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="438,192,549,213,548,219,437,197"/>
+<area shape="rect" id="Node000004" href="$classfe_1_1Mesh.html#a55b3e75c83f467a678b3f775a6ac0dec" title="Get the type of element in mesh." alt="" coords="541,268,716,293"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="446,192,472,204,488,216,497,229,506,242,520,253,536,261,534,266,517,258,502,245,492,232,484,220,469,208,444,197"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="543,5,714,31"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="379,167,433,106,472,70,517,40,532,33,534,38,520,44,476,74,437,109,383,171"/>
+<area shape="rect" id="Node000006" href="$classfe_1_1Mesh.html#ab168daf41aec75099948a519d1a252ad" title="Get the number of elements." alt="" coords="537,317,720,343"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="453,192,472,204,484,216,491,229,497,255,503,280,509,291,520,303,529,309,526,313,517,307,505,295,498,282,492,256,486,231,480,219,469,208,451,197"/>
+<area shape="rect" id="Node000007" href="$classfe_1_1Mesh.html#aac3df3472139b865eda7406c1d1c3d77" title="Get the number of nodes." alt="" coords="546,55,711,80"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="388,167,444,129,518,90,544,81,546,86,520,95,446,134,391,171"/>
+<area shape="rect" id="Node000008" href="$classfe_1_1BaseElem.html#a96fb54d9aca45e987c163e95242ceb8f" title="Get number of quadrature points in the data." alt="" coords="535,105,722,145"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="428,167,524,145,525,150,429,172"/>
+<area shape="rect" id="Node000009" href="$classfe_1_1BaseElem.html#a845050a671a67d9dc61d294bd11ef16d" title="Get vector of quadrature data." alt="" coords="532,169,725,195"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="456,179,518,179,518,185,456,185"/>
+<area shape="poly" id="edge11_Node000010_Node000003" title=" " alt="" coords="437,265,548,244,549,249,438,271"/>
+<area shape="poly" id="edge12_Node000010_Node000004" title=" " alt="" coords="471,278,528,278,528,283,471,283"/>
+<area shape="poly" id="edge13_Node000010_Node000006" title=" " alt="" coords="438,291,549,312,548,317,437,296"/>
+<area shape="poly" id="edge14_Node000010_Node000007" title=" " alt="" coords="451,266,469,253,484,234,491,215,492,174,493,132,501,111,517,91,532,80,535,84,521,95,505,114,498,133,497,174,496,216,488,237,473,257,454,270"/>
+<area shape="poly" id="edge15_Node000010_Node000008" title=" " alt="" coords="448,266,469,253,480,242,486,230,492,206,498,180,505,167,517,155,523,150,527,154,520,159,510,170,503,182,497,207,491,232,484,245,472,257,451,270"/>
+<area shape="poly" id="edge16_Node000010_Node000009" title=" " alt="" coords="441,265,469,253,484,241,492,229,502,216,517,204,531,197,533,202,520,208,506,220,497,232,488,245,472,258,443,270"/>
+<area shape="rect" id="Node000011" href="$classfe_1_1Mesh.html#ace82526bc83fe9fd574dc5daf2a10433" title="Get the dimension of the domain." alt="" coords="548,416,709,441"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="453,291,472,303,484,315,491,328,497,353,503,378,509,390,520,401,537,411,534,416,517,405,505,393,498,380,492,355,486,330,480,318,469,307,451,296"/>
+<area shape="rect" id="Node000012" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="586,367,671,392"/>
+<area shape="poly" id="edge17_Node000010_Node000012" title=" " alt="" coords="446,291,472,302,488,315,497,328,506,340,520,352,546,363,573,370,572,375,544,368,517,356,502,344,492,331,484,318,469,307,444,296"/>
+<area shape="poly" id="edge20_Node000013_Node000003" title=" " alt="" coords="436,229,504,229,504,234,436,234"/>
+<area shape="poly" id="edge21_Node000013_Node000004" title=" " alt="" coords="437,241,549,263,548,268,436,246"/>
+<area shape="poly" id="edge22_Node000013_Node000005" title=" " alt="" coords="435,222,453,215,469,204,484,185,491,165,492,124,493,82,501,60,517,40,529,31,533,35,521,44,505,63,498,83,497,124,496,166,488,187,473,208,456,220,437,227"/>
+<area shape="poly" id="edge23_Node000013_Node000006" title=" " alt="" coords="437,239,472,253,488,265,497,279,506,291,520,302,536,310,534,315,517,307,502,295,492,282,484,269,469,258,435,244"/>
+<area shape="poly" id="edge24_Node000013_Node000007" title=" " alt="" coords="435,221,453,214,469,204,481,191,487,177,492,149,497,119,504,105,517,91,532,81,535,85,520,95,508,108,502,121,497,150,492,179,485,194,472,208,456,219,437,226"/>
+<area shape="poly" id="edge25_Node000013_Node000008" title=" " alt="" coords="435,218,469,204,484,192,493,180,502,167,517,154,529,148,532,153,520,159,506,171,497,183,488,196,472,208,437,223"/>
+<area shape="poly" id="edge26_Node000013_Node000009" title=" " alt="" coords="436,216,548,195,549,200,437,222"/>
+<area shape="poly" id="edge19_Node000013_Node000011" title=" " alt="" coords="437,235,456,242,472,253,488,272,495,291,497,329,499,367,506,384,520,401,537,413,534,417,517,405,502,387,494,368,492,330,490,292,483,275,469,257,453,247,435,240"/>
+<area shape="poly" id="edge27_Node000013_Node000012" title=" " alt="" coords="437,236,456,243,472,253,484,266,491,278,497,304,503,329,509,341,520,352,545,366,573,374,572,379,543,371,517,356,505,344,498,331,492,305,486,280,480,269,469,257,453,248,435,241"/>
+</map>

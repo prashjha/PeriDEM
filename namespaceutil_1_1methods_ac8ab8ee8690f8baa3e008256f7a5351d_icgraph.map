@@ -1,0 +1,9 @@
+<map id="util::methods::isFree" name="util::methods::isFree">
+<area shape="rect" id="Node000001" title="Returns true if degree of freedom is free." alt="" coords="548,5,689,31"/>
+<area shape="rect" id="Node000002" href="$classmodel_1_1DEMModel.html#a934129b5f683dc4ce250b8c9a6fc9228" title="Initialize remaining data members." alt="" coords="345,5,500,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="534,21,500,21,500,15,534,15"/>
+<area shape="rect" id="Node000003" href="$classtwoparticle__demo_1_1Model.html#af741e660292b3c71c59277cbd1beb052" title="Runs simulation by executing steps such as init(), integrate(), and close()." alt="" coords="104,5,297,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="332,21,298,21,298,15,332,15"/>
+<area shape="rect" id="Node000004" href="$apps_2twoparticle__demo_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,5,56,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,21,56,21,56,15,91,15"/>
+</map>
