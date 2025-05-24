@@ -13,13 +13,14 @@
 #include "fe/meshPartitioning.h"
 #include "fe/meshUtil.h"
 #include "util/point.h"
-#include "util/methods.h" // declares std::chrono and defines timeDiff()
+#include "util/vecMethods.h"
 #include "util/io.h"
 #include "rw/writer.h"
-#include "geometry/geometryUtil.h"
+#include "geom/geomIncludes.h"
 
 #include <metis.h>
-#include <fmt/format.h>
+#include <format>
+#include <print>
 #include <algorithm>
 #include <fstream>
 #include <string>
@@ -138,7 +139,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
   std::cout << "\nMETIS_TEST\n";
   std::cout << "\n  Test the METIS library for graph partitioning for realistic mesh with nonlocal interaction.\n" ;
-  std::cout << fmt::format("\n  Arguments: nPart = {}, nGrid = {}, mHorizon = {}\n", nPart, nGrid, mHorizon);
+  std::cout << std::format("\n  Arguments: nPart = {}, nGrid = {}, mHorizon = {}\n", nPart, nGrid, mHorizon);
 
   // create uniform mesh on domain [0, Lx]x[0, Ly]
   auto t1 = steady_clock::now();
@@ -164,7 +165,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
     fe::createUniformMesh(&mesh, dim, box, nGridVec);
 
     // filename for outputting
-    outMeshFilename = fmt::format("uniform_mesh_Lx_{}_Ly_{}_Nx_{}_Ny_{}",
+    outMeshFilename = std::format("uniform_mesh_Lx_{}_Ly_{}_Nx_{}_Ny_{}",
                                                box.second[0], box.second[1],
                                                nGridVec[0], nGridVec[1]);
   }
@@ -197,14 +198,14 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
   auto t2 = steady_clock::now();
   auto setup_time = util::methods::timeDiff(t1, t2, "microseconds");
-  std::cout << fmt::format("Setup time (ms) = {}. \n", setup_time);
+  std::cout << std::format("Setup time (ms) = {}. \n", setup_time);
 
   // create neighborhood of each node (to be used in metis partitioning of the graph)
   std::vector<std::vector<size_t>> nodeNeighs(mesh.d_numNodes);
-  geometry::computeNonlocalNeighborhood(mesh.d_nodes, horizon, nodeNeighs);
+  geom::computeNonlocalNeighborhood(mesh.d_nodes, horizon, nodeNeighs);
   auto t3 = steady_clock::now();
   auto neigh_time = util::methods::timeDiff(t2, t3, "microseconds");
-  std::cout << fmt::format("Neighborhood calculation time (ms) = {}.\n", neigh_time);
+  std::cout << std::format("Neighborhood calculation time (ms) = {}.\n", neigh_time);
 
   // at this stage, we have mesh and nonlocal neighborhood
   // we are ready to cast the nonlocal neighborhood into graph and call metis for partitioning of nodes
@@ -222,11 +223,11 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
   auto partition_recursive_time = util::methods::timeDiff(t4, t5, "microseconds");
   auto partition_kway_time = util::methods::timeDiff(t5, t6, "microseconds");
-  std::cout << fmt::format("Partition (Recursive) calculation time (ms) = {}.\n", partition_recursive_time);
-  std::cout << fmt::format("Partition (KWay) calculation time (ms) = {}.\n", partition_kway_time);
+  std::cout << std::format("Partition (Recursive) calculation time (ms) = {}.\n", partition_recursive_time);
+  std::cout << std::format("Partition (KWay) calculation time (ms) = {}.\n", partition_kway_time);
 
   // write data to file
-  outMeshFilename = outMeshFilename + fmt::format("_mHorizon_{}_nPart_{}", mHorizon, nPart);
+  outMeshFilename = outMeshFilename + std::format("_mHorizon_{}_nPart_{}", mHorizon, nPart);
   std::cout << "out mesh filename = " << outMeshFilename << std::endl;
   auto writer = rw::writer::Writer(outMeshFilename, "vtu");
   writer.appendMesh(&mesh.d_nodes, mesh.d_eType, &mesh.d_enc);

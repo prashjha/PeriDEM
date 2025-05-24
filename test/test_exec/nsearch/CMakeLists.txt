@@ -10,4 +10,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestNSearch ${SOURCES})
 
-target_link_libraries(TestNSearch PUBLIC Util FE Geometry Particle NSearch fmt::fmt Threads::Threads)
+target_link_libraries(TestNSearch PUBLIC Util FE Geom Particle NSearch Threads::Threads)

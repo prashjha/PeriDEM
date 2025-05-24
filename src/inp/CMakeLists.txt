@@ -15,4 +15,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Inp ${SOURCES})
 
-target_link_libraries(Inp PUBLIC Util) # PRIVATE nlohmann_json::nlohmann_json)
+target_link_libraries(Inp PUBLIC Util Geom) # PRIVATE nlohmann_json::nlohmann_json)

@@ -12,7 +12,7 @@
 #define NSEARCH_NSEARCH_H
 
 #include "util/point.h" // definition of Point
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include <cstdint> // uint8_t type
 #include <string> // size_t type
 #include <vector>

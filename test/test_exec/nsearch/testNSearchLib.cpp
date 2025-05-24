@@ -12,11 +12,12 @@
 #include "nsearch/nsearch.h"
 #include "util/function.h"
 #include "util/matrix.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "util/point.h"
 #include "util/randomDist.h"
 #include "util/parallelUtil.h"
-#include <fmt/format.h>
+#include <format>
+#include <print>
 #include <bitset>
 #include <fstream>
 #include <iostream>
@@ -426,7 +427,7 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
     bool header_done = false;
     if (n1.size() != n2.size()) {
       composs << "    Node = " << i << " \n";
-      composs << fmt::format("      size ({}) {} != {} ({}) not matching\n",
+      composs << std::format("      size ({}) {} != {} ({}) not matching\n",
                              tags[0], n1.size(), n2.size(), tags[1]);
       header_done = true;
       error_size++;
@@ -437,7 +438,7 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
         if (!header_done)
           composs << "    Node = " << i << " \n";
 
-        composs << fmt::format("      neigh = {} in {} search not found in {} "
+        composs << std::format("      neigh = {} in {} search not found in {} "
                                "search neighs list\n",
                                j, tags[1], tags[0]);
         err_neighs += 1;
@@ -449,10 +450,10 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
   }
 
   if (only_err_count)
-    return fmt::format("    error_size = {}, error_neighs = {}\n", error_size,
+    return std::format("    error_size = {}, error_neighs = {}\n", error_size,
                        error_neighs);
   else
-    return fmt::format("    error_size = {}, error_neighs = {}\n", error_size,
+    return std::format("    error_size = {}, error_neighs = {}\n", error_size,
                        error_neighs) +
            composs.str();
 }
@@ -470,7 +471,7 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
       for (size_t i = 0; i < err_points.size(); i++) {
 
         if (err_points[i] != -1) {
-          composs << fmt::format("    Node = {} at location = {}, "
+          composs << std::format("    Node = {} at location = {}, "
                                  "Search point = {}, closest point id = {} at"
                                  " location = {}. True dist = {}, found "
                                  "dist = {}\n",
@@ -483,9 +484,9 @@ std::string compare_results(const std::vector<std::vector<size_t>> &neigh1,
       }
 
       if (only_err_count)
-        return fmt::format("    error_size = {}\n", error_size);
+        return std::format("    error_size = {}\n", error_size);
       else
-        return fmt::format("    error_size = {}\n", error_size) +
+        return std::format("    error_size = {}\n", error_size) +
                composs.str();
     }
 } // namespace
@@ -550,12 +551,12 @@ std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
             neigh_nflann_3d, neigh_brute, {"nflann_tree-3d", "brute_force"}, -1, true);
 
     std::ostringstream msg;
-    msg << fmt::format("  Setup times (microseconds): \n"
+    msg << std::format("  Setup times (microseconds): \n"
                        "    nflann_tree_set_time = {} \n "
                        "    nflann_tree_set_time_3d = {}\n",
                        nflann_tree_set_time, nflann_tree_set_time_3d);
 
-    msg << fmt::format("  Search times (microseconds): \n"
+    msg << std::format("  Search times (microseconds): \n"
                        "    brute_force_search_time = {}\n"
                        "    nflann_tree_search_time = {}\n"
                        "    nflann_tree_search_time_3d = {}\n",
@@ -563,11 +564,11 @@ std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
                        nflann_tree_search_time,
                        nflann_tree_search_time_3d);
 
-    msg << fmt::format("  Comparison results: \n"
+    msg << std::format("  Comparison results: \n"
                        "    nflann_brute_compare: \n{}\n",
                        nflann_brute_compare);
 
-    msg << fmt::format("  Comparison results: \n"
+    msg << std::format("  Comparison results: \n"
                        "    nflann_brute_compare_3d: \n{}\n",
                        nflann_brute_compare_3d);
 
@@ -600,17 +601,17 @@ std::string test::testNanoflann(size_t N, double L, double dL, int seed) {
             neigh_nflann, neigh_brute, {"nflann_tree", "brute_force"}, -1, true);
 
     std::ostringstream msg;
-    msg << fmt::format("  Setup times (microseconds): \n"
+    msg << std::format("  Setup times (microseconds): \n"
                        "    nflann_tree_set_time = {}\n",
                        nflann_tree_set_time);
 
-    msg << fmt::format("  Search times (microseconds): \n"
+    msg << std::format("  Search times (microseconds): \n"
                        "    brute_force_search_time = {}\n"
                        "    nflann_tree_search_time = {}\n",
                        brute_force_search_time,
                        nflann_tree_search_time);
 
-    msg << fmt::format("  Comparison results: \n"
+    msg << std::format("  Comparison results: \n"
                        "    nflann_brute_compare: \n{}\n",
                        nflann_brute_compare);
 
@@ -730,42 +731,42 @@ std::string test::testNanoflannExcludeInclude(size_t N, double L,
           {"nflann_tree_include", "brute_force_include"}, -1, true);
 
   std::ostringstream msg;
-  msg << fmt::format("  Setup times (microseconds): \n"
+  msg << std::format("  Setup times (microseconds): \n"
                      "    nflann_tree_set_time = {}\n",
                      data.d_treeBuildTime);
 
-  msg << fmt::format("  Default search times (microseconds): \n"
+  msg << std::format("  Default search times (microseconds): \n"
                      "    brute_force_search_time = {}\n"
                      "    nflann_tree_search_time = {}\n",
                      data.d_defaultBruteSearchTime,
                      data.d_defaultNFlannSearchTime);
 
-  msg << fmt::format("  Exclude comparison results: \n"
+  msg << std::format("  Exclude comparison results: \n"
                      "    nflann_brute_compare: \n{}\n",
                      nflann_brute_compare_default);
 
-  msg << fmt::format("  Exclude search times (microseconds): \n"
+  msg << std::format("  Exclude search times (microseconds): \n"
                      "    brute_force_search_time = {}\n"
                      "    nflann_tree_search_time = {}\n",
                      data.d_excludeBruteSearchTime,
                      data.d_excludeNFlannSearchTime);
 
-  msg << fmt::format("  Exclude comparison results: \n"
+  msg << std::format("  Exclude comparison results: \n"
                      "    nflann_brute_compare: \n{}\n",
                      nflann_brute_compare_exclude);
 
-  msg << fmt::format("  Include search times (microseconds): \n"
+  msg << std::format("  Include search times (microseconds): \n"
                      "    brute_force_search_time = {}\n"
                      "    nflann_tree_search_time = {}\n",
                      data.d_includeBruteSearchTime,
                      data.d_includeNFlannSearchTime);
 
-  msg << fmt::format("  Include comparison results: \n"
+  msg << std::format("  Include comparison results: \n"
                      "    nflann_brute_compare: \n{}\n",
                      nflann_brute_compare_include);
 
 
-  msg << fmt::format("  Nflann all search times (microseconds): \n"
+  msg << std::format("  Nflann all search times (microseconds): \n"
                      "    default = {}\n"
                      "    exclude = {}\n"
                      "    include = {}\n",
@@ -808,11 +809,11 @@ std::string test::testNanoflannClosestPoint(size_t N, double L, double dL, int s
                                                               err_dist, false);
 
     std::ostringstream msg;
-    msg << fmt::format("  Setup times (microseconds): \n"
+    msg << std::format("  Setup times (microseconds): \n"
                        "    nflann_tree_set_time = {}\n",
                        nflann_tree_set_time);
 
-    msg << fmt::format("  Comparison results: \n"
+    msg << std::format("  Comparison results: \n"
                        "    nflann_compare: \n{}\n",
                        nflann_compare);
 

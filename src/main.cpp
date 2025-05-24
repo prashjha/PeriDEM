@@ -20,16 +20,16 @@
 #include "inp/input.h"                          // Input class
 #include "model/dem/demModel.h"                 // Model class
 #include "util/io.h"                            // InputParser class
-#include "util/parallelUtil.h"                       // MPI-related functions
-#include "util/methods.h"
-#include <fmt/format.h>
+#include "util/parallelUtil.h"                  // MPI-related functions
+#include "util/vecMethods.h"
+#include <format>
 
 int main(int argc, char *argv[]) {
 
   // init parallel
   util::parallel::initMpi(argc, argv);
   int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
-  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(std::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
   util::io::print(util::parallel::getMpiStatus()->printStr());
 
   util::io::InputParser input(argc, argv);
@@ -45,11 +45,11 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = std::thread::hardware_concurrency();
-    util::io::print(fmt::format("Running test with default number of threads = {}\n", nThreads));
+    util::io::print(std::format("Running test with default number of threads = {}\n", nThreads));
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
-  util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
+  util::io::print(std::format("Number of threads = {}\n", util::parallel::getNThreads()));
   
   // print program version
   std::cout << "PeriDEM"
@@ -62,7 +62,7 @@ int main(int argc, char *argv[]) {
   // read input data
   std::string filename = input.getCmdOption("-i");
   if (!std::filesystem::exists(filename)) {
-    throw std::runtime_error(fmt::format("Input file {} does not exist.", filename));
+    throw std::runtime_error(std::format("Input file {} does not exist.", filename));
   }
   std::ifstream f(filename);
   auto j = json::parse(f);

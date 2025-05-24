@@ -10,10 +10,10 @@
 
 #include "meshPartitioning.h"
 #include "mesh.h"
-#include "util/methods.h" // declares std::chrono and defines timeDiff()
+#include "util/vecMethods.h" // declares std::chrono and defines timeDiff()
 
 #include <metis.h>
-#include <fmt/format.h>
+#include <print>
 
 void fe::metisGraphPartition(std::string partitionMethod,
                          const std::vector<std::vector<size_t>> &nodeNeighs,
@@ -37,7 +37,7 @@ void fe::metisGraphPartition(std::string partitionMethod,
     adjncy.insert(adjncy.end(), nodeNeighs[i].begin(), nodeNeighs[i].end());
     xadj[i+1] = xadj[i] + idx_t(nodeNeighs[i].size());
   }
-  std::cout << fmt::format("adjcny size = {}, xadj[end] = {}\n",
+  std::print("adjcny size = {}, xadj[end] = {}\n",
                            adjncy.size(), xadj[nvtxs]);
 
   std::cout << "\nmetisGraphPartition():\n";
@@ -67,7 +67,7 @@ void fe::metisGraphPartition(std::string partitionMethod,
   // record time
   auto t2 = steady_clock::now();
 
-  std::cout << fmt::format("\n  Return code = {}\n"
+  std::print("\n  Return code = {}\n"
                            "  Edge cuts for partition = {}\n"
                            "  Partition calculation time (ms) = {}\n",
                            metis_return, (int) objval,

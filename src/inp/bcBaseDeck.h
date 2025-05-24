@@ -11,7 +11,7 @@
 #ifndef INP_BCBASEDECK_H
 #define INP_BCBASEDECK_H
 
-#include "util/geomObjectsUtil.h"
+#include "geom/geomIncludes.h"
 
 namespace inp {
 
@@ -44,7 +44,7 @@ namespace inp {
     bool d_isRegionActive;
 
     /*! @brief Region geometry (if any) */
-    util::geometry::GeomData d_regionGeomData;
+    geom::GeomData d_regionGeomData;
 
     /*! @brief List of particles (if any) */
     std::vector<size_t> d_pList;
@@ -114,7 +114,7 @@ namespace inp {
      * @brief Constructor
      */
     BCBaseDeck(bool isRegionActive,
-               util::geometry::GeomData regionGeomData = util::geometry::GeomData(),
+               geom::GeomData regionGeomData = geom::GeomData(),
                std::vector<size_t> pList = std::vector<size_t>(),
                std::vector<size_t> pNotList = std::vector<size_t>(),
                std::string timeFnType = "",
@@ -144,7 +144,7 @@ namespace inp {
 
       if (d_isRegionActive) {
         // create a geometry object based on the data
-        util::geometry::createGeomObject(d_regionGeomData);
+        geom::createGeomObject(d_regionGeomData);
       }
     };
 
@@ -155,7 +155,7 @@ namespace inp {
      */
     static json getExampleJson(std::string type = "Foce_BC",
                                 bool isRegionActive = false,
-                               util::geometry::GeomData regionGeomData = util::geometry::GeomData(),
+                               geom::GeomData regionGeomData = geom::GeomData(),
                                std::vector<size_t> pList = std::vector<size_t>(),
                                std::vector<size_t> pNotList = std::vector<size_t>(),
                                std::string timeFnType = "",
@@ -172,7 +172,7 @@ namespace inp {
       if (isRegionActive) {
         // get json object for geometry
         auto j_geom = json({});
-        util::geometry::writeGeometry(j_geom, regionGeomData);
+        geom::writeGeometry(j_geom, regionGeomData);
         j["Region"] = {"Geometry", j_geom};
       }
 
@@ -233,9 +233,9 @@ namespace inp {
       }
 
       if (d_isRegionActive) {
-        util::geometry::readGeometry(j.at("Region").at("Geometry"), d_regionGeomData);
+        geom::readGeometry(j.at("Region").at("Geometry"), d_regionGeomData);
         // create a geometry object based on the data
-        util::geometry::createGeomObject(d_regionGeomData);
+        geom::createGeomObject(d_regionGeomData);
       }
 
       if (j.find("Particle_List") != j.end()) d_pList = j.value("Particle_List", std::vector<size_t>());

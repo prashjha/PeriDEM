@@ -19,6 +19,7 @@
 // forward declaration of geometry deck
 namespace inp {
 struct MeshDeck;
+struct ModelDeck;
 }
 
 /*!
@@ -66,9 +67,10 @@ public:
    * The mesh file of  **.csv**, **.vtu (VTK)** and **.msh (Gmsh)** are
    * supported.
    *
-   * @param deck Input deck which contains user-specified information
+   * @param meshDeck Input mesh deck which contains user-specified information
+   * @param modelDeck Input model deck which contains user-specified information
    */
-  explicit Mesh(inp::MeshDeck *deck);
+  explicit Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck);
 
   /**
    * @name Accessor methods

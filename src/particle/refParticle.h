@@ -12,14 +12,12 @@
 #define PARTILCE_REFPARTILCE_H
 
 #include "fe/mesh.h"
-#include "geometry/fracture.h"
+#include "fracture/fracture.h"
 #include "inp/particleDeck.h"
 #include "material/mparticle/material.h"
-#include "util/geomObjects.h"
+#include "geom/geomIncludes.h"
 #include "util/matrix.h" // definition of Matrix3
 #include "util/point.h"  // definition of Point
-#include "util/transformation.h"
-#include "particleTransform.h"
 #include "model/modelData.h"
 
 #include <cstdint> // uint8_t type
@@ -48,7 +46,7 @@ public:
    */
   RefParticle(size_t id,
               std::shared_ptr<model::ModelData> model_data,
-              std::shared_ptr<util::geometry::GeomObject> geom,
+              std::shared_ptr<geom::GeomObject> geom,
               std::shared_ptr<fe::Mesh> mesh);
 
   /**
@@ -69,10 +67,10 @@ public:
    * @brief Get pointer to geometry object
    * @return pointer Pointer
    */
-  std::shared_ptr<util::geometry::GeomObject> &getGeomP() { return d_geom_p; };
+  std::shared_ptr<geom::GeomObject> &getGeomP() { return d_geom_p; };
 
   /*! @copydoc getGeomP() */
-  const std::shared_ptr<util::geometry::GeomObject> &getGeomP() const { return d_geom_p; };
+  const std::shared_ptr<geom::GeomObject> &getGeomP() const { return d_geom_p; };
 
   /*!
    * @brief Get reference to mesh object
@@ -162,7 +160,7 @@ public:
   size_t d_centerNode;
 
   /*! @brief Geometrical object defining this particle */
-  std::shared_ptr<util::geometry::GeomObject> d_geom_p;
+  std::shared_ptr<geom::GeomObject> d_geom_p;
 
   /*! @brief Particle radius */
   double d_pRadius;

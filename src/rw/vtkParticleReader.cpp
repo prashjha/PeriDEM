@@ -12,7 +12,7 @@
 #include "util/feElementDefs.h"
 #include "util/io.h"
 #include "fe/mesh.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "model/modelData.h"
 #include "particle/baseParticle.h"
 

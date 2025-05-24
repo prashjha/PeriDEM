@@ -9,14 +9,14 @@
  */
 
 #include "baseParticle.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "fe/baseElem.h"
 #include "fe/quadElem.h"
 #include "fe/tetElem.h"
 #include "fe/triElem.h"
 #include "material/materialUtil.h"
 #include "util/feElementDefs.h"
-#include "util/geom.h"
+#include "geom/geomIncludes.h"
 #include <iostream>
 
 particle::BaseParticle::BaseParticle(size_t id)
@@ -39,7 +39,7 @@ particle::BaseParticle::BaseParticle(size_t id)
       d_modelData_p(nullptr),
       d_rp_p(nullptr),
       d_geom_p(nullptr),
-      d_tform(particle::ParticleTransform()),
+      d_tform(geom::ParticleTransform()),
       d_mesh_p(nullptr) {}
 
 particle::BaseParticle::BaseParticle(size_t id,
@@ -51,8 +51,8 @@ particle::BaseParticle::BaseParticle(size_t id,
                                      double h,
                                      std::shared_ptr<model::ModelData> model_data,
                                      std::shared_ptr<particle::RefParticle> ref_particle,
-                                     std::shared_ptr<util::geometry::GeomObject> geom,
-                                     particle::ParticleTransform &transform,
+                                     std::shared_ptr<geom::GeomObject> geom,
+                                     geom::ParticleTransform &transform,
                                      std::shared_ptr<fe::Mesh> mesh,
                                      inp::MaterialDeck &material_deck,
                                      bool populate_data)
@@ -106,8 +106,7 @@ particle::BaseParticle::BaseParticle(size_t id,
     }
   }
 
-  d_h = util::computeMeshSize(d_modelData_p->d_x, d_globStart,
-                                        d_globEnd);
+  d_h = geom::computeMeshSize(d_modelData_p->d_x, d_globStart, d_globEnd);
 
   // initialize material class
   inp::MaterialDeck p_material_deck = material_deck;

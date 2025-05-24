@@ -124,9 +124,6 @@ endif()
 # #<<<<<<<<<< Threads >>>>>>>>>>#
 find_package(Threads REQUIRED)
 
-# #<<<<<<<<<< YAML >>>>>>>>>>#
-find_package(YamlCpp REQUIRED)
-
 # #<<<<<<<<<< VTK >>>>>>>>>>#
 #find_package(VTK REQUIRED)
 find_package(VTK COMPONENTS CommonCore CommonDataModel IOXML)
@@ -171,11 +168,12 @@ add_subdirectory(external/)
 
 # PeriDEM sub-directories
 add_subdirectory(src/util)
+add_subdirectory(src/geom)
 add_subdirectory(src/rw)
 add_subdirectory(src/inp)
 add_subdirectory(src/material)
 add_subdirectory(src/loading)
-add_subdirectory(src/geometry)
+add_subdirectory(src/fracture)
 add_subdirectory(src/fe)
 add_subdirectory(src/particle)
 add_subdirectory(src/nsearch)

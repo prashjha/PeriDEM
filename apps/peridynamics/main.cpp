@@ -14,14 +14,14 @@
 #include "material/materialUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
-#include "util/geomObjects.h"
+#include "geom/geomObjects.h"
 #include "util/matrix.h"
 #include "util/methods.h"
 #include "util/point.h"
 #include "inp/pdecks/contactDeck.h"
 #include "rw/reader.h"
 #include "util/function.h"
-#include "util/geom.h"
+#include "geom/geom.h"
 #include "util/methods.h"
 #include "util/randomDist.h"
 #include "util/parallelUtil.h"
@@ -34,7 +34,8 @@
 #include "fe/elemIncludes.h"
 #include "fe/meshUtil.h"
 
-#include <fmt/format.h>
+#include <format>
+#include <print>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -101,7 +102,7 @@ public:
 
     // output avg time info
     if (dbg_condition) {
-      log(fmt::format("    Avg time (ms): \n"
+      log(std::format("    Avg time (ms): \n"
                       "      {:48s} = {:8d}\n"
                       "      {:48s} = {:8d}\n",
                       "peridynamics force", size_t(getKeyData("avg_peridynamics_force_time")),
@@ -112,19 +113,19 @@ public:
       appendKeyData("avg_extf_compute_time", 0.);
     }
 
-    log(fmt::format("    {:50s} = {:8d} \n",
+    log(std::format("    {:50s} = {:8d} \n",
                     "Force reset time (ms)",
                     size_t(force_reset_time)
         ),
         2, dbg_condition, 3);
 
-    log(fmt::format("    {:50s} = {:8d} \n",
+    log(std::format("    {:50s} = {:8d} \n",
                     "External force time (ms)",
                     size_t(extf_time)
         ),
         2, dbg_condition, 3);
 
-    log(fmt::format("    {:50s} = {:8d} \n",
+    log(std::format("    {:50s} = {:8d} \n",
                     "Peridynamics force time (ms)",
                     size_t(pd_time)
         ),
@@ -154,18 +155,18 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = 2;
-    util::io::print(fmt::format("Running Peridynamics with number of threads = {}\n", nThreads));
+    std::print("Running Peridynamics with number of threads = {}\n", nThreads);
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
-  util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
+  std::print("Number of threads = {}\n", util::parallel::getNThreads());
 
   std::string filename;
   if (input.cmdOptionExists("-i"))
     filename = input.getCmdOption("-i");
   else {
     filename = "./example/input_1.yaml";
-    util::io::print(fmt::format("Running Peridynamics with example input file = {}\n", filename));
+    std::print("Running Peridynamics with example input file = {}\n", filename);
   }
 
   // current time

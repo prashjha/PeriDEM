@@ -16,8 +16,7 @@
 #include "contactDeck.h"
 #include "pNeighborDeck.h"
 #include "pGenDeck.h"
-
-#include "util/geomObjectsUtil.h"
+#include "geom/geomIncludes.h"
 #include <memory>
 
 namespace inp {
@@ -39,7 +38,7 @@ struct ParticleDeck {
   std::string d_particleSimType;
 
   /*! @brief Particle geometry data */
-  std::vector<util::geometry::GeomData> d_pGeomVec;
+  std::vector<geom::GeomData> d_pGeomVec;
 
   /*! @brief Particle mesh data */
   std::vector<inp::MeshDeck> d_pMeshVec;
@@ -83,13 +82,16 @@ struct ParticleDeck {
 
     if (j.find("Particle_Generation") != j.end())
       readParticleGenFromJson(j.at("Particle_Generation"));
+
+    if (d_pGeomVec.size() != d_pMeshVec.size())
+      throw std::runtime_error("Number of particle geometry groups must be equal to number of particle mesh groups");
   }
 
   /*!
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
-  static json getParticleGeomExampleJson(std::vector<util::geometry::GeomData> pGeomVec = std::vector<util::geometry::GeomData>()) {
+  static json getParticleGeomExampleJson(std::vector<geom::GeomData> pGeomVec = std::vector<geom::GeomData>()) {
 
     auto nSets = pGeomVec.size();
 
@@ -100,7 +102,7 @@ struct ParticleDeck {
 
     for (size_t i = 0; i < nSets; i++) {
       auto js = json({});
-      util::geometry::writeGeometry(js, pGeomVec[i]);
+      geom::writeGeometry(js, pGeomVec[i]);
       std::string set_name = "Set_" + std::to_string(i+1);
       j[set_name] = js;
     }
@@ -129,16 +131,16 @@ struct ParticleDeck {
         auto js = j.at(set_name);
 
         // read
-        util::geometry::readGeometry(js, d_pGeomVec[i]);
+        geom::readGeometry(js, d_pGeomVec[i]);
         // create
-        util::geometry::createGeomObject(d_pGeomVec[i]);
+        geom::createGeomObject(d_pGeomVec[i]);
       }
     } else if (d_particleSimType == "Single_Particle") {
       d_pGeomVec.resize(1);
       auto js = j.find("Set_1") == j.end()? j : j.at("Set_1");
       if (js.find("Type") != j.end()) {
-        util::geometry::readGeometry(js, d_pGeomVec[0]);
-        util::geometry::createGeomObject(d_pGeomVec[0]);
+        geom::readGeometry(js, d_pGeomVec[0]);
+        geom::createGeomObject(d_pGeomVec[0]);
       }
     }
   }

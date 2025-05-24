@@ -24,7 +24,7 @@ void test::testTransform() {
   double scale = 1.0;
   double theta = 0.;
   auto xt = util::Point(1., 1., 0.);
-  auto t1 = particle::ParticleTransform(xt, util::Point(0., 0., 1.), theta, scale);
+  auto t1 = geom::ParticleTransform(xt, util::Point(0., 0., 1.), theta, scale);
 
   auto xold = util::Point(0., 0., 0.);
   auto xnew = t1.apply(xold);
@@ -43,7 +43,7 @@ void test::testTransform() {
   theta = M_PI / 6;
   xt = util::Point(0., 0., 0.);
   auto t2 =
-      particle::ParticleTransform(xt, util::Point(0., 0., 1.), theta, scale);
+      geom::ParticleTransform(xt, util::Point(0., 0., 1.), theta, scale);
   xold = util::Point(0.5, 0.2, 0.);
   xnew = t2.apply(xold);
   xnew_check = util::Point(
@@ -63,7 +63,7 @@ void test::testTransform() {
   theta = M_PI / 3;
   xt = util::Point(0., 0., 0.);
   auto t3 =
-      particle::ParticleTransform(xt, util::Point(0., 0., 1.), theta,
+      geom::ParticleTransform(xt, util::Point(0., 0., 1.), theta,
           scale);
   xold = util::Point(0.2, 0.4, 0.);
   xnew = t3.apply(xold);

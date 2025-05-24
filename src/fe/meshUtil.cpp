@@ -15,7 +15,7 @@
 #include "util/parallelUtil.h"
 #include "util/function.h"
 
-#include <fmt/format.h>
+#include <format>
 
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
@@ -206,7 +206,7 @@ fe::getCurrentQuadPoints(const fe::Mesh *mesh_p,
   else if (mesh_p->getElementType() == util::vtk_type_tetra)
     elem = new fe::TetElem(quadOrder);
   else {
-    std::cerr << fmt::format("Error: Can not compute strain/stress as the element "
+    std::cerr << std::format("Error: Can not compute strain/stress as the element "
                  "type = {} is not yet supported in this routine.\n", mesh_p->getElementType());
     exit(EXIT_FAILURE);
   }
@@ -219,18 +219,6 @@ fe::getCurrentQuadPoints(const fe::Mesh *mesh_p,
   assert((xQuadCur.size() >= numQuadPointsTotal + iQuadStart)
         && "Number of elements in xQuad data can not be less than "
            "total number of quadrature points.\n");
-
-  //  std::cout << fmt::format("num_elems = {}, "
-  //                           "iNodeStart = {}, "
-  //                           "numQuadPointsTotal = {}, "
-  //                           "iQuadStart = {}, "
-  //                           "xQuadCur.size() = {}",
-  //                           num_elems,
-  //                           iNodeStart,
-  //                           numQuadPointsTotal,
-  //                           iQuadStart,
-  //                           xQuadCur.size())
-  //           << std::endl;
 
 
   // compute current position of quad points

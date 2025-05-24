@@ -12,7 +12,8 @@
 #include "testParallelCompLib.h"
 #include "util/io.h"
 #include "util/parallelUtil.h"
-#include <fmt/format.h>
+#include <format>
+#include <print>
 #include <iostream>
 
 int main(int argc, char *argv[]) {
@@ -20,7 +21,7 @@ int main(int argc, char *argv[]) {
   // init parallel
   util::parallel::initMpi(argc, argv);
   int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
-  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(std::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
   util::io::print(util::parallel::getMpiStatus()->printStr());
 
   // init logger
@@ -60,24 +61,24 @@ int main(int argc, char *argv[]) {
     if (input.cmdOptionExists("-i")) nTaskflow = std::stoi(input.getCmdOption("-i"));
     else {
       nTaskflow = 100000;
-      util::io::print(fmt::format("Running test with default vector-size = {}\n", nTaskflow));
+      util::io::print(std::format("Running test with default vector-size = {}\n", nTaskflow));
     }
 
     unsigned int nThreads;
     if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
     else {
       nThreads = std::thread::hardware_concurrency();
-      util::io::print(fmt::format("Running test with default number of threads = {}\n", nThreads));
+      util::io::print(std::format("Running test with default number of threads = {}\n", nThreads));
     }
     // set number of threads
     util::parallel::initNThreads(nThreads);
-    util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
+    util::io::print(std::format("Number of threads = {}\n", util::parallel::getNThreads()));
 
     std::vector<size_t> N_test = {size_t(nTaskflow/100), size_t(nTaskflow/10), nTaskflow, 10*nTaskflow, 100*nTaskflow};
     int seed = 0;
     size_t test_count = 0;
     for (auto n : N_test) {
-      util::io::print(fmt::format("**** Test number = {} ****\n"
+      util::io::print(std::format("**** Test number = {} ****\n"
                                   "Test parameters: N = {}\n\n",
                                   test_count++, n));
       auto msg = test::testTaskflow(n, seed);
@@ -100,7 +101,7 @@ int main(int argc, char *argv[]) {
         // set only if we are running test using in-built mesh
         if (testOption == 1) {
           nGrid = 50;
-          util::io::print(fmt::format("Running test with default grid size = {}\n", nGrid));
+          util::io::print(std::format("Running test with default grid size = {}\n", nGrid));
         }
       }
 
@@ -108,7 +109,7 @@ int main(int argc, char *argv[]) {
         mHorizon = size_t(std::stoi(input.getCmdOption("-m")));
       else {
         mHorizon = 4;
-        util::io::print(fmt::format("Running test with default integer factor for horizon = {}\n", mHorizon));
+        util::io::print(st::format("Running test with default integer factor for horizon = {}\n", mHorizon));
       }
 
       // read filename

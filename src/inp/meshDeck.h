@@ -12,7 +12,7 @@
 #define INP_MESHDECK_H
 
 #include "util/io.h"
-#include "util/geomObjectsUtil.h"
+#include "geom/geomIncludes.h"
 #include <string>
 
 namespace inp {
@@ -48,7 +48,7 @@ struct MeshDeck {
   /*!
    * @brief Information that will be used when creating a mesh using in-built routines
    */
-  util::geometry::GeomData d_createMeshGeomData;
+  geom::GeomData d_createMeshGeomData;
 
   /*! @brief Use particle geometry in 'Particle' json block to create mesh? */
   bool d_useParticleGeomToCreateMesh;
@@ -113,9 +113,9 @@ struct MeshDeck {
 
         // geometry?
         if (j.find("Geometry") != j.end()) {
-          util::geometry::readGeometry(j.at("Geometry"), d_createMeshGeomData);
+          geom::readGeometry(j.at("Geometry"), d_createMeshGeomData);
           // create a geometry object based on the data
-          util::geometry::createGeomObject(d_createMeshGeomData);
+          geom::createGeomObject(d_createMeshGeomData);
         } else {
           // create mesh using particle geometry
           d_useParticleGeomToCreateMesh = true;

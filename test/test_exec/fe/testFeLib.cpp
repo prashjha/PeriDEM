@@ -14,7 +14,7 @@
 #include "fe/tetElem.h"
 #include "util/point.h"
 #include "util/feElementDefs.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "nsearch/nsearch.h"
 #include <csv/csv.h>
 #include <algorithm>

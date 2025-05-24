@@ -9,17 +9,16 @@
  */
 
 #include "testParallelCompLib.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "util/randomDist.h"
 #include "util/point.h"
-#include "util/methods.h" // declares std::chrono and defines timeDiff()
 #include "util/io.h"
 #include "fe/mesh.h"
 #include "fe/meshPartitioning.h"
 #include "fe/meshUtil.h"
-#include "geometry/geometryUtil.h"
+#include "geom/geomIncludes.h"
 #include <mpi.h>
-#include <fmt/format.h>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -135,17 +134,17 @@ namespace {
       bool found_asym = false;
       for (size_t i_proc = 0; i_proc < mpiSize; i_proc++) {
         for (size_t j_proc = 0; j_proc < mpiSize; j_proc++) {
-          std::cout << fmt::format("(i,j) = ({}, {}), num data = {}\n",
+          std::cout << std::format("(i,j) = ({}, {}), num data = {}\n",
                                    i_proc, j_proc,
                                    numGhostDataAllProc[i_proc][j_proc]);
 
           if (j_proc > i_proc) {
             if (numGhostDataAllProc[i_proc][j_proc] == numGhostDataAllProc[j_proc][i_proc])
-              std::cout << fmt::format("    symmetric: data ({}, {}) = data ({}, {})\n",
+              std::cout << std::format("    symmetric: data ({}, {}) = data ({}, {})\n",
                                        i_proc, j_proc, j_proc, i_proc);
             else {
               found_asym = true;
-              std::cout << fmt::format(
+              std::cout << std::format(
                       "    asymmetric: data ({}, {}) != data ({}, {})\n",
                       i_proc, j_proc, j_proc, i_proc);
             }
@@ -176,7 +175,7 @@ namespace {
 
     // exchange data
     util::io::print("\n\nBegin exchange data\n\n");
-    util::io::print(fmt::format("\n\nThis processor's rank = {}\n\n", mpiRank), util::io::print_default_tab, -1);
+    util::io::print(std::format("\n\nThis processor's rank = {}\n\n", mpiRank), util::io::print_default_tab, -1);
     MPI_Request mpiRequests[2*(mpiSize-1)];
     size_t requestCounter = 0;
     for (size_t j_proc=0; j_proc<mpiSize; j_proc++) {
@@ -185,7 +184,7 @@ namespace {
 
       if (j_proc != mpiRank and recvIds.size() != 0) {
 
-        util::io::print(fmt::format("\n\n    Processing j_proc = {}\n\n", j_proc), util::io::print_default_tab, -1);
+        util::io::print(std::format("\n\n    Processing j_proc = {}\n\n", j_proc), util::io::print_default_tab, -1);
 
         // fill in ghost displacement data that we are sending from nodal displacement data
         for (size_t k = 0; k<sendIds.size(); k++)
@@ -222,7 +221,7 @@ namespace {
 std::string test::testTaskflow(size_t N, int seed) {
 
   auto nThreads = util::parallel::getNThreads();
-  util::io::print(fmt::format("\n\ntestTaskflow(): Number of threads = {}\n\n", nThreads));
+  util::io::print(std::format("\n\ntestTaskflow(): Number of threads = {}\n\n", nThreads));
 
   // task: perform N computations in serial and using taskflow for_each
 
@@ -268,16 +267,16 @@ std::string test::testTaskflow(size_t N, int seed) {
     y_err += std::pow(y1[i] - y2[i], 2);
 
   if (y_err > 1.e-10) {
-    std::cerr << fmt::format("Error: Serial and taskflow computation results do not match (squared error = {})\n",
+    std::cerr << std::format("Error: Serial and taskflow computation results do not match (squared error = {})\n",
                             y_err);
     exit(1);
   }
 
   // get time
   std::ostringstream msg;
-  msg << fmt::format("  Serial computation took = {}ms\n", dt12);
-  msg << fmt::format("  Taskflow computation took = {}ms\n", dt23);
-  msg << fmt::format("  Speed-up factor = {}\n\n\n", dt12/dt23);
+  msg << std::format("  Serial computation took = {}ms\n", dt12);
+  msg << std::format("  Taskflow computation took = {}ms\n", dt23);
+  msg << std::format("  Speed-up factor = {}\n\n\n", dt12/dt23);
 
   return msg.str();
 }
@@ -313,7 +312,7 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
     fe::createUniformMesh(&mesh, dim, box, nGridVec);
 
     // filename for outputting
-    outMeshFilename = fmt::format("uniform_mesh_Lx_{}_Ly_{}_Nx_{}_Ny_{}",
+    outMeshFilename = std::format("uniform_mesh_Lx_{}_Ly_{}_Nx_{}_Ny_{}",
                                   box.second[0], box.second[1],
                                   nGridVec[0], nGridVec[1]);
   }
@@ -342,7 +341,7 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
   // calculate nonlocal neighborhood
   double horizon = mHorizon*mesh.d_h;
   std::vector<std::vector<size_t>> nodeNeighs(mesh.d_numNodes);
-  geometry::computeNonlocalNeighborhood(mesh.d_nodes, horizon, nodeNeighs);
+  geom::computeNonlocalNeighborhood(mesh.d_nodes, horizon, nodeNeighs);
 
   // partition the mesh on root processor and broadcast to other processors
   mesh.d_nodePartition.resize(mesh.d_numNodes);
@@ -407,7 +406,7 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
           if (uk[0] != j_proc + 1 or uk[1] != 100 * (j_proc + 1)
               or uk[2] != 10000 * (j_proc + 1)) {
             debug_failed = true;
-            util::io::print(fmt::format("    MPI exchange error: j_proc = {}, "
+            util::io::print(std::format("    MPI exchange error: j_proc = {}, "
                                      "uk = ({}, {}, {})\n", j_proc,
                                      uk[0], uk[1], uk[2]),
                      util::io::print_default_tab, -1);
@@ -417,9 +416,9 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
     } // loop over j_proc
 
     if (debug_failed)
-      util::io::print(fmt::format("\n\nDEBUG failed for processor = {}\n\n", mpiRank), util::io::print_default_tab, -1);
+      util::io::print(std::format("\n\nDEBUG failed for processor = {}\n\n", mpiRank), util::io::print_default_tab, -1);
     else
-      util::io::print(fmt::format("\n\nDEBUG passed for processor = {}\n\n", mpiRank), util::io::print_default_tab, -1);
+      util::io::print(std::format("\n\nDEBUG passed for processor = {}\n\n", mpiRank), util::io::print_default_tab, -1);
   }
   //// END OF DEBUG
 }

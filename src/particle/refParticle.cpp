@@ -9,15 +9,14 @@
  */
 
 #include "refParticle.h"
-#include "inp/pdecks/particleDeck.h"
+#include "inp/particleDeck.h"
 #include "fe/baseElem.h"
-#include "util/geom.h"
 #include <iostream>
 
 // Reference particle class
 particle::RefParticle::RefParticle(size_t id,
                                    std::shared_ptr<model::ModelData> model_data,
-                                   std::shared_ptr<util::geometry::GeomObject> geom,
+                                   std::shared_ptr<geom::GeomObject> geom,
                                    std::shared_ptr<fe::Mesh> mesh)
     : d_id(id),
       d_modelData_p(model_data),

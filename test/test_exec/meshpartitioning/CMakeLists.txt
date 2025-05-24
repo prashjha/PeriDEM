@@ -10,4 +10,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestMeshPartitioning ${SOURCES})
 
-target_link_libraries(TestMeshPartitioning PUBLIC Geometry FE)
+target_link_libraries(TestMeshPartitioning PUBLIC Geom FE)

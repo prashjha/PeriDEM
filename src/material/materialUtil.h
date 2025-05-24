@@ -13,7 +13,7 @@
 
 #include "util/point.h"
 #include "mparticle/material.h"
-#include "geometry/fracture.h"
+#include "fracture/fracture.h"
 #include "model/modelData.h"
 #include <limits>
 #include <string>

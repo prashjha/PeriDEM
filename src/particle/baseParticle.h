@@ -14,6 +14,7 @@
 #include "refParticle.h"
 #include "material/mparticle/material.h"
 #include "model/modelData.h"
+#include "geom/particleTransform.h"
 
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
@@ -67,8 +68,8 @@ public:
                double h,
                std::shared_ptr<model::ModelData> model_data,
                std::shared_ptr<particle::RefParticle> ref_particle,
-               std::shared_ptr<util::geometry::GeomObject> geom,
-               particle::ParticleTransform &transform,
+               std::shared_ptr<geom::GeomObject> geom,
+               geom::ParticleTransform &transform,
                std::shared_ptr<fe::Mesh> mesh,
                inp::MaterialDeck &material_deck,
                bool populate_data = true);
@@ -79,28 +80,23 @@ public:
   /**@{*/
 
   /*!
-   * @brief Get type of this object
-   * @return Type Type
-   */
-  std::string getType() const { return d_type; };
-
-  /*!
-   * @brief Get type (in integer format) of this object
-   * @return Type Type
-   */
-  int getTypeIndex() const { return d_typeIndex; };
-
-  /*!
    * @brief Get id
    * @return id ID of this object
    */
   size_t getId() const { return d_id; };
 
   /*!
-   * @brief Get id among the group of object in the same type as this
-   * @return id ID of this object
+   * @brief Is this particle a wall?
+   * @return bool True if this particle is a wall
    */
-  //size_t getTypeId() const { return d_typeId; };
+  bool isWall() const { return d_isWall; };
+
+  /*!
+   * @brief Get group id for given key
+   * @param key Key to lookup group id (e.g. "geom_id", "mat_id", "mesh_id", "contact_id")
+   * @return Group id corresponding to key
+   */
+  size_t getGroupId(const std::string &key) const { return d_groups.at(key); };
 
   /*!
    * @brief Get the dimension of the domain
@@ -939,10 +935,10 @@ public:
   std::shared_ptr<particle::RefParticle> d_rp_p;
 
   /*! @brief Geometrical object defining this particle */
-  std::shared_ptr<util::geometry::GeomObject> d_geom_p;
+  std::shared_ptr<geom::GeomObject> d_geom_p;
 
   /*! @brief Transformation related data */
-  particle::ParticleTransform d_tform;
+  geom::ParticleTransform d_tform;
 
   /*! @brief Pointer to mesh on reference particle */
   std::shared_ptr<fe::Mesh> d_mesh_p;

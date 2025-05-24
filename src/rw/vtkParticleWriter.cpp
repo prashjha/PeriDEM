@@ -24,7 +24,7 @@
 #include "model/modelData.h"
 #include "particle/baseParticle.h"
 
-#include "util/methods.h"
+#include "util/vecMethods.h"
 
 rw::writer::VtkParticleWriter::VtkParticleWriter(const std::string &filename,
                                  const std::string &compress_type)
@@ -196,7 +196,7 @@ void rw::writer::VtkParticleWriter::appendNodes(
 
     for (size_t i = 0; i<model->d_x.size(); i++) {
       auto pi = model->getPtId(i);
-      p_tag[0] = double(model->getParticleFromAllList(pi)->d_zoneId);
+      p_tag[0] = double(model->getParticleFromAllList(pi)->d_groups.at("geom_id"));
       array->InsertNextTuple(p_tag);
     }
 

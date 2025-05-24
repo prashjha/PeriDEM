@@ -71,7 +71,7 @@ public:
    * @brief Main driver to simulate
    * @param deck Input deck
    */
-  virtual void run(inp::Input *deck);
+  virtual void run(std::shared_ptr<inp::Input> & deck);
 
   /**
    * @name Methods to initialize and run model
@@ -82,7 +82,7 @@ public:
    * @brief Restarts the simulation from previous state
    * @param deck Input deck
    */
-  virtual void restart(inp::Input *deck);
+  virtual void restart(std::shared_ptr<inp::Input> & deck);
 
   /*! @brief Initialize remaining data members */
   virtual void init();
@@ -167,25 +167,10 @@ public:
    * 3. We rotate the particle by amount "orient". In case of "loc_rad", we
    * apply random orientation.
    *
-   * @param z Zone id
-   * @param ref_p Shared pointer to reference particle from which we need to create new particles
    */
-  virtual void createParticlesFromFile(size_t z,
-                                       std::shared_ptr<particle::RefParticle> ref_p);
+  virtual void createParticlesFromFile();
 
-  virtual void createParticleUsingParticleZoneGeomObject(size_t z,
-                                       std::shared_ptr<particle::RefParticle> ref_p);
-
-  /*! @brief Creates geometrical object for a particle given particle radius, orientation, and site location */
-  virtual double createGeometryAtSite(const double &particle_radius,
-                                    const double &particle_orient,
-                                    const util::Point &site,
-                                    const std::vector<double> &rep_geom_params,
-                                    const std::shared_ptr<util::geometry::GeomObject> &rep_geom_p,
-                                    std::shared_ptr<util::geometry::GeomObject> &p_geom);
-
-  /*! @brief Update varioud geometry objects associated with container, particles, and reference particles */
-  virtual void updateGeometryObjectsPostInit();
+  virtual void createParticleUsingParticleZoneGeomObject();
 
   /*! @brief Update neighborlist for contact */
   virtual void updateContactNeighborlist();

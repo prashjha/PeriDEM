@@ -13,14 +13,14 @@
 
 #include "util/point.h"
 #include "util/matrix.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "material/mparticle/material.h"
 #include "inp/input.h"
 #include "loading/particleFLoading.h"
 #include "loading/particleULoading.h"
 #include "loading/particleIC.h"
 #include "nsearch/nsearch.h"
-#include "geometry/fracture.h"
+#include "fracture/fracture.h"
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
 #include <vector>

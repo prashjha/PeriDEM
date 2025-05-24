@@ -20,6 +20,7 @@ namespace inp {
   /*! @brief Structure to read and store particle-particle contact related input
    * data */
   struct ContactPairDeck {
+
     /*! @brief contact radius */
     double d_contactR;
 
@@ -31,22 +32,22 @@ namespace inp {
     double d_vMax;
     double d_deltaMax;
     double d_Kn;
+    double d_KnFactor;
     ///@}
 
     ///@{
     /*! @brief parameters for normal damping force */
     double d_eps;
     double d_betan;
+    bool d_dampingOn;
+    double d_betanFactor;
     ///@}
 
     ///@{
     /*! @brief parameters for frictional force */
     double d_mu;
-    bool d_dampingOn;
     bool d_frictionOn;
-    double d_KnFactor;
-    double d_betanFactor;
-    double d_kappa;
+    double d_K;
     ///@}
 
     /*!
@@ -55,7 +56,7 @@ namespace inp {
     ContactPairDeck(const json &j = json({}))
       : d_contactR(0.), d_computeContactR(true), d_vMax(0.), d_deltaMax(0.),
         d_Kn(0.), d_eps(1.), d_betan(0.), d_mu(0.), d_dampingOn(true),
-        d_frictionOn(true), d_KnFactor(1.), d_betanFactor(1.), d_kappa(1.) {
+        d_frictionOn(true), d_KnFactor(1.), d_betanFactor(1.), d_K(0.) {
       readFromJson(j);
     };
 
@@ -69,7 +70,7 @@ namespace inp {
                     double deltaMax = 1., double vMax = 0.)
         : d_contactR(contactR), d_computeContactR(computeContactR), d_vMax(vMax), d_deltaMax(deltaMax),
           d_Kn(Kn), d_eps(eps), d_betan(0.), d_mu(mu), d_dampingOn(dampingOn),
-          d_frictionOn(frictionOn), d_KnFactor(KnFactor), d_betanFactor(betanFactor), d_kappa(1.) {
+          d_frictionOn(frictionOn), d_KnFactor(KnFactor), d_betanFactor(betanFactor), d_K(0.) {
     };
 
     /*!
@@ -83,7 +84,7 @@ namespace inp {
         d_Kn(cd.d_Kn), d_eps(cd.d_eps), d_betan(cd.d_betan),
         d_mu(cd.d_mu), d_dampingOn(cd.d_dampingOn),
         d_frictionOn(cd.d_frictionOn), d_KnFactor(cd.d_KnFactor),
-        d_betanFactor(cd.d_betanFactor), d_kappa(cd.d_kappa) {
+        d_betanFactor(cd.d_betanFactor), d_K(cd.d_K) {
     };
 
     /*!
@@ -94,7 +95,7 @@ namespace inp {
         bool dampingOn = true, bool frictionOn = true,
         double Kn = 0., double eps = 1., double mu = 0.,
         double KnFactor = 1., double betanFactor = 1.,
-        double deltaMax = 1., double vMax = 0.) {
+        double deltaMax = 1., double vMax = 0., double K = 0.) {
 
       auto j = json({});
 
@@ -119,6 +120,13 @@ namespace inp {
 
       if (dampingOn and betanFactor < 1.E-10) dampingOn = false;
       if (!dampingOn) betanFactor = 0.;
+
+      if (frictionOn and mu < 1.E-10) {
+        throw std::runtime_error("Friction coefficient can not be zero.");
+      }
+
+      if (K > 1.E-10) 
+        j["K"] = K;
 
       j["Damping_On"] = dampingOn;
       j["Epsilon"] = eps;
@@ -173,6 +181,14 @@ namespace inp {
 
       d_frictionOn = j.value("Friction_On", true);
       d_mu = j.value("Friction_Coeff", 0.);
+      d_K = j.value("K", 0.);
+
+      if (d_frictionOn and d_mu < 1.E-10) {
+        throw std::runtime_error("Friction coefficient can not be zero.");
+      }
+      if (d_frictionOn and d_K < 1.E-10) {
+        throw std::runtime_error("Bulk modulus can not be zero.");
+      }
     }
     
 
@@ -195,7 +211,7 @@ namespace inp {
       oss << tabS << "Damping status = " << d_dampingOn << std::endl;
       oss << tabS << "Kn factor = " << d_KnFactor
           << ", Beta n factor = " << d_betanFactor << std::endl;
-      oss << tabS << "Bulk modulus = " << d_kappa << std::endl;
+      oss << tabS << "Bulk modulus = " << d_K << std::endl;
       oss << tabS << std::endl;
       return oss.str();
     }

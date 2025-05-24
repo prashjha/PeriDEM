@@ -8,6 +8,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Particle ${SOURCES})
+add_library(Fracture ${SOURCES})
 
-target_link_libraries(Particle PUBLIC FE Material Fracture)
+target_link_libraries(Fracture PUBLIC Util NSearch Threads::Threads)

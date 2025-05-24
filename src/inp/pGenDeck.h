@@ -12,7 +12,7 @@
 #define INP_PGENDECK_H
 
 #include "util/io.h"
-#include "util/geomObjectsUtil.h"
+#include "geom/geomIncludes.h"
 #include <string>
 
 namespace inp {
@@ -30,11 +30,16 @@ namespace inp {
      *
      * "From_File" means particle location, radius and other details will be
      * loaded from the input json file. Use key 'Particle_Generation' to provide the data.
+     * 
+     * "Use_Particle_Geometry" means particle geometry will be used to generate particles.
      */
     std::string d_genMethod;
 
     /*! @brief Json object loaded from the input json file or jason file for particle generation */
     json d_pGenJson;
+
+    /*! @brief Random rotation of particles if orientation is not provided */
+    bool d_genWithRandomRotation;
 
     /*!
      * @brief Constructor
@@ -48,9 +53,9 @@ namespace inp {
     /*!
      * @brief Constructor
      */
-    PGenDeck(std::string genMethod, json pGenJson = json({}))
+    PGenDeck(std::string genMethod, json pGenJson = json({}), bool genWithRandomRotation = true)
         : d_genMethod(genMethod),
-          d_pGenJson(pGenJson) {};
+          d_pGenJson(pGenJson), d_genWithRandomRotation(genWithRandomRotation) {};
 
     /*!
      * @brief Returns example JSON object for ModelDeck configuration
@@ -58,7 +63,7 @@ namespace inp {
      */
     static json getExampleJson(std::string genMethod = "From_File") {
 
-      auto j = json({{"Method", "From_File"}});
+      auto j = json({{"Method", "From_File"}, {"Random_Rotation", true}});
       return j;
     }
 
@@ -69,7 +74,8 @@ namespace inp {
       if (j.empty())
         return;
 
-      d_genMethod = j.value("Method", std::string("From_File"));
+      d_genMethod = j.value("Method", std::string("Use_Particle_Geometry"));
+      d_genWithRandomRotation = j.value("Random_Rotation", true);
 
       if (d_genMethod == "From_File") {
         if (j.find("Data") == j.end())
@@ -92,6 +98,7 @@ namespace inp {
       std::ostringstream oss;
       oss << tabS << "------- PGenDeck --------" << std::endl << std::endl;
       oss << tabS << "Method = " << d_genMethod << std::endl;
+      oss << tabS << "Random rotation of particles = " << d_genWithRandomRotation << std::endl;
       size_t nParticles = d_pGenJson.value("N", 0);
       oss << tabS << "Number of particles in json object = " << nParticles << std::endl;
       oss << tabS << "Data for first five particles: " << std::endl;

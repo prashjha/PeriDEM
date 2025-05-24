@@ -12,7 +12,7 @@
 #include "testNSearchLib.h"
 #include "util/io.h"
 #include "util/parallelUtil.h"                       // MPI-related functions
-#include <fmt/format.h>
+#include <format>
 #include <iostream>
 
 
@@ -21,7 +21,7 @@ int main(int argc, char *argv[]) {
   // init parallel
   util::parallel::initMpi(argc, argv);
   int mpiSize = util::parallel::mpiSize(), mpiRank = util::parallel::mpiRank();
-  util::io::print(fmt::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
+  util::io::print(std::format("Initialized MPI. MPI size = {}, MPI rank = {}\n", mpiSize, mpiRank));
   util::io::print(util::parallel::getMpiStatus()->printStr());
 
   util::io::InputParser input(argc, argv);
@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
               data.d_leafMaxSize = leafMaxSizes[0];
 
               std::cout << "\n**** Test number = " << test_count++ << " ****\n";
-              std::cout << fmt::format("Test parameters: L = {}, lattice "
+              std::cout << std::format("Test parameters: L = {}, lattice "
                                        "perturbation = {}, seed = {}, "
                                        "N = {}, leafMaxSize = {}, num_tags = {}, "
                                        "dim = {}\n\n",
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
           data.d_leafMaxSize = leafMaxSizes[i];
 
           std::cout << "\n**** Test number = " << test_count++ << " ****\n";
-          std::cout << fmt::format("Test parameters: L = {}, lattice "
+          std::cout << std::format("Test parameters: L = {}, lattice "
                                    "perturbation = {}, seed = {}, "
                                    "N = {}, leafMaxSize = {}, num_tags = {}, "
                                    "dim = {}\n\n",
@@ -158,10 +158,10 @@ int main(int argc, char *argv[]) {
     for (size_t k = 0; k < dims.size(); k++) {
       std::cout << "Dim = " << dims[k] << "\n";
       for (size_t j = 0; j < numTags.size(); j++) {
-        std::cout << fmt::format("    numTag = {:2d}\n", numTags[j]);
+        std::cout << std::format("    numTag = {:2d}\n", numTags[j]);
         for (size_t i = 0; i < leafMaxSizes.size(); i++) {
           const auto &data = data_set[i][j][k];
-          std::cout << fmt::format(
+          std::cout << std::format(
                   "        leafMaxSize = {:2d}, numPoints = {:8d}, bld_time = {:8d}\n"
                   "          (brute-search) def_time = {:8d}, exc_time = {:8d}, inc_time = {:8d}\n"
                   "          (nflan-search) def_time = {:8d}, exc_time = {:8d}, inc_time = {:8d}\n",
@@ -196,7 +196,7 @@ int main(int argc, char *argv[]) {
               data.d_leafMaxSize = leafMaxSizes[0];
 
               std::cout << "\n**** Test number = " << test_count++ << " ****\n";
-              std::cout << fmt::format("Test parameters: L = {}, lattice "
+              std::cout << std::format("Test parameters: L = {}, lattice "
                                        "perturbation = {}, seed = {}, "
                                        "N = {}, leafMaxSize = {}, num_tags = {}"
                                        "\n\n",

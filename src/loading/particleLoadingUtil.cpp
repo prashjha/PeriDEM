@@ -9,7 +9,7 @@
  */
 
 #include "particleLoadingUtil.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 
 bool loading::needToProcessParticle(size_t id, const inp::BCBaseDeck &bc) {
 

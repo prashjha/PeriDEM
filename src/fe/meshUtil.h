@@ -12,7 +12,7 @@
 
 #include "util/point.h"
 #include "util/matrix.h"
-#include "inp/decks/materialDeck.h"
+#include "inp/materialDeck.h"
 #include <string>
 #include <vector>
 

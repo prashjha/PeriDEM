@@ -12,7 +12,7 @@
 #define INP_OUTPUTDECK_H
 
 #include "util/io.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include <string>
 #include <vector>
 

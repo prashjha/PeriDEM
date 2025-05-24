@@ -10,7 +10,7 @@
 
 #include "inp/deckIncludes.h"
 
-#include <fmt/format.h>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -115,7 +115,7 @@ int main(int argc, char *argv[]) {
   auto bcDeckJson = inp::BCDeck::getExampleJson(0, 1, 2, false, util::Point());
 
   // create this block from the BCData static function
-  bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("Displacement_BC", false, util::geometry::GeomData(),
+  bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("Displacement_BC", false, geom::GeomData(),
         {0}, {}, "", {}, "", {},
         {1, 2}, true, "", {});
   // or explicitly, we can do
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
   double v_mag = 0.1; // m/s
   {
     // create this block from the ICData static function
-    bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("IC", false, util::geometry::GeomData(),
+    bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("IC", false, geom::GeomData(),
                                                                    {1}, {}, "", {}, "", {},
                                                                    {}, true, "Constant_Velocity", {v_mag*0.1, v_mag*0.9, 0.});
     // or explicitly, we can do
@@ -135,7 +135,7 @@ int main(int argc, char *argv[]) {
     // initCondJson.at("Constant_Velocity").at("Velocity_Vector") = std::vector<double>{v_mag*0.1, v_mag*0.9, 0.};
   }
   {
-    bcDeckJson["IC"]["Set_2"] = inp::BCBaseDeck::getExampleJson("IC", false, util::geometry::GeomData(),
+    bcDeckJson["IC"]["Set_2"] = inp::BCBaseDeck::getExampleJson("IC", false, geom::GeomData(),
                                                                    {2}, {}, "", {}, "", {},
                                                                    {}, true, "Constant_Velocity", {v_mag*0.5, v_mag*0.5, 0.});
   }
@@ -155,7 +155,7 @@ int main(int argc, char *argv[]) {
   auto pDeckJson = json({});
 
   //// create particle geometry json
-  std::vector<util::geometry::GeomData> pGeomVec(3); // 3 geometry groups
+  std::vector<geom::GeomData> pGeomVec(3); // 3 geometry groups
 
   pGeomVec[0].d_geomName = "rectangle_minus_rectangle";
   // parameters
@@ -198,7 +198,7 @@ int main(int argc, char *argv[]) {
   // contact pair 1 - 1
   pContactJson["Set_1_1"] = inp::ContactPairDeck::getExampleJson(0.95,
       true, false, false,
-      1e+22, 0.95, 0., 1., 1., 1., 0.);
+      1e+22, 0.95, 0., 1., 1., 1., 0., 25000.);
   // copy other pairs
   pContactJson["Set_1_2"] = {{"Copy_Data", std::vector<int>({1, 1})}};
   pContactJson["Set_2_2"] = {{"Copy_Data", std::vector<int>({1, 1})}};
@@ -217,15 +217,15 @@ int main(int argc, char *argv[]) {
 
   // p1
   pGenJson["Data"]["0"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"o", 0.}, {"s", 1.},
-                           {"geom_id", 0}, {"mat_id", 0}, {"mesh_id", 0}, {"contact_id", 0}};
+                           {"geom_id", 0}, {"mat_id", 0}, {"contact_id", 0}};
 
   // p1
   pGenJson["Data"]["1"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"o", 0.}, {"s", 1.},
-                           {"geom_id", 1}, {"mat_id", 1}, {"mesh_id", 1}, {"contact_id", 1}};
+                           {"geom_id", 1}, {"mat_id", 1}, {"contact_id", 1}};
 
   // p1
   pGenJson["Data"]["2"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"o", 0.}, {"s", 1.},
-                           {"geom_id", 2}, {"mat_id", 1}, {"mesh_id", 2}, {"contact_id", 1}};
+                           {"geom_id", 2}, {"mat_id", 1}, {"contact_id", 1}};
 
   // add to json
   pDeckJson["Particle_Generation"] = pGenJson;

@@ -10,4 +10,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestUtil ${SOURCES})
 
-target_link_libraries(TestUtil PUBLIC Util fmt::fmt-header-only)
+target_link_libraries(TestUtil PUBLIC Util Geom)

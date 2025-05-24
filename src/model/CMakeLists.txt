@@ -13,4 +13,4 @@ add_library(Model ${SOURCES})
 
 target_include_directories(Model PUBLIC ${VTK_INCLUDE_DIRS})
 
-target_link_libraries(Model PUBLIC Util RW Inp Material Loading Geometry FE Particle NSearch)
+target_link_libraries(Model PUBLIC Util RW Inp Material Loading Fracture Geom FE Particle NSearch)

@@ -8,6 +8,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Particle ${SOURCES})
+add_library(Geom ${SOURCES})
 
-target_link_libraries(Particle PUBLIC FE Material Fracture)
+target_link_libraries(Geom PUBLIC Util) 

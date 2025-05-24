@@ -230,16 +230,15 @@ the implementation, interested readers can look at
 Core dependencies are:
   - [cmake](https://cmake.org/) (>= 3.10.2) 
   - [vtk](https://vtk.org/) (>= 7.1.1)
-  - [yaml-cpp](https://github.com/jbeder/yaml-cpp) (>= 0.5.2)
   - [metis](https://github.com/KarypisLab/METIS) (>= 5.1.0)
   - MPI
 
 Following dependencies are included in the `PeriDEM` library in `external` folder (see [external/README.md](./external/README.md) for more details):
   - [fast-cpp-csv-parser](https://github.com/ben-strasser/fast-cpp-csv-parser/tree/master) (version included - master)
-  - [fmt](https://github.com/fmtlib/fmt) (>= 7.1.3, version included - 10.2.1)
   - [nanoflann](https://github.com/jlblancoc/nanoflann) (>= 1.3.2, version included - v1.5.5)
   - [taskflow](https://github.com/taskflow/taskflow) (>= 3.7.0)
   - [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) (>= v2.3.3) 
+  - [nlohmann_json](https://github.com/nlohmann/json) (>= 3.12.0)
 
 ### Building the code
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 

@@ -11,4 +11,4 @@ AUX_SOURCE_DIRECTORY(./mparticle SOURCES)
 
 add_library(Material ${SOURCES})
 
-target_link_libraries(Material PUBLIC Geometry Threads::Threads)
+target_link_libraries(Material PUBLIC Fracture Threads::Threads)

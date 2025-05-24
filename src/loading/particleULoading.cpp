@@ -12,8 +12,8 @@
 #include "particleLoadingUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
-#include "util/geom.h"
-#include "util/transformation.h"
+#include "geom/geomUtilFunctions.h"
+#include "util/transformationFunctions.h"
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 

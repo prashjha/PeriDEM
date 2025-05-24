@@ -10,11 +10,6 @@
 - current version - v2.3.3
 - download link (current version) - [https://github.com/jothepro/doxygen-awesome-css/releases/tag/v2.3.3](https://github.com/jothepro/doxygen-awesome-css/releases/tag/v2.3.3)
 
-## fmt
-- project page - [https://github.com/fmtlib/fmt](https://github.com/fmtlib/fmt)
-- current version - 10.2.1
-- download link (current version) - [https://github.com/fmtlib/fmt/releases/tag/10.2.1](https://github.com/fmtlib/fmt/releases/tag/10.2.1)
-
 ## nanoflann
 - project page - [https://github.com/jlblancoc/nanoflann](https://github.com/jlblancoc/nanoflann)
 - current version - v1.5.5

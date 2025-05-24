@@ -12,7 +12,7 @@
 #define MATERIAL_PARTILCE_MATERIAL_H
 
 #include "influenceFn.h"
-#include "inp/decks/materialDeck.h"
+#include "inp/materialDeck.h"
 #include "util/function.h"
 #include "util/point.h" // definition of Point
 #include <limits>

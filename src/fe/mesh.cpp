@@ -9,14 +9,15 @@
  */
 
 #include "mesh.h"
-#include "inp/decks/meshDeck.h"
+#include "inp/meshDeck.h"
+#include "inp/modelDeck.h"
 #include "quadElem.h"
 #include "rw/reader.h"
 #include "tetElem.h"
 #include "triElem.h"
 #include "util/feElementDefs.h"
 #include "util/function.h"
-#include "util/geom.h"
+#include "geom/geomUtilFunctions.h"
 #include "util/parallelUtil.h"
 #include <cstdint>
 #include <iostream>
@@ -28,12 +29,12 @@ fe::Mesh::Mesh(size_t dim)
       d_h(0.), d_dim(dim), d_encDataPopulated(false), d_needEncData(false),
       d_nPart(0){}
 
-fe::Mesh::Mesh(inp::MeshDeck *deck)
+fe::Mesh::Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
-      d_h(deck->d_h), d_dim(deck->d_dim),
-      d_spatialDiscretization(deck->d_spatialDiscretization),
-      d_filename(deck->d_filename), d_encDataPopulated(false),
-      d_needEncData(deck->d_populateElementNodeConnectivity),
+      d_h(meshDeck->d_h), d_dim(modelDeck->d_dim),
+      d_spatialDiscretization(modelDeck->d_spatialDiscretization),
+      d_filename(meshDeck->d_filename), d_encDataPopulated(false),
+      d_needEncData(modelDeck->d_populateElementNodeConnectivity),
       d_nPart(0) {
 
   // perform check on input data
@@ -41,10 +42,7 @@ fe::Mesh::Mesh(inp::MeshDeck *deck)
       d_spatialDiscretization != "weak_finite_element" and
       d_spatialDiscretization != "nodal_finite_element" and
       d_spatialDiscretization != "truss_finite_element") {
-    std::cerr << "Error: Spatial discretization type not known. Check input "
-                 "data.\n";
-    std::cerr << deck->printStr() << "\n";
-    exit(1);
+    throw std::runtime_error("Spatial discretization type " + d_spatialDiscretization + " not known. Check input data.");
   }
 
   if (d_dim < 0 or d_dim > 3) {

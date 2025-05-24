@@ -10,31 +10,27 @@
 
 #include <PeriDEMConfig.h>
 
+#include "inp/input.h"
 #include "model/dem/demModel.h"
 #include "material/materialUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
-#include "util/geomObjects.h"
+#include "geom/geomObjects.h"
 #include "util/matrix.h"
-#include "util/methods.h"
+#include "util/vecMethods.h"
 #include "util/point.h"
-#include "inp/pdecks/contactDeck.h"
 #include "rw/reader.h"
 #include "util/function.h"
-#include "util/geom.h"
-#include "util/methods.h"
+#include "geom/geomUtilFunctions.h"
+#include "util/vecMethods.h"
 #include "util/randomDist.h"
 #include "util/parallelUtil.h"
-#include "inp/decks/materialDeck.h"
-#include "inp/decks/modelDeck.h"
-#include "inp/decks/outputDeck.h"
-#include "inp/decks/restartDeck.h"
 #include "rw/vtkParticleWriter.h"
 #include "rw/vtkParticleReader.h"
 #include "fe/elemIncludes.h"
 #include "fe/meshUtil.h"
 
-#include <fmt/format.h>
+#include <format>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -102,7 +98,7 @@ public:
         else if (particle_mesh_p->getElementType() == util::vtk_type_tetra)
           elem = new fe::TetElem(d_modelDeck_p->d_quadOrder);
         else {
-          std::cerr << fmt::format("Error: Can not compute strain/stress as the element "
+          std::cerr << std::format("Error: Can not compute strain/stress as the element "
                                    "type = {} is not yet supported in this routine.\n", particle_mesh_p->getElementType());
           exit(EXIT_FAILURE);
         }
@@ -132,7 +128,7 @@ public:
   void integrate() override {
     // perform output at the beginning
     if (d_n == 0 && d_outputDeck_p->d_performOut) {
-      log(fmt::format("{}: Output step = {}, time = {:.6f} \n", d_name, d_n, d_time),
+      log(std::format("{}: Output step = {}, time = {:.6f} \n", d_name, d_n, d_time),
           2);
       output();
     }
@@ -146,7 +142,7 @@ public:
 
     for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
 
-      log(fmt::format("{}: Time step: {}, time: {:8.6f}, steps completed = {}%\n",
+      log(std::format("{}: Time step: {}, time: {:8.6f}, steps completed = {}%\n",
                       d_name,
                       i,
                       d_time,
@@ -160,7 +156,7 @@ public:
       double integrate_time =
               util::methods::timeDiff(t1, steady_clock::now());
 
-      log(fmt::format("  Integration time (ms) = {}\n", integrate_time),
+      log(std::format("  Integration time (ms) = {}\n", integrate_time),
           2, d_n % d_infoN == 0, 3);
 
       if (d_pDeck_p->d_testName == "two_particle") {
@@ -250,7 +246,7 @@ public:
     if (util::isLess(d_maxY, max_y_loc))
       d_maxY = max_y_loc;
 
-    log(fmt::format("max y: {} \n", d_maxY), 2, d_n % d_infoN == 0, 3);
+    log(std::format("max y: {} \n", d_maxY), 2, d_n % d_infoN == 0, 3);
 
     // compute ideal values
     static int contact_pp_ideal = -1;
@@ -392,18 +388,18 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = 2;
-    util::io::print(fmt::format("Running TwoParticle_Demo with number of threads = {}\n", nThreads));
+    std::print("Running TwoParticle_Demo with number of threads = {}\n", nThreads);
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
-  util::io::print(fmt::format("Number of threads = {}\n", util::parallel::getNThreads()));
+  std::print("Number of threads = {}\n", util::parallel::getNThreads());
 
   std::string filename;
   if (input.cmdOptionExists("-i"))
     filename = input.getCmdOption("-i");
   else {
     filename = "./example/input_0.yaml";
-    util::io::print(fmt::format("Running TwoParticle_Demo with example input file = {}\n", filename));
+    std::print("Running TwoParticle_Demo with example input file = {}\n", filename);
   }
 
   // current time
