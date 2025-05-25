@@ -1,3 +1,4 @@
+
 /*
  * -------------------------------------------
  * Copyright (c) 2021 - 2024 Prashant K. Jha
@@ -13,9 +14,9 @@
 #include "util/vecMethods.h" // declares std::chrono and defines timeDiff()
 
 #include <metis.h>
-#include <print>
+#include <format>
 
-void fe::metisGraphPartition(std::string partitionMethod,
+void mesh::metisGraphPartition(std::string partitionMethod,
                          const std::vector<std::vector<size_t>> &nodeNeighs,
                          std::vector<size_t> &nodePartition,
                          size_t nPartitions) {
@@ -37,7 +38,7 @@ void fe::metisGraphPartition(std::string partitionMethod,
     adjncy.insert(adjncy.end(), nodeNeighs[i].begin(), nodeNeighs[i].end());
     xadj[i+1] = xadj[i] + idx_t(nodeNeighs[i].size());
   }
-  std::print("adjcny size = {}, xadj[end] = {}\n",
+  std::cout << std::format("adjcny size = {}, xadj[end] = {}\n",
                            adjncy.size(), xadj[nvtxs]);
 
   std::cout << "\nmetisGraphPartition():\n";
@@ -67,7 +68,7 @@ void fe::metisGraphPartition(std::string partitionMethod,
   // record time
   auto t2 = steady_clock::now();
 
-  std::print("\n  Return code = {}\n"
+  std::cout << std::format("\n  Return code = {}\n"
                            "  Edge cuts for partition = {}\n"
                            "  Partition calculation time (ms) = {}\n",
                            metis_return, (int) objval,
@@ -78,12 +79,12 @@ void fe::metisGraphPartition(std::string partitionMethod,
   nodePartition.insert(nodePartition.end(), part.begin(), part.end());
 }
 
-void fe::metisGraphPartition(std::string partitionMethod,
-                         fe::Mesh *mesh_p,
+void mesh::metisGraphPartition(std::string partitionMethod,
+                         mesh::Mesh *mesh_p,
                          const std::vector<std::vector<size_t>> &nodeNeighs,
                          size_t nPartitions) {
   mesh_p->d_nPart = nPartitions;
   mesh_p->d_partitionMethod = partitionMethod;
-  fe::metisGraphPartition(partitionMethod, nodeNeighs,
+  mesh::metisGraphPartition(partitionMethod, nodeNeighs,
                           mesh_p->d_nodePartition, nPartitions);
 }

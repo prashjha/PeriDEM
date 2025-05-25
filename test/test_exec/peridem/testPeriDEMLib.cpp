@@ -16,7 +16,6 @@
 #include "inp/outputDeck.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
-#include <fmt/format.h>
 #include <fstream>
 #include <string>
 

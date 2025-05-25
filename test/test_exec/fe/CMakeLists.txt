@@ -10,4 +10,4 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_executable(TestFE ${SOURCES})
 
-target_link_libraries(TestFE PUBLIC FE)
+target_link_libraries(TestFE PUBLIC FE Mesh)

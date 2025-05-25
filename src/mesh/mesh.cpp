@@ -11,10 +11,8 @@
 #include "mesh.h"
 #include "inp/meshDeck.h"
 #include "inp/modelDeck.h"
-#include "quadElem.h"
+#include "fe/elemIncludes.h"
 #include "rw/reader.h"
-#include "tetElem.h"
-#include "triElem.h"
 #include "util/feElementDefs.h"
 #include "util/function.h"
 #include "geom/geomUtilFunctions.h"
@@ -24,12 +22,14 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-fe::Mesh::Mesh(size_t dim)
+namespace mesh {
+
+Mesh::Mesh(size_t dim)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
       d_h(0.), d_dim(dim), d_encDataPopulated(false), d_needEncData(false),
       d_nPart(0){}
 
-fe::Mesh::Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck)
+Mesh::Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
       d_h(meshDeck->d_h), d_dim(modelDeck->d_dim),
       d_spatialDiscretization(modelDeck->d_spatialDiscretization),
@@ -62,7 +62,7 @@ fe::Mesh::Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck)
 //
 // Utility functions
 //
-void fe::Mesh::createData(const std::string &filename, bool ref_config) {
+void Mesh::createData(const std::string &filename, bool ref_config) {
 
   util::io::log("Mesh: Reading element data.\n");
 
@@ -198,7 +198,7 @@ void fe::Mesh::createData(const std::string &filename, bool ref_config) {
     readElementData(d_filename);
 }
 
-bool fe::Mesh::readElementData(const std::string &filename) {
+bool Mesh::readElementData(const std::string &filename) {
 
   if (d_encDataPopulated and !d_enc.empty()) {
     util::io::log("Mesh: Element data is populated already.\n");
@@ -245,7 +245,7 @@ bool fe::Mesh::readElementData(const std::string &filename) {
   return false;
 }
 
-void fe::Mesh::computeVol() {
+void Mesh::computeVol() {
 
   // initialize quadrature data
   fe::BaseElem *quads;
@@ -327,7 +327,7 @@ void fe::Mesh::computeVol() {
   executor.run(taskflow).get();
 }
 
-void fe::Mesh::computeBBox() {
+void Mesh::computeBBox() {
   std::vector<double> p1(3,0.);
   std::vector<double> p2(3,0.);
   for (const auto& x : d_nodes) {
@@ -348,7 +348,7 @@ void fe::Mesh::computeBBox() {
   d_bbox = std::make_pair(p1, p2);
 }
 
-void fe::Mesh::computeMeshSize() {
+void Mesh::computeMeshSize() {
 
   double guess = 0.;
   if (d_nodes.size() < 2) {
@@ -380,7 +380,7 @@ void fe::Mesh::computeMeshSize() {
 //
 // Setter functions
 //
-void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof,
+void Mesh::setFixity(const size_t &i, const unsigned int &dof,
                          const bool &flag) {
 
   // to set i^th bit as true of integer a,
@@ -391,7 +391,7 @@ void fe::Mesh::setFixity(const size_t &i, const unsigned int &dof,
 
   flag ? (d_fix[i] |= 1UL << dof) : (d_fix[i] &= ~(1UL << dof));
 }
-void fe::Mesh::clearElementData() {
+void Mesh::clearElementData() {
   if (!d_enc.empty())
     d_enc.shrink_to_fit();
   d_numElems = 0;
@@ -399,7 +399,7 @@ void fe::Mesh::clearElementData() {
     d_nec.shrink_to_fit();
 }
 
-std::string fe::Mesh::printStr(int nt, int lvl) const {
+std::string Mesh::printStr(int nt, int lvl) const {
 
   auto tabS = util::io::getTabS(nt);
   std::ostringstream oss;
@@ -418,3 +418,5 @@ std::string fe::Mesh::printStr(int nt, int lvl) const {
 
   return oss.str();
 }
+
+} // namespace mesh

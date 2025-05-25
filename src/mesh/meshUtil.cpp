@@ -10,7 +10,7 @@
 
 #include "meshUtil.h"
 #include "mesh.h"
-#include "elemIncludes.h"
+#include "fe/elemIncludes.h"
 #include "util/feElementDefs.h"
 #include "util/parallelUtil.h"
 #include "util/function.h"
@@ -20,7 +20,9 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-void fe::createUniformMesh(fe::Mesh *mesh_p, size_t dim, std::pair<std::vector<double>, std::vector<double>> box, std::vector<size_t> nGrid) {
+namespace mesh {
+
+void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<double>, std::vector<double>> box, std::vector<size_t> nGrid) {
 
   mesh_p->d_dim = dim;
   if (nGrid.size() < dim or box.first.size() < dim or box.second.size() < dim) {
@@ -172,8 +174,7 @@ void fe::createUniformMesh(fe::Mesh *mesh_p, size_t dim, std::pair<std::vector<d
   }
 }
 
-void
-fe::getCurrentQuadPoints(const fe::Mesh *mesh_p,
+void getCurrentQuadPoints(const mesh::Mesh *mesh_p,
                          const std::vector<util::Point> &xRef,
                          const std::vector<util::Point> &u,
                          std::vector<util::Point> &xQuadCur,
@@ -265,19 +266,19 @@ fe::getCurrentQuadPoints(const fe::Mesh *mesh_p,
   executor.run(taskflow).get();
 }
 
-void fe::getStrainStress(const fe::Mesh *mesh_p,
-                         const std::vector<util::Point> & xRef,
-                         const std::vector<util::Point> &u,
-                         bool isPlaneStrain,
-                         std::vector<util::SymMatrix3> &strain,
-                         std::vector<util::SymMatrix3> &stress,
-                         size_t iNodeStart,
-                         size_t iStrainStart,
-                         double nu,
-                         double lambda,
-                         double mu,
-                         bool computeStress,
-                         size_t quadOrder) {
+void getStrainStress(const mesh::Mesh *mesh_p,
+                     const std::vector<util::Point> & xRef,
+                     const std::vector<util::Point> &u,
+                     bool isPlaneStrain,
+                     std::vector<util::SymMatrix3> &strain,
+                     std::vector<util::SymMatrix3> &stress,
+                     size_t iNodeStart,
+                     size_t iStrainStart,
+                     double nu,
+                     double lambda,
+                     double mu,
+                     bool computeStress,
+                     size_t quadOrder) {
 
   assert((mesh_p->getDimension() > 1) && "In getStrainStress(), dimension = 2,3 is supported.\n");
 
@@ -414,16 +415,16 @@ void fe::getStrainStress(const fe::Mesh *mesh_p,
   executor.run(taskflow).get();
 }
 
-void fe::getMaxShearStressAndLoc(const fe::Mesh *mesh_p,
-                                 const std::vector<util::Point> & xRef,
-                                 const std::vector<util::Point> &u,
-                                 const std::vector<util::SymMatrix3> &stress,
-                                 double &maxShearStress,
-                                 util::Point &maxShearStressLocRef,
-                                 util::Point &maxShearStressLocCur,
-                                 size_t iNodeStart,
-                                 size_t iStrainStart,
-                                 size_t quadOrder) {
+void getMaxShearStressAndLoc(const mesh::Mesh *mesh_p,
+                             const std::vector<util::Point> & xRef,
+                             const std::vector<util::Point> &u,
+                             const std::vector<util::SymMatrix3> &stress,
+                             double &maxShearStress,
+                             util::Point &maxShearStressLocRef,
+                             util::Point &maxShearStressLocCur,
+                             size_t iNodeStart,
+                             size_t iStrainStart,
+                             size_t quadOrder) {
 
   assert((mesh_p->getDimension() == 2) && "In getMaxShearStressAndLoc(), only dimension = 2 is supported.\n");
 
@@ -510,4 +511,6 @@ void fe::getMaxShearStressAndLoc(const fe::Mesh *mesh_p,
     maxShearStressLocCur = qd_point_current;
   }
 }
+
+} // namespace mesh
 

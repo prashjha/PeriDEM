@@ -150,6 +150,10 @@ if(${Enable_Documentation})
     find_package(Doxygen)
 endif()
 
+# Add Gmsh
+find_package(Gmsh REQUIRED)
+include_directories(${GMSH_INCLUDE_DIRS})
+
 #----------------------------------#
 #<<<<<<<<<< Include directories >>>>>>>>>>#
 #----------------------------------#
@@ -167,17 +171,19 @@ include_directories(src)
 add_subdirectory(external/)
 
 # PeriDEM sub-directories
-add_subdirectory(src/util)
-add_subdirectory(src/geom)
-add_subdirectory(src/rw)
-add_subdirectory(src/inp)
-add_subdirectory(src/material)
-add_subdirectory(src/loading)
-add_subdirectory(src/fracture)
 add_subdirectory(src/fe)
-add_subdirectory(src/particle)
-add_subdirectory(src/nsearch)
+add_subdirectory(src/fracture)
+add_subdirectory(src/geom)
+add_subdirectory(src/inp)
+add_subdirectory(src/loading)
+add_subdirectory(src/material)
+add_subdirectory(src/mesh)
+add_subdirectory(src/mesh_gen)
 add_subdirectory(src/model)
+add_subdirectory(src/nsearch)
+add_subdirectory(src/particle)
+add_subdirectory(src/rw)
+add_subdirectory(src/util)
 
 # test directory
 if(${Enable_Tests})

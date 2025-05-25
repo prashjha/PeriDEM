@@ -28,7 +28,7 @@ void loading::applyIC(particle::BaseParticle *particle, const std::vector<inp::B
       continue;
 
     // get bounding box (quite possibly be generic)
-    auto reg_box = bc.d_regionGeomData.d_geom_p->box();
+    auto reg_box = bc.d_regionGeomData.d_geom_p == nullptr ? std::pair<util::Point, util::Point>(util::Point(), util::Point()) : bc.d_regionGeomData.d_geom_p->box();
 
     tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;

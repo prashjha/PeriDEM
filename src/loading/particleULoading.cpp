@@ -58,21 +58,16 @@ void loading::ParticleULoading::apply(const double &time,
     // get alias for bc data
     const auto &bc = d_bcData[s];
 
-    // if this is zero displacement condition, and if we have already applied
-    // displacement then do not need to reapply this
-    if (bc.d_isDisplacementZero && d_pZeroDisplacementApplied[s])
-      continue;
-
-    // set to true so that next time this is not called
+    // if this is zero displacement condition, we do not apply displacement
     if (bc.d_isDisplacementZero)
-      d_pZeroDisplacementApplied[s] = true;
+      continue;
 
     // check if we need to process this particle
     if (!needToProcessParticle(particle->getId(), bc))
       continue;
 
     // get bounding box (quite possibly be generic)
-    auto reg_box = bc.d_regionGeomData.d_geom_p->box();
+    auto reg_box = bc.d_regionGeomData.d_geom_p == nullptr ? std::pair<util::Point, util::Point>(util::Point(), util::Point()) : bc.d_regionGeomData.d_geom_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
     tf::Executor executor(util::parallel::getNThreads());

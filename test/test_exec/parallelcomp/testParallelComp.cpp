@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
         mHorizon = size_t(std::stoi(input.getCmdOption("-m")));
       else {
         mHorizon = 4;
-        util::io::print(st::format("Running test with default integer factor for horizon = {}\n", mHorizon));
+        util::io::print(std::format("Running test with default integer factor for horizon = {}\n", mHorizon));
       }
 
       // read filename

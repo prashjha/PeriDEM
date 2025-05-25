@@ -26,7 +26,7 @@
 #include "rw/vtkParticleWriter.h"
 #include "rw/vtkParticleReader.h"
 #include "fe/elemIncludes.h"
-#include "fe/meshUtil.h"
+#include "mesh/meshUtil.h"
 #include "loading/particleIC.h"
 
 #include <format>
@@ -1095,9 +1095,9 @@ void model::DEMModel::createParticles() {
     // read mesh data
     log(d_name + ": Creating mesh for reference particle in mesh group = " +
         std::to_string(z) + "\n");
-    std::shared_ptr<fe::Mesh> mesh;
+    std::shared_ptr<mesh::Mesh> mesh;
     if (!zmeshDeck.d_createMesh) {
-      mesh = std::make_shared<fe::Mesh>(&zmeshDeck, d_modelDeck_p.get());
+      mesh = std::make_shared<mesh::Mesh>(&zmeshDeck, d_modelDeck_p.get());
     }
     else {
       if (zmeshDeck.d_createMeshInfo == "uniform"
@@ -1120,12 +1120,12 @@ void model::DEMModel::createParticles() {
                                    box.second[i],
                                    nGrid[i]);
         }
-        fe::Mesh temp_mesh;
-        fe::createUniformMesh(&temp_mesh,
+        mesh::Mesh temp_mesh;
+        mesh::createUniformMesh(&temp_mesh,
                               d_modelDeck_p->d_dim,
                               box,
                               nGrid);
-        mesh = std::make_shared<fe::Mesh>(temp_mesh);
+        mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
       else {
         std::cerr << "Error: Currently, we can only support in-built uniform mesh for rectangles.\n";
@@ -1231,14 +1231,14 @@ void model::DEMModel::createParticlesFromFile() {
                  p_data.at("y").get<double>(), 
                  p_data.at("z").get<double>());
     
-    double orient = 0.;
+    double angle = 0.;
     double scale = p_data.value("s", double(1.));
 
-    if (p_data.find("o") != p_data.end()) {
-      orient = p_data.at("o").get<double>();
+    if (p_data.find("theta") != p_data.end()) {
+      angle = p_data.at("theta").get<double>();
     } else {
       if (pgen_deck.d_genWithRandomRotation) {
-        orient = util::transform_to_uniform_dist(0., 2. * M_PI, uniform_dist());
+        angle = util::transform_to_uniform_dist(0., 2. * M_PI, uniform_dist());
       }
     }
 
@@ -1254,9 +1254,11 @@ void model::DEMModel::createParticlesFromFile() {
 
     // create geometrical object by scaling the reference particle geometry at the site
     auto p_geom = std::make_shared<geom::GeomObject>(*rep_geom_p); // copy constructor
+    // scale the geometry
+    p_geom->transform(site, scale, angle, axis);
 
     // create transform with location, orientation and scale
-    auto p_transform = geom::ParticleTransform(site, axis, orient, scale);
+    auto p_transform = geom::ParticleTransform(site, axis, angle, scale);
 
     // create particle
     auto p = new particle::BaseParticle(
@@ -1780,13 +1782,13 @@ void model::DEMModel::output() {
 
         const auto particle_mesh_p = p->getMeshP();
 
-        fe::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
+        mesh::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
                                  p->d_globStart,
                                  p->d_globQuadStart,
                                  d_modelDeck_p->d_quadOrder);
 
         auto isPlaneStrain = p->d_material_p->isPlaneStrain();
-        fe::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
+        mesh::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
                             isPlaneStrain,
                             d_strain, d_stress,
                             p->d_globStart,

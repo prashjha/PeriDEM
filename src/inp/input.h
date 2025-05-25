@@ -26,7 +26,7 @@
  * *
  * Each deck is unique and is designed to initialize the higher level object
  * associated to it without needing information from other decks. For example,
- * fe::Mesh is initialized by inp::MeshDeck.
+ * mesh::Mesh is initialized by inp::MeshDeck.
  *
  * The namespace consists of Input and Policy member classes. Input class is
  * the main class responsible of reading input data into various decks.

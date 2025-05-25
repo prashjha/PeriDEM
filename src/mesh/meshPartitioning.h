@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace fe {
+namespace mesh {
 
 // forward declare Mesh
 class Mesh;
@@ -42,8 +42,18 @@ void metisGraphPartition(std::string partitionMethod,
  * @param nPartitions Number of partitions
  */
 void metisGraphPartition(std::string partitionMethod,
-                         fe::Mesh *mesh_p,
+                         mesh::Mesh *mesh_p,
                          const std::vector<std::vector<size_t>> &nodeNeighs,
                          size_t nPartitions);
 
-} // namespace fe
+void metisGraphPartition(std::string partitionMethod,
+                        std::vector<std::vector<size_t>> &nodeNeighs,
+                        size_t nparts,
+                        std::vector<size_t> &epart,
+                        std::vector<size_t> &npart);
+
+void metisGraphPartition(std::string partitionMethod,
+                        mesh::Mesh *mesh_p,
+                        size_t nparts);
+
+} // namespace mesh

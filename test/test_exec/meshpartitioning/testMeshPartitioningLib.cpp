@@ -9,9 +9,9 @@
  */
 
 #include "testMeshPartitioningLib.h"
-#include "fe/mesh.h"
-#include "fe/meshPartitioning.h"
-#include "fe/meshUtil.h"
+#include "mesh/mesh.h"
+#include "mesh/meshPartitioning.h"
+#include "mesh/meshUtil.h"
 #include "util/point.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
@@ -146,7 +146,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
   // empty mesh object
   size_t dim(2);
-  auto mesh = fe::Mesh(dim);
+  auto mesh = mesh::Mesh(dim);
   mesh.d_spatialDiscretization = "finite_difference";
 
   // create mesh
@@ -162,7 +162,7 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
     }
 
     // call utility function to create mesh
-    fe::createUniformMesh(&mesh, dim, box, nGridVec);
+    mesh::createUniformMesh(&mesh, dim, box, nGridVec);
 
     // filename for outputting
     outMeshFilename = std::format("uniform_mesh_Lx_{}_Ly_{}_Nx_{}_Ny_{}",
@@ -214,11 +214,11 @@ void test::testGraphPartitioning(size_t nPart, size_t nGrid, size_t mHorizon, si
 
   // recursive method
   auto t4 = steady_clock::now();
-  fe::metisGraphPartition("metis_recursive", nodeNeighs, nodePartitionRecursive, nPart);
+  mesh::metisGraphPartition("metis_recursive", nodeNeighs, nodePartitionRecursive, nPart);
   auto t5 = steady_clock::now();
 
   // K-way method
-  fe::metisGraphPartition("metis_kway", nodeNeighs, nodePartitionKWay, nPart);
+  mesh::metisGraphPartition("metis_kway", nodeNeighs, nodePartitionKWay, nPart);
   auto t6 = steady_clock::now();
 
   auto partition_recursive_time = util::methods::timeDiff(t4, t5, "microseconds");

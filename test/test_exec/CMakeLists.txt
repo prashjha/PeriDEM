@@ -13,6 +13,4 @@ add_subdirectory(nsearch)
 add_subdirectory(peridem)
 add_subdirectory(parallelcomp)
 add_subdirectory(meshpartitioning)
-
-
-
+add_subdirectory(mesh_gen)

@@ -13,9 +13,9 @@
 #include "util/randomDist.h"
 #include "util/point.h"
 #include "util/io.h"
-#include "fe/mesh.h"
-#include "fe/meshPartitioning.h"
-#include "fe/meshUtil.h"
+#include "mesh/mesh.h"
+#include "mesh/meshPartitioning.h"
+#include "mesh/meshUtil.h"
 #include "geom/geomIncludes.h"
 #include <mpi.h>
 #include <format>
@@ -292,7 +292,7 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
 
   // create uniform mesh
   size_t dim(2);
-  auto mesh = fe::Mesh(dim);
+  auto mesh = mesh::Mesh(dim);
   mesh.d_spatialDiscretization = "finite_difference";
 
   // create mesh
@@ -309,7 +309,7 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
 
     // call utility function to create mesh
     util::io::print("\n\nCreating uniform mesh\n\n");
-    fe::createUniformMesh(&mesh, dim, box, nGridVec);
+    mesh::createUniformMesh(&mesh, dim, box, nGridVec);
 
     // filename for outputting
     outMeshFilename = std::format("uniform_mesh_Lx_{}_Ly_{}_Nx_{}_Ny_{}",
@@ -347,7 +347,7 @@ void test::testMPI(size_t nGrid, size_t mHorizon,
   mesh.d_nodePartition.resize(mesh.d_numNodes);
   util::io::print("\n\nCreating partition of mesh\n\n");
   if (mpiRank == 0)
-    fe::metisGraphPartition("metis_kway", &mesh, nodeNeighs, nPart);
+    mesh::metisGraphPartition("metis_kway", &mesh, nodeNeighs, nPart);
 
   util::io::print("\n\nBroadcasting partition to all processors\n\n");
   MPI_Bcast(mesh.d_nodePartition.data(), mesh.d_numNodes,

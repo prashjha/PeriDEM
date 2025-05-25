@@ -9,9 +9,7 @@
  */
 
 #include "testFeLib.h"
-#include "fe/quadElem.h"
-#include "fe/triElem.h"
-#include "fe/tetElem.h"
+#include "fe/elemIncludes.h"
 #include "util/point.h"
 #include "util/feElementDefs.h"
 #include "util/vecMethods.h"

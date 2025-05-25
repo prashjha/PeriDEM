@@ -11,7 +11,7 @@
 #ifndef PARTILCE_REFPARTILCE_H
 #define PARTILCE_REFPARTILCE_H
 
-#include "fe/mesh.h"
+#include "mesh/mesh.h"
 #include "fracture/fracture.h"
 #include "inp/particleDeck.h"
 #include "material/mparticle/material.h"
@@ -47,7 +47,7 @@ public:
   RefParticle(size_t id,
               std::shared_ptr<model::ModelData> model_data,
               std::shared_ptr<geom::GeomObject> geom,
-              std::shared_ptr<fe::Mesh> mesh);
+              std::shared_ptr<mesh::Mesh> mesh);
 
   /**
    * @name Accessors
@@ -58,10 +58,10 @@ public:
    * @brief Get pointer to mesh object
    * @return mesh Pointer to mesh
    */
-  std::shared_ptr<fe::Mesh> &getMeshP() { return d_mesh_p; };
+  std::shared_ptr<mesh::Mesh> &getMeshP() { return d_mesh_p; };
 
   /*! @copydoc getMeshP() */
-  const std::shared_ptr<fe::Mesh> &getMeshP() const { return d_mesh_p; };
+  const std::shared_ptr<mesh::Mesh> &getMeshP() const { return d_mesh_p; };
 
   /*!
    * @brief Get pointer to geometry object
@@ -76,10 +76,10 @@ public:
    * @brief Get reference to mesh object
    * @return mesh Reference to mesh
    */
-  fe::Mesh &getMesh() { return *d_mesh_p; };
+  mesh::Mesh &getMesh() { return *d_mesh_p; };
 
   /*! @copydoc getMesh() */
-  const fe::Mesh &getMesh() const { return *d_mesh_p; };
+  const mesh::Mesh &getMesh() const { return *d_mesh_p; };
 
   /*!
    * @brief Get the dimension of the domain
@@ -154,7 +154,7 @@ public:
   std::shared_ptr<model::ModelData> d_modelData_p;
 
   /*! @brief Pointer to mesh on reference particle */
-  std::shared_ptr<fe::Mesh> d_mesh_p;
+  std::shared_ptr<mesh::Mesh> d_mesh_p;
 
   /*! @brief Id of mesh node closest to the particle center */
   size_t d_centerNode;

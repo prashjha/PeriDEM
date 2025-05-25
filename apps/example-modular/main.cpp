@@ -216,15 +216,15 @@ int main(int argc, char *argv[]) {
   pGenJson["Data"]["N"] = 3; // three particles
 
   // p1
-  pGenJson["Data"]["0"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"o", 0.}, {"s", 1.},
+  pGenJson["Data"]["0"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"theta", 0.}, {"s", 1.},
                            {"geom_id", 0}, {"mat_id", 0}, {"contact_id", 0}};
 
   // p1
-  pGenJson["Data"]["1"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"o", 0.}, {"s", 1.},
+  pGenJson["Data"]["1"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"theta", 0.}, {"s", 1.},
                            {"geom_id", 1}, {"mat_id", 1}, {"contact_id", 1}};
 
   // p1
-  pGenJson["Data"]["2"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"o", 0.}, {"s", 1.},
+  pGenJson["Data"]["2"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"theta", 0.}, {"s", 1.},
                            {"geom_id", 2}, {"mat_id", 1}, {"contact_id", 1}};
 
   // add to json

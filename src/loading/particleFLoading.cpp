@@ -47,7 +47,7 @@ void loading::ParticleFLoading::apply(const double &time,
       continue;
 
     // get bounding box (quite possibly be generic)
-    auto reg_box = bc.d_regionGeomData.d_geom_p->box();
+    auto reg_box = bc.d_regionGeomData.d_geom_p == nullptr ? std::pair<util::Point, util::Point>(util::Point(), util::Point()) : bc.d_regionGeomData.d_geom_p->box();
 
     // for (size_t i = 0; i < particle->getNumNodes(); i++) {
     tf::Executor executor(util::parallel::getNThreads());

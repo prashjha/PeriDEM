@@ -10,10 +10,7 @@
 
 #include "baseParticle.h"
 #include "util/vecMethods.h"
-#include "fe/baseElem.h"
-#include "fe/quadElem.h"
-#include "fe/tetElem.h"
-#include "fe/triElem.h"
+#include "fe/elemIncludes.h"
 #include "material/materialUtil.h"
 #include "util/feElementDefs.h"
 #include "geom/geomIncludes.h"
@@ -53,7 +50,7 @@ particle::BaseParticle::BaseParticle(size_t id,
                                      std::shared_ptr<particle::RefParticle> ref_particle,
                                      std::shared_ptr<geom::GeomObject> geom,
                                      geom::ParticleTransform &transform,
-                                     std::shared_ptr<fe::Mesh> mesh,
+                                     std::shared_ptr<mesh::Mesh> mesh,
                                      inp::MaterialDeck &material_deck,
                                      bool populate_data)
         : d_id(id),

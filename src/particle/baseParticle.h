@@ -70,7 +70,7 @@ public:
                std::shared_ptr<particle::RefParticle> ref_particle,
                std::shared_ptr<geom::GeomObject> geom,
                geom::ParticleTransform &transform,
-               std::shared_ptr<fe::Mesh> mesh,
+               std::shared_ptr<mesh::Mesh> mesh,
                inp::MaterialDeck &material_deck,
                bool populate_data = true);
 
@@ -108,19 +108,19 @@ public:
    * @brief Get pointer to mesh object
    * @return mesh Pointer to mesh
    */
-  std::shared_ptr<fe::Mesh> &getMeshP() { return d_mesh_p; };
+  std::shared_ptr<mesh::Mesh> &getMeshP() { return d_mesh_p; };
 
   /*! @copydoc getMeshP() */
-  const std::shared_ptr<fe::Mesh> &getMeshP() const { return d_mesh_p; };
+  const std::shared_ptr<mesh::Mesh> &getMeshP() const { return d_mesh_p; };
 
   /*!
    * @brief Get reference to mesh object
    * @return mesh Reference to mesh
    */
-  fe::Mesh &getMesh() { return *d_mesh_p; };
+  mesh::Mesh &getMesh() { return *d_mesh_p; };
 
   /*! @copydoc getMesh() */
-  const fe::Mesh &getMesh() const { return *d_mesh_p; };
+  const mesh::Mesh &getMesh() const { return *d_mesh_p; };
 
   /*!
    * @brief Get mesh size
@@ -941,7 +941,7 @@ public:
   geom::ParticleTransform d_tform;
 
   /*! @brief Pointer to mesh on reference particle */
-  std::shared_ptr<fe::Mesh> d_mesh_p;
+  std::shared_ptr<mesh::Mesh> d_mesh_p;
 };
 
 } // namespace particle

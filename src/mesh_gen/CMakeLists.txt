@@ -8,6 +8,9 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Particle ${SOURCES})
+add_library(MeshGen ${SOURCES})
 
-target_link_libraries(Particle PUBLIC Mesh Material Fracture)
+target_link_libraries(MeshGen PUBLIC
+        Util
+        Mesh
+        ${GMSH_LIBRARIES}) 

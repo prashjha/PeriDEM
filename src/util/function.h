@@ -174,6 +174,8 @@ double doubleGaussian2d(const util::Point &x, const size_t &dof,
  */
 double equivalentMass(const double &m1, const double &m2);
 
+double harmonicMean(const double &m1, const double &m2);
+
 } // namespace util
 
 #endif // UTIL_FUNCTION_H

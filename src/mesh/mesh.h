@@ -30,7 +30,7 @@ struct ModelDeck;
  * methods related to mesh such as nodal coordinates, element-node
  * connectivity, etc.
  */
-namespace fe {
+namespace mesh {
 
 /*! @brief A class for mesh data
  *
@@ -199,7 +199,7 @@ public:
    * @brief Get the connectivity of element
    *
    * Since we store connectivity in a single vector, we use
-   * fe::Mesh::d_eNumVertex to get the connectivity of element. Given element
+   * mesh::Mesh::d_eNumVertex to get the connectivity of element. Given element
    * e, the connectivity of e begins from location \f$ i_0 = e*d\_eNumVertex + 0
    * \f$ upto \f$i_{n-1} = e*d\_eNumVertex + d\_eNumVertex - 1\f$.
    *
@@ -518,6 +518,6 @@ public:
   double d_h;
 };
 
-} // namespace fe
+} // namespace mesh
 
 #endif // FE_MESH_H

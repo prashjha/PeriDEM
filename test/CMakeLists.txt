@@ -20,6 +20,9 @@ endif()
 #----------------------------------#
 add_subdirectory(test_exec)
 
+
+add_subdirectory(test_data/peridem/twop_circ)
+
 #----------------------------------#
 #<<<<<<<<<< Lib tests >>>>>>>>>>#
 #----------------------------------#

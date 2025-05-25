@@ -8,6 +8,6 @@
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(Particle ${SOURCES})
+add_library(Mesh ${SOURCES})
 
-target_link_libraries(Particle PUBLIC Mesh Material Fracture)
+target_link_libraries(Mesh PUBLIC ${METIS_LIB} FE Util Geom Inp RW)

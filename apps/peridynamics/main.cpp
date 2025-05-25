@@ -32,7 +32,7 @@
 #include "rw/vtkParticleWriter.h"
 #include "rw/vtkParticleReader.h"
 #include "fe/elemIncludes.h"
-#include "fe/meshUtil.h"
+#include "mesh/meshUtil.h"
 
 #include <format>
 #include <print>

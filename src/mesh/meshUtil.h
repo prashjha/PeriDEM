@@ -16,7 +16,7 @@
 #include <string>
 #include <vector>
 
-namespace fe {
+namespace mesh {
 
 // forward declare Mesh
 class Mesh;
@@ -28,7 +28,7 @@ class Mesh;
  * @param box Specifies domain (e.g., rectangle/cuboid)
  * @param nGrid Grid sizes in dim directions
  */
-void createUniformMesh(fe::Mesh *mesh_p, size_t dim, std::pair<std::vector<double>, std::vector<double>> box, std::vector<size_t> nGrid);
+void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<double>, std::vector<double>> box, std::vector<size_t> nGrid);
 
 /*!
  * @brief Get current location of quadrature points of elements in the mesh.
@@ -60,7 +60,7 @@ void createUniformMesh(fe::Mesh *mesh_p, size_t dim, std::pair<std::vector<doubl
  * iNodeStart
  * @param quadOrder Order of quadrature approximation (default is 1)
  */
-void getCurrentQuadPoints(const fe::Mesh *mesh_p,
+void getCurrentQuadPoints(const mesh::Mesh *mesh_p,
                           const std::vector<util::Point> &xRef,
                           const std::vector<util::Point> &u,
                           std::vector<util::Point> &xQuadCur,
@@ -94,7 +94,7 @@ void getCurrentQuadPoints(const fe::Mesh *mesh_p,
  * @param computeStress False will not compute stress
  * @param quadOrder Order of quadrature approximation (default is 1)
  */
-void getStrainStress(const fe::Mesh *mesh_p,
+void getStrainStress(const mesh::Mesh *mesh_p,
                      const std::vector<util::Point> & xRef,
                      const std::vector<util::Point> &u,
                      bool isPlaneStrain,
@@ -124,7 +124,7 @@ void getStrainStress(const fe::Mesh *mesh_p,
  * iNodeStart
  * @param quadOrder Order of quadrature approximation (default is 1)
  */
-void getMaxShearStressAndLoc(const fe::Mesh *mesh_p,
+void getMaxShearStressAndLoc(const mesh::Mesh *mesh_p,
                              const std::vector<util::Point> & xRef,
                              const std::vector<util::Point> &u,
                              const std::vector<util::SymMatrix3> &stress,
@@ -135,4 +135,4 @@ void getMaxShearStressAndLoc(const fe::Mesh *mesh_p,
                              size_t iStrainStart = 0,
                              size_t quadOrder = 1);
 
-} // namespace fe
+} // namespace mesh

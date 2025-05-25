@@ -11,7 +11,7 @@
 #include "vtkParticleReader.h"
 #include "util/feElementDefs.h"
 #include "util/io.h"
-#include "fe/mesh.h"
+#include "mesh/mesh.h"
 #include "util/vecMethods.h"
 #include "model/modelData.h"
 #include "particle/baseParticle.h"

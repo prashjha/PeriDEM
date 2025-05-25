@@ -19,7 +19,7 @@
 #include <vtkPoints.h>
 #include <vtkUnsignedIntArray.h>
 
-#include "fe/mesh.h"
+#include "mesh/mesh.h"
 #include <cstdint>
 #include "model/modelData.h"
 #include "particle/baseParticle.h"

@@ -6,8 +6,14 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-AUX_SOURCE_DIRECTORY(./ SOURCES)
+add_executable(TestMeshGen testMeshGen.cpp)
 
-add_library(Particle ${SOURCES})
+target_link_libraries(TestMeshGen PUBLIC
+        MeshGen
+        Util
+        Mesh
+        ${GMSH_LIBRARIES})
 
-target_link_libraries(Particle PUBLIC Mesh Material Fracture)
+# Add test
+add_test(NAME TestMeshGen COMMAND TestMeshGen)
+set_tests_properties(TestMeshGen PROPERTIES LABELS "MeshGen") 

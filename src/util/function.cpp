@@ -127,3 +127,7 @@ double util::doubleGaussian2d(const util::Point &x,
 double util::equivalentMass(const double &m1, const double &m2) {
   return 2. * m1 * m2 / (m1 + m2);
 }
+
+double util::harmonicMean(const double &m1, const double &m2) {
+  return 2. * m1 * m2 / (m1 + m2);
+}
