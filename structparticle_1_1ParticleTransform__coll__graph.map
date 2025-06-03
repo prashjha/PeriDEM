@@ -1,5 +1,0 @@
-<map id="particle::ParticleTransform" name="particle::ParticleTransform">
-<area shape="rect" id="Node000001" title="A struct that stores transformation parameters and provides method to transform the particle...." alt="" coords="5,668,172,853"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="31,5,146,591"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,591,91,652,86,652,86,591"/>
-</map>

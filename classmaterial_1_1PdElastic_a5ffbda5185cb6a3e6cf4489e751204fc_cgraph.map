@@ -1,5 +1,0 @@
-<map id="material::PdElastic::getS" name="material::PdElastic::getS">
-<area shape="rect" id="Node000001" title="Returns the bond strain." alt="" coords="5,5,137,45"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="185,13,305,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,23,172,23,172,28,137,28"/>
-</map>
