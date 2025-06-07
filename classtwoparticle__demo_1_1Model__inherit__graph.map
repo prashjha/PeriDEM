@@ -1,7 +1,0 @@
-<map id="twoparticle_demo::Model" name="twoparticle_demo::Model">
-<area shape="rect" id="Node000001" title="Main model class to handle demo two&#45;particle test implementation. Goal is to show that it is easy to ..." alt="" coords="10,4300,231,4660"/>
-<area shape="rect" id="Node000002" href="$classmodel_1_1DEMModel.html" title="A class for discrete element particle simulation with peridynamic model" alt="" coords="5,2919,236,4252"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,4266,123,4300,118,4300,118,4266"/>
-<area shape="rect" id="Node000003" href="$classmodel_1_1ModelData.html" title="A class to store model data." alt="" coords="25,5,216,2871"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="123,2884,123,2918,118,2918,118,2884"/>
-</map>
