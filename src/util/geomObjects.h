@@ -2054,6 +2054,176 @@ namespace util {
         };
 
 /*!
+* @brief Defines ellipse
+*/
+        class Ellipse : public GeomObject {
+
+        public:
+            /*!
+             * @brief Constructor
+             */
+            Ellipse()
+                    : GeomObject("ellipse", ""),
+                      d_x(util::Point()),
+                      d_a(0.),
+                      d_b(0.),
+                      d_theta(0.),
+                      d_r(0.) {};
+
+            /*!
+             * @brief Constructor
+             *
+             * @param a Semi-major axis length
+             * @param b Semi-minor axis length
+             * @param x Center point
+             * @param theta Rotation angle in radians (counterclockwise from x-axis)
+             * @param description Description of object (e.g., further classification or any tag)
+             */
+            Ellipse(double a, double b, util::Point x = util::Point(),
+                   double theta = 0., std::string description = "")
+                    : GeomObject("ellipse", description),
+                      d_x(x),
+                      d_a(a),
+                      d_b(b),
+                      d_theta(theta),
+                      d_r(std::max(a, b)) {};
+
+            /*!
+             * @copydoc GeomObject::volume() const
+             */
+            double volume() const override;
+
+            /*!
+             * @copydoc GeomObject::center() const
+             */
+            util::Point center() const override;
+
+            /*!
+             * @copydoc GeomObject::box() const
+             */
+            std::pair<util::Point, util::Point> box() const override;
+
+            /*!
+             * @copydoc GeomObject::box(const double &tol) const
+             */
+            std::pair<util::Point, util::Point>
+            box(const double &tol) const override;
+
+            /*!
+             * @copydoc GeomObject::inscribedRadius() const
+             */
+            double inscribedRadius() const override;
+
+            /*!
+             * @copydoc GeomObject::boundingRadius() const
+             */
+            double boundingRadius() const override;
+
+            /**
+             * @name Interaction with point
+             */
+            /** @{*/
+
+            /*!
+             * @copydoc GeomObject::isInside(const util::Point &x) const
+             */
+            bool isInside(const util::Point &x) const override;
+
+            /*!
+             * @copydoc GeomObject::isOutside(const util::Point &x) const
+             */
+            bool isOutside(const util::Point &x) const override;
+
+            /*!
+             * @copydoc GeomObject::isNear(const util::Point &x, const double &tol) const
+             */
+            bool isNear(const util::Point &x, const double &tol) const override;
+
+            /*!
+             * @copydoc GeomObject::isNearBoundary(const util::Point &x, const double &tol,
+                                const bool &within) cons
+             */
+            bool isNearBoundary(const util::Point &x, const double &tol,
+                                const bool &within) const override;
+
+            /*!
+             * @copydoc GeomObject::doesIntersect(const util::Point &x) const
+             */
+            bool doesIntersect(const util::Point &x) const override;
+
+            /** @}*/
+
+            /**
+             * @name Interaction with box
+             */
+            /** @{*/
+
+            /*!
+             * @copydoc GeomObject::isInside(
+                    const std::pair<util::Point, util::Point> &box) const
+             */
+            bool
+            isInside(
+                    const std::pair<util::Point, util::Point> &box) const override;
+
+            /*!
+             * @copydoc GeomObject::isOutside(
+                    const std::pair<util::Point, util::Point> &box) const
+             */
+            bool
+            isOutside(
+                    const std::pair<util::Point, util::Point> &box) const override;
+
+            /*!
+             * @copydoc GeomObject::isNear(const std::pair<util::Point, util::Point> &box,
+                        const double &tol) const
+             */
+            bool isNear(const std::pair<util::Point, util::Point> &box,
+                        const double &tol) const override;
+
+            /*!
+             * @copydoc GeomObject::doesIntersect(
+                    const std::pair<util::Point, util::Point> &box) const
+             */
+            bool doesIntersect(
+                    const std::pair<util::Point, util::Point> &box) const override;
+
+            /** @}*/
+
+            /*!
+             * @copydoc GeomObject::printStr(int nt, int lvl) const
+             */
+            std::string printStr(int nt, int lvl) const override;
+
+            /*!
+             * @copydoc GeomObject::print(int nt, int lvl) const
+             */
+            void print(int nt, int lvl) const override {
+              std::cout << printStr(nt, lvl);
+            };
+
+            /*!
+             * @copydoc GeomObject::print() const
+             */
+            void print() const override { print(0, 0); };
+
+            /*! @brief Center */
+            util::Point d_x;
+
+            /*! @brief Semi-major axis length */
+            double d_a;
+
+            /*! @brief Semi-minor axis length */
+            double d_b;
+
+            /*! @brief Rotation angle in radians (counterclockwise from x-axis) */
+            double d_theta;
+
+            /*! @brief Bounding radius (max of semi-major and semi-minor axis) */
+            double d_r;
+        };
+
+/*!
 * @brief Defines sphere
 */
         class Sphere : public GeomObject {

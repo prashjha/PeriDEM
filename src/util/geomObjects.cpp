@@ -2046,3 +2046,139 @@ namespace util {
     }
 
 }// ComplexGeomObject
+
+//
+// Ellipse
+//
+namespace util {
+    double util::geometry::Ellipse::volume() const {
+      return M_PI * d_a * d_b;  // Area of ellipse = π * a * b
+    }
+
+    util::Point util::geometry::Ellipse::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> util::geometry::Ellipse::box() const {
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> util::geometry::Ellipse::box(const double &tol) const {
+      // For a rotated ellipse, we need to find the extreme points
+      double cos_t = std::cos(d_theta);
+      double sin_t = std::sin(d_theta);
+      
+      // Maximum extents in x and y directions
+      double xmax = std::sqrt(std::pow(d_a * cos_t, 2) + std::pow(d_b * sin_t, 2));
+      double ymax = std::sqrt(std::pow(d_a * sin_t, 2) + std::pow(d_b * cos_t, 2));
+
+      return {d_x - util::Point(xmax + tol, ymax + tol, 0.),
+              d_x + util::Point(xmax + tol, ymax + tol, 0.)};
+    }
+
+    double util::geometry::Ellipse::inscribedRadius() const {
+      return std::min(d_a, d_b);  // Minimum of semi-major and semi-minor axes
+    }
+
+    double util::geometry::Ellipse::boundingRadius() const {
+      return d_r;  // Maximum of semi-major and semi-minor axes (set in constructor)
+    }
+
+    bool util::geometry::Ellipse::isInside(const util::Point &x) const {
+      // Transform point to ellipse coordinate system
+      util::Point dx = x - d_x;
+      double cos_t = std::cos(d_theta);
+      double sin_t = std::sin(d_theta);
+      
+      // Rotate point to align with ellipse axes
+      double x_rot = dx.d_x * cos_t + dx.d_y * sin_t;
+      double y_rot = -dx.d_x * sin_t + dx.d_y * cos_t;
+      
+      // Check standard ellipse equation (x²/a² + y²/b² ≤ 1)
+      return util::isLess(std::pow(x_rot/d_a, 2) + std::pow(y_rot/d_b, 2), 1.0);
+    }
+
+    bool util::geometry::Ellipse::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool util::geometry::Ellipse::isNear(const util::Point &x, const double &tol) const {
+      // Transform point to ellipse coordinate system
+      util::Point dx = x - d_x;
+      double cos_t = std::cos(d_theta);
+      double sin_t = std::sin(d_theta);
+      
+      // Rotate point to align with ellipse axes
+      double x_rot = dx.d_x * cos_t + dx.d_y * sin_t;
+      double y_rot = -dx.d_x * sin_t + dx.d_y * cos_t;
+      
+      // Calculate normalized distance from ellipse boundary
+      double dist = std::pow(x_rot/d_a, 2) + std::pow(y_rot/d_b, 2);
+      return util::isLess(std::abs(dist - 1.0), tol/std::min(d_a, d_b));
+    }
+
+    bool util::geometry::Ellipse::isNearBoundary(const util::Point &x,
+                                               const double &tol,
+                                               const bool &within) const {
+      return isNear(x, tol) && (within ? isInside(x) : isOutside(x));
+    }
+
+    bool util::geometry::Ellipse::doesIntersect(const util::Point &x) const {
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool util::geometry::Ellipse::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+      // Check if all corners of the box are inside the ellipse
+      for (auto p: util::getCornerPoints(2, box))
+        if (!isInside(p))
+          return false;
+      return true;
+    }
+
+    bool util::geometry::Ellipse::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+      // Check if all corners of the box are outside the ellipse
+      for (auto p: util::getCornerPoints(2, box))
+        if (!isOutside(p))
+          return false;
+      return true;
+    }
+
+    bool util::geometry::Ellipse::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+      return util::areBoxesNear(this->box(), box, tol, 2);
+    }
+
+    bool util::geometry::Ellipse::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+      // Check if any corner point is inside
+      for (auto p: util::getCornerPoints(2, box))
+        if (isInside(p))
+          return true;
+      return false;
+    }
+
+    std::string util::geometry::Ellipse::printStr(int nt, int lvl) const {
+      auto tabS = util::io::getTabS(nt);
+      std::ostringstream oss;
+
+      oss << tabS << "------- Ellipse --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Semi-major axis = " << d_a << std::endl;
+      oss << tabS << "Semi-minor axis = " << d_b << std::endl;
+      oss << tabS << "Rotation angle = " << d_theta << " radians" << std::endl;
+      oss << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+} // Ellipse

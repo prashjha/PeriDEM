@@ -134,7 +134,8 @@ const std::vector<std::string> acceptable_geometries = {"circle",
                                                     "drum2d",
                                                     "sphere",
                                                     "cube",
-                                                    "cuboid"};
+                                                    "cuboid",
+                                                    "ellipse"};
 
 /*! @brief Returns list of acceptable geometries for PeriDEM simulation */
 inline const std::vector<std::string> &getAcceptableGeometries() {

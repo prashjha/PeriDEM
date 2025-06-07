@@ -53,6 +53,8 @@ namespace util {
         return {3, 6};
       else if (geom_type == "circle")
         return {1, 4};
+      else if (geom_type == "ellipse")
+        return {2, 5};
       else if (geom_type == "sphere")
         return {1, 4};
       else if (geom_type == "cylinder")
@@ -173,6 +175,31 @@ namespace util {
                                                          util::Point());
         } // if else check_failed
       } // if circle
+      else if (type == "ellipse") {
+
+        if (check_passed) {
+          // if check is passed
+          obj = std::make_shared<util::geometry::Ellipse>(params[0], params[1],
+                                                         util::Point());
+        } // if else check_failed
+        else {
+          // if check is failed check if we can use other constructor
+          if (params.size() < 2) {
+            // if params are not adequate
+            std::cerr << "Error: need at least " << 2
+                      << " parameters for creating ellipse. "
+                         "Number of params provided = "
+                      << params.size()
+                      << ", params = "
+                      << util::io::printStr(params) << " \n";
+            exit(EXIT_FAILURE);
+          }
+
+          // reached here it means we have adequate parameters
+          obj = std::make_shared<util::geometry::Ellipse>(params[0], params[1],
+                                                         util::Point());
+        } // if else check_failed
+      } // if ellipse
       else if (type == "rectangle") {
 
         if (check_passed) {
@@ -706,6 +733,28 @@ namespace util {
           } // if params.size() == n
         } // loop over n
       } // Circle
+      else if (geom_type == "ellipse") {
+
+        num_params_needed = {2, 5, 6};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 2) {
+              obj = std::make_shared<util::geometry::Ellipse>(params[0], params[1]);
+              return;
+            } else if (n == 5) {
+              obj = std::make_shared<util::geometry::Ellipse>(params[0], params[1],
+                                                             util::Point(params[2], params[3], params[4]));
+              return;
+            } else if (n == 6) {
+              obj = std::make_shared<util::geometry::Ellipse>(params[0], params[1],
+                                                             util::Point(params[2], params[3], params[4]),
+                                                             params[5]);
+              return;
+            }
+          } // if params.size() == n
+        } // loop over n
+      } // Ellipse
       else if (geom_type == "sphere") {
 
         num_params_needed = {1, 4};

@@ -1463,7 +1463,24 @@ double model::DEMModel::createGeometryAtSite(const double &particle_radius,
 
       scale = params[0] / rep_geom_params[0];
     }
-  } else {
+  } else if (rep_geom_p->d_name == "ellipse") {
+
+    // case - objects requiring six parameters
+    size_t num_params = 6;
+
+    if (params.size() < num_params)
+      params.resize(num_params);
+
+    params[0] = particle_radius;
+    params[1] = particle_radius * rep_geom_params[1] / rep_geom_params[0];
+    for (int dof = 0; dof < 3; dof++)
+      params[dof + 2] = site[dof];
+
+    params[5] = particle_orient;
+
+    scale = params[0] / rep_geom_params[0];
+  }
+  else {
     std::cerr << fmt::format("Error: PeriDEM supports following type "
                              "of geometries for particles = {}\n",
                              util::io::printStr(util::geometry::acceptable_geometries));
