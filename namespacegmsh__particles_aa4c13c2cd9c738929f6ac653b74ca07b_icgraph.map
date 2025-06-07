@@ -1,0 +1,5 @@
+<map id="gmsh_particles.rectangle_mesh_symmetric" name="gmsh_particles.rectangle_mesh_symmetric">
+<area shape="rect" id="Node000001" title=" " alt="" coords="223,13,389,53"/>
+<area shape="rect" id="Node000002" href="$namespacecircle__wall__input__using__symmetric__mesh.html#af6fc8d30f4a74bb437c3b7fbd099f15e" title=" " alt="" coords="5,5,175,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,35,175,35,175,30,209,30"/>
+</map>

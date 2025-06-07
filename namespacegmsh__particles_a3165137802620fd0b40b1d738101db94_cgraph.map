@@ -1,0 +1,11 @@
+<map id="gmsh_particles.sphere_mesh_symmetric" name="gmsh_particles.sphere_mesh_symmetric">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,99,159,139"/>
+<area shape="rect" id="Node000002" href="$namespacegeom__util.html#a13f030c6d181d0210c230fc01e33331c" title=" " alt="" coords="210,5,379,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,96,206,55,223,48,225,53,208,60,122,101"/>
+<area shape="rect" id="Node000003" href="$namespacegeom__util.html#a4cff2d2279e07cecdbff9c469cadc986" title=" " alt="" coords="225,69,364,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="159,105,211,98,212,103,160,111"/>
+<area shape="rect" id="Node000004" href="$namespacegeom__util.html#a4da92e283f0d3adaeec14f498c0f2c10" title=" " alt="" coords="207,134,383,159"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="160,126,194,131,193,136,159,131"/>
+<area shape="rect" id="Node000005" href="$namespacegeom__util.html#a0402fa3ab58c62403ff40506f3453665" title=" " alt="" coords="209,183,380,209"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="128,136,208,168,234,177,232,182,206,173,126,141"/>
+</map>
