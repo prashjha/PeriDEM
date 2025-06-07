@@ -1,0 +1,8 @@
+<map id="model::DEMModel::log" name="model::DEMModel::log">
+<area shape="rect" id="Node000001" title="Prints message if any of these two conditions are true." alt="" coords="5,29,160,55"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="208,29,291,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,39,194,39,194,45,160,45"/>
+<area shape="rect" id="Node000003" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="339,29,468,55"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="291,39,325,39,325,45,291,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="378,31,372,21,375,11,386,5,403,3,424,6,433,15,430,19,422,11,403,8,388,10,379,15,378,20,382,28"/>
+</map>
