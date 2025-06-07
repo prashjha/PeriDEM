@@ -9,118 +9,147 @@
  */
 
 #include "meshGenerator.h"
-#include <format>
-#include <stdexcept>
 
 namespace mesh_gen {
 
-MeshGenerator::MeshGenerator(int debugLevel) 
-    : d_meshSize(0.0), d_debugLevel(debugLevel), d_isInitialized(false) {}
-
-MeshGenerator::~MeshGenerator() {
-  if (d_isInitialized)
-    finalize();
+std::vector<std::pair<int, int>> getGmshEntities() {
+  std::vector<std::pair<int, int>> entities;
+  for (int dim = 0; dim < 4; dim++) {
+    std::vector<std::pair<int, int>> dimEntities;
+    gmsh::model::getEntities(dimEntities, dim);
+    entities.insert(entities.end(), dimEntities.begin(), dimEntities.end());
+  }
+  return entities;
 }
 
-void MeshGenerator::initialize() {
-  if (!d_isInitialized) {
-    gmsh::initialize();
-    
-    // Set debug options based on debug level
-    if (d_debugLevel > 0) {
-      gmsh::option::setNumber("General.Terminal", 1);
-      if (d_debugLevel > 1) {
-        gmsh::option::setNumber("General.Verbosity", 99);
-      } else {
-        gmsh::option::setNumber("General.Verbosity", 5);
-      }
+void gmshTransform(const std::vector<std::pair<int, int>>& m, int offset_entity, int offset_node, int offset_element, double tx, double ty, double tz) {
+  for (const auto& e : m) {
+    // Add new discrete entity
+    std::vector<std::pair<int, int>> boundaryTags;
+    gmsh::model::getBoundary({e}, boundaryTags, false);
+    std::vector<int> outDimTags;
+    for (const auto& tag : boundaryTags) {
+      outDimTags.push_back(std::abs(tag.second) + offset_entity);
+      if (tag.second < 0) outDimTags.back() *= -1;
     }
-    
-    // Set mesh file version to 2.2
-    gmsh::option::setNumber("Mesh.MshFileVersion", 2.2);
-    
-    d_isInitialized = true;
+    gmsh::model::addDiscreteEntity(e.first, e.second + offset_entity, outDimTags);
+
+    // Get and transform node coordinates
+    std::vector<std::size_t> nodeTags;
+    std::vector<double> coord;
+    std::vector<double> paramCoord;
+    gmsh::model::mesh::getNodes(nodeTags, coord, paramCoord, e.first, e.second);
+
+    std::vector<double> newCoord;
+    for (std::size_t i = 0; i < coord.size(); i += 3) {
+      newCoord.push_back(coord[i] * tx);
+      newCoord.push_back(coord[i + 1] * ty);
+      newCoord.push_back(coord[i + 2] * tz);
+    }
+
+    // Add transformed nodes
+    std::vector<std::size_t> newNodeTags;
+    for (auto tag : nodeTags) newNodeTags.push_back(tag + offset_node);
+    gmsh::model::mesh::addNodes(e.first, e.second + offset_entity, newNodeTags, newCoord);
+
+    // Get and transform elements
+    std::vector<int> elementTypes;
+    std::vector<std::vector<std::size_t>> elementTags, elementNodeTags;
+    gmsh::model::mesh::getElements(elementTypes, elementTags, elementNodeTags, e.first, e.second);
+
+    // Add transformed elements
+    for (std::size_t i = 0; i < elementTypes.size(); i++) {
+      std::vector<std::size_t> newElementTags;
+      for (auto tag : elementTags[i]) newElementTags.push_back(tag + offset_element);
+
+      std::vector<std::size_t> newElementNodeTags;
+      for (auto tag : elementNodeTags[i]) newElementNodeTags.push_back(tag + offset_node);
+
+      gmsh::model::mesh::addElements(e.first, e.second + offset_entity, {elementTypes[i]}, {newElementTags}, {newElementNodeTags});
+    }
+
+    // Reverse orientation if needed
+    if ((tx * ty * tz) < 0) {
+      gmsh::model::mesh::reverse({{e.first, e.second + offset_entity}});
+    }
+  }
+}
+
+void gmshTranslate(const std::vector<double>& xc) {
+  // Get all nodes
+  std::vector<std::size_t> nodeTags;
+  std::vector<double> coord;
+  std::vector<double> paramCoord;
+  gmsh::model::mesh::getNodes(nodeTags, coord, paramCoord);
+
+  // Update each node's coordinates
+  for (std::size_t i = 0; i < nodeTags.size(); i++) {
+    std::vector<double> newCoord = {
+      coord[3*i] + xc[0],
+      coord[3*i + 1] + xc[1],
+      coord[3*i + 2] + xc[2]
+    };
+    gmsh::model::mesh::setNode(nodeTags[i], newCoord, paramCoord.empty() ? std::vector<double>() : std::vector<double>(paramCoord.begin() + 3*i, paramCoord.begin() + 3*i + 3));
   }
 }
 
-void MeshGenerator::finalize() {
-  // Only finalize if we initialized
-  if (d_isInitialized) {
-    try {
-      gmsh::finalize();
-      d_isInitialized = false;
-    } catch (const std::runtime_error& e) {
-      // If Gmsh is already finalized, just update our flag
-      d_isInitialized = false;
-    }
-  }
-}
+void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, const std::string& filename, bool vtk_out, bool symmetric_mesh) {
+  gmsh::initialize();
+  gmsh::option::setNumber("Mesh.MshFileVersion", 2.2);
 
-CircularParticleMeshGenerator::CircularParticleMeshGenerator(
-    const std::vector<double>& center, double radius, double meshSize, int tag, int debugLevel)
-    : MeshGenerator(debugLevel), d_center(center), d_radius(radius), d_tag(tag) {
-  setMeshSize(meshSize);
-}
+  if (symmetric_mesh) {
+    // Create 1/4 circle at origin first, then mirror and translate
+    std::vector<double> xc_mesh = {0., 0., 0.};
 
-void CircularParticleMeshGenerator::generate(const std::string& filename) {
-  // Initialize if needed
-  if (!d_isInitialized)
-    initialize();
+    // Create points for 1/4 circle
+    int p1 = gmsh::model::geo::addPoint(xc_mesh[0], xc_mesh[1], xc_mesh[2], h);  // Center
+    int p2 = gmsh::model::geo::addPoint(xc_mesh[0] + r, xc_mesh[1], xc_mesh[2], h);  // Right
+    int p3 = gmsh::model::geo::addPoint(xc_mesh[0], xc_mesh[1] + r, xc_mesh[2], h);  // Top
 
-  // Create a new model
-  gmsh::model::add(std::format("particle_{}", d_tag));
+    // Create circle arc and lines
+    int l1 = gmsh::model::geo::addCircleArc(p2, p1, p3);  // Quarter circle arc
+    int l2 = gmsh::model::geo::addLine(p1, p2);  // Center to right
+    int l3 = gmsh::model::geo::addLine(p3, p1);  // Top to center
 
-  // Create circle
-  double cx = d_center[0];
-  double cy = d_center[1];
-  
-  // Center point
-  int centerPoint = gmsh::model::geo::addPoint(cx, cy, 0, d_meshSize);
-  
-  // Points on circle
-  int p1 = gmsh::model::geo::addPoint(cx + d_radius, cy, 0, d_meshSize);
-  int p2 = gmsh::model::geo::addPoint(cx, cy + d_radius, 0, d_meshSize);
-  int p3 = gmsh::model::geo::addPoint(cx - d_radius, cy, 0, d_meshSize);
-  int p4 = gmsh::model::geo::addPoint(cx, cy - d_radius, 0, d_meshSize);
+    // Create curve loop and surface
+    int c1 = gmsh::model::geo::addCurveLoop({l2, l1, l3});
+    int s1 = gmsh::model::geo::addPlaneSurface({c1});
 
-  // Create circle arcs
-  int c1 = gmsh::model::geo::addCircleArc(p1, centerPoint, p2);
-  int c2 = gmsh::model::geo::addCircleArc(p2, centerPoint, p3);
-  int c3 = gmsh::model::geo::addCircleArc(p3, centerPoint, p4);
-  int c4 = gmsh::model::geo::addCircleArc(p4, centerPoint, p1);
+    gmsh::model::geo::synchronize();
+    gmsh::model::mesh::generate(3);
 
-  // Create curve loop
-  gmsh::model::geo::addCurveLoop({c1, c2, c3, c4}, 1);
+    // Get mesh data for mirroring
+    auto m = getGmshEntities();
 
-  // Create surface
-  gmsh::model::geo::addPlaneSurface({1}, 1);
+    // Mirror the mesh in all quadrants
+    gmshTransform(m, 1000, 1000000, 1000000, -1, 1, 1);  // Mirror across y-axis
+    gmshTransform(m, 2000, 2000000, 2000000, 1, -1, 1);  // Mirror across x-axis
+    gmshTransform(m, 3000, 3000000, 3000000, -1, -1, 1);  // Mirror across origin
 
-  // First synchronize to create the surface
-  gmsh::model::geo::synchronize();
+    // Remove duplicate nodes
+    gmsh::model::mesh::removeDuplicateNodes();
 
-  if (d_debugLevel > 0) {
-    // Print debug info about entities
-    std::vector<std::pair<int, int>> surfaces;
-    gmsh::model::getEntities(surfaces, 2);
-    std::cout << "Number of surfaces: " << surfaces.size() << std::endl;
-    for (const auto& s : surfaces) {
-      std::cout << "Surface: (" << s.first << ", " << s.second << ")" << std::endl;
-    }
+    // Translate to specified center coordinates
+    gmshTranslate(xc);
+  } else {
+    // Create full circle directly
+    int c = gmsh::model::occ::addCircle(xc[0], xc[1], xc[2], r);
+    int cl = gmsh::model::occ::addCurveLoop({c});
+    int s = gmsh::model::occ::addPlaneSurface({cl});
+    int p = gmsh::model::occ::addPoint(xc[0], xc[1], xc[2], h);
+
+    gmsh::model::occ::synchronize();
+    gmsh::model::mesh::embed(0, {p}, 2, s);
+    gmsh::model::mesh::generate(3);
   }
 
-  // Now embed the center point in the surface
-  std::vector<int> pointTags = {centerPoint};
-  gmsh::model::mesh::embed(0, pointTags, 2, 1);
-
-  // Generate 2D mesh
-  gmsh::model::mesh::generate(2);
-
-  // Save to file
+  // Write output files
   gmsh::write(filename + ".msh");
-  gmsh::write(filename + ".vtk");
+  if (vtk_out) {
+    gmsh::write(filename + ".vtk");
+  }
 
-  // Clear the current model but don't finalize Gmsh
-  gmsh::model::remove();
+  gmsh::finalize();
 }
 
 } // namespace mesh_gen 

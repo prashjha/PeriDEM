@@ -17,6 +17,7 @@
 #include "pNeighborDeck.h"
 #include "pGenDeck.h"
 #include "geom/geomIncludes.h"
+#include "util/json.h"
 #include <memory>
 
 namespace inp {

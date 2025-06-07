@@ -11,6 +11,9 @@
 #ifndef INP_CONTACTPAIRDECK_H
 #define INP_CONTACTPAIRDECK_H
 
+
+#include "util/json.h"
+
 namespace inp {
   /**
    * \ingroup Input

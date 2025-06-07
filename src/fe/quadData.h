@@ -11,8 +11,8 @@
 #ifndef FE_QUADDATA_H
 #define FE_QUADDATA_H
 
-#include <util/io.h>
-#include <util/point.h> // definition of Point
+#include "util/io.h"
+#include "util/point.h" // definition of Point
 #include <vector>
 
 namespace fe {

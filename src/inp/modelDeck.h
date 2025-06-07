@@ -13,6 +13,7 @@
 
 #include <string>
 #include "util/io.h"
+#include "util/json.h"
 
 namespace inp {
   /**

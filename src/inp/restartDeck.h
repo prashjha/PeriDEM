@@ -12,6 +12,7 @@
 #define INP_RESTARTDECK_H
 
 #include <string>
+#include "util/json.h"
 
 namespace inp {
 

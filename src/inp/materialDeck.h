@@ -12,6 +12,7 @@
 #define INP_MATERIALDECK_H
 
 #include "util/io.h"
+#include "util/json.h"
 #include <cmath>
 #include <string>
 #include <vector>

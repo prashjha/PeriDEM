@@ -12,6 +12,7 @@
 #define INP_INPUT_H
 
 #include "deckIncludes.h"
+#include "util/json.h"
 #include <string>
 #include <vector>
 #include <memory>

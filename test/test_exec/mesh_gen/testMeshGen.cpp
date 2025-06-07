@@ -16,39 +16,59 @@
 namespace fs = std::filesystem;
 
 /**
- * @brief Test circular particle mesh generation
+ * @brief Test circle mesh generation with symmetric and non-symmetric options
  */
-bool testCircularParticleMesh() {
-  util::io::log("Testing circular particle mesh generation...\n");
+bool testCircleMesh() {
+  util::io::log("Testing circle mesh generation...\n");
 
   // Test parameters
-  std::vector<double> center = {0.0, 0.0};
+  std::vector<double> center = {0.0, 0.0, 0.0};  // 3D coordinates
   double radius = 0.001;  // 1mm radius
   double meshSize = radius / 5.0;
-  int tag = 1;
-  int debugLevel = 2;  // Set to maximum debug level
 
   // Create output directory if it doesn't exist
   fs::path outputDir = "test_output/mesh_gen";
   fs::create_directories(outputDir);
 
-  // Create mesh generator with debug level 2 (verbose)
-  mesh_gen::CircularParticleMeshGenerator generator(center, radius, meshSize, tag, debugLevel);
-
   try {
-    // Generate mesh
-    generator.generate((outputDir / "circle").string());
+    // Test symmetric mesh generation
+    util::io::log("Testing symmetric circle mesh...\n");
+    mesh_gen::circleMeshSymmetric(
+        center,
+        radius,
+        meshSize,
+        (outputDir / "circle_symmetric").string(),
+        true,   // output vtk
+        true    // symmetric mesh
+    );
+
+    // Test non-symmetric mesh generation
+    util::io::log("Testing non-symmetric circle mesh...\n");
+    mesh_gen::circleMeshSymmetric(
+        center,
+        radius,
+        meshSize,
+        (outputDir / "circle_full").string(),
+        true,    // output vtk
+        false    // non-symmetric mesh
+    );
 
     // Check if files were created
-    bool mshExists = fs::exists(outputDir / "circle.msh");
-    bool vtkExists = fs::exists(outputDir / "circle.vtk");
+    bool symMshExists = fs::exists(outputDir / "circle_symmetric.msh");
+    bool symVtkExists = fs::exists(outputDir / "circle_symmetric.vtk");
+    bool fullMshExists = fs::exists(outputDir / "circle_full.msh");
+    bool fullVtkExists = fs::exists(outputDir / "circle_full.vtk");
 
-    if (!mshExists || !vtkExists) {
-      util::io::log("Error: Mesh files were not created.\n");
+    if (!symMshExists || !symVtkExists || !fullMshExists || !fullVtkExists) {
+      util::io::log("Error: Some mesh files were not created.\n");
+      if (!symMshExists) util::io::log("Missing: circle_symmetric.msh\n");
+      if (!symVtkExists) util::io::log("Missing: circle_symmetric.vtk\n");
+      if (!fullMshExists) util::io::log("Missing: circle_full.msh\n");
+      if (!fullVtkExists) util::io::log("Missing: circle_full.vtk\n");
       return false;
     }
 
-    util::io::log("Circular particle mesh generation test passed.\n");
+    util::io::log("Circle mesh generation tests passed.\n");
     return true;
   } catch (const std::exception& e) {
     util::io::log(std::format("Error in mesh generation: {}\n", e.what()));
@@ -64,9 +84,9 @@ int main() {
 
   bool allTestsPassed = true;
 
-  // Test circular particle mesh generation
-  if (!testCircularParticleMesh()) {
-    util::io::log("Circular particle mesh test failed.\n");
+  // Test circle mesh generation (both symmetric and non-symmetric)
+  if (!testCircleMesh()) {
+    util::io::log("Circle mesh tests failed.\n");
     allTestsPassed = false;
   }
 

@@ -12,6 +12,7 @@
 #define INP_CONTACTDECK_H
 
 #include "contactPairDeck.h"
+#include "util/json.h"
 
 namespace inp {
 

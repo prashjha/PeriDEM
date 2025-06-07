@@ -14,19 +14,17 @@
 #include "point.h"
 #include "constants.h"
 #include "logger.h"
-#include <nlohmann_json/json.hpp>
 #include <fstream>
 #include <iostream>
 #include <vector>
 #include <algorithm>
 #include <format>
 #include <string>
+#include <map>
 #include <string_view>
 
 // includes for files that include this file
 #include "inputParser.h"
-
-using json = nlohmann::ordered_json;
 
 namespace util {
 

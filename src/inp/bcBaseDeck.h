@@ -12,6 +12,7 @@
 #define INP_BCBASEDECK_H
 
 #include "geom/geomIncludes.h"
+#include "util/json.h"
 
 namespace inp {
 

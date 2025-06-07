@@ -12,6 +12,7 @@
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
+#include "util/json.h"
 #include <vector>
 #include <set>
 

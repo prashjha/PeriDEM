@@ -20,6 +20,7 @@
 #include "inp/input.h"                          // Input class
 #include "model/dem/demModel.h"                 // Model class
 #include "util/io.h"                            // InputParser class
+#include "util/json.h"
 #include "util/parallelUtil.h"                  // MPI-related functions
 #include "util/vecMethods.h"
 #include <format>

@@ -8,127 +8,52 @@
  * file LICENSE)
  */
 
-#ifndef MESH_GEN_MESH_GENERATOR_H
-#define MESH_GEN_MESH_GENERATOR_H
+#ifndef MESH_GENERATOR_H
+#define MESH_GENERATOR_H
 
-#include "util/point.h"
-#include <gmsh.h>
-#include <string>
 #include <vector>
+#include <string>
+#include <cmath>
+#include <stdexcept>
+#include <gmsh.h>
 
 namespace mesh_gen {
 
 /**
- * @brief Base class for mesh generation
+ * @brief Get all GMSH entities in the current model
+ * @return Vector of pairs (dimension, tag) for each entity
  */
-class MeshGenerator {
-public:
-  /**
-   * @brief Constructor
-   * @param debugLevel Debug level (0: no debug, 1: basic debug, 2: verbose debug)
-   */
-  explicit MeshGenerator(int debugLevel = 0);
-
-  /**
-   * @brief Destructor
-   */
-  virtual ~MeshGenerator();
-
-  /**
-   * @brief Initialize Gmsh
-   */
-  void initialize();
-
-  /**
-   * @brief Finalize Gmsh
-   */
-  void finalize();
-
-  /**
-   * @brief Set mesh size
-   * @param meshSize Mesh size
-   */
-  void setMeshSize(double meshSize) { d_meshSize = meshSize; }
-
-  /**
-   * @brief Set debug level
-   * @param level Debug level (0: no debug, 1: basic debug, 2: verbose debug)
-   */
-  void setDebugLevel(int level) { d_debugLevel = level; }
-
-  /**
-   * @brief Get debug level
-   * @return Debug level
-   */
-  int getDebugLevel() const { return d_debugLevel; }
-
-  /**
-   * @brief Get mesh size
-   * @return Target mesh size
-   */
-  double getMeshSize() const { return d_meshSize; }
-
-protected:
-  /**
-   * @brief Target mesh size
-   */
-  double d_meshSize;
-
-  /**
-   * @brief Debug level (0: no debug, 1: basic debug, 2: verbose debug)
-   */
-  int d_debugLevel;
-
-  /**
-   * @brief Flag indicating if Gmsh is initialized
-   */
-  bool d_isInitialized;
-};
+std::vector<std::pair<int, int>> getGmshEntities();
 
 /**
- * @brief Class for generating circular particle mesh
+ * @brief Transform mesh entities by applying a scaling transformation
+ * @param m Vector of entity pairs (dimension, tag) to transform
+ * @param offset_entity Offset for new entity tags
+ * @param offset_node Offset for new node tags
+ * @param offset_element Offset for new element tags
+ * @param tx X-axis scale factor
+ * @param ty Y-axis scale factor
+ * @param tz Z-axis scale factor
  */
-class CircularParticleMeshGenerator : public MeshGenerator {
-public:
-  /**
-   * @brief Constructor
-   * 
-   * @param center Center coordinates [x, y, z]
-   * @param radius Radius of the particle
-   * @param meshSize Target mesh size
-   * @param tag Particle tag
-   * @param debugLevel Debug level (0: no debug, 1: basic debug, 2: verbose debug)
-   */
-  CircularParticleMeshGenerator(const std::vector<double>& center, 
-                               double radius,
-                               double meshSize,
-                               int tag,
-                               int debugLevel = 0);
+void gmshTransform(const std::vector<std::pair<int, int>>& m, int offset_entity, int offset_node, int offset_element, double tx, double ty, double tz);
 
-  /**
-   * @brief Generate mesh and save to file
-   * 
-   * @param filename Output filename without extension
-   */
-  void generate(const std::string& filename);
+/**
+ * @brief Translate mesh by a vector
+ * @param xc Translation vector [x, y, z]
+ */
+void gmshTranslate(const std::vector<double>& xc);
 
-private:
-  /**
-   * @brief Center coordinates
-   */
-  std::vector<double> d_center;
-
-  /**
-   * @brief Radius
-   */
-  double d_radius;
-
-  /**
-   * @brief Particle tag
-   */
-  int d_tag;
-};
+/**
+ * @brief Generate a circular mesh with optional symmetry
+ * @param xc Center coordinates [x, y, z]
+ * @param r Radius of the circle
+ * @param h Mesh size
+ * @param filename Output filename (without extension)
+ * @param vtk_out Whether to output VTK file
+ * @param symmetric_mesh If true, creates 1/4 mesh and mirrors it. If false, creates full circle
+ */
+void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, const std::string& filename, bool vtk_out = false, bool symmetric_mesh = true);
 
 } // namespace mesh_gen
 
-#endif // MESH_GEN_MESH_GENERATOR_H 
+#endif // MESH_GENERATOR_H 

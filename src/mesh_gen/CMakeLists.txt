@@ -10,7 +10,13 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(MeshGen ${SOURCES})
 
+target_include_directories(MeshGen PUBLIC
+    ${CMAKE_SOURCE_DIR}/src
+    ${CMAKE_SOURCE_DIR}/external
+    ${GMSH_INCLUDE_DIRS}
+)
+
 target_link_libraries(MeshGen PUBLIC
-        Util
-        Mesh
-        ${GMSH_LIBRARIES}) 
+    Util
+    Mesh
+    ${GMSH_LIBRARIES}) 

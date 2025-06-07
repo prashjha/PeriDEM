@@ -12,6 +12,7 @@
 #define INP_PNEIGHBORDECK_H
 
 #include "util/io.h"
+#include "util/json.h"
 
 namespace inp {
 

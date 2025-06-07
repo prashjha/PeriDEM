@@ -15,6 +15,7 @@
 
 #include "bcBaseDeck.h"
 #include "util/io.h"
+#include "util/json.h"
 
 namespace inp {
   /**

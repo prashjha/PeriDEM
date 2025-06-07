@@ -12,6 +12,7 @@
 #define INP_PGENDECK_H
 
 #include "util/io.h"
+#include "util/json.h"
 #include "geom/geomIncludes.h"
 #include <string>
 
