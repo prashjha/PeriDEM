@@ -1,9 +1,0 @@
-<map id="gmsh_particles.ellipse_mesh_symmetric" name="gmsh_particles.ellipse_mesh_symmetric">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,63,156,103"/>
-<area shape="rect" id="Node000002" href="$namespacegeom__util.html#a4cff2d2279e07cecdbff9c469cadc986" title=" " alt="" coords="223,5,361,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,60,209,45,210,50,156,65"/>
-<area shape="rect" id="Node000003" href="$namespacegeom__util.html#a4da92e283f0d3adaeec14f498c0f2c10" title=" " alt="" coords="204,70,380,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,80,190,80,190,85,156,85"/>
-<area shape="rect" id="Node000004" href="$namespacegeom__util.html#a0402fa3ab58c62403ff40506f3453665" title=" " alt="" coords="207,119,377,145"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="157,98,225,114,223,119,156,103"/>
-</map>

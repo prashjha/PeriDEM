@@ -1,7 +1,0 @@
-var searchData=
-[
-  ['hatfunction_0',['hatFunction',['../namespaceutil.html#a51adb530fc272317c3a859af27787b1a',1,'util']]],
-  ['hatfunctionquick_1',['hatFunctionQuick',['../namespaceutil.html#a7ad8c95bec3f5405435dff75422e6993',1,'util']]],
-  ['hexagon_2',['hexagon',['../classutil_1_1geometry_1_1Hexagon.html#a0b7179b6eac1d4aa4cc9aa10a9cdb5d3',1,'util::geometry::Hexagon::Hexagon()'],['../classutil_1_1geometry_1_1Hexagon.html#a87fcb9a61198f2194e1090757efa8f38',1,'util::geometry::Hexagon::Hexagon(double r, util::Point x=util::Point(0., 0., 0.), util::Point a=util::Point(1., 0., 0.), std::string description=&quot;&quot;)']]],
-  ['hexagon_5fmesh_5fsymmetric_3',['hexagon_mesh_symmetric',['../namespacegmsh__particles.html#a4ad630d57e69747a673e2191b8d68bf9',1,'gmsh_particles']]]
-];
