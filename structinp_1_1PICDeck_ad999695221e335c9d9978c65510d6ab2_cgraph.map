@@ -1,0 +1,9 @@
+<map id="inp::PICDeck::print" name="inp::PICDeck::print">
+<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,31,140,56"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1PICDeck.html#a0bbc0d684f9fd0ddd7d8b46e99f22014" title="Returns the string containing printable information about the object." alt="" coords="188,31,339,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,41,175,41,175,46,140,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="393,5,507,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="339,30,379,25,380,30,339,36"/>
+<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Returns the string containing printable information about the object." alt="" coords="387,55,513,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="339,50,373,55,373,60,339,56"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="problem_setup.generate_rigid_wall_gmsh_input" name="problem_setup.generate_rigid_wall_gmsh_input">
+<area shape="rect" id="Node000001" title=" " alt="" coords="228,29,389,69"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#a4dd4df45d28c58aafac4fdf8aa8c554d" title=" " alt="" coords="5,29,180,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="214,52,180,52,180,47,214,47"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="129,18,116,11,93,8,72,10,59,15,55,21,57,28,52,30,50,20,56,10,71,5,93,3,118,6,132,13"/>
+</map>

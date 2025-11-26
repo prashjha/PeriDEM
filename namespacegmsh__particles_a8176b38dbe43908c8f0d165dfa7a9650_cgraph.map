@@ -1,0 +1,5 @@
+<map id="gmsh_particles.cylindrical2d_wall_mesh" name="gmsh_particles.cylindrical2d_wall_mesh">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,192,45"/>
+<area shape="rect" id="Node000002" href="$namespacegeom__util.html#a13f030c6d181d0210c230fc01e33331c" title=" " alt="" coords="240,5,409,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,23,226,23,226,28,192,28"/>
+</map>
