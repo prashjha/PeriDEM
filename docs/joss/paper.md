@@ -8,7 +8,7 @@ tags:
   - Particle breakage
   - Particle interlocking
 authors:
-  - name: Prashant Kumar Jha
+  - name: Prashant K. Jha
     orcid: 0000-0003-2158-364X
     affiliation: 1
 affiliations:
@@ -29,7 +29,7 @@ Implemented in C++, PeriDEM is designed for extensibility and ease of deployment
 
 # Statement of Need
 
-Granular materials play a central role in many engineered systems, but modeling their behavior under high loading, deformation, and fragmentation remains an open problem. Popular open-source DEM codes such as YADE [@yade2021], BlazeDEM [@govender2016blaze], Chrono DEM-Engine [@zhang_2024_deme], and LAMMPS [@THOMPSON2022108171] are widely used but typically treat particles as rigid, limiting their accuracy in scenarios involving internal deformation and breakage. A recent review by Dosta et al. [@dosta2024comparing] compares several DEM libraries. Meanwhile, peridynamics-based codes such as Peridigm [@littlewood2024peridigm] and NLMech [@Jha2021] are aimed at simulating deformation and fracture within a single structure, with limited support for multi-structure simulations. 
+Granular materials play a central role in many engineered systems, but modeling their behavior under high loading, deformation, and fragmentation remains an open problem. Popular open-source DEM codes such as YADE [@yade2021], BlazeDEM [@govender2016blaze], Chrono DEM-Engine [@zhang_2024_deme], and LAMMPS [@THOMPSON2022108171] are widely used but typically treat particles as rigid, limiting their accuracy in scenarios involving internal deformation and breakage. A recent review by Dosta et al. [@dosta2024comparing] compares several DEM libraries. Meanwhile, peridynamics-based codes such as Peridigm [@littlewood2024peridigm] and NLMech [@Jha2021] are designed to simulate deformation and fracture within a single structure, with limited support for multi-structure simulations. 
 
 PeriDEM fills this gap by integrating state-based peridynamics for intra-particle deformation with DEM-style contact laws for particle interactions. This hybrid approach enables direct simulation of particle fragmentation, stress redistribution, and dynamic failure propagation—capabilities essential for modeling granular compaction, attrition, and crushing.
 
