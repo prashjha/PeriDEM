@@ -1,4 +1,0 @@
-var dir_089d66321c2b9e5791d58530a4cf4d6d =
-[
-    [ "problem_setup.py", "examples_2PeriDEM_2two__particles_2twop__wall__concave__diff__material__diff__size_2inp_2problem__setup_8py.html", "examples_2PeriDEM_2two__particles_2twop__wall__concave__diff__material__diff__size_2inp_2problem__setup_8py" ]
-];

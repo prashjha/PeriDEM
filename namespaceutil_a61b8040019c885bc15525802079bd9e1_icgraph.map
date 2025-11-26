@@ -1,5 +1,0 @@
-<map id="util::equivalentMass" name="util::equivalentMass">
-<area shape="rect" id="Node000001" title="Compute harmonic mean of m1 and m2." alt="" coords="269,5,408,31"/>
-<area shape="rect" id="Node000002" href="$classmodel_1_1DEMModel.html#a214e43cda5ec99caef8804bf83530037" title="Creates particles in a given container." alt="" coords="5,5,221,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="256,21,222,21,222,15,256,15"/>
-</map>

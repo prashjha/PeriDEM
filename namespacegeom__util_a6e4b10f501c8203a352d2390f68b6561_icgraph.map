@@ -1,9 +1,0 @@
-<map id="geom_util.gmsh_transform_general" name="geom_util.gmsh_transform_general">
-<area shape="rect" id="Node000001" title=" " alt="" coords="216,69,392,109"/>
-<area shape="rect" id="Node000002" href="$namespacegmsh__particles.html#a4ad630d57e69747a673e2191b8d68bf9" title=" " alt="" coords="5,5,168,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,68,154,48,156,43,223,63"/>
-<area shape="rect" id="Node000003" href="$namespacegmsh__particles.html#a6e6ea1a434988f51bfe21cc99e6504d6" title=" " alt="" coords="7,69,166,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="202,92,166,92,166,87,202,87"/>
-<area shape="rect" id="Node000004" href="$namespacegmsh__particles.html#a197b7b0069dfed40167af646f1345d12" title=" " alt="" coords="9,133,165,173"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="223,116,156,136,154,131,222,111"/>
-</map>
