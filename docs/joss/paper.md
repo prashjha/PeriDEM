@@ -84,7 +84,8 @@ Preliminary performance tests show that compute time increases exponentially wit
 
 # Acknowledgements
 
-This work was supported by the U.S. National Science Foundation through the Engineering Research Initiation (ERI) program under Grant No. 2502279. The support has contributed to the continued development and enhancement of the PeriDEM library.
+Current efforts on the development and enhancement of the PeriDEM library are supported by the U.S. National Science Foundation through the Engineering Research Initiation (ERI) program under Grant No. 2502279.
+
 
 
 
