@@ -1,8 +1,0 @@
-<map id="fe::Mesh::printStr" name="fe::Mesh::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="5,5,128,31"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="355,5,468,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,15,341,15,341,21,128,21"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="176,31,307,56"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="129,24,163,29,162,35,128,29"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="306,31,341,26,341,31,307,36"/>
-</map>

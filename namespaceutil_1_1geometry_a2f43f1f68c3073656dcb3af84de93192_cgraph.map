@@ -1,9 +1,0 @@
-<map id="util::geometry::checkParamForGeometry" name="util::geometry::checkParamForGeometry">
-<area shape="rect" id="Node000001" title="Check parameter data for validity." alt="" coords="5,35,188,75"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1geometry.html#a273199cba8fab80639f5479b3f01ab5d" title="Ascertain if number of parameters are correct for the given geometry." alt="" coords="236,35,415,75"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,52,222,52,222,57,189,57"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1geometry.html#a2852c83a568ff72c000bfb1d682f9678" title="Get num params required for creation of object." alt="" coords="463,5,663,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="414,41,449,37,449,42,415,46"/>
-<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#a86460acadab9a2e99a92121c0213e444" title="Find if data is in the list." alt="" coords="489,70,636,95"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="415,63,476,70,475,75,414,68"/>
-</map>
