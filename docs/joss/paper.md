@@ -33,7 +33,7 @@ Granular materials play a central role in many engineered systems, but modeling 
 
 PeriDEM fills this gap by integrating state-based peridynamics for intra-particle deformation with DEM-style contact laws for particle interactions. This hybrid approach enables direct simulation of particle fragmentation, stress redistribution, and dynamic failure propagation—capabilities essential for modeling granular compaction, attrition, and crushing.
 
-Recent multiscale approaches, including DEM-continuum and DEM-level-set coupling methods [@harmon2021levelset], attempt to bridge scales but often require homogenized assumptions. Sand crushing in geotechnical systems, for example, has been modeled using micro-CT-informed FEM or phenomenological laws [@chen2023mechanical]. PeriDEM offers a particle-resolved alternative that allows bottom-up investigation of granular failure and shape evolution, especially in systems where fragment dynamics are critical.
+Recent multiscale approaches, including DEM-continuum and DEM-level-set coupling methods [@harmon2021modeling], attempt to bridge scales but often require homogenized assumptions. Sand crushing in geotechnical systems, for example, has been modeled using micro-CT-informed FEM or phenomenological laws [@chen2023mechanical]. PeriDEM offers a particle-resolved alternative that allows bottom-up investigation of granular failure and shape evolution, especially in systems where fragment dynamics are critical.
 
 # Background
 
