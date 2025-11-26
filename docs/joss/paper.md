@@ -69,14 +69,7 @@ The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includ
 
 # Implementation
 
-[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in C++ and hosted on GitHub. It is designed for rapid deployment and extensibility, using a minimal set of external libraries bundled in the `external` directory. The core simulation model is implemented in [`src/model/dem`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem), with the class [`DEMModel`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem/demModel.cpp) managing particle states, force calculations, and time integration.
-
-The code uses:
-- **Taskflow** [@huang2021taskflow] for multithreaded parallelism  
-- **nanoflann** [@blanco2014nanoflann] for efficient neighborhood search  
-- **VTK** for output and post-processing
-
-The numerical strategies for neighbor search, peridynamic integration, damage evaluation, and time stepping follow those introduced in [@jha2021peridynamics, Section 3], where additional implementation details and validation are discussed.
+[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in C++ and hosted on GitHub. It depends on a minimal set of external libraries, most of which are bundled in the `external` directory. Some of the key dependencies include Taskflow [@huang2021taskflow] for multithreaded parallelism, nanoflann [@blanco2014nanoflann] for efficient neighborhood search, and VTK for output and post-processing. The numerical strategies for neighbor search, peridynamic integration, damage evaluation, and time stepping follow those introduced in [@jha2021peridynamics, Section 3], where additional implementation details and validation are discussed. The core simulation model is implemented in [`src/model/dem`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem), with the class [`DEMModel`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem/demModel.cpp) managing particle states, force calculations, and time integration.
 
 This work builds on earlier research in the analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @lipton2019complex].
 
@@ -91,9 +84,11 @@ This work builds on earlier research in the analysis and numerical methods for p
 
 ![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=80%}
 
-Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key case demonstrates compression of 500+ circular and hexagonal particles in a rectangular container by moving the top wall. The stress on the wall as a function of penetration becomes increasingly nonlinear as damage accumulates and the medium yields; see \autoref{fig:peridemSummary}a.
+Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key case demonstrates compression of 500+ circular and hexagonal particles in a rectangular container by moving the top wall. The stress on the wall as a function of penetration becomes increasingly nonlinear as damage accumulates and the medium yields; see \autoref{fig:peridemSummary}a. Preliminary performance tests show an exponential increase in compute time with the number of particles, due to the nonlocal nature of both peridynamic and contact forces, highlighting a computational bottleneck. This motivates the integration of MPI and the development of a multi-fidelity framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
 
-Preliminary performance tests show an exponential increase in compute time with the number of particles, due to the nonlocal nature of both peridynamic and contact forces, highlighting a computational bottleneck. This motivates the integration of MPI and the development of a multi-fidelity framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
+# Acknowledgements
+
+This work was supported by the U.S. National Science Foundation through the Engineering Research Initiation (ERI) program under Grant No. 2502279. The support has contributed to the continued development and enhancement of the PeriDEM library.
 
 
 
