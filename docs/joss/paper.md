@@ -41,7 +41,7 @@ The PeriDEM model was introduced in [@jha2021peridynamics], demonstrating its ab
 
 ## Brief Introduction to PeriDEM Model
 
-![Motion of particle system.\label{fig:schemMultiParticles}](./files/multi-particle.png){width=60%}
+![Motion of particle system.\label{fig:schemMultiParticles}](./files/multi-particle.png){width=50%}
 
 Consider a fixed frame of reference and $\{\boldsymbol{e}_i\}_{i=1}^d$ are orthonormal bases. Consider a collection of $N_P$ particles ${\Omega}^{(p)}_0$, $1\leq p \leq N_P$, where ${\Omega}^{(p)}_0 \subset \mathbb{R}^d$ with $d=2,3$ represents the initial configuration of particle $p$. Suppose $\Omega_0 \supset \cup_{p=1}^{N_P} {\Omega}^{(p)}_0$ is the domain containing all particles; see \autoref{fig:schemMultiParticles}. The particles in $\Omega_0$ are dynamically evolving due to external boundary conditions and internal interactions; let ${\Omega}^{(p)}_t$ denote the configuration of particle $p$ at time $t\in (0, t_F]$, and $\Omega_t \supset \cup_{p=1}^{N_P} {\Omega}^{(p)}_t$ domain containing all particles at that time. The motion ${\boldsymbol{x}}^{(p)} = {\boldsymbol{x}}^{(p)}({\boldsymbol{X}}^{(p)}, t)$ takes point ${\boldsymbol{X}}^{(p)}\in {\Omega}^{(p)}_0$ to ${\boldsymbol{x}}^{(p)}\in {\Omega}^{(p)}_t$, and collectively, the motion is given by $\boldsymbol{x} = \boldsymbol{x}(\boldsymbol{X}, t) \in \Omega_t$ for $\boldsymbol{X} \in \Omega_0$. We assume the media is dry and not influenced by factors other than mechanical loading (e.g., moisture and temperature are not considered). The configuration of particles in $\Omega_t$ at time $t$ depends on various factors, such as material and geometrical properties, contact mechanism, and external loading. 
 Essentially, there are two types of interactions present in the media:
@@ -63,7 +63,7 @@ The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the
 
 ### DEM-inspired contact forces
 
-![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$.\label{fig:peridemContact}](./files/peridem-contact.png){width=60%}
+![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$.\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
 
 The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or simplified geometries. \autoref{fig:peridemContact} illustrates the local high-resolution contact approach between deformable particles. The full formulation of contact detection, force assembly, and its implementation is provided in [@jha2021peridynamics, Section 2.2]. 
 
@@ -82,7 +82,7 @@ This work builds on earlier research in the analysis and numerical methods for p
 
 ## Examples
 
-![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=80%}
+![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=60%}
 
 Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key case demonstrates compression of 500+ circular and hexagonal particles in a rectangular container by moving the top wall. The stress on the wall as a function of penetration becomes increasingly nonlinear as damage accumulates and the medium yields; see \autoref{fig:peridemSummary}a. Preliminary performance tests show an exponential increase in compute time with the number of particles, due to the nonlocal nature of both peridynamic and contact forces, highlighting a computational bottleneck. This motivates the integration of MPI and the development of a multi-fidelity framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
 
