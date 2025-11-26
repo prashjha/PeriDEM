@@ -1,22 +1,22 @@
 ---
 title: 'PeriDEM -- High-fidelity modeling of granular media consisting of deformable complex-shaped particles'
 tags:
- - Granular media
- - Peridynamics
- - Discrete element method
- - Fracture
- - Particle breakage
- - Particle interlocking
+  - Granular media
+  - Peridynamics
+  - Discrete element method
+  - Fracture
+  - Particle breakage
+  - Particle interlocking
 authors:
- - name: Prashant Kumar Jha
+  - name: Prashant Kumar Jha
     orcid: 0000-0003-2158-364X
     affiliation: 1
 affiliations:
- - name: Department of Mechanical Engineering, South Dakota School of Mines and Technology, Rapid City, SD 57701, USA
-   index: 1
-header-includes:
- - \usepackage{amsfonts,amssymb,amsmath}
+  - name: Department of Mechanical Engineering, South Dakota School of Mines and Technology, Rapid City, SD 57701, USA
+    index: 1
 date: 25 November 2025
+header-includes:
+  - \usepackage{amsfonts,amssymb,amsmath}
 bibliography: paper.bib
 
 ---
