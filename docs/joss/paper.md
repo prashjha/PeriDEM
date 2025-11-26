@@ -1,21 +1,21 @@
 ---
 title: 'PeriDEM -- High-fidelity modeling of granular media consisting of deformable complex-shaped particles'
 tags:
-  - Granular media
-  - Peridynamics
-  - Discrete element method
-  - Fracture
-  - Particle breakage
-  - Particle interlocking
+ - Granular media
+ - Peridynamics
+ - Discrete element method
+ - Fracture
+ - Particle breakage
+ - Particle interlocking
 authors:
-  - name: Prashant Kumar Jha
+ - name: Prashant Kumar Jha
     orcid: 0000-0003-2158-364X
     affiliation: 1
 affiliations:
  - name: Department of Mechanical Engineering, South Dakota School of Mines and Technology, Rapid City, SD 57701, USA
    index: 1
 header-includes:
-   - \usepackage{amsfonts,amssymb,amsmath}
+ - \usepackage{amsfonts,amssymb,amsmath}
 date: 25 November 2025
 bibliography: paper.bib
 
@@ -23,17 +23,17 @@ bibliography: paper.bib
 
 # Summary
 
-Accurate simulation of granular materials under extreme mechanical conditions-such as crushing, fracture, and large deformation—remains a significant challenge in geotechnical, manufacturing, and mining applications. Classical discrete element method (DEM) models typically treat particles as rigid or nearly rigid bodies, limiting their ability to capture internal deformation and fracture. The PeriDEM library, first introduced in [@jha2021peridynamics], addresses this limitation by modeling particles as deformable solids using peridynamics, a nonlocal continuum theory that naturally accommodates fracture and large deformation. Inter-particle contact is handled using DEM-inspired local laws, enabling realistic interaction between complex-shaped particles.
+Accurate simulation of granular materials under extreme mechanical conditions, such as crushing, fracture, and large deformation, remains a significant challenge in geotechnical, manufacturing, and mining applications. Classical discrete element method (DEM) models typically treat particles as rigid or nearly rigid bodies, limiting their ability to capture internal deformation and fracture. The PeriDEM library, first introduced in [@jha2021peridynamics], addresses this limitation by modeling particles as deformable solids using peridynamics, a nonlocal continuum theory that naturally accommodates fracture and significant deformation. Inter-particle contact is handled using DEM-inspired local laws, enabling realistic interaction between complex-shaped particles.
 
 Implemented in C++, PeriDEM is designed for extensibility and ease of deployment. It relies on a minimal set of external libraries, supports multithreaded execution, and includes demonstration examples involving compaction, fracture, and rotational dynamics. The framework facilitates granular-scale simulations, supports the development of constitutive models, and serves as a foundation for multi-fidelity coupling in real-world applications.
 
 # Statement of Need
 
-Granular materials play a central role in many engineered systems, but modeling their behavior under high loading, deformation, and fragmentation remains an open problem. Popular open-source DEM codes such as YADE [@yade2021], BlazeDEM [@govender2016blaze], Chrono DEM-Engine [@zhang_2024_deme], and LAMMPS [@THOMPSON2022108171] are widely used but typically treat particles as rigid, limiting their accuracy in scenarios involving internal deformation and breakage. A recent review by Dosta et al. [@dosta2024comparing] compares these libraries across a range of bulk processes. Meanwhile, peridynamics-based codes like Peridigm [@littlewood2024peridigm] and NLMech [@Jha2021] offer detailed fracture modeling but do not capture realistic particle contact mechanics or bulk granular dynamics.
+Granular materials play a central role in many engineered systems, but modeling their behavior under high loading, deformation, and fragmentation remains an open problem. Popular open-source DEM codes such as YADE [@yade2021], BlazeDEM [@govender2016blaze], Chrono DEM-Engine [@zhang_2024_deme], and LAMMPS [@THOMPSON2022108171] are widely used but typically treat particles as rigid, limiting their accuracy in scenarios involving internal deformation and breakage. A recent review by Dosta et al. [@dosta2024comparing] compares several DEM libraries. Meanwhile, peridynamics-based codes such as Peridigm [@littlewood2024peridigm] and NLMech [@Jha2021] are aimed at simulating deformation and fracture within a single structure, with limited support for multi-structure simulations. 
 
 PeriDEM fills this gap by integrating state-based peridynamics for intra-particle deformation with DEM-style contact laws for particle interactions. This hybrid approach enables direct simulation of particle fragmentation, stress redistribution, and dynamic failure propagation—capabilities essential for modeling granular compaction, attrition, and crushing.
 
-Recent multiscale approaches, including DEM-continuum and DEM-level-set coupling methods [@harmon2021modeling], attempt to bridge scales but often require homogenized assumptions. Sand crushing in geotechnical systems, for example, has been modeled using micro-CT-informed FEM or phenomenological laws [@chen2023mechanical]. PeriDEM offers a particle-resolved alternative that allows bottom-up investigation of granular failure and shape evolution, especially in systems where fragment dynamics are critical.
+Recent multiscale approaches, including DEM-continuum and DEM-level-set coupling methods [@harmon2021modeling], aim to bridge scales but often rely on homogenization assumptions. Sand crushing in geotechnical systems, for example, has been modeled using micro-CT-informed FEM or phenomenological laws [@chen2023mechanical]. PeriDEM offers a particle-resolved alternative that allows bottom-up investigation of granular failure and shape evolution, especially in systems where fragment dynamics are critical.
 
 # Background
 
@@ -93,7 +93,7 @@ This work builds on earlier research in the analysis and numerical methods for p
 
 Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key case demonstrates compression of 500+ circular and hexagonal particles in a rectangular container by moving the top wall. The stress on the wall as a function of penetration becomes increasingly nonlinear as damage accumulates and the medium yields; see \autoref{fig:peridemSummary}a.
 
-Preliminary performance tests show an exponential increase in compute time with the number of particles due to the nonlocal nature of both peridynamic and contact forces—highlighting a computational bottleneck. This motivates the integration of MPI and development of a multi-fidelity framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
+Preliminary performance tests show an exponential increase in compute time with the number of particles, due to the nonlocal nature of both peridynamic and contact forces, highlighting a computational bottleneck. This motivates the integration of MPI and the development of a multi-fidelity framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
 
 
 
