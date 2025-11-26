@@ -74,11 +74,12 @@ The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includ
 This work builds on earlier research in the analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @lipton2019complex].
 
 ## Features
-- Hybrid modeling using peridynamics and DEM for intra-particle and inter-particle interactions  
-- Simulation of deformation and breakage of a single particle under complex boundary conditions  
-- Support for arbitrarily shaped particles, allowing for realistic simulation scenarios  
-- Ongoing integration of MPI for distributed computing  
-- Planned development of adaptive modeling strategies to enhance efficiency without compromising accuracy
+
+- Combines peridynamics and DEM to model intra-particle deformation and inter-particle contact  
+- Simulates deformation and breakage of single particles under complex loading conditions  
+- Supports arbitrarily shaped particles for realistic granular systems  
+- Ongoing development of MPI-based parallelism and adaptive modeling strategies to improve efficiency without sacrificing accuracy
+
 
 ## Examples
 
