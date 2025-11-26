@@ -57,18 +57,19 @@ The balance of linear momentum for particle $p$, $1\leq p\leq N_P$, takes the fo
 \end{equation}
 where ${\rho}^{(p)}$, ${\boldsymbol{f}}^{(p)}_{int}$, and ${\boldsymbol{f}}^{(p)}_{ext}$ are density, and internal and external force densities. The above equation is complemented with initial conditions, ${\boldsymbol{u}}^{(p)}(\boldsymbol{X}, 0) = {\boldsymbol{u}}^{(p)}_0(\boldsymbol{X}), {\dot{\boldsymbol{u}}}^{(p)}(\boldsymbol{X}, 0) = {\dot{\boldsymbol{u}}}^{(p)}_0(\boldsymbol{X}), \boldsymbol{X} \in {\Omega}^{(p)}_0$. 
 
-### Internal force - State-based peridynamics
+### Internal force – State-based peridynamics
 
-The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the momentum balance governs intra-particle deformation and fracture. In PeriDEM, this term is modeled using a simplified state-based peridynamics formulation that accounts for nonlocal interactions over a finite horizon. The specific constitutive structure used—including damage-driven bond weakening, volumetric strain contributions, and neighbor-weighted quadrature—is discussed in detail in [[@jha2021peridynamics], Sections 2.1 and 2.3]. This formulation allows unified simulation of deformation and fracture in individual particles. 
+The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the momentum balance governs intra-particle deformation and fracture. In PeriDEM, this term is modeled using a simplified state-based peridynamics formulation that accounts for nonlocal interactions over a finite horizon. The underlying model and its numerical implementation are discussed in detail in [[@jha2021peridynamics], Sections 2.1 and 2.3].
 
 ### DEM-inspired contact forces
 
+The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance; see \autoref{fig:peridemContact}. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or geometric simplifications. The full formulation of contact detection, force assembly, and implementation is detailed in [[@jha2021peridynamics], Section 2.2].
+
 ![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$.\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
-The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or simplified geometries. \autoref{fig:peridemContact} illustrates the local high-resolution contact approach between deformable particles. The full formulation of contact detection, force assembly, and its implementation is provided in [[@jha2021peridynamics], Section 2.2]. 
 
 # Implementation
 
-[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in C++ and hosted on GitHub. It depends on a minimal set of external libraries, most of which are bundled in the `external` directory. Some of the key dependencies include Taskflow [@huang2021taskflow] for multithreaded parallelism, nanoflann [@blanco2014nanoflann] for efficient neighborhood search, and VTK for output and post-processing. The numerical strategies for neighbor search, peridynamic integration, damage evaluation, and time stepping follow those introduced in [[@jha2021peridynamics], Section 3], where additional implementation details and validation are discussed. The core simulation model is implemented in [`src/model/dem`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem), with the class [`DEMModel`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem/demModel.cpp) managing particle states, force calculations, and time integration. This work builds on earlier research in the analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @lipton2019complex].
+[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in C++ and hosted on GitHub. It depends on a minimal set of external libraries, most of which are bundled in the `external` directory. Key dependencies include Taskflow [@huang2021taskflow] for multithreaded parallelism, nanoflann [@blanco2014nanoflann] for efficient neighborhood search, and VTK for output. The numerical strategies for neighbor search, peridynamic integration, damage evaluation, and time stepping follow those introduced in [[@jha2021peridynamics], Section 3]. The core simulation model is implemented in [`src/model/dem`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem), with the class [`DEMModel`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem/demModel.cpp) managing particle states, force calculations, and time integration. This work builds on earlier research in the analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @jha2025nodal].
 
 ## Features
 
@@ -79,10 +80,11 @@ The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includ
 
 ## Examples
 
-![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=60%}
 Example cases are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key simulation demonstrates the compression of over 500 circular and hexagonal particles in a rectangular container by displacing the top wall. The stress on the wall becomes increasingly nonlinear with penetration depth as damage accumulates and the medium yields (see \autoref{fig:peridemSummary}a).
 
 Preliminary performance tests show that compute time increases exponentially with particle count due to the nonlocal nature of both peridynamic and contact interactions—highlighting a computational bottleneck. This motivates future integration of MPI-based parallelism and a multi-fidelity modeling framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
+
+![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=60%}
 
 # Acknowledgements
 
