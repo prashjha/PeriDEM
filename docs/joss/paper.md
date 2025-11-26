@@ -23,7 +23,7 @@ bibliography: paper.bib
 
 # Summary
 
-Accurate simulation of granular materials under extreme mechanical conditions, such as crushing, fracture, and large deformation, remains a significant challenge in geotechnical, manufacturing, and mining applications. Classical discrete element method (DEM) models typically treat particles as rigid or nearly rigid bodies, limiting their ability to capture internal deformation and fracture. The PeriDEM library, first introduced in [@jha2021peridynamics], addresses this limitation by modeling particles as deformable solids using peridynamics, a nonlocal continuum theory that naturally accommodates fracture and significant deformation. Inter-particle contact is handled using DEM-inspired local laws, enabling realistic interaction between complex-shaped particles.
+Accurate simulation of granular materials under extreme mechanical conditions, such as crushing, fracture, and large deformation, remains a significant challenge in geotechnical, manufacturing, and mining applications. Classical discrete element method (DEM) models typically treat particles as rigid or nearly rigid bodies, limiting their ability to capture internal deformation and fracture. The PeriDEM library, first introduced in [@Jha2021JMPS], addresses this limitation by modeling particles as deformable solids using peridynamics, a nonlocal continuum theory that naturally accommodates fracture and significant deformation. Inter-particle contact is handled using DEM-inspired local laws, enabling realistic interaction between complex-shaped particles.
 
 Implemented in \texttt{C++}, PeriDEM is designed for extensibility and ease of deployment. It relies on a minimal set of external libraries, supports multithreaded execution, and includes demonstration examples involving compaction, fracture, and rotational dynamics. The framework facilitates granular-scale simulations, supports the development of constitutive models, and serves as a foundation for multi-fidelity coupling in real-world applications.
 
@@ -34,10 +34,6 @@ Granular materials play a central role in many engineered systems, but modeling 
 PeriDEM fills this gap by integrating state-based peridynamics for intra-particle deformation with DEM-style contact laws for particle interactions. This hybrid approach enables direct simulation of particle fragmentation, stress redistribution, and dynamic failure propagation—capabilities essential for modeling granular compaction, attrition, and crushing.
 
 Recent multiscale approaches, including DEM-continuum and DEM-level-set coupling methods [@harmon2021modeling], aim to bridge scales but often rely on homogenization assumptions. Sand crushing in geotechnical systems, for example, has been modeled using micro-CT-informed FEM or phenomenological laws [@chen2023mechanical]. PeriDEM offers a particle-resolved alternative that allows bottom-up investigation of granular failure and shape evolution, especially in systems where fragment dynamics are critical.
-
-# Background
-
-The PeriDEM model was introduced in [@jha2021peridynamics], demonstrating its ability to model inter-particle contact and intra-particle fracture for complex-shaped particles. It is briefly described next.
 
 ## Brief Introduction to PeriDEM Model
 
@@ -59,17 +55,17 @@ where ${\rho}^{(p)}$, ${\boldsymbol{f}}^{(p)}_{int}$, and ${\boldsymbol{f}}^{(p)
 
 ### Internal force – State-based peridynamics
 
-The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the momentum balance governs intra-particle deformation and fracture. In PeriDEM, this term is modeled using a simplified state-based peridynamics formulation that accounts for nonlocal interactions over a finite horizon. The underlying model and its numerical implementation are discussed in detail in [[@jha2021peridynamics], Sections 2.1 and 2.3].
+The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the momentum balance governs intra-particle deformation and fracture. In PeriDEM, this term is modeled using a simplified state-based peridynamics formulation that accounts for nonlocal interactions over a finite horizon. The underlying model and its numerical implementation are discussed in detail in [[@Jha2021JMPS], Sections 2.1 and 2.3].
 
 ### DEM-inspired contact forces
 
-The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance; see \autoref{fig:peridemContact}. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or geometric simplifications. The full formulation of contact detection, force assembly, and implementation is detailed in [[@jha2021peridynamics], Section 2.2].
+The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance; see \autoref{fig:peridemContact}. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or geometric simplifications. The full formulation of contact detection, force assembly, and implementation is detailed in [[@Jha2021JMPS], Section 2.2].
 
-![High-resolution contact approach in PeriDEM model for granular materials\cite{jha2021peridynamics} between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$.\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
+![High-resolution contact approach in PeriDEM model for granular materials between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$.\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
 
 # Implementation
 
-[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in \texttt{C++} and hosted on GitHub. It depends on a minimal set of external libraries, most of which are bundled in the `external` directory. Key dependencies include Taskflow [@huang2021taskflow] for multithreaded parallelism, nanoflann [@blanco2014nanoflann] for efficient neighborhood search, and VTK for output. The numerical strategies for neighbor search, peridynamic integration, damage evaluation, and time stepping follow those introduced in [[@jha2021peridynamics], Section 3]. The core simulation model is implemented in [`src/model/dem`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem), with the class [`DEMModel`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem/demModel.cpp) managing particle states, force calculations, and time integration. This work builds on earlier research in the analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @jha2025nodal].
+[PeriDEM](https://github.com/prashjha/PeriDEM) is implemented in \texttt{C++} and hosted on GitHub. It depends on a minimal set of external libraries, most of which are bundled in the `external` directory. Key dependencies include Taskflow [@huang2021taskflow] for multithreaded parallelism, nanoflann [@blanco2014nanoflann] for efficient neighborhood search, and VTK for output. The numerical strategies for neighbor search, peridynamic integration, damage evaluation, and time stepping follow those introduced in [[@Jha2021JMPS], Section 3]. The core simulation model is implemented in [`src/model/dem`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem), with the class [`DEMModel`](https://github.com/prashjha/PeriDEM/blob/v0.2.1/src/model/dem/demModel.cpp) managing particle states, force calculations, and time integration. This work builds on earlier research in the analysis and numerical methods for peridynamics; see [@jha2018numerical; @jha2019numerical; @jha2018numerical2; @Jha2020peri; @jha2025nodal].
 
 ## Features
 
