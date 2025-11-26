@@ -80,12 +80,13 @@ This work builds on earlier research in the analysis and numerical methods for p
 - Supports arbitrarily shaped particles for realistic granular systems  
 - Ongoing development of MPI-based parallelism and adaptive modeling strategies to improve efficiency without sacrificing accuracy
 
-
 ## Examples
 
 ![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=60%}
 
-Examples are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key case demonstrates compression of 500+ circular and hexagonal particles in a rectangular container by moving the top wall. The stress on the wall as a function of penetration becomes increasingly nonlinear as damage accumulates and the medium yields; see \autoref{fig:peridemSummary}a. Preliminary performance tests show an exponential increase in compute time with the number of particles, due to the nonlocal nature of both peridynamic and contact forces, highlighting a computational bottleneck. This motivates the integration of MPI and the development of a multi-fidelity framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
+Example cases are described in [examples/README.md](https://github.com/prashjha/PeriDEM/blob/v0.2.1/examples/README.md). One key simulation demonstrates the compression of over 500 circular and hexagonal particles in a rectangular container by displacing the top wall. The stress on the wall becomes increasingly nonlinear with penetration depth as damage accumulates and the medium yields (see \autoref{fig:peridemSummary}a).
+
+Preliminary performance tests show that compute time increases exponentially with particle count due to the nonlocal nature of both peridynamic and contact interactions—highlighting a computational bottleneck. This motivates future integration of MPI-based parallelism and a multi-fidelity modeling framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
 
 # Acknowledgements
 
