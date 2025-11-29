@@ -242,8 +242,6 @@ The [pixi.toml](pixi.toml) file defines the dependencies and build instructions 
 
 To install the Pixi package manager, follow the instructions at the official [installation page](https://pixi.sh/dev/installation/#update).
 
-
-
 ### Dependencies
 
 Core dependencies are:
@@ -285,6 +283,22 @@ repository.
  This means you will have to build the package in the `build` directory, and 
  use the `build/bin/PeriDEM` executable. We plan to provide the method to `install` 
  the library in the future.  
+
+### Using docker to test the library
+```sh
+# run ubuntu using docker (we are using the same image we use to test the library)
+docker run -it prashjha/peridem-base-noble
+
+# we install pixi and add it to the path
+curl -fsSL https://pixi.sh/install.sh | sh
+export PATH="/root/.pixi/bin:$PATH"
+
+# assuming we are now in root of docker image
+cd user/
+git clone git@github.com:prashjha/PeriDEM.git
+cd PeriDEM/
+pixi run build
+```
 
 ### Future plans
 
