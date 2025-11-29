@@ -16,6 +16,7 @@
     * [Dependencies](#Dependencies)
     * [Building the code](#Building-the-code)
     * [Recommendations for quick build](#Recommendations-for-quick-build)
+    * [Install & use as a CMake package](#install--use-as-a-cmake-package)
   - [Running simulations](#Running-simulations)
     * [Two-particle with wall](#Two-particle-with-wall)
     * [Compressive test](#Compressive-test)
@@ -279,10 +280,39 @@ make -j 4
 directory. You can create the `build` directory either inside or outside the 
 repository. 
 
-> :exclamation: As of now, we can only build the library and not install it. 
- This means you will have to build the package in the `build` directory, and 
- use the `build/bin/PeriDEM` executable. We plan to provide the method to `install` 
- the library in the future.  
+### Install & use as a CMake package
+- Build and install (example prefix `/tmp/peridem-install`):
+  ```sh
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+  cmake --build build -- -j$(sysctl -n hw.ncpu)
+  cmake --install build --prefix /tmp/peridem-install
+  ```
+  This installs `bin/PeriDEM`, shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
+- Consume in another CMake project:
+  ```cmake
+  cmake_minimum_required(VERSION 3.18)
+  project(peridem_consumer LANGUAGES CXX)
+  find_package(PeriDEM REQUIRED)
+  add_executable(hello main.cpp)
+  target_link_libraries(hello PRIVATE PeriDEM::Model) # or another PeriDEM library target
+  ```
+  ```cpp
+  #include <iostream>
+  #include <PeriDEMConfig.h>
+  int main() {
+    std::cout << "PeriDEM version: "
+              << PERIDEM_VERSION_MAJOR << "."
+              << PERIDEM_VERSION_MINOR << "."
+              << PERIDEM_VERSION_PATCH << "\n";
+  }
+  ```
+  Configure and build the consumer:
+  ```sh
+  cmake -S . -B build -DCMAKE_PREFIX_PATH=/tmp/peridem-install
+  cmake --build build -- -j$(sysctl -n hw.ncpu)
+  ./build/hello
+  ```
+- External dependencies required on the target system: MPI, Threads, yaml-cpp, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis (found via bundled `FindMetis.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers.
 
 ### Using docker to test the library
 ```sh
