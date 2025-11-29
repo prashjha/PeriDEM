@@ -25,6 +25,7 @@
   - [Developers](#Developers)
 
 ## Introduction
+
 Implementation of the high-fidelity model of granular media that combines the advantages 
 of peridynamics and discrete element method (DEM). 
 The model has the following advantages over existing mechanical models for granular media:
@@ -48,14 +49,17 @@ We have created channels on various platforms:
   * Email us if interested in joining the workspace.
 
 ## Documentation
+
 [Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
 
 ## Tutorial
+
 We explain the setting-up of simulations in further details in [tutorial](./tutorial/README.md). 
 We consider `two-particle` test setup with non-circular particles and `compressive-test` to 
 discuss the various aspects of simulations.
 
 ## Examples
+
 We next highlight some key examples. Further details are available in [examples/README.md](./examples/README.md). 
 
 ### Two-particle tests
@@ -75,6 +79,7 @@ We next highlight some key examples. Further details are available in [examples/
 | Concave particles |
 
 ### Compressive tests
+
 Setup for this test consists of 502 circular and hexagonal-shaped particles of varying 
 radius and orientation inside a rectangle container. The container's top wall is moving 
 downward at a prescribed speed, resulting in the compression of the particle system. 
@@ -91,6 +96,7 @@ yielding of the system. For more details, we refer to
 
 
 ### Attrition tests
+
 We consider mix of different particles in a rotating container. Particles considered include circular, triangular, hexagonal, and drum shaped. Particles come in large and small shapes (their sizes are purturbed randomly). In order to to introduce diversity of material properties, we considered large particles to be tougher compared to the smaller ones. Setup files are in [examples/PeriDEM/attrition_tests](./examples/PeriDEM/attrition_tests)
 
 |                                         <img src="./assets/attrition_test_sim1.gif" width="250">                                         |                                                                              <img src="./assets/attrition_test_sim2.gif" width="250">                                                                               | 
@@ -102,14 +108,17 @@ Complex container geometries can be considered as well. For example, the image b
 <img src="./examples/PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container/init_view.png" width="600">
 
 ### Single particle deformation
+
 We can use `PeriDEM` executable or `Peridynamics` executable in `apps` directory to simulate the deformation of single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
 
 ## Brief implementation details
+
 The main implementation of the model is carried out in the model directory [dem](./src/model/dem). 
 The model is implemented in class [DEMModel](./src/model/dem/demModel.cpp). 
 Function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more details:
 
 ### DEMModel::run()
+
 This function does three tasks:
 ```cpp
 void model::DEMModel::run(inp::Input *deck) {
@@ -129,6 +138,7 @@ In `DEMModel::init()`, the simulation is prepared by reading the input
 files (such as `.yaml`, `.msh`, `particle_locations.csv` files). 
 
 ### DEMModel::integrate()
+
 Key steps in  `DEMModel::integrate()` are 
 ```cpp
 void model::DEMModel::run(inp::Input *deck) {
@@ -197,6 +207,7 @@ void model::DEMModel::integrateVerlet() {
 ```
 
 ### DEMModel::computeForces()
+
 The key method in time integration is `DEMModel::computeForces()`
 In this function, we compute internal and external forces at each node of a particle 
 and also account for the external boundary conditions. This function looks like
@@ -220,13 +231,21 @@ void model::DEMModel::computeForces() {
 ```
 
 ### Further reading
+
 Above gives the basic idea of simulation steps. For more thorough understanding of 
 the implementation, interested readers can look at 
 [demModel.cpp](./src/model/dem/demModel.cpp).
 
 ## Installation
 
+The [pixi.toml](pixi.toml) file defines the dependencies and build instructions for the library. It should be used to create a reproducible environment and build the code using Pixi and CMake.
+
+To install the Pixi package manager, follow the instructions at the official [installation page](https://pixi.sh/dev/installation/#update).
+
+
+
 ### Dependencies
+
 Core dependencies are:
   - [cmake](https://cmake.org/) (>= 3.10.2) 
   - [vtk](https://vtk.org/) (>= 7.1.1)
@@ -242,6 +261,7 @@ Following dependencies are included in the `PeriDEM` library in `external` folde
   - [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) (>= v2.3.3) 
 
 ### Building the code
+
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
 commands for building the PeriDEM code is as simple as
 ```sh
@@ -266,9 +286,8 @@ repository.
  use the `build/bin/PeriDEM` executable. We plan to provide the method to `install` 
  the library in the future.  
 
-We refer to [tools/README.md](./tools/README.md) for further details about installing dependencies and building the library in different ubuntu releases.
-
 ### Future plans
+
 We are trying to make PeriDEM MPI-friendly so that we can target large problems. 
 We are moving in following key directions:
 - MPI parallelism for Peridynamics simulations (deformation of single body subjected to external loading)
@@ -285,6 +304,7 @@ If any of the above future directions interest you or if you have new directions
 in mind, please do reach out to us.    
 
 ### Ask for help
+
 In the past, `PeriDEM` library depended on large libraries such as `HPX`, `PCL`, `Boost` (explicitly dependence). 
 We have put a lot of efforts into reducing the dependencies to absolutely minimum 
 so that it is easier to build and run `PeriDEM` in different operating systems and clusters. 
@@ -301,6 +321,7 @@ If you like some help, want to contribute, extend the code, or discuss new ideas
 please do reach out to us.
 
 ## Running simulations
+
 Assuming that the input file is `input.yaml` and all other files such as `.msh` 
 file for particle/wall and particle locations file are created and their filenames 
 with paths are correctly provided in `input.yaml`, we will run the problem (using 4 threads) 
@@ -311,6 +332,7 @@ with paths are correctly provided in `input.yaml`, we will run the problem (usin
 Some examples are listed below.
 
 ### Two-particle with wall
+
 Navigate to the example directory [examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp](.examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp) 
 and run the example as follows
 ```sh
@@ -334,6 +356,7 @@ to modify simulation parameters and run the simulation using
 > Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
 ### Compressive test
+
 Navigate to the example directory [examples/PeriDEM/compressive_test/compression_large_set/inp](./examples/PeriDEM/compressive_test/compression_large_set/inp) 
 and run the example as follows (note that this is a computationally expensive example)
 ```sh
@@ -349,6 +372,7 @@ As before:
   - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/compression_large_set//run.sh).
 
 ## Visualizing results
+
 Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) 
  or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit). 
 
@@ -371,12 +395,14 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
     regions with elastic deformation and region with fracture.
 
 ## Contributing
+
 We welcome contributions to the code. In `Future plans` section above, some 
 potential directions are listed.
 Please fork this repository, make changes, and make a pull request to the 
 source branch.  
  
 ## Citations
+
 If this library was useful in your work, we recommend citing the following article:
 
 > Jha, P.K., Desai, P.S., Bhattacharya, D. and Lipton, R., 2021. 
@@ -388,5 +414,6 @@ You can also cite the PeriDEM using zenodo doi:
 > Prashant K., J. (2024). Peridynamics-based discrete element method (PeriDEM) model of granular systems. Zenodo. https://doi.org/10.5281/zenodo.13888588
 
 ## Developers
+
   - [Prashant K. Jha](https://prashjha.github.io/) 
     (pjha.sci@gmail.com, prashant.jha@sdsmt.edu)
