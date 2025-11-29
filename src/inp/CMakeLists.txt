@@ -18,3 +18,10 @@ AUX_SOURCE_DIRECTORY(./pdecks SOURCES)
 add_library(Inp ${SOURCES})
 
 target_link_libraries(Inp PUBLIC Util ${YAML_CPP_LIB})
+
+target_include_directories(Inp
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include>
+)

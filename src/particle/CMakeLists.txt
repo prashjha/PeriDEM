@@ -11,3 +11,10 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 add_library(Particle ${SOURCES})
 
 target_link_libraries(Particle PUBLIC FE Material Geometry)
+
+target_include_directories(Particle
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<INSTALL_INTERFACE:include>
+)
