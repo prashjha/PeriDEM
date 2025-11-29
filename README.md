@@ -281,10 +281,14 @@ directory. You can create the `build` directory either inside or outside the
 repository. 
 
 ### Install & use as a CMake package
-- Build and install (example prefix `/tmp/peridem-install`):
+- Build and install (starting from a fresh clone, e.g., `git clone ... && cd PeriDEM`; create a build dir wherever you like—`build` inside the source is assumed below):
   ```sh
+  # from the source root
+  mkdir -p build
   cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
   cmake --build build -- -j$(sysctl -n hw.ncpu)
+
+  # install library in /tmp/peridem-install
   cmake --install build --prefix /tmp/peridem-install
   ```
   This installs `bin/PeriDEM`, shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
@@ -296,6 +300,7 @@ repository.
   add_executable(hello main.cpp)
   target_link_libraries(hello PRIVATE PeriDEM::Model) # or another PeriDEM library target
   ```
+  Place this in, e.g., `/tmp/peridem-consumer/CMakeLists.txt`. A minimal `main.cpp` in the same folder:
   ```cpp
   #include <iostream>
   #include <PeriDEMConfig.h>
@@ -306,7 +311,7 @@ repository.
               << PERIDEM_VERSION_PATCH << "\n";
   }
   ```
-  Configure and build the consumer:
+  Configure and build the consumer (run these inside `/tmp/peridem-consumer`):
   ```sh
   cmake -S . -B build -DCMAKE_PREFIX_PATH=/tmp/peridem-install
   cmake --build build -- -j$(sysctl -n hw.ncpu)
