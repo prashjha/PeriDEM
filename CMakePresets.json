@@ -1,0 +1,48 @@
+{
+    "version": 3,
+    "cmakeMinimumRequired": {
+        "major": 3,
+        "minor": 10,
+        "patch": 0
+    },
+    "configurePresets": [
+        {
+            "name": "default",
+            "displayName": "Default Config",
+            "description": "Default build using Ninja generator",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/build",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Release",
+                "CMAKE_CXX_STANDARD": "23",
+                "Enable_CMAKE_Debug_Build": "TRUE",
+                "Enable_Documentation": "FALSE", 
+                "Enable_Tests": "FALSE",
+                "Enable_High_Load_Tests": "FALSE",
+                "Disable_Docker_MPI_Tests": "TRUE",
+                "Enable_Apps": "FALSE"
+            }
+        },
+        {
+            "name": "debug",
+            "inherits": "default",
+            "displayName": "Debug Config",
+            "description": "Debug build with tests enabled",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "Enable_Tests": "TRUE",
+                "Enable_Apps": "TRUE"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "default",
+            "configurePreset": "default"
+        },
+        {
+            "name": "debug",
+            "configurePreset": "debug"
+        }
+    ]
+}

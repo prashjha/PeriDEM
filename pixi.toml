@@ -1,0 +1,35 @@
+[workspace]
+channels = ["conda-forge"]
+name = "PeriDEM"
+platforms = ["linux-64", "osx-arm64"]
+version = "v0.2.1"
+
+# Currently can't install, only build?
+# c.f. https://github.com/prashjha/PeriDEM/blob/8f73cbd12fbf8d483bb46670661f9f2641d03c37/README.md?plain=1#L264
+[tasks.build]
+cmd = """
+rm -rf build && \
+cmake   -DEnable_Documentation=OFF \
+        -DEnable_Tests=ON \
+        -DEnable_High_Load_Tests=OFF \
+        -DDisable_Docker_MPI_Tests=ON \
+        -DVTK_DIR="$CONDA_PREFIX" \
+        -DMETIS_DIR="$CONDA_PREFIX" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX="$CONDA_PREFIX" \
+        -S . \
+        -B build && \
+cmake build -LH && \
+cmake --build build --clean-first --parallel "$(nproc --ignore=2)" && \
+ctest --verbose --test-dir build/
+"""
+
+[dependencies]
+cxx-compiler = ">=1.11.0,<2"
+cmake = "<4"
+make = ">=4.4.1,<5"
+vtk = ">=9.5.2,<10"
+yaml-cpp = ">=0.8.0,<0.9"
+metis = ">=5.2.1,<6"
+openmpi = ">=5.0.8,<6"
+gmsh = ">=4.13.1,<5"  # for tests
