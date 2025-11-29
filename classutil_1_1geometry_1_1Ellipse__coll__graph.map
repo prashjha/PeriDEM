@@ -1,7 +1,0 @@
-<map id="util::geometry::Ellipse" name="util::geometry::Ellipse">
-<area shape="rect" id="Node000001" title="Defines ellipse." alt="" coords="107,713,247,1399"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,180,651"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,664,140,712,134,713,129,665"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="205,35,319,621"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="230,621,221,697,216,697,225,620"/>
-</map>
