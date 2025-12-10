@@ -1,0 +1,14 @@
+<map id="problem_setup.get_ref_rect_points" name="problem_setup.get_ref_rect_points">
+<area shape="rect" id="Node000001" title=" " alt="" coords="741,57,892,97"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#ab77cd691be605123ba53961f21c8885a" title=" " alt="" coords="5,29,191,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="734,56,693,48,566,29,467,22,367,24,239,32,191,37,191,32,238,27,367,18,467,17,567,24,694,43,735,51"/>
+<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#a0ab66833a3b558c6c2e060e8fb9603da" title=" " alt="" coords="532,57,693,97"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="727,80,693,80,693,75,727,75"/>
+<area shape="rect" id="Node000005" href="$namespaceproblem__setup.html#a1fec8dd536ff2dc0499259901333ee04" title=" " alt="" coords="536,121,689,161"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="740,104,678,124,676,119,738,99"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="143,18,127,11,98,8,73,10,57,15,52,21,55,28,50,30,47,20,54,10,72,5,98,3,128,6,145,13"/>
+<area shape="rect" id="Node000004" href="$namespaceproblem__setup.html#a8e72848abab104858c2a4647079140ed" title=" " alt="" coords="239,66,484,121"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="519,86,485,88,484,83,518,81"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="225,73,190,67,191,62,226,68"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="403,55,388,48,361,45,339,47,324,51,318,58,318,66,313,66,313,56,322,47,338,41,361,39,390,42,406,50"/>
+</map>

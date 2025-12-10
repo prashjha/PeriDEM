@@ -1,0 +1,34 @@
+<map id="geom_util.gmsh_translate" name="geom_util.gmsh_translate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="437,429,608,454"/>
+<area shape="rect" id="Node000002" href="$namespacegmsh__particles.html#a419347b5a2bf3af6a4ed71b344bcbd63" title=" " alt="" coords="223,5,389,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="517,415,508,346,488,251,471,199,449,149,421,101,387,59,373,48,376,43,391,55,426,98,454,147,476,198,493,249,514,345,522,415"/>
+<area shape="rect" id="Node000003" href="$namespacegmsh__particles.html#a989db766c3af5de0f57c5fe83ab27266" title=" " alt="" coords="227,69,385,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="515,416,503,356,480,278,463,237,442,196,417,157,388,123,372,112,375,107,391,119,421,154,447,193,468,234,485,276,508,355,520,415"/>
+<area shape="rect" id="Node000004" href="$namespacegmsh__particles.html#a5fc8cc16fa3ce4d1eb69f352f5e6c586" title=" " alt="" coords="233,133,379,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="512,416,496,367,471,306,435,243,413,213,388,187,371,176,374,171,391,183,417,210,439,240,476,304,501,366,517,414"/>
+<area shape="rect" id="Node000006" href="$namespacegmsh__particles.html#aa341105f1573b81a7fd2cc7c7c90c0b1" title=" " alt="" coords="230,197,382,237"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="508,417,489,381,462,336,428,291,388,251,369,240,372,235,391,247,432,288,467,333,494,378,512,415"/>
+<area shape="rect" id="Node000007" href="$namespacegmsh__particles.html#a3d721b1745fe6fbb45b8edf547b2c711" title=" " alt="" coords="227,261,385,301"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="500,420,452,368,421,340,388,316,366,304,369,299,391,311,425,336,456,364,504,416"/>
+<area shape="rect" id="Node000008" href="$namespacegmsh__particles.html#a8909a20e19ab6af8bcc5387d26814639" title=" " alt="" coords="227,325,385,365"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="483,425,388,380,359,368,362,363,390,375,485,420"/>
+<area shape="rect" id="Node000009" href="$namespacegmsh__particles.html#af5c1ef25240c478c454be8eaa4ac9a4a" title=" " alt="" coords="231,389,381,429"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="423,429,381,423,382,418,424,424"/>
+<area shape="rect" id="Node000010" href="$namespacegmsh__particles.html#aafeaa93f4627014cfbc97a140bd81682" title=" " alt="" coords="225,453,387,493"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="424,459,387,464,386,459,423,453"/>
+<area shape="rect" id="Node000011" href="$namespacegmsh__particles.html#a4ad630d57e69747a673e2191b8d68bf9" title=" " alt="" coords="225,517,387,557"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="485,463,390,508,362,520,359,515,388,503,483,458"/>
+<area shape="rect" id="Node000012" href="$namespacegmsh__particles.html#a391a8f8b2b6fc1c040dff76ae2f87b3b" title=" " alt="" coords="235,581,377,621"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="504,467,456,518,425,547,391,572,369,583,366,579,388,567,421,542,452,515,500,463"/>
+<area shape="rect" id="Node000013" href="$namespacegmsh__particles.html#a6e6ea1a434988f51bfe21cc99e6504d6" title=" " alt="" coords="227,645,385,685"/>
+<area shape="poly" id="edge12_Node000001_Node000013" title=" " alt="" coords="512,468,494,505,467,549,432,595,391,635,372,648,369,643,388,631,428,592,462,546,489,502,508,465"/>
+<area shape="rect" id="Node000014" href="$namespacegmsh__particles.html#aa4c13c2cd9c738929f6ac653b74ca07b" title=" " alt="" coords="223,709,389,749"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="517,469,501,517,476,579,439,643,417,673,391,699,374,711,371,707,388,695,413,669,435,640,471,576,496,515,512,467"/>
+<area shape="rect" id="Node000015" href="$namespacegmsh__particles.html#a3165137802620fd0b40b1d738101db94" title=" " alt="" coords="229,773,383,813"/>
+<area shape="poly" id="edge15_Node000001_Node000015" title=" " alt="" coords="520,468,508,528,485,606,468,648,447,690,421,729,391,763,375,775,372,771,388,759,417,725,442,687,463,646,480,604,503,526,515,467"/>
+<area shape="rect" id="Node000016" href="$namespacegmsh__particles.html#a197b7b0069dfed40167af646f1345d12" title=" " alt="" coords="228,837,384,877"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="522,468,514,538,493,634,476,685,454,736,426,784,391,827,376,839,373,835,387,823,421,781,449,734,471,683,488,632,508,537,517,467"/>
+<area shape="rect" id="Node000005" href="$namespacecircle__wall__input__using__symmetric__mesh.html#af6fc8d30f4a74bb437c3b7fbd099f15e" title=" " alt="" coords="5,414,175,469"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="230,183,224,187,199,213,177,242,142,305,116,366,101,415,96,413,111,364,137,303,173,239,195,210,221,183,226,179"/>
+<area shape="poly" id="edge14_Node000014_Node000005" title=" " alt="" coords="226,704,221,699,195,673,173,643,137,580,111,518,96,470,101,468,116,516,142,577,177,640,199,669,224,695,230,700"/>
+</map>

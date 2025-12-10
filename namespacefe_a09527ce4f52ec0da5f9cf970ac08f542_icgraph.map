@@ -1,0 +1,11 @@
+<map id="fe::getMaxShearStressAndLoc" name="fe::getMaxShearStressAndLoc">
+<area shape="rect" id="Node000001" title="Get location where maximum of specified component of stress occurs in this particle." alt="" coords="941,13,1141,38"/>
+<area shape="rect" id="Node000002" href="$classtwoparticle__demo_1_1Model.html#ab8c38cc78c0c17a86f17dd6b477ecde0" title="Computes maximum shear stress and its location in particle." alt="" coords="676,5,893,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="927,28,893,28,893,23,927,23"/>
+<area shape="rect" id="Node000003" href="$classtwoparticle__demo_1_1Model.html#a200a62053eadcf3d6f08a9f4a186ad59" title="Handles postprocessing for two&#45;particle test." alt="" coords="461,5,628,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="662,28,628,28,628,23,662,23"/>
+<area shape="rect" id="Node000004" href="$classtwoparticle__demo_1_1Model.html#a4edd5f54de8ea3e6e35391b134c642be" title="Perform time step integration." alt="" coords="247,5,413,45"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="447,28,414,28,414,23,447,23"/>
+<area shape="rect" id="Node000005" href="$classtwoparticle__demo_1_1Model.html#af741e660292b3c71c59277cbd1beb052" title="Runs simulation by executing steps such as init(), integrate(), and close()." alt="" coords="5,13,199,38"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="233,28,199,28,199,23,233,23"/>
+</map>

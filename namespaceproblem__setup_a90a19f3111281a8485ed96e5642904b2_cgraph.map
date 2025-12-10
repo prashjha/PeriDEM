@@ -1,0 +1,8 @@
+<map id="problem_setup.particle_locations_orient" name="problem_setup.particle_locations_orient">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,159,75"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#afdb4a08aeffd3f2335ddf0cc8a0cad00" title=" " alt="" coords="207,5,357,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="159,41,192,36,193,41,159,46"/>
+<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#a985dacfd6be0ac3572b15624d629e2b7" title=" " alt="" coords="405,42,549,67"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="159,54,207,55,357,55,392,54,392,59,357,60,207,60,159,59"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="358,34,392,39,391,44,357,39"/>
+</map>

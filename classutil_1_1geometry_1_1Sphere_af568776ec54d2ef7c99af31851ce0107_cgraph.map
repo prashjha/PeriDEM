@@ -1,0 +1,18 @@
+<map id="util::geometry::Sphere::isNear" name="util::geometry::Sphere::isNear">
+<area shape="rect" id="Node000001" title="Checks if box is within given distance of this object." alt="" coords="5,91,156,131"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#af6ab7e8072282977994d4c13e470dfc7" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="207,91,376,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,109,193,109,193,114,157,114"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a9a73e26a05894da76d4d0a922272b7cc" title="Returns center point." alt="" coords="445,5,549,31"/>
+<area shape="poly" id="edge5_Node000001_Node000003" title=" " alt="" coords="119,89,159,71,203,55,263,41,324,31,431,19,432,24,324,36,264,47,205,61,161,76,122,94"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="427,84,568,109"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="145,89,204,77,291,71,379,77,413,80,413,85,378,82,291,76,204,82,147,94"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#aa5b234685d92d1a0f48600c3a3708bfd" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="204,156,379,181"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="155,129,231,150,230,155,154,134"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="249,205,334,231"/>
+<area shape="poly" id="edge9_Node000001_Node000007" title=" " alt="" coords="108,129,152,161,205,192,236,203,234,208,203,196,149,166,105,134"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="335,89,455,34,457,39,337,94"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="376,103,413,100,413,105,377,108"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="447,137,547,163"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="377,125,434,136,433,141,376,130"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="379,158,434,153,434,158,379,163"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="inp::PBCData" name="inp::PBCData">
+<area shape="rect" id="Node000001" title="User&#45;input data for particle neighbor search." alt="" coords="11,313,167,599"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1geometry_1_1GeomData.html" title="Input data for geometrical objects." alt="" coords="5,5,172,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,251,91,297,86,297,86,251"/>
+</map>
