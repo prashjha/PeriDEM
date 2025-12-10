@@ -1,5 +1,0 @@
-<map id="inp::PICDeck" name="inp::PICDeck">
-<area shape="rect" id="Node000001" title="User&#45;input data for particle neighbor search." alt="" coords="16,653,109,799"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="5,5,120,591"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="65,591,65,637,60,637,60,591"/>
-</map>

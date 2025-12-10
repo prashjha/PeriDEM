@@ -1,5 +1,0 @@
-<map id="problem_setup.generate_tri_particle_gmsh_input" name="problem_setup.generate_tri_particle_gmsh_input">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,168,45"/>
-<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#acb67d3097eb783b92c758558193b6de3" title=" " alt="" coords="216,5,367,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,23,202,23,202,28,168,28"/>
-</map>

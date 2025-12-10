@@ -1,5 +1,0 @@
-<map id="material::PdElastic::printStr" name="material::PdElastic::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="185,5,317,45"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1PdElastic.html#aee70b78f854fd33e654cd684085a7a75" title="Prints the information about the object." alt="" coords="5,5,137,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,28,138,28,138,23,171,23"/>
-</map>

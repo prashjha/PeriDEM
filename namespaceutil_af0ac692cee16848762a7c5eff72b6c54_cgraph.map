@@ -1,7 +1,0 @@
-<map id="util::isPointInsideRectangle" name="util::isPointInsideRectangle">
-<area shape="rect" id="Node000001" title="Checks if point is inside a rectangle." alt="" coords="5,31,187,56"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="235,5,335,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="187,28,221,24,221,29,187,34"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="242,55,327,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,52,229,58,228,63,187,58"/>
-</map>

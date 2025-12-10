@@ -1,9 +1,0 @@
-<map id="model::DEMModel::checkStop" name="model::DEMModel::checkStop">
-<area shape="rect" id="Node000001" title="Checks if simulation should be stopped due to abnormal state of system." alt="" coords="5,35,205,60"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="288,5,388,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,32,274,23,275,29,206,37"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#a15ca8392b2b1b5f4888d4bda9cdb4473" title="Returns the maximum length of point and index from list of points." alt="" coords="253,55,423,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="206,57,240,61,239,66,205,62"/>
-<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="471,63,633,88"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="423,73,457,73,457,78,423,78"/>
-</map>

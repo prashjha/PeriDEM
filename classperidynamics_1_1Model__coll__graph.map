@@ -1,9 +1,0 @@
-<map id="peridynamics::Model" name="peridynamics::Model">
-<area shape="rect" id="Node000001" title="Main model class to simulate peridynamics deformation of single particle." alt="" coords="53,5611,188,5696"/>
-<area shape="rect" id="Node000002" href="$classmodel_1_1DEMModel.html" title="A class for discrete element particle simulation with peridynamic model" alt="" coords="5,4228,236,5561"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,5575,123,5610,118,5610,118,5575"/>
-<area shape="rect" id="Node000003" href="$classmodel_1_1ModelData.html" title="A class to store model data." alt="" coords="25,1313,216,4179"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="123,4192,123,4228,118,4228,118,4192"/>
-<area shape="rect" id="Node000004" href="$classinp_1_1Input.html" title="A class to read input file." alt="" coords="11,5,230,1251"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="123,1251,123,1297,118,1297,118,1251"/>
-</map>

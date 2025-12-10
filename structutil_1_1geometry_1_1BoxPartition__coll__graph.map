@@ -1,5 +1,0 @@
-<map id="util::geometry::BoxPartition" name="util::geometry::BoxPartition">
-<area shape="rect" id="Node000001" title="Defines simple rectangle domain." alt="" coords="5,653,177,819"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="34,5,149,591"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="94,591,94,637,89,637,89,591"/>
-</map>
