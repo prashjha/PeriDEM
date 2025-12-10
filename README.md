@@ -332,7 +332,7 @@ export PATH="/root/.pixi/bin:$PATH"
 cd user/
 git clone git@github.com:prashjha/PeriDEM.git
 cd PeriDEM/
-pixi run build
+pixi run test
 ```
 
 ### Future plans
