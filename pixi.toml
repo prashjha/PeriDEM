@@ -26,10 +26,10 @@ ctest --verbose --test-dir build/
 
 [dependencies]
 cxx-compiler = ">=1.11.0,<2"
-cmake = "<4"
+cmake = ">=4.2.1,<5"
 make = ">=4.4.1,<5"
 vtk = ">=9.5.2,<10"
 yaml-cpp = ">=0.8.0,<0.9"
 metis = ">=5.2.1,<6"
 openmpi = ">=5.0.8,<6"
-gmsh = ">=4.13.1,<5"  # for tests
+gmsh = ">=4.15.0,<5"  # for tests
