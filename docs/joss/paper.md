@@ -61,7 +61,7 @@ The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the
 
 The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance; see \autoref{fig:peridemContact}. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or geometric simplifications. The full formulation of contact detection, force assembly, and implementation is detailed in [[@jha2021peridynamics], Section 2.2].
 
-![High-resolution contact approach in PeriDEM model for granular materials between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$. This figure is adapted from [[@jha2021peridynamics].\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
+![High-resolution contact approach in the PeriDEM model for granular materials between arbitrarily shaped particles. The spring dashpot slider system represents normal contact elasticity, normal damping, and tangential friction between material points $\boldsymbol{x}$ and $\boldsymbol{y}$. Adapted from @jha2021peridynamics.](./files/peridem-contact.png){#fig:peridemContact width=40%}
 
 # Implementation
 
