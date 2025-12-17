@@ -80,7 +80,7 @@ Example cases are described in [examples/README.md](https://github.com/prashjha/
 
 Preliminary performance tests show that compute time increases exponentially with particle count due to the nonlocal nature of both peridynamic and contact interactions—highlighting a computational bottleneck. This motivates future integration of MPI-based parallelism and a multi-fidelity modeling framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
 
-![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles. This figure is adapted from [[@jha2021peridynamics].\label{fig:peridemSummary}](./files/peridem-summary.png){width=70%}
+![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles. Adapted from @jha2021peridynamics.](./files/peridem-summary.png){#fig:peridemSummary width=70%}
 
 # Acknowledgements
 
