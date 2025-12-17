@@ -61,7 +61,7 @@ The internal force term ${\boldsymbol{f}}^{(p)}_{int}(\boldsymbol{X}, t)$ in the
 
 The external force term ${\boldsymbol{f}}^{(p)}_{ext}(\boldsymbol{X}, t)$ includes body forces, wall-particle interactions, and contact forces from other particles. Contact is modeled using a spring-dashpot-slider formulation applied locally when particles come within a critical distance; see \autoref{fig:peridemContact}. This approach introduces nonlinear normal forces, damping, and friction without relying on particle convexity or geometric simplifications. The full formulation of contact detection, force assembly, and implementation is detailed in [[@jha2021peridynamics], Section 2.2].
 
-![High-resolution contact approach in PeriDEM model for granular materials between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$.\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
+![High-resolution contact approach in PeriDEM model for granular materials between arbitrarily-shaped particles. The spring-dashpot-slider system shows the normal contact (spring), normal damping (dashpot), and tangential friction (slider) forces between points $\boldsymbol{x}$ and $\boldsymbol{y}$. This figure is adapted from [[@jha2021peridynamics].\label{fig:peridemContact}](./files/peridem-contact.png){width=40%}
 
 # Implementation
 
@@ -80,7 +80,7 @@ Example cases are described in [examples/README.md](https://github.com/prashjha/
 
 Preliminary performance tests show that compute time increases exponentially with particle count due to the nonlocal nature of both peridynamic and contact interactions—highlighting a computational bottleneck. This motivates future integration of MPI-based parallelism and a multi-fidelity modeling framework. Additional examples include attrition of non-circular particles in a rotating cylinder (\autoref{fig:peridemSummary}c).
 
-![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles.\label{fig:peridemSummary}](./files/peridem-summary.png){width=70%}
+![(a) Nonlinear response under compression, (b) exponential growth of compute time due to nonlocality of internal and contact forces, and (c) rotating cylinder with nonspherical particles. This figure is adapted from [[@jha2021peridynamics].\label{fig:peridemSummary}](./files/peridem-summary.png){width=70%}
 
 # Acknowledgements
 
