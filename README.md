@@ -1,6 +1,6 @@
 # PeriDEM - High-fidelity modeling of granular media consisting of deformable complex-shaped particles
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues) [![Join the chat at https://gitter.im/PeriDEM/community](https://badges.gitter.im/PeriDEM/community.svg)](https://gitter.im/PeriDEM/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub repo size](https://img.shields.io/github/repo-size/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13888588.svg)](https://zenodo.org/records/13888588)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues) [![Join the chat at https://gitter.im/PeriDEM/community](https://badges.gitter.im/PeriDEM/community.svg)](https://gitter.im/PeriDEM/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub repo size](https://img.shields.io/github/repo-size/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13888588.svg)](https://zenodo.org/records/13888588) [![DOI](https://joss.theoj.org/papers/10.21105/joss.07525/status.svg)](https://doi.org/10.21105/joss.07525)
 
 
 <p align="center"> <img src="./assets/logo/logo.png" width="400"> </p>
@@ -28,10 +28,10 @@
 ## Introduction
 
 Implementation of the high-fidelity model of granular media that combines the advantages 
-of peridynamics and discrete element method (DEM). 
+of peridynamics and the discrete element method (DEM). 
 The model has the following advantages over existing mechanical models for granular media:
   - handle intra-particle deformation and breakage/damage
-  - handle arbitrary shape of the particle. Inter-particle contact is not specific to any shape of the particle
+  - handle the arbitrary shape of the particle. Inter-particle contact is not specific to any shape of the particle
   - tunable inter-particle contact parameters
   - easy to add different mechanical constitutive laws within peridynamics for individual particle deformation
 
@@ -39,9 +39,14 @@ For more details about the model and results, we refer to the paper:
 
 > Prashant K. Jha, Prathamesh S. Desai, Debdeep Bhattacharya, Robert P Lipton (2020). 
 > **Peridynamics-based discrete element method (PeriDEM) model of granular systems involving breakage of arbitrarily shaped particles**. 
-> *Journal of the Mechanics and Physics of Solids, 151*, p.104376. Doi https://doi.org/10.1016/j.jmps.2021.104376.
+> *Journal of the Mechanics and Physics of Solids*, 151, p.104376. Doi https://doi.org/10.1016/j.jmps.2021.104376.
+> Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-peridem.pdf).
 
-Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-peridem.pdf).
+**PeriDEM is published as a software article in the Journal of Open Source Software:**
+> Prashant K. Jha (2025).
+> **PeriDEM -- High-fidelity modeling of granular media consisting of deformable complex-shaped particles**
+> *Journal of Open Source Software*, vol. 10, 116, p.7525, DOI 10.21105/joss.07525.
+> Download pdf [here](https://doi.org/10.21105/joss.07525).
 
 We have created channels on various platforms: 
 - [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
