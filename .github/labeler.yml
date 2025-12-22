@@ -1,0 +1,14 @@
+test:
+  - tests/*
+code:
+  - src/*
+documentaiton:
+  - docs/*
+examples:
+  - examples/*
+build:
+  - CMakeLists.txt
+cmake:
+  - cmake/*
+tools:
+  - tools/*

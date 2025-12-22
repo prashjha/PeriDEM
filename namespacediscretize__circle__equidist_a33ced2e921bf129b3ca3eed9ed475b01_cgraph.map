@@ -1,0 +1,7 @@
+<map id="discretize_circle_equidist.discretize_circle" name="discretize_circle_equidist.discretize_circle">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,27,233,67"/>
+<area shape="rect" id="Node000002" href="$namespacediscretize__circle__equidist.html#a6ad10d7c8fe12bc5e4d7f9f8fd9fb650" title=" " alt="" coords="281,5,479,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="233,32,268,28,268,33,234,37"/>
+<area shape="rect" id="Node000003" href="$namespacediscretize__circle__equidist.html#a84bb2b07029e8a3fb1b1f7f7f93db3bd" title=" " alt="" coords="281,55,479,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,57,268,61,267,66,233,62"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="model::DEMModel::setupQuadratureData" name="model::DEMModel::setupQuadratureData">
+<area shape="rect" id="Node000001" title="Sets up quadrature data." alt="" coords="5,42,268,67"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1BaseElem.html#a96fb54d9aca45e987c163e95242ceb8f" title="Get number of quadrature points in the data." alt="" coords="316,5,503,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="255,39,302,34,303,39,255,45"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="325,70,493,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,65,312,70,311,75,260,70"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#a86460acadab9a2e99a92121c0213e444" title="Find if data is in the list." alt="" coords="551,70,697,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="494,80,537,80,537,85,494,85"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="rw::reader::readVtuFileCells" name="rw::reader::readVtuFileCells">
+<area shape="rect" id="Node000001" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="397,31,581,56"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1Mesh.html#af19a12e75facdf38b898d4b627f3e5d1" title="Reads mesh data from the file and populates other data." alt="" coords="185,5,331,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="383,34,330,29,331,23,384,29"/>
+<area shape="rect" id="Node000004" href="$classfe_1_1Mesh.html#a1fc63a979a642992882c047238aaa3d4" title="Reads element&#45;node connectivity data from file. This function is meant for cases when mesh was create..." alt="" coords="167,55,349,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="384,57,350,61,349,55,383,52"/>
+<area shape="rect" id="Node000003" href="$classfe_1_1Mesh.html#a0041afbb7d7e94bfb01c108e460196fb" title="Constructor." alt="" coords="5,5,119,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="172,21,119,21,119,15,172,15"/>
+</map>

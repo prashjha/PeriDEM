@@ -1,0 +1,19 @@
+<map id="problem_setup.does_intersect_with_rectangle_wall_with_protrusion_and_opening" name="problem_setup.does_intersect_with_rectangle_wall_with_protrusion_and_opening">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,195,180,265"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="46,195,48,185,57,176,72,171,93,169,118,172,134,180,131,185,117,177,93,174,73,176,60,181,53,187,51,196"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#a87d1edc5859436e6e3766ff2af750f8e" title=" " alt="" coords="262,5,401,60"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="114,193,161,131,192,99,226,70,248,57,251,62,230,75,196,103,165,135,118,197"/>
+<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#abbe18e265febcd61e06c82e6167e4a6b" title=" " alt="" coords="228,85,435,154"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="165,193,227,164,240,157,243,162,229,168,167,198"/>
+<area shape="rect" id="Node000004" href="$namespaceproblem__setup.html#aff4594201e815ccb4330bbe21584f3a9" title=" " alt="" coords="256,178,407,218"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="180,216,242,207,242,213,181,221"/>
+<area shape="rect" id="Node000006" href="$namespaceproblem__setup.html#afdb4a08aeffd3f2335ddf0cc8a0cad00" title=" " alt="" coords="256,242,407,282"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="181,239,242,247,242,253,180,244"/>
+<area shape="rect" id="Node000007" href="$namespaceproblem__setup.html#acb67d3097eb783b92c758558193b6de3" title=" " alt="" coords="256,306,407,346"/>
+<area shape="poly" id="edge8_Node000001_Node000007" title=" " alt="" coords="163,262,229,292,250,299,248,304,227,296,161,267"/>
+<area shape="rect" id="Node000008" href="$namespaceproblem__setup.html#ae30c357d27d5432d48650f6df3974250" title=" " alt="" coords="228,370,435,439"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="126,263,173,310,230,356,237,361,234,365,226,360,169,314,122,267"/>
+<area shape="rect" id="Node000005" href="$namespaceproblem__setup.html#a985dacfd6be0ac3572b15624d629e2b7" title=" " alt="" coords="483,217,627,243"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="407,206,470,215,469,220,406,211"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="406,249,469,240,470,245,407,254"/>
+</map>

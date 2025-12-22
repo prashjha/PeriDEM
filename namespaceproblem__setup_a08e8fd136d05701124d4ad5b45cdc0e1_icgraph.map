@@ -1,0 +1,17 @@
+<map id="problem_setup.write_point_geo" name="problem_setup.write_point_geo">
+<area shape="rect" id="Node000001" title=" " alt="" coords="825,114,964,154"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#ab77cd691be605123ba53961f21c8885a" title=" " alt="" coords="5,44,191,84"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="864,105,825,72,801,58,776,47,697,25,615,13,532,8,450,10,372,16,299,25,180,47,179,41,299,20,371,10,450,4,532,3,616,8,698,20,778,42,804,53,828,68,867,101"/>
+<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#a0ab66833a3b558c6c2e060e8fb9603da" title=" " alt="" coords="574,56,735,96"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="812,117,735,98,736,93,813,111"/>
+<area shape="rect" id="Node000004" href="$namespaceproblem__setup.html#a8e72848abab104858c2a4647079140ed" title=" " alt="" coords="239,81,484,136"/>
+<area shape="poly" id="edge8_Node000001_Node000004" title=" " alt="" coords="811,132,484,117,484,111,812,127"/>
+<area shape="rect" id="Node000005" href="$namespaceproblem__setup.html#a4c13edcf86882c08c2e422a2f95118cc" title=" " alt="" coords="532,172,777,226"/>
+<area shape="poly" id="edge7_Node000001_Node000005" title=" " alt="" coords="813,158,756,174,755,169,812,153"/>
+<area shape="rect" id="Node000006" href="$namespaceproblem__setup.html#a1fec8dd536ff2dc0499259901333ee04" title=" " alt="" coords="578,251,731,291"/>
+<area shape="poly" id="edge9_Node000001_Node000006" title=" " alt="" coords="869,166,829,205,779,241,733,259,731,254,776,237,826,201,866,162"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="143,32,127,26,98,23,73,25,57,30,52,36,55,43,50,45,47,34,54,25,72,20,98,18,128,20,145,28"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="561,89,484,97,484,92,560,84"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="225,88,190,82,191,77,226,83"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="405,70,389,62,361,60,338,61,323,66,316,73,316,81,311,81,311,71,320,62,337,56,361,54,391,57,407,65"/>
+</map>

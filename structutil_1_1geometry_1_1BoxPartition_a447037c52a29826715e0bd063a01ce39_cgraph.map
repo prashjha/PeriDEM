@@ -1,0 +1,7 @@
+<map id="util::geometry::BoxPartition::isNear" name="util::geometry::BoxPartition::isNear">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,23,185,63"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="233,5,333,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="185,29,219,24,220,29,186,34"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="241,55,326,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="186,52,227,58,226,63,185,57"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="util::geometry::Circle::isInside" name="util::geometry::Circle::isInside">
+<area shape="rect" id="Node000001" title="Checks if box is completely inside." alt="" coords="5,5,148,45"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="196,13,337,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,23,182,23,182,28,148,28"/>
+</map>

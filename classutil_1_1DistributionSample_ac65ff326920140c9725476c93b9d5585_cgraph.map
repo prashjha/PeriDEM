@@ -1,0 +1,5 @@
+<map id="util::DistributionSample::init" name="util::DistributionSample::init">
+<area shape="rect" id="Node000001" title="Initialize the distribution." alt="" coords="5,5,163,45"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#afcff5a3416f12b7e3c727dae52c5523a" title="Return random number generator." alt="" coords="211,13,321,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,23,197,23,197,28,163,28"/>
+</map>

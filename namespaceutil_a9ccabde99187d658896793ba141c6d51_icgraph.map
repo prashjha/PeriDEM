@@ -1,0 +1,15 @@
+<map id="util::dot" name="util::dot">
+<area shape="rect" id="Node000001" title="Computes the dot product between matrix and vector." alt="" coords="271,144,336,169"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1TetElem.html#a093bba69d7db17b0e5dcc7a8f00fb268" title="Returns the values of derivative of shape function at point p." alt="" coords="24,5,204,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="289,133,263,87,244,64,221,44,199,33,202,28,224,40,247,60,267,84,294,130"/>
+<area shape="rect" id="Node000003" href="$classfe_1_1TetElem.html#a1e53cb40204c661265b6780d4c9c688a" title="Get vector of quadrature data." alt="" coords="23,55,205,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="278,136,252,114,221,95,188,83,190,78,224,90,255,110,282,132"/>
+<area shape="rect" id="Node000004" href="$classutil_1_1geometry_1_1Line.html#af3222bd1791a4d8fa102f4096dc2ca3c" title="Checks if point is inside this object." alt="" coords="47,105,181,145"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="256,152,180,139,181,133,257,146"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1geometry_1_1Line.html#a7c3409e5d8a1025bdbf72d664ded6d03" title="Checks if point is within given distance of this object." alt="" coords="47,169,181,209"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="257,167,181,180,180,175,256,162"/>
+<area shape="rect" id="Node000006" href="$classutil_1_1geometry_1_1Line.html#a3eca2640ef36978ada44a3bb2926a56d" title="cons" alt="" coords="47,233,181,273"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="281,181,255,203,224,223,182,240,180,235,221,218,252,199,278,177"/>
+<area shape="rect" id="Node000007" href="$classfe_1_1TetElem.html#ab608ed3b2fc3948fabcbec3734d34f45" title="Maps point p in a given element to the reference element." alt="" coords="5,297,223,323"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="295,184,269,236,249,264,224,287,200,300,198,295,221,282,245,260,265,233,291,181"/>
+</map>

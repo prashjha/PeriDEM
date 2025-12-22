@@ -1,0 +1,9 @@
+<map id="util::io::Logger::log" name="util::io::Logger::log">
+<area shape="rect" id="Node000001" title="Log the message." alt="" coords="5,5,135,31"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="183,5,331,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="135,15,169,15,169,21,135,21"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="379,5,513,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,15,365,15,365,21,331,21"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="561,5,733,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="513,15,548,15,548,21,513,21"/>
+</map>

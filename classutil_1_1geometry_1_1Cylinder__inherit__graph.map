@@ -1,0 +1,5 @@
+<map id="util::geometry::Cylinder" name="util::geometry::Cylinder">
+<area shape="rect" id="Node000001" title="Defines cylinder." alt="" coords="18,699,167,1424"/>
+<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,180,651"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="95,665,95,698,90,698,90,665"/>
+</map>

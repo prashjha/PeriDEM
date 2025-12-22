@@ -1,0 +1,5 @@
+<map id="util::geometry::Triangle::Triangle" name="util::geometry::Triangle::Triangle">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,5,160,45"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="208,13,288,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,23,194,23,194,28,160,28"/>
+</map>

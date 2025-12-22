@@ -1,0 +1,6 @@
+<map id="problem_setup.does_particle_intersect" name="problem_setup.does_particle_intersect">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,144,69"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="37,30,35,20,41,11,54,5,75,3,98,6,111,13,108,18,96,11,75,8,56,10,45,15,40,21,43,28"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#a994bc08b964e2a925cf8160befb6d215" title=" " alt="" coords="192,37,353,62"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="144,47,178,47,178,52,144,52"/>
+</map>
