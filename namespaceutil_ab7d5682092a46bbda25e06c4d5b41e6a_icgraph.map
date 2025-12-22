@@ -1,5 +1,0 @@
-<map id="util::derRotate2D" name="util::derRotate2D">
-<area shape="rect" id="Node000001" title="Computes derivative of rotation wrt to time." alt="" coords="224,13,345,38"/>
-<area shape="rect" id="Node000002" href="$classloading_1_1ParticleULoading.html#aa734f05394a34f72b09a52276e395d54" title="Applies displacement boundary condition." alt="" coords="5,5,176,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,28,176,28,176,23,210,23"/>
-</map>

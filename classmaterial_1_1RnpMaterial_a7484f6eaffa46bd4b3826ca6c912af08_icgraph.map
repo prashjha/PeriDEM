@@ -1,5 +1,0 @@
-<map id="material::RnpMaterial::printStr" name="material::RnpMaterial::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="200,5,347,45"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1RnpMaterial.html#a0fd2e05f1decd109519715627ce9d34a" title="Prints the information about the object." alt="" coords="5,5,152,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,28,152,28,152,23,186,23"/>
-</map>

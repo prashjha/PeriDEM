@@ -1,7 +1,0 @@
-<map id="util::parallel::mpiSize" name="util::parallel::mpiSize">
-<area shape="rect" id="Node000001" title="Get size (number) of processors." alt="" coords="5,5,148,31"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="196,5,331,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,15,182,15,182,21,148,21"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="379,5,551,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,15,365,15,365,21,331,21"/>
-</map>
