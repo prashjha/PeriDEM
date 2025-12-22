@@ -1,7 +1,0 @@
-<map id="util::Matrix3::inv" name="util::Matrix3::inv">
-<area shape="rect" id="Node000001" title="Computes the determinant of matrix." alt="" coords="5,31,120,56"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Matrix3.html#abc5aecfc0d6f7a7421b995bb39084446" title="Computes the determinant of matrix." alt="" coords="181,5,297,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,32,166,26,167,31,121,38"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Matrix3.html#a0ed74445ede833f02dd62475b6707fc9" title="Constructor." alt="" coords="168,55,309,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="121,48,154,53,154,58,120,54"/>
-</map>

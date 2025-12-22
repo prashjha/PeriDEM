@@ -1,5 +1,0 @@
-<map id="util::geometry::isNumberOfParamForComplexGeometryValid" name="util::geometry::isNumberOfParamForComplexGeometryValid">
-<area shape="rect" id="Node000001" title="Ascertain if number of parameters are correct for the given geometry." alt="" coords="5,5,236,45"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1geometry.html#a2852c83a568ff72c000bfb1d682f9678" title="Get num params required for creation of object." alt="" coords="284,5,484,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,23,270,23,270,28,236,28"/>
-</map>

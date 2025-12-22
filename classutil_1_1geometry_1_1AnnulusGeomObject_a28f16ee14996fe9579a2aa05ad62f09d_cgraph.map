@@ -1,5 +1,0 @@
-<map id="util::geometry::AnnulusGeomObject::doesIntersect" name="util::geometry::AnnulusGeomObject::doesIntersect">
-<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,5,196,45"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="244,13,385,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="197,23,230,23,230,28,197,28"/>
-</map>
