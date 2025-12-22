@@ -1,0 +1,153 @@
+# -------------------------------------------
+# Copyright (c) 2021 - 2024 Prashant K. Jha
+# -------------------------------------------
+# PeriDEM https://github.com/prashjha/PeriDEM
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE)
+
+PROJECT_NAME           = @CMAKE_PROJECT_NAME@
+PROJECT_NUMBER         = @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_UPDATE@
+PROJECT_BRIEF          = @CMAKE_PROJECT_DESCRIPTION@
+PROJECT_LOGO           = @CMAKE_CURRENT_SOURCE_DIR@/../assets/logo/doxy_logo.jpg
+
+OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/
+WARN_LOGFILE           = @CMAKE_CURRENT_BINARY_DIR@/doxy.log
+
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../apps/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../examples/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../src/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../test/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../tools/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../tutorial/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../README.md
+
+EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/../apps/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../examples/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../test/ \
+                         @CMAKE_CURRENT_SOURCE_DIR@/../tutorial/
+EXAMPLE_RECURSIVE      = YES
+
+IMAGE_PATH             = @CMAKE_CURRENT_SOURCE_DIR@/../assets
+USE_MDFILE_AS_MAINPAGE = @CMAKE_CURRENT_SOURCE_DIR@/../README.md
+
+GENERATE_HTML          = YES
+HTML_EXTRA_STYLESHEET  = @CMAKE_CURRENT_SOURCE_DIR@/../external/doxygen-awesome-css/doxygen-awesome.css
+HTML_COLORSTYLE        = LIGHT
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+FULL_SIDEBAR           = NO
+HTML_COLORSTYLE_HUE    = 20
+HTML_COLORSTYLE_SAT    = 150
+HTML_COLORSTYLE_GAMMA  = 70
+HTML_DYNAMIC_SECTIONS  = NO
+HTML_INDEX_NUM_ENTRIES = 100
+
+FORMULA_FONTSIZE       = 10
+FORMULA_TRANSPARENT    = YES
+USE_MATHJAX            = YES
+
+GENERATE_MAN           = NO
+MAN_OUTPUT             = man
+
+GENERATE_DOCBOOK       = YES
+DOCBOOK_OUTPUT         = docbook
+DOCBOOK_PROGRAMLISTING = YES
+
+GENERATE_AUTOGEN_DEF   = YES
+
+MACRO_EXPANSION        = YES
+
+MARKDOWN_SUPPORT       = YES
+CREATE_SUBDIRS         = YES
+SOURCE_BROWSER         = YES
+INLINE_SOURCES         = YES
+
+REFERENCED_BY_RELATION = YES
+REFERENCES_RELATION    = YES
+REFERENCES_LINK_SOURCE = YES
+SOURCE_TOOLTIPS        = YES
+VERBATIM_HEADERS       = YES
+
+MULTILINE_CPP_IS_BRIEF = YES
+OPTIMIZE_OUTPUT_FOR_C  = YES
+TOC_INCLUDE_HEADINGS   = 3
+DISTRIBUTE_GROUP_DOC   = YES
+SUBGROUPING            = YES
+EXTRACT_ALL            = YES
+CASE_SENSE_NAMES       = YES
+SHOW_INCLUDE_FILES     = YES
+INLINE_INFO            = YES
+SORT_MEMBER_DOCS       = YES
+GENERATE_TODOLIST      = YES
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+SHOW_USED_FILES        = YES
+SHOW_FILES             = YES
+SHOW_NAMESPACES        = YES
+RECURSIVE              = YES
+EXAMPLE_RECURSIVE      = YES
+ALPHABETICAL_INDEX     = YES
+
+
+HAVE_DOT               = YES
+DOT_NUM_THREADS        = 2
+DOT_FONTNAME           = Arial
+#DOT_FONTNAME          = Helvetica
+DOT_FONTSIZE           = 10
+UML_LOOK               = YES
+TEMPLATE_RELATIONS     = YES
+CALL_GRAPH             = YES
+MAX_DOT_GRAPH_DEPTH    = 4
+CALLER_GRAPH           = YES
+DOT_IMAGE_FORMAT       = png
+MAX_DOT_GRAPH_DEPTH    = 4
+DOT_TRANSPARENT        = YES
+DOT_MULTI_TARGETS      = YES
+
+FILE_PATTERNS          = *.c \
+                         *.cc \
+                         *.cxx \
+                         *.cpp \
+                         *.c++ \
+                         *.java \
+                         *.ii \
+                         *.ixx \
+                         *.ipp \
+                         *.i++ \
+                         *.inl \
+                         *.idl \
+                         *.ddl \
+                         *.odl \
+                         *.h \
+                         *.hh \
+                         *.hxx \
+                         *.hpp
+                         *.h++ \
+                         *.cs \
+                         *.d \
+                         *.php \
+                         *.php4 \
+                         *.php5 \
+                         *.phtml \
+                         *.inc \
+                         *.m \
+                         *.markdown \
+                         *.md \
+                         *.mm \
+                         *.dox \
+                         *.py \
+                         *.pyw \
+                         *.f90 \
+                         *.f95 \
+                         *.f03 \
+                         *.f08 \
+                         *.f \
+                         *.for \
+                         *.tcl \
+                         *.vhd \
+                         *.vhdl \
+                         *.ucf \
+                         *.qsf \
+                         *.sh

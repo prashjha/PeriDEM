@@ -1,0 +1,7 @@
+<map id="util.copy_contact_zone" name="util.copy_contact_zone">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,161,31"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a0fb244b180f7a3ae3bc4276569f6255f" title=" " alt="" coords="209,5,323,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,15,196,15,196,21,162,21"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a9ece00bdfa36ec661ae172119c1a2064" title=" " alt="" coords="371,5,463,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="323,15,357,15,357,21,323,21"/>
+</map>

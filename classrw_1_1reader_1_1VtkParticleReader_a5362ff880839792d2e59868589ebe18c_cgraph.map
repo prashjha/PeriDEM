@@ -1,0 +1,7 @@
+<map id="rw::reader::VtkParticleReader::VtkParticleReader" name="rw::reader::VtkParticleReader::VtkParticleReader">
+<area shape="rect" id="Node000001" title="Constructor." alt="" coords="5,5,200,45"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a8a38ac2a0437a16aa1c311b6a075dc51" title="Check for extension and if possible create new filename from a given filename and a given extension." alt="" coords="248,5,411,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,23,234,23,234,28,200,28"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a6588c46813adf0cb86b795880f1a2ec7" title="Get extension from the filename." alt="" coords="459,13,651,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="411,23,445,23,445,28,411,28"/>
+</map>

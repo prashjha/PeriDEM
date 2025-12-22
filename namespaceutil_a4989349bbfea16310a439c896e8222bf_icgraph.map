@@ -1,0 +1,13 @@
+<map id="util::angle" name="util::angle">
+<area shape="rect" id="Node000001" title="Computes angle between two vectors." alt="" coords="339,80,417,105"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a61e14a30b244c6b3764234fd024a35c8" title="Computes angle between two vectors." alt="" coords="158,5,237,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="346,75,290,44,236,28,238,23,292,40,348,70"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a40d4628247bdf3fdd57b068d4a322c95" title="Compute distance between planes." alt="" coords="104,55,291,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="325,88,288,83,288,77,325,83"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a250e0cd1a3e9c62d9ebad16c69e63635" title="Do lines intersect." alt="" coords="126,104,269,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="325,102,269,110,268,105,325,97"/>
+<area shape="rect" id="Node000005" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="125,153,269,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="346,115,292,143,254,156,253,151,290,138,344,110"/>
+<area shape="rect" id="Node000006" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,153,56,179"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="111,169,56,169,56,163,111,163"/>
+</map>

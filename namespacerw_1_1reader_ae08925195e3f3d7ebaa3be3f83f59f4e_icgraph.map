@@ -1,0 +1,5 @@
+<map id="rw::reader::readMshFileCells" name="rw::reader::readMshFileCells">
+<area shape="rect" id="Node000001" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="236,5,425,31"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1Mesh.html#a1fc63a979a642992882c047238aaa3d4" title="Reads element&#45;node connectivity data from file. This function is meant for cases when mesh was create..." alt="" coords="5,5,188,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,21,188,21,188,15,222,15"/>
+</map>

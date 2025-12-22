@@ -1,0 +1,8 @@
+<map id="inp::Input::setParticleData" name="inp::Input::setParticleData">
+<area shape="rect" id="Node000001" title="Read particle data." alt="" coords="5,42,180,67"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1geometry_1_1GeomData.html#a1018c26daed053c99bb18f99a9ffc34b" title="Copies the geometry details." alt="" coords="228,5,400,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,40,214,36,215,41,181,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1geometry.html#ae276de197ea051002fc7c062c259537e" title=" " alt="" coords="448,35,628,75"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="180,54,228,55,400,55,434,54,434,60,400,60,228,60,180,59"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="401,34,435,38,434,44,400,39"/>
+</map>

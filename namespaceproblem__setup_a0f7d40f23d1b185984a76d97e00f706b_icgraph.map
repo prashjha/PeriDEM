@@ -1,0 +1,8 @@
+<map id="problem_setup.get_center" name="problem_setup.get_center">
+<area shape="rect" id="Node000001" title=" " alt="" coords="239,69,411,94"/>
+<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#ab77cd691be605123ba53961f21c8885a" title=" " alt="" coords="5,29,191,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="225,70,190,65,191,60,226,65"/>
+<area shape="rect" id="Node000003" href="$namespaceproblem__setup.html#a1fec8dd536ff2dc0499259901333ee04" title=" " alt="" coords="21,93,175,133"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="226,98,175,105,175,100,225,93"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="136,18,123,11,98,8,76,10,63,15,58,21,61,28,56,30,53,20,60,10,75,5,98,3,124,6,139,13"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="model::DEMModel::createParticles" name="model::DEMModel::createParticles">
+<area shape="rect" id="Node000001" title="Creates particles in a given container." alt="" coords="5,5,231,31"/>
+<area shape="rect" id="Node000002" href="$namespacefe.html#abe6bbc09314c74619abaa8c13f489335" title="Creates uniform mesh for rectangle/cuboid domain." alt="" coords="279,5,433,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="231,15,265,15,265,21,231,21"/>
+</map>

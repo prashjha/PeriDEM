@@ -1,0 +1,11 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="Node000000" href="$classfe_1_1BaseElem.html" title="A base class which provides methods to map points to/from reference element and to compute quadrature..." alt="" coords="5,80,107,105"/>
+<area shape="rect" id="Node000001" href="$classfe_1_1LineElem.html" title="A class for mapping and quadrature related operations for linear 2&#45;node line element." alt="" coords="159,5,253,31"/>
+<area shape="poly" id="edge1_Node000000_Node000001" title=" " alt="" coords="92,71,153,40,176,28,179,33,156,44,94,76"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1QuadElem.html" title="A class for mapping and quadrature related operations for bi&#45;linear quadrangle element." alt="" coords="155,55,257,80"/>
+<area shape="poly" id="edge2_Node000000_Node000002" title=" " alt="" coords="120,79,154,73,155,79,121,85"/>
+<area shape="rect" id="Node000003" href="$classfe_1_1TetElem.html" title="A class for mapping and quadrature related operations for linear tetrahedron element." alt="" coords="161,104,251,129"/>
+<area shape="poly" id="edge3_Node000000_Node000003" title=" " alt="" coords="121,100,161,107,161,112,120,106"/>
+<area shape="rect" id="Node000004" href="$classfe_1_1TriElem.html" title="A class for mapping and quadrature related operations for linear triangle element." alt="" coords="163,153,249,179"/>
+<area shape="poly" id="edge4_Node000000_Node000004" title=" " alt="" coords="96,109,180,151,178,156,94,114"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="material::Material::print" name="material::Material::print">
+<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,5,128,45"/>
+<area shape="rect" id="Node000002" href="$classmaterial_1_1Material.html#af07301c0c31cd2d39eb4f4e9393ca096" title="Returns the string containing printable information about the object." alt="" coords="176,5,299,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,23,162,23,162,28,128,28"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="347,13,460,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="299,23,333,23,333,28,299,28"/>
+</map>

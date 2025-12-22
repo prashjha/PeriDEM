@@ -1,0 +1,14 @@
+<map id="util::rotateCW2D" name="util::rotateCW2D">
+<area shape="rect" id="Node000001" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="507,95,627,121"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#aa8815570c0c72e1618f998abef7eef4e" title="Checks if point is inside an angled rectangle." alt="" coords="296,5,459,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="526,92,458,60,429,48,431,43,460,55,528,87"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#ab949e9f056cf2566e19c8214a6282c64" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="313,70,442,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="492,101,442,94,443,89,493,95"/>
+<area shape="rect" id="Node000004" href="$namespacetest.html#ad3c8cad23ca76bc12534c5487df9a25f" title="Test methods" alt="" coords="104,95,248,121"/>
+<area shape="poly" id="edge6_Node000001_Node000004" title=" " alt="" coords="493,111,248,111,248,105,493,105"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#aa34d16047f3c3e76ad994191083d1cf0" title="Rotates a vector in xy&#45;plane in anti&#45;clockwise direction." alt="" coords="313,171,442,197"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="523,129,460,154,412,174,410,169,458,150,521,124"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="300,95,248,102,248,96,299,90"/>
+<area shape="rect" id="Node000005" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,95,56,121"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="90,111,56,111,56,105,90,105"/>
+</map>
