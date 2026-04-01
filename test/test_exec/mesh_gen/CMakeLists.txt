@@ -9,10 +9,7 @@
 add_executable(TestMeshGen testMeshGen.cpp)
 
 target_link_libraries(TestMeshGen PUBLIC
-        MeshGen
-        Util
-        Mesh
-        ${GMSH_LIBRARIES})
+        MeshGen)
 
 # Add test
 add_test(NAME TestMeshGen COMMAND TestMeshGen)

@@ -14,8 +14,8 @@
 #include <vector>
 #include <string>
 #include <cmath>
-#include <stdexcept>
 #include <gmsh.h>
+#include <stdexcept>
 
 namespace mesh_gen {
 
