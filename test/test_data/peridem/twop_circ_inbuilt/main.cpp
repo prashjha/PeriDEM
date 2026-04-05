@@ -86,9 +86,9 @@ json buildInputJson(const std::string &output_path_for_deck,
   std::vector<double> p1_center = center;
   std::vector<double> p2_center = center;
 
-  const double final_time = 0.08;
-  const size_t num_steps = 200000;
-  const size_t dt_out_n = num_steps / 40;
+  const double final_time = 0.012;
+  const size_t num_steps = 36000;
+  const size_t dt_out_n = num_steps / 10;
   auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps,
                                                         "finite_difference", "central_difference",
                                                         true, 2, "Multi_Particle", 0);

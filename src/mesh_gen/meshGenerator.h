@@ -70,6 +70,20 @@ void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, cons
                          const inp::MeshDeck* meshDeck_for_out = nullptr,
                          const inp::ModelDeck* modelDeck_for_out = nullptr);
 
+/**
+ * @brief Gmsh symmetric/in-process mesh for any built-in particle geometry in geom::acceptable_geometries.
+ *
+ * Uses the same mesh size h and file/VTK behavior as circleMeshSymmetric. Circle delegates to
+ * circleMeshSymmetric; 2D shapes use a planar geo mesh; sphere/cube/cuboid use OCC volume meshing.
+ *
+ * CreateMesh.Info should be "gmsh_symmetric_mesh" (or legacy "gmsh_circle_symmetric" for circles).
+ */
+void generateSymmetricParticleMeshGmsh(const std::string& geomName,
+                                       const std::vector<double>& params, double h,
+                                       const std::string& filenameStem, bool vtk_out, bool write_mesh_file,
+                                       mesh::Mesh* out_mesh, const inp::MeshDeck* meshDeck,
+                                       const inp::ModelDeck* modelDeck);
+
 } // namespace mesh_gen
 
 #endif // MESH_GENERATOR_H 

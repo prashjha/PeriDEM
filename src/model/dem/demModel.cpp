@@ -1131,25 +1131,19 @@ void model::DEMModel::createParticles() {
                               nGrid);
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
-      else if (zmeshDeck.d_createMeshInfo == "gmsh_circle_symmetric" and
-               zgeomDeck.d_geomName == "circle") {
-
-        if (zgeomDeck.d_geomParams.size() < 4)
-          throw std::runtime_error(
-              "createParticles: circle geometry requires radius and center (4 parameters).");
-
-        const double r = zgeomDeck.d_geomParams[0];
-        std::vector<double> xc = {zgeomDeck.d_geomParams[1], zgeomDeck.d_geomParams[2],
-                                  zgeomDeck.d_geomParams[3]};
+      else if (zmeshDeck.d_createMeshInfo == "gmsh_symmetric_mesh" or
+               (zmeshDeck.d_createMeshInfo == "gmsh_circle_symmetric" and
+                zgeomDeck.d_geomName == "circle")) {
 
         mesh::Mesh temp_mesh;
         const std::string mesh_stem =
             zmeshDeck.d_filename.empty()
                 ? std::string()
                 : util::io::removeExtensionFromFile(zmeshDeck.d_filename);
-        mesh_gen::circleMeshSymmetric(xc, r, zmeshDeck.d_h, mesh_stem, false, true,
-                                      zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
-                                      d_modelDeck_p.get());
+        mesh_gen::generateSymmetricParticleMeshGmsh(zgeomDeck.d_geomName, zgeomDeck.d_geomParams,
+                                                    zmeshDeck.d_h, mesh_stem, false,
+                                                    zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
+                                                    d_modelDeck_p.get());
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
       else {

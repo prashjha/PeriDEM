@@ -23,6 +23,7 @@ add_subdirectory(test_exec)
 
 add_subdirectory(test_data/peridem/twop_circ)
 add_subdirectory(test_data/peridem/twop_circ_inbuilt)
+add_subdirectory(test_data/peridem/twop_general_inbuilt)
 
 #----------------------------------#
 #<<<<<<<<<< Lib tests >>>>>>>>>>#

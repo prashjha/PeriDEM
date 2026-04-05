@@ -19,4 +19,5 @@ target_include_directories(MeshGen PUBLIC
 target_link_libraries(MeshGen PUBLIC
     Util
     Mesh
+    Geom
     ${GMSH_LIBRARIES}) 

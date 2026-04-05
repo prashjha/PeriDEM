@@ -342,6 +342,14 @@ public:
                                   const inp::ModelDeck *modelDeck);
 
   /*!
+   * @brief Populate mesh from 3D tetrahedron data (0-based node indices in enc) without reading a file.
+   */
+  void loadFromTetraElements3D(std::vector<util::Point> nodes,
+                               std::vector<size_t> enc,
+                               const inp::MeshDeck *meshDeck,
+                               const inp::ModelDeck *modelDeck);
+
+  /*!
    * @brief Reads element-node connectivity data from file. This function
    * is meant for cases when mesh was created without element-node connectivity data
    * but later during output, strain/stress were required which needs element-node

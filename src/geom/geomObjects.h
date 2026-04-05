@@ -1637,28 +1637,19 @@ public:
         d_a(a),
         d_x(x),
         d_vertices(std::vector<util::Point>(6, util::Point())) {
-      // generate vertices
-      auto rotate_axis = util::Point(0., 0., 1.); // z-axis
-
-      // half-width of big (top and bottom) edge
-      double w_big_edge = d_r * std::cos(M_PI / 3.);
+      // generate vertices in the plane perpendicular to rotate_axis (z for axis a in xy)
+      const util::Point rotate_axis(0., 0., 1.);
 
       d_vertices[0] = d_x + d_w * d_a;
       d_vertices[3] = d_x - d_w * d_a;
 
-      d_vertices[1] =
-          d_x + d_r * util::rotate(d_a, M_PI / 3., rotate_axis);
-      // to get third vertex, we could either rotate axis further or use second vertex to get
-      // to the third vertex
-      // Option 1
-      // d_vertices[2] = d_x + d_r * util::rotate(d_a, 2.*M_PI/3., rotate_axis);
-      // Option 2
-      d_vertices[2] = d_vertices[1] - 2 * w_big_edge * rotate_axis;
+      d_vertices[1] = d_x + d_r * util::rotate(d_a, M_PI / 3., rotate_axis);
+      /* Option 2 used (v1 - k*z_hat), which is not in the drum plane for a in xy and
+       * breaks coplanarity (e.g. z != 0 on some corners) -> degenerate nodal volumes. */
+      d_vertices[2] = d_x + d_r * util::rotate(d_a, 2. * M_PI / 3., rotate_axis);
 
-      d_vertices[4] = d_x + d_r * util::rotate(-1. * d_a, M_PI / 3.,
-                                               rotate_axis);
-      // Option 2
-      d_vertices[5] = d_vertices[4] + 2. * w_big_edge * d_a;
+      d_vertices[4] = d_x + d_r * util::rotate(-1. * d_a, M_PI / 3., rotate_axis);
+      d_vertices[5] = d_x + d_r * util::rotate(-1. * d_a, 2. * M_PI / 3., rotate_axis);
     };
 
     /*!
