@@ -9,9 +9,12 @@
  */
 
 #include "mesh_gen/meshGenerator.h"
+#include "geom/geomObjects.h"
 #include "util/io.h"
+#include "util/point.h"
 #include <filesystem>
 #include <format>
+#include <memory>
 #include <vector>
 
 namespace fs = std::filesystem;
@@ -30,16 +33,10 @@ bool testCircleMesh() {
   fs::create_directories(outputDir);
 
   try {
-    mesh_gen::generateBuiltinParticleMeshGmsh(
-        "circle",
-        std::vector<double>{radius, center[0], center[1], center[2]},
-        meshSize,
-        (outputDir / "circle").string(),
-        true,  // vtk
-        true,  // write .msh
-        nullptr,
-        nullptr,
-        nullptr);
+    auto circle =
+        std::make_shared<geom::Circle>(radius, util::Point(center[0], center[1], center[2]));
+    mesh_gen::generateBuiltinParticleMeshGmsh(circle, meshSize, (outputDir / "circle").string(),
+                                              true, true, nullptr, nullptr, nullptr);
 
     const bool mshOk = fs::exists(outputDir / "circle.msh");
     const bool vtkOk = fs::exists(outputDir / "circle.vtk");

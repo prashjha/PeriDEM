@@ -6,9 +6,13 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-AUX_SOURCE_DIRECTORY(./ SOURCES)
+set(MESH_GEN_SOURCES
+    builtinGmshGeometry.cpp
+    gmshMeshPipeline.cpp
+    meshGenerator.cpp
+)
 
-add_library(MeshGen ${SOURCES})
+add_library(MeshGen ${MESH_GEN_SOURCES})
 
 target_include_directories(MeshGen PUBLIC
     ${CMAKE_SOURCE_DIR}/src

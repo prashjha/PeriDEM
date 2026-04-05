@@ -71,7 +71,7 @@ std::vector<double> geomParamsFor(const std::string &geomName, const util::Point
   if (geomName == "cube")
     return {2.0 * s, c.d_x, c.d_y, c.d_z};
   if (geomName == "cuboid")
-    return {2.0 * s, 1.5 * s, 1.2 * s, c.d_x, c.d_y, c.d_z};
+    return {c.d_x - s, c.d_y - 0.75 * s, c.d_z - 0.6 * s, c.d_x + s, c.d_y + 0.75 * s, c.d_z + 0.6 * s};
   throw std::runtime_error("geomParamsFor: unknown geometry " + geomName);
 }
 
@@ -125,9 +125,9 @@ json buildInputJson(const std::string &geomName, const std::string &output_path_
   const std::vector<double> gp_ref = geomParamsFor(geomName, origin, s);
 
   /* Same integration window and IC gap as twop_circ_inbuilt (stable dt). */
-  const double final_time = 0.012;
-  const size_t num_steps = 36000;
-  const size_t dt_out_n = num_steps / 10;
+  const double final_time = 0.0001; // 0.012;
+  const size_t num_steps = 1000; //36000;
+  const size_t dt_out_n = num_steps / 4; // 10;
 
   auto modelDeckJson = inp::ModelDeck::getExampleJson(static_cast<size_t>(model_dim), final_time, num_steps,
                                                       "finite_difference", "central_difference",
@@ -209,22 +209,26 @@ json buildInputJson(const std::string &geomName, const std::string &output_path_
     pGenJson["Data"]["0"] = {
         {"x", s}, {"y", s}, {"z", 0.0},
         {"theta", 0.0}, {"s", 1.0},
+        {"ax", 0.0}, {"ay", 0.0}, {"az", 1.0},
         {"geom_id", 0}, {"mat_id", 0}, {"contact_id", 0}
     };
     pGenJson["Data"]["1"] = {
         {"x", s}, {"y", 2.0 * s + particle_dist + s}, {"z", 0.0},
         {"theta", M_PI}, {"s", 1.0},
+        {"ax", 0.0}, {"ay", 0.0}, {"az", 1.0},
         {"geom_id", 1}, {"mat_id", 1}, {"contact_id", 1}
     };
   } else {
     pGenJson["Data"]["0"] = {
         {"x", s}, {"y", s}, {"z", s},
         {"theta", 0.0}, {"s", 1.0},
+        {"ax", 0.0}, {"ay", 0.0}, {"az", 1.0},
         {"geom_id", 0}, {"mat_id", 0}, {"contact_id", 0}
     };
     pGenJson["Data"]["1"] = {
         {"x", s}, {"y", 2.0 * s + particle_dist + s}, {"z", s},
         {"theta", M_PI}, {"s", 1.0},
+        {"ax", 0.0}, {"ay", 0.0}, {"az", 1.0},
         {"geom_id", 1}, {"mat_id", 1}, {"contact_id", 1}
     };
   }

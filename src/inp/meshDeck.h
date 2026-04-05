@@ -13,7 +13,6 @@
 
 #include "util/io.h"
 #include "util/json.h"
-#include "geom/geomIncludes.h"
 #include <string>
 
 namespace inp {
@@ -47,23 +46,14 @@ struct MeshDeck {
    */
   std::string d_createMeshInfo;
 
-  /*!
-   * @brief Information that will be used when creating a mesh using in-built routines
-   */
-  geom::GeomData d_createMeshGeomData;
-
   /*! @brief If true (default), Gmsh-based create-mesh paths write a .msh file; set false for in-memory only. */
   bool d_writeMeshFile;
-
-  /*! @brief Use particle geometry in 'Particle' json block to create mesh? */
-  bool d_useParticleGeomToCreateMesh;
 
   /*!
    * @brief Constructor
    */
   MeshDeck(const json &j = json({})) : d_computeMeshSize(false),
-               d_h(0.), d_createMesh(false), d_writeMeshFile(true),
-               d_useParticleGeomToCreateMesh(false) {
+               d_h(0.), d_createMesh(false), d_writeMeshFile(true) {
     readFromJson(j);
   };
 
@@ -71,8 +61,7 @@ struct MeshDeck {
    * @brief Constructor
    */
   MeshDeck(std::string filename, double h = -1.)
-    : d_createMesh(false), d_filename(filename), d_writeMeshFile(true),
-      d_useParticleGeomToCreateMesh(false) {
+    : d_createMesh(false), d_filename(filename), d_writeMeshFile(true) {
 
     if (h <= 0)
       d_computeMeshSize = true;
@@ -118,15 +107,6 @@ struct MeshDeck {
       d_createMeshInfo = j.at("CreateMesh").value("Info", std::string("uniform"));
       d_writeMeshFile = j.at("CreateMesh").value("Write_Mesh_File", true);
 
-      // geometry?
-      if (j.find("Geometry") != j.end()) {
-        geom::readGeometry(j.at("Geometry"), d_createMeshGeomData);
-        geom::createGeomObject(d_createMeshGeomData);
-      } else if (d_createMesh) {
-        // create mesh using particle geometry (when Geometry block omitted)
-        d_useParticleGeomToCreateMesh = true;
-      }
-
       if (d_createMesh && j.find("Mesh_Size") == j.end())
         throw std::runtime_error("Need Mesh_Size to create mesh using inbuilt function.");
     }
@@ -152,11 +132,9 @@ struct MeshDeck {
     oss << tabS << "Compute mesh size = " << d_computeMeshSize << std::endl;
     oss << tabS << "Mesh size = " << d_h << std::endl;
     oss << tabS << "Create mesh = " << d_createMesh << std::endl;
-    oss << tabS << "Create mesh using particle geometry in Particle block? = " << d_useParticleGeomToCreateMesh << std::endl;
     oss << tabS << "Create mesh info = " << d_createMeshInfo << std::endl;
     oss << tabS << "Write mesh file (Gmsh) = " << d_writeMeshFile << std::endl;
-    oss << tabS << "Create mesh geometry details: " << std::endl;
-    oss << d_createMeshGeomData.printStr(nt+1, lvl);
+    oss << tabS << "(Built-in mesh geometry comes from Particle.Set_i for the same index.)" << std::endl;
     oss << tabS << std::endl;
 
     return oss.str();

@@ -9,6 +9,7 @@
  */
 
 #include "inp/deckIncludes.h"
+#include "geom/geomObjects.h"
 #include "mesh_gen/meshGenerator.h"
 #include "util/io.h"
 #include "util/function.h"
@@ -18,6 +19,7 @@
 #include <format>
 #include <fstream>
 #include <cmath>
+#include <memory>
 #include <thread>
 
 json getInputJson();
@@ -99,23 +101,24 @@ json getInputJson() {
   // Bottom particle (Zone 1)
   std::vector<double> p1_center = center;
   std::string mesh1_file_name = input_dir + "mesh_cir_1";
-  mesh_gen::generateBuiltinParticleMeshGmsh(
-      "circle",
-      std::vector<double>{R1, p1_center[0], p1_center[1], p1_center[2]},
-      mesh_size, mesh1_file_name, false, true, nullptr, nullptr, nullptr);
+  auto mesh_geom_1 = std::make_shared<geom::Circle>(
+      R1, util::Point(p1_center[0], p1_center[1], p1_center[2]));
+  mesh_gen::generateBuiltinParticleMeshGmsh(mesh_geom_1, mesh_size, mesh1_file_name, false, true,
+                                              nullptr, nullptr, nullptr);
 
   // Top particle (Zone 2)
   std::vector<double> p2_center = center;
   std::string mesh2_file_name = input_dir + "mesh_cir_2";
-  mesh_gen::generateBuiltinParticleMeshGmsh(
-      "circle",
-      std::vector<double>{R2, p2_center[0], p2_center[1], p2_center[2]},
-      mesh_size, mesh2_file_name, false, true, nullptr, nullptr, nullptr);
+  auto mesh_geom_2 = std::make_shared<geom::Circle>(
+      R2, util::Point(p2_center[0], p2_center[1], p2_center[2]));
+  mesh_gen::generateBuiltinParticleMeshGmsh(mesh_geom_2, mesh_size, mesh2_file_name, false, true,
+                                              nullptr, nullptr, nullptr);
 
   // Model deck
-  size_t num_steps = 20000;
-  size_t dt_out_n = num_steps / 10;
-  auto modelDeckJson = inp::ModelDeck::getExampleJson(2, 0.006, num_steps, 
+  const double final_time = 0.0001;
+  const size_t num_steps = 1000;
+  const size_t dt_out_n = num_steps / 4;
+  auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps, 
       "finite_difference", "central_difference",
       true, 2, "Multi_Particle", 0);
 

@@ -11,12 +11,12 @@
 #ifndef MESH_GENERATOR_H
 #define MESH_GENERATOR_H
 
-#include <vector>
+#include <memory>
 #include <string>
-#include <cmath>
-#include <gmsh.h>
-#include <stdexcept>
 
+namespace geom {
+class GeomObject;
+}
 namespace inp {
 struct MeshDeck;
 struct ModelDeck;
@@ -28,16 +28,15 @@ class Mesh;
 namespace mesh_gen {
 
 /**
- * @brief In-process Gmsh mesh from a built-in geometry name (geom::acceptable_geometries).
+ * @brief In-process Gmsh mesh from geom::GeomObject (after createGeomObject on deck / Particle data).
  *
- * Meshes the full domain (not a symmetry-reduced patch). 2D shapes use planar OCC/geo;
- * sphere/cube/cuboid use volumes. CreateMesh.Info must be "gmsh_builtin_mesh".
+ * Single entry point: geometry is only the shared object; mesh size, VTK, file stem, and write
+ * flags are explicit. Simulation code unpacks MeshDeck + GeomData.d_geom_p at the call site.
  */
-void generateBuiltinParticleMeshGmsh(const std::string &geomName,
-                                       const std::vector<double> &params, double h,
-                                       const std::string &filenameStem, bool vtk_out, bool write_mesh_file,
-                                       mesh::Mesh *out_mesh, const inp::MeshDeck *meshDeck,
-                                       const inp::ModelDeck *modelDeck);
+void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &geomObj, double h,
+                                     const std::string &filenameStem, bool vtk_out,
+                                     bool write_mesh_file, mesh::Mesh *out_mesh,
+                                     const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck);
 
 } // namespace mesh_gen
 

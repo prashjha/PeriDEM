@@ -1093,8 +1093,8 @@ void model::DEMModel::createParticles() {
     // get particle mesh
     auto &zmeshDeck = d_particleDeck_p->d_pMeshVec[z];
 
-    // get geometry of particle in this group (use geometry from mesh block if available)
-    auto &zgeomDeck = zmeshDeck.d_createMeshGeomData.d_geomName == "" ? d_particleDeck_p->d_pGeomVec[z] : zmeshDeck.d_createMeshGeomData;
+    // Geometry for mesh creation and reference particle: Particle.Set_i only (same index as Mesh.Set_i).
+    auto &zgeomDeck = d_particleDeck_p->d_pGeomVec[z];
 
     // read mesh data
     log(d_name + ": Creating mesh for reference particle in mesh group = " +
@@ -1133,15 +1133,17 @@ void model::DEMModel::createParticles() {
       }
       else if (zmeshDeck.d_createMeshInfo == "gmsh_builtin_mesh") {
 
+        if (!zgeomDeck.d_geom_p)
+          throw std::runtime_error(d_name + ": gmsh_builtin_mesh requires particle geometry object "
+                                           "(geom::createGeomObject on Particle.Set_i).");
         mesh::Mesh temp_mesh;
         const std::string mesh_stem =
             zmeshDeck.d_filename.empty()
                 ? std::string()
                 : util::io::removeExtensionFromFile(zmeshDeck.d_filename);
-        mesh_gen::generateBuiltinParticleMeshGmsh(zgeomDeck.d_geomName, zgeomDeck.d_geomParams,
-                                                    zmeshDeck.d_h, mesh_stem, false,
-                                                    zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
-                                                    d_modelDeck_p.get());
+        mesh_gen::generateBuiltinParticleMeshGmsh(zgeomDeck.d_geom_p, zmeshDeck.d_h, mesh_stem, false,
+                                                  zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
+                                                  d_modelDeck_p.get());
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
       else {
