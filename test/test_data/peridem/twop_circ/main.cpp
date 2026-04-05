@@ -18,6 +18,7 @@
 #include <format>
 #include <fstream>
 #include <cmath>
+#include <thread>
 
 json getInputJson();
 
@@ -98,16 +99,12 @@ json getInputJson() {
   // Bottom particle (Zone 1)
   std::vector<double> p1_center = center;
   std::string mesh1_file_name = input_dir + "mesh_cir_1";
-  mesh_gen::CircularParticleMeshGenerator gen1(p1_center, R1, mesh_size, 1, 1);
-  gen1.generate(mesh1_file_name);
-  gen1.finalize();
+  mesh_gen::circleMeshSymmetric(p1_center, R1, mesh_size, mesh1_file_name, false, true);
 
   // Top particle (Zone 2)
   std::vector<double> p2_center = center;
   std::string mesh2_file_name = input_dir + "mesh_cir_2";
-  mesh_gen::CircularParticleMeshGenerator gen2(p2_center, R2, mesh_size, 2, 1);
-  gen2.generate(mesh2_file_name);
-  gen2.finalize();
+  mesh_gen::circleMeshSymmetric(p2_center, R2, mesh_size, mesh2_file_name, false, true);
 
   // Model deck
   size_t num_steps = 20000;

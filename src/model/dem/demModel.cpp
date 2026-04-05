@@ -24,11 +24,15 @@
 #include "util/randomDist.h"
 #include "util/parallelUtil.h"
 #include "rw/vtkParticleWriter.h"
+#include "rw/pvdCollectionWriter.h"
 #include "rw/vtkParticleReader.h"
 #include "fe/elemIncludes.h"
 #include "mesh/meshUtil.h"
+#include "mesh_gen/meshGenerator.h"
 #include "loading/particleIC.h"
+#include "util/io.h"
 
+#include <filesystem>
 #include <format>
 #include <random>
 
@@ -1127,8 +1131,30 @@ void model::DEMModel::createParticles() {
                               nGrid);
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
+      else if (zmeshDeck.d_createMeshInfo == "gmsh_circle_symmetric" and
+               zgeomDeck.d_geomName == "circle") {
+
+        if (zgeomDeck.d_geomParams.size() < 4)
+          throw std::runtime_error(
+              "createParticles: circle geometry requires radius and center (4 parameters).");
+
+        const double r = zgeomDeck.d_geomParams[0];
+        std::vector<double> xc = {zgeomDeck.d_geomParams[1], zgeomDeck.d_geomParams[2],
+                                  zgeomDeck.d_geomParams[3]};
+
+        mesh::Mesh temp_mesh;
+        const std::string mesh_stem =
+            zmeshDeck.d_filename.empty()
+                ? std::string()
+                : util::io::removeExtensionFromFile(zmeshDeck.d_filename);
+        mesh_gen::circleMeshSymmetric(xc, r, zmeshDeck.d_h, mesh_stem, false, true,
+                                      zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
+                                      d_modelDeck_p.get());
+        mesh = std::make_shared<mesh::Mesh>(temp_mesh);
+      }
       else {
-        std::cerr << "Error: Currently, we can only support in-built uniform mesh for rectangles.\n";
+        std::cerr << "Error: Unsupported in-built mesh: CreateMesh.Info = " << zmeshDeck.d_createMeshInfo
+                  << " with geometry = " << zgeomDeck.d_geomName << std::endl;
         exit(EXIT_FAILURE);
       }
     }
@@ -1766,6 +1792,14 @@ void model::DEMModel::output() {
   writer.addTimeStep(d_time);
   writer.close();
 
+  if (d_outputDeck_p->d_outFormat == "vtu" && d_outputDeck_p->d_pvdCollection) {
+    const std::filesystem::path stem(out_filename);
+    d_pvdParticleEntries.push_back(
+        {d_time, stem.filename().string() + ".vtu"});
+    rw::writePvdCollectionFile(d_outputDeck_p->d_path + "output.pvd",
+                               d_pvdParticleEntries);
+  }
+
   if (util::methods::isTagInList("Strain_Stress", d_outputDeck_p->d_outTags)) {
 
     // compute current position of quadrature points and strain/stress data
@@ -1811,6 +1845,14 @@ void model::DEMModel::output() {
     writer1.appendStrainStress(this);
     writer1.addTimeStep(d_time);
     writer1.close();
+
+    if (d_outputDeck_p->d_outFormat == "vtu" && d_outputDeck_p->d_pvdCollection) {
+      const std::filesystem::path stem(out_filename);
+      d_pvdStrainEntries.push_back(
+          {d_time, stem.filename().string() + ".vtu"});
+      rw::writePvdCollectionFile(d_outputDeck_p->d_path + "output_strain.pvd",
+                                 d_pvdStrainEntries);
+    }
   }
 
   // output particle locations to csv file

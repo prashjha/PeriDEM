@@ -19,6 +19,7 @@
 #include "util/parallelUtil.h"
 #include <cstdint>
 #include <iostream>
+#include <stdexcept>
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
@@ -186,6 +187,72 @@ void Mesh::createData(const std::string &filename, bool ref_config) {
                 << ", Node = " << counter
                 << " at position = " << d_nodes[counter].printStr() << "\n"
                 << "mesh filename = " << filename << "\n"
+                << printStr() << "\n";
+
+      exit(1);
+    }
+
+    counter++;
+  }
+
+  if (d_needEncData and (!d_encDataPopulated or d_enc.empty()))
+    readElementData(d_filename);
+}
+
+void Mesh::loadFromTriangleElements2D(std::vector<util::Point> nodes,
+                                      std::vector<size_t> enc,
+                                      const inp::MeshDeck *meshDeck,
+                                      const inp::ModelDeck *modelDeck) {
+
+  if (enc.size() % 3 != 0)
+    throw std::runtime_error(
+        "Mesh::loadFromTriangleElements2D: connectivity length must be a multiple of 3.");
+
+  d_nodes = std::move(nodes);
+  d_enc = std::move(enc);
+  d_eType = util::vtk_type_triangle;
+  d_numNodes = d_nodes.size();
+  d_eNumVertex = 3;
+  d_numElems = d_enc.size() / 3;
+  d_dim = modelDeck->d_dim;
+  d_spatialDiscretization = modelDeck->d_spatialDiscretization;
+  d_h = meshDeck->d_h;
+  d_filename = meshDeck->d_filename;
+  d_needEncData = modelDeck->d_populateElementNodeConnectivity;
+  d_encDataPopulated = true;
+  d_fix.assign(d_numNodes, 0);
+  d_vol.clear();
+
+  d_nec.assign(d_numNodes, {});
+  for (size_t e = 0; e < d_numElems; ++e) {
+    for (unsigned k = 0; k < 3; ++k) {
+      size_t nid = d_enc[3 * e + k];
+      d_nec[nid].push_back(e);
+    }
+  }
+
+  d_numDofs = d_numNodes * d_dim;
+
+  bool is_fd = (d_spatialDiscretization == "finite_difference");
+
+  if (is_fd) {
+    util::io::log("Mesh: Computing nodal volume.\n");
+    computeVol();
+  }
+
+  computeBBox();
+  computeMeshSize();
+
+  size_t counter = 0;
+  for (const auto &v : d_vol) {
+
+    if (v < 0.01 * std::pow(d_h, d_dim)) {
+
+      std::cerr << "Error: Check nodal volume " << v
+                << " is less than " << 0.01 * std::pow(d_h, d_dim)
+                << ", Node = " << counter << " at position = " << d_nodes[counter].printStr()
+                << "\n"
+                << "(in-memory triangle mesh)\n"
                 << printStr() << "\n";
 
       exit(1);

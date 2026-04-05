@@ -13,6 +13,16 @@ cmake_minimum_required(VERSION 3.10)
 #----------------------------------#
 project(PeriDEM LANGUAGES CXX C)
 
+# Homebrew LLVM on macOS: default CMAKE_AR is /usr/bin/ar while CMAKE_RANLIB may be
+# llvm-ranlib; mixing them produces invalid .a archives (bogus members like "/").
+if(APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
+  get_filename_component(_PDEM_LLVM_BIN "${CMAKE_CXX_COMPILER}" DIRECTORY)
+  if(EXISTS "${_PDEM_LLVM_BIN}/llvm-ar" AND EXISTS "${_PDEM_LLVM_BIN}/llvm-ranlib")
+    set(CMAKE_AR "${_PDEM_LLVM_BIN}/llvm-ar" CACHE FILEPATH "Archiver for static libraries" FORCE)
+    set(CMAKE_RANLIB "${_PDEM_LLVM_BIN}/llvm-ranlib" CACHE FILEPATH "Ranlib for static libraries" FORCE)
+  endif()
+endif()
+
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
 set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamics-based high-fidelity model for granular media")
 

@@ -98,12 +98,18 @@ namespace inp {
     std::string d_tagPPFile;
 
     /*!
+     * @brief If true, write a ParaView .pvd collection alongside VTU files so one file
+     * can be opened to animate all timesteps (references the per-step .vtu files).
+     */
+    bool d_pvdCollection;
+
+    /*!
      * @brief Constructor
      */
     OutputDeck(const json& j = json({}))
       : d_outFormat("vtu"), d_path("./"), d_dtOut(0), d_dtOutOld(0), d_debug(0),
         d_performFEOut(true), d_dtOutCriteria(0), d_performOut(true),
-        d_dtTestOut(0), d_tagPPFile("") {
+        d_dtTestOut(0), d_tagPPFile(""), d_pvdCollection(false) {
 
       readFromJson(j);
     };
@@ -120,14 +126,15 @@ namespace inp {
                 bool performFEOut = true,
                 std::string compressType = "zlib",
                 bool performOut = true,
-                size_t dtTestOut = 1,
-                std::string tagPPFile = "")
+        size_t dtTestOut = 1,
+        std::string tagPPFile = "",
+        bool pvdCollection = false)
       : d_outFormat(outFormat), d_path(path),
         d_dtOut(outputInterval), d_dtOutOld(outputInterval), d_dtOutCriteria(outputInterval),
         d_debug(debug),
         d_performFEOut(performFEOut), d_compressType(compressType),
         d_performOut(performOut), d_dtTestOut(dtTestOut), d_tagPPFile(tagPPFile),
-        d_outTags(outTags){};
+        d_pvdCollection(pvdCollection), d_outTags(outTags){};
 
     /*!
      * @brief Returns example JSON object for ModelDeck configuration
@@ -142,13 +149,16 @@ namespace inp {
                 std::string compressType = "zlib",
                 bool performOut = true,
                 size_t dtTestOut = 1,
-                std::string tagPPFile = "") {
+                std::string tagPPFile = "",
+                bool pvdCollection = false) {
 
-      return json{{"Path", path}, {"Perform_Out", performOut}, {"Tags", outTags},
+      json j = {{"Path", path}, {"Perform_Out", performOut}, {"Tags", outTags},
         {"Output_Interval", outputInterval}, {"Debug", debug}, {"Perform_FE_Out", performFEOut},
         {"Compress_Type", compressType}, {"File_Format", outFormat},
-        {"Test_Output_Interval", dtTestOut}, {"Tag_PP", tagPPFile}
-      };
+        {"Test_Output_Interval", dtTestOut}, {"Tag_PP", tagPPFile}};
+      if (pvdCollection)
+        j["PVD_Collection"] = true;
+      return j;
     }
 
     /*!
@@ -170,6 +180,8 @@ namespace inp {
       d_performOut = j.value("Perform_Out", true);
       d_dtTestOut = j.value("Test_Output_Interval", size_t(1));
       d_tagPPFile = j.value("Tag_PP", "");
+
+      d_pvdCollection = j.value("PVD_Collection", false);
 
       d_outTags = j.value("Tags", std::vector<std::string>());
 
@@ -206,6 +218,7 @@ namespace inp {
       oss << tabS << "Perform output = " << d_performOut << std::endl;
       oss << tabS << "Output time step when test = " << d_dtTestOut << std::endl;
       oss << tabS << "Tag for postprocessing file = " << d_tagPPFile << std::endl;
+      oss << tabS << "Write ParaView PVD collection = " << d_pvdCollection << std::endl;
       oss << tabS << std::endl;
 
       return oss.str();

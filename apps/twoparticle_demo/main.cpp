@@ -33,6 +33,7 @@
 #include <format>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <random>
 
 #include <taskflow/taskflow/taskflow.hpp>
@@ -57,7 +58,8 @@ public:
    *
    * @param deck Input deck
    */
-  explicit Model(inp::Input *deck) : model::DEMModel(deck, "twoparticle_demo::Model") {
+  explicit Model(std::shared_ptr<inp::Input> & deck)
+      : model::DEMModel(deck, "twoparticle_demo::Model") {
 
     if (d_ppFile.is_open())
       d_ppFile.close();
@@ -74,7 +76,7 @@ public:
    *
    * @param deck Input deck
    */
-  void run(inp::Input *deck) override {
+  void run(std::shared_ptr<inp::Input> & deck) override {
 
     log(d_name + ": Running TwoParticle_Demo app \n");
 
@@ -159,7 +161,7 @@ public:
       log(std::format("  Integration time (ms) = {}\n", integrate_time),
           2, d_n % d_infoN == 0, 3);
 
-      if (d_pDeck_p->d_testName == "two_particle") {
+      if (d_testDeck_p->d_testName == "two_particle") {
         // NOTE: The purpose of this app 'twop' is to show that if we have
         // specific post-processing requirement from the outcome of
         // simulation -- eg in two-particle test, we may be interested in the
@@ -222,7 +224,8 @@ public:
     const auto &xc1 = p1->getXCenter();
     const double &r = p0->d_geom_p->boundingRadius();
 
-    const auto &contact = d_cDeck_p->getContact(p0->d_zoneId, p1->d_zoneId);
+    const auto &contact = d_particleDeck_p->d_contactDeck.getContact(
+        p0->getGroupId("contact_id"), p1->getGroupId("contact_id"));
     double r_e = r + contact.d_contactR;
 
     d_penDist = xc1.dist(xc0) - r_e - r;
@@ -256,7 +259,7 @@ public:
       const auto &mat_data =
               p1->getMaterial()->computeMaterialProperties(d_modelDeck_p->d_dim);
 
-      d_contactAreaRadiusIdeal = 3. * mass * std::abs(d_pDeck_p->d_gravity[1]) *
+      d_contactAreaRadiusIdeal = 3. * mass * std::abs(d_bcDeck_p->d_gravity[1]) *
                                  2. * r * (1. - std::pow(mat_data.d_nu, 2.)) /
                                  (4. * mat_data.d_E);
       d_contactAreaRadiusIdeal = std::pow(d_contactAreaRadiusIdeal, 1. / 3.);
@@ -264,7 +267,7 @@ public:
       d_maxStressLocRefIdeal = r - 0.48 * d_contactAreaRadiusIdeal;
 
       d_maxStressIdeal =
-              0.93 * mass * std::abs(d_pDeck_p->d_gravity[1]) /
+              0.93 * mass * std::abs(d_bcDeck_p->d_gravity[1]) /
               (2. * M_PI * d_contactAreaRadiusIdeal * d_contactAreaRadiusIdeal);
 
       contact_pp_ideal = 0;
@@ -294,14 +297,13 @@ public:
 
       const auto particle_mesh_p = p->getMeshP();
 
-      fe::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
+      mesh::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
                                p->d_globStart,
                                p->d_globQuadStart,
                                d_modelDeck_p->d_quadOrder);
 
-      auto p_z_id = p->d_zoneId;
-      auto isPlaneStrain = d_pDeck_p->d_particleZones[p_z_id].d_matDeck.d_isPlaneStrain;
-      fe::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
+      auto isPlaneStrain = p->getMaterial()->isPlaneStrain();
+      mesh::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
                           isPlaneStrain,
                           d_strain, d_stress,
                           p->d_globStart,
@@ -315,7 +317,7 @@ public:
       double p_max_stress = 0.;
       auto p_max_stress_loc_cur = util::Point();
       auto p_max_stress_loc_ref = util::Point();
-      fe::getMaxShearStressAndLoc(p->getMeshP().get(), d_xRef, d_u, d_stress,
+      mesh::getMaxShearStressAndLoc(p->getMeshP().get(), d_xRef, d_u, d_stress,
                                   p_max_stress,
                                   p_max_stress_loc_ref,
                                   p_max_stress_loc_cur,
@@ -388,25 +390,25 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = 2;
-    std::print("Running TwoParticle_Demo with number of threads = {}\n", nThreads);
+    std::cout << std::format("Running TwoParticle_Demo with number of threads = {}\n", nThreads);
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
-  std::print("Number of threads = {}\n", util::parallel::getNThreads());
+  std::cout << std::format("Number of threads = {}\n", util::parallel::getNThreads());
 
   std::string filename;
   if (input.cmdOptionExists("-i"))
     filename = input.getCmdOption("-i");
   else {
     filename = "./example/input_0.yaml";
-    std::print("Running TwoParticle_Demo with example input file = {}\n", filename);
+    std::cout << std::format("Running TwoParticle_Demo with example input file = {}\n", filename);
   }
 
   // current time
   auto begin = steady_clock::now();
 
   // create deck
-  auto *deck = new inp::Input(filename);
+  std::shared_ptr<inp::Input> deck = std::make_shared<inp::Input>(filename);
 
   // check which model to run
   if (deck->isPeriDEM()) {

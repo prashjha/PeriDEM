@@ -331,6 +331,17 @@ public:
   void createData(const std::string &filename, bool ref_config = false);
 
   /*!
+   * @brief Populate mesh from 2D triangle data (0-based node indices in enc) without reading a file.
+   *
+   * Used after Gmsh generates a mesh in memory. Requires finite_difference or
+   * populated element connectivity consistent with the model deck.
+   */
+  void loadFromTriangleElements2D(std::vector<util::Point> nodes,
+                                  std::vector<size_t> enc,
+                                  const inp::MeshDeck *meshDeck,
+                                  const inp::ModelDeck *modelDeck);
+
+  /*!
    * @brief Reads element-node connectivity data from file. This function
    * is meant for cases when mesh was created without element-node connectivity data
    * but later during output, strain/stress were required which needs element-node

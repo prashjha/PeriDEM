@@ -51,6 +51,9 @@ struct MeshDeck {
    */
   geom::GeomData d_createMeshGeomData;
 
+  /*! @brief If true (default), Gmsh-based create-mesh paths write a .msh file; set false for in-memory only. */
+  bool d_writeMeshFile;
+
   /*! @brief Use particle geometry in 'Particle' json block to create mesh? */
   bool d_useParticleGeomToCreateMesh;
 
@@ -58,7 +61,8 @@ struct MeshDeck {
    * @brief Constructor
    */
   MeshDeck(const json &j = json({})) : d_computeMeshSize(false),
-               d_h(0.), d_createMesh(false), d_useParticleGeomToCreateMesh(false) {
+               d_h(0.), d_createMesh(false), d_writeMeshFile(true),
+               d_useParticleGeomToCreateMesh(false) {
     readFromJson(j);
   };
 
@@ -66,7 +70,8 @@ struct MeshDeck {
    * @brief Constructor
    */
   MeshDeck(std::string filename, double h = -1.)
-    : d_createMesh(false), d_filename(filename), d_useParticleGeomToCreateMesh(false) {
+    : d_createMesh(false), d_filename(filename), d_writeMeshFile(true),
+      d_useParticleGeomToCreateMesh(false) {
 
     if (h <= 0)
       d_computeMeshSize = true;
@@ -107,30 +112,26 @@ struct MeshDeck {
       d_computeMeshSize = true;
     }
 
-    if (d_filename.empty()) {
-      if (j.find("CreateMesh") != j.end()) {
-        d_createMesh = j.at("CreateMesh").value("Flag", false);
-        d_createMeshInfo = j.at("CreateMesh").value("Info", std::string("uniform"));
+    if (j.find("CreateMesh") != j.end()) {
+      d_createMesh = j.at("CreateMesh").value("Flag", false);
+      d_createMeshInfo = j.at("CreateMesh").value("Info", std::string("uniform"));
+      d_writeMeshFile = j.at("CreateMesh").value("Write_Mesh_File", true);
 
-        // geometry?
-        if (j.find("Geometry") != j.end()) {
-          geom::readGeometry(j.at("Geometry"), d_createMeshGeomData);
-          // create a geometry object based on the data
-          geom::createGeomObject(d_createMeshGeomData);
-        } else {
-          // create mesh using particle geometry
-          d_useParticleGeomToCreateMesh = true;
-        }
-
-        // mesh size is needed
-        if (j.find("Mesh_Size") == j.end())
-          throw std::runtime_error("Need Mesh_Size to create mesh using inbuilt function.");
+      // geometry?
+      if (j.find("Geometry") != j.end()) {
+        geom::readGeometry(j.at("Geometry"), d_createMeshGeomData);
+        geom::createGeomObject(d_createMeshGeomData);
+      } else if (d_createMesh) {
+        // create mesh using particle geometry (when Geometry block omitted)
+        d_useParticleGeomToCreateMesh = true;
       }
+
+      if (d_createMesh && j.find("Mesh_Size") == j.end())
+        throw std::runtime_error("Need Mesh_Size to create mesh using inbuilt function.");
     }
 
-    if (d_filename.empty()) {
-      throw std::runtime_error("Mesh filename = " + d_filename + " can not be empty.");
-      return;
+    if (d_filename.empty() && !d_createMesh) {
+      throw std::runtime_error("Mesh filename can not be empty unless CreateMesh is enabled.");
     }
   }
 
@@ -152,6 +153,7 @@ struct MeshDeck {
     oss << tabS << "Create mesh = " << d_createMesh << std::endl;
     oss << tabS << "Create mesh using particle geometry in Particle block? = " << d_useParticleGeomToCreateMesh << std::endl;
     oss << tabS << "Create mesh info = " << d_createMeshInfo << std::endl;
+    oss << tabS << "Write mesh file (Gmsh) = " << d_writeMeshFile << std::endl;
     oss << tabS << "Create mesh geometry details: " << std::endl;
     oss << d_createMeshGeomData.printStr(nt+1, lvl);
     oss << tabS << std::endl;

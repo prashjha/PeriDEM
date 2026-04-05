@@ -9,8 +9,57 @@
  */
 
 #include "meshGenerator.h"
+#include "inp/meshDeck.h"
+#include "inp/modelDeck.h"
+#include "mesh/mesh.h"
+#include "util/feElementDefs.h"
+#include <unordered_map>
 
 namespace mesh_gen {
+
+namespace {
+
+void fillMeshFromActiveGmshModel(mesh::Mesh *mesh_p, const inp::MeshDeck *meshDeck,
+                                 const inp::ModelDeck *modelDeck) {
+
+  std::vector<std::size_t> nodeTags;
+  std::vector<double> coord;
+  std::vector<double> paramCoord;
+  gmsh::model::mesh::getNodes(nodeTags, coord, paramCoord);
+
+  std::unordered_map<std::size_t, std::size_t> tagToIdx;
+  tagToIdx.reserve(nodeTags.size());
+  for (size_t i = 0; i < nodeTags.size(); ++i)
+    tagToIdx[nodeTags[i]] = i;
+
+  std::vector<util::Point> nodes(nodeTags.size());
+  for (size_t i = 0; i < nodeTags.size(); ++i)
+    nodes[i] = util::Point(coord[3 * i], coord[3 * i + 1], coord[3 * i + 2]);
+
+  std::vector<int> elementTypes;
+  std::vector<std::vector<std::size_t>> elementTags, elementNodeTags;
+  gmsh::model::mesh::getElements(elementTypes, elementTags, elementNodeTags, -1, -1);
+
+  std::vector<size_t> enc;
+  for (size_t t = 0; t < elementTypes.size(); ++t) {
+    if (elementTypes[t] != util::msh_type_triangle)
+      continue;
+    const auto &nt = elementNodeTags[t];
+    for (size_t j = 0; j < nt.size(); j += 3) {
+      enc.push_back(tagToIdx.at(nt[j]));
+      enc.push_back(tagToIdx.at(nt[j + 1]));
+      enc.push_back(tagToIdx.at(nt[j + 2]));
+    }
+  }
+
+  if (enc.empty())
+    throw std::runtime_error("fillMeshFromActiveGmshModel: no Gmsh triangle elements found.");
+
+  mesh_p->loadFromTriangleElements2D(std::move(nodes), std::move(enc), meshDeck, modelDeck);
+}
+
+} // namespace
+
 
 std::vector<std::pair<int, int>> getGmshEntities() {
   std::vector<std::pair<int, int>> entities;
@@ -93,7 +142,9 @@ void gmshTranslate(const std::vector<double>& xc) {
   }
 }
 
-void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, const std::string& filename, bool vtk_out, bool symmetric_mesh) {
+void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, const std::string& filename,
+                         bool vtk_out, bool symmetric_mesh, bool write_mesh_file, mesh::Mesh *out_mesh,
+                         const inp::MeshDeck *meshDeck_for_out, const inp::ModelDeck *modelDeck_for_out) {
   gmsh::initialize();
   gmsh::option::setNumber("Mesh.MshFileVersion", 2.2);
 
@@ -143,9 +194,26 @@ void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, cons
     gmsh::model::mesh::generate(3);
   }
 
-  // Write output files
-  gmsh::write(filename + ".msh");
+  if (!write_mesh_file && out_mesh == nullptr)
+    throw std::runtime_error(
+        "circleMeshSymmetric: when write_mesh_file is false, out_mesh is required.");
+
+  if (out_mesh != nullptr) {
+    if (meshDeck_for_out == nullptr || modelDeck_for_out == nullptr)
+      throw std::runtime_error(
+          "circleMeshSymmetric: meshDeck and modelDeck are required when out_mesh is set.");
+    fillMeshFromActiveGmshModel(out_mesh, meshDeck_for_out, modelDeck_for_out);
+  }
+
+  if (write_mesh_file) {
+    if (filename.empty())
+      throw std::runtime_error("circleMeshSymmetric: non-empty filename is required when writing a .msh file.");
+    gmsh::write(filename + ".msh");
+  }
+
   if (vtk_out) {
+    if (filename.empty())
+      throw std::runtime_error("circleMeshSymmetric: non-empty filename is required for VTK output.");
     gmsh::write(filename + ".vtk");
   }
 

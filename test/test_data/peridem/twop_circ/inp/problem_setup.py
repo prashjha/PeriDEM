@@ -71,7 +71,7 @@ def particle_locations(inp_dir, pp_tag, R1, R2, offset):
 
   sim_particles = []
   sim_particles.append([0., R1, R1, 0., R1, 0.])
-  sim_particles.append([1., R1, 2. * R1 + R2 + offset, 0., R2, np.pi*0.5])
+  sim_particles.append([1., R1, 2. * R1 + R2 + offset, 0., R2, np.pi])
 
   inpf = open(inp_dir + 'particle_locations_' + str(pp_tag) + '.csv','w')
   inpf.write("i, x, y, z, r, o\n")
@@ -159,11 +159,11 @@ def create_input_file(inp_dir, pp_tag):
   particle_dist = 0.001
 
   ## time 
-  final_time = 0.006
-  num_steps = 20000
+  final_time = 0.08
+  num_steps = 200000
   # final_time = 0.00002
   # num_steps = 2
-  num_outputs = 10
+  num_outputs = 40
   dt_out_n = num_steps / num_outputs
   perform_out = True
 

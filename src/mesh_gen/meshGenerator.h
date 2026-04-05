@@ -17,6 +17,14 @@
 #include <gmsh.h>
 #include <stdexcept>
 
+namespace inp {
+struct MeshDeck;
+struct ModelDeck;
+}
+namespace mesh {
+class Mesh;
+}
+
 namespace mesh_gen {
 
 /**
@@ -51,8 +59,16 @@ void gmshTranslate(const std::vector<double>& xc);
  * @param filename Output filename (without extension)
  * @param vtk_out Whether to output VTK file
  * @param symmetric_mesh If true, creates 1/4 mesh and mirrors it. If false, creates full circle
+ * @param write_mesh_file If true, write filename.msh (requires non-empty filename)
+ * @param out_mesh If non-null, fill this mesh from the active Gmsh model before finalize (required when write_mesh_file is false)
+ * @param meshDeck_for_out Required when out_mesh is set
+ * @param modelDeck_for_out Required when out_mesh is set
  */
-void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, const std::string& filename, bool vtk_out = false, bool symmetric_mesh = true);
+void circleMeshSymmetric(const std::vector<double>& xc, double r, double h, const std::string& filename,
+                         bool vtk_out = false, bool symmetric_mesh = true, bool write_mesh_file = true,
+                         mesh::Mesh* out_mesh = nullptr,
+                         const inp::MeshDeck* meshDeck_for_out = nullptr,
+                         const inp::ModelDeck* modelDeck_for_out = nullptr);
 
 } // namespace mesh_gen
 

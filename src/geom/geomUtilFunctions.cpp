@@ -10,8 +10,8 @@
 #include "util/io.h"
 #include "util/transformationFunctions.h"
 #include "nsearch/nsearch.h"
+#include <format>
 #include <iostream>
-#include <print>
 
 typedef nsearch::NFlannSearchKd<3> NSearch;
 
@@ -659,7 +659,7 @@ void computeNonlocalNeighborhood(const std::vector<util::Point> &nodes,
   auto nsearch_p = std::make_unique<NSearch>(nodes);
   double set_tree_time = nsearch_p->updatePointCloud(nodes, true);
   set_tree_time += nsearch_p->setInputCloud();
-  std::print("Tree setup time (ms) = {}. \n", set_tree_time);
+  std::cout << std::format("Tree setup time (ms) = {}. \n", set_tree_time);
 
   for (size_t i=0; i<nodes.size(); i++) {
     std::vector<size_t> neighs;

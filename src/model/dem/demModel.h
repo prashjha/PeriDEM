@@ -12,6 +12,8 @@
 #define MODEL_FASTDEMMODEL_H
 
 #include "../modelData.h"
+#include <utility>
+#include <vector>
 
 namespace model {
 
@@ -218,6 +220,12 @@ public:
   virtual void checkStop();
 
   /** @}*/
+
+private:
+  /*! @brief (simulation time, VTU filename) for output.pvd */
+  std::vector<std::pair<double, std::string>> d_pvdParticleEntries;
+  /*! @brief (simulation time, VTU filename) for output_strain.pvd */
+  std::vector<std::pair<double, std::string>> d_pvdStrainEntries;
 };
 
 /** @}*/

@@ -29,9 +29,9 @@
 #include "mesh/meshUtil.h"
 
 #include <format>
-#include <print>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <random>
 
 #include <taskflow/taskflow/taskflow.hpp>
@@ -56,7 +56,8 @@ public:
    *
    * @param deck Input deck
    */
-  explicit Model(inp::Input *deck) : model::DEMModel(deck, "peridynamics::Model") {}
+  explicit Model(std::shared_ptr<inp::Input> & deck)
+      : model::DEMModel(deck, "peridynamics::Model") {}
 
   /*!
    * @brief Compute forces
@@ -149,25 +150,25 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-nThreads")) nThreads = std::stoi(input.getCmdOption("-nThreads"));
   else {
     nThreads = 2;
-    std::print("Running Peridynamics with number of threads = {}\n", nThreads);
+    std::cout << std::format("Running Peridynamics with number of threads = {}\n", nThreads);
   }
   // set number of threads
   util::parallel::initNThreads(nThreads);
-  std::print("Number of threads = {}\n", util::parallel::getNThreads());
+  std::cout << std::format("Number of threads = {}\n", util::parallel::getNThreads());
 
   std::string filename;
   if (input.cmdOptionExists("-i"))
     filename = input.getCmdOption("-i");
   else {
     filename = "./example/input_1.yaml";
-    std::print("Running Peridynamics with example input file = {}\n", filename);
+    std::cout << std::format("Running Peridynamics with example input file = {}\n", filename);
   }
 
   // current time
   auto begin = steady_clock::now();
 
   // create deck
-  auto *deck = new inp::Input(filename);
+  std::shared_ptr<inp::Input> deck = std::make_shared<inp::Input>(filename);
 
   // check which model to run
   if (deck->isPeriDEM()) {
