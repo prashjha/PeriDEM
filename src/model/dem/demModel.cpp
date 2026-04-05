@@ -1107,28 +1107,33 @@ void model::DEMModel::createParticles() {
       if (zmeshDeck.d_createMeshInfo == "uniform"
           and zgeomDeck.d_geomName == "rectangle") {
 
-        // get the geometrical details
+        if (!zgeomDeck.d_geom_p)
+          throw std::runtime_error(d_name + ": uniform mesh on rectangle requires particle geometry object "
+                                           "(geom::createGeomObject on Particle.Set_i).");
+
+        const size_t dim = d_modelDeck_p->d_dim;
+        const auto bb = zgeomDeck.d_geom_p->box();
         std::pair<std::vector<double>, std::vector<double>> box;
-        std::vector<size_t> nGrid(3, 0);
-
-        for (size_t i=0; i<3; i++) {
-          box.first.push_back(zgeomDeck.d_geomParams[i]);
-          box.second.push_back(zgeomDeck.d_geomParams[i+3]);
-
-          nGrid[i] = size_t((zgeomDeck.d_geomParams[i+3] - zgeomDeck.d_geomParams[i])/zmeshDeck.d_h);
-
-          std::cout << std::format("box.first[i] = {}, "
-                                   "box.second[i] = {}, "
-                                   "nGrid[i] = {}\n",
-                                   box.first[i],
-                                   box.second[i],
-                                   nGrid[i]);
+        box.first.reserve(dim);
+        box.second.reserve(dim);
+        for (size_t i = 0; i < dim; ++i) {
+          const double lo_i = (i == 0) ? bb.first.d_x : (i == 1) ? bb.first.d_y : bb.first.d_z;
+          const double hi_i = (i == 0) ? bb.second.d_x : (i == 1) ? bb.second.d_y : bb.second.d_z;
+          box.first.push_back(lo_i);
+          box.second.push_back(hi_i);
         }
+
+        std::vector<size_t> nGrid(dim);
+        for (size_t i = 0; i < dim; ++i) {
+          const double span = box.second[i] - box.first[i];
+          if (span <= 0.)
+            throw std::runtime_error(d_name + ": uniform mesh: non-positive axis extent from geom box "
+                                                 "(axis " + std::to_string(i) + ").");
+          nGrid[i] = static_cast<size_t>(span / zmeshDeck.d_h);
+        }
+
         mesh::Mesh temp_mesh;
-        mesh::createUniformMesh(&temp_mesh,
-                              d_modelDeck_p->d_dim,
-                              box,
-                              nGrid);
+        mesh::createUniformMesh(&temp_mesh, dim, box, nGrid);
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
       else if (zmeshDeck.d_createMeshInfo == "gmsh_builtin_mesh") {
