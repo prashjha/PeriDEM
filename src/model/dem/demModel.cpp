@@ -1131,16 +1131,14 @@ void model::DEMModel::createParticles() {
                               nGrid);
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);
       }
-      else if (zmeshDeck.d_createMeshInfo == "gmsh_symmetric_mesh" or
-               (zmeshDeck.d_createMeshInfo == "gmsh_circle_symmetric" and
-                zgeomDeck.d_geomName == "circle")) {
+      else if (zmeshDeck.d_createMeshInfo == "gmsh_builtin_mesh") {
 
         mesh::Mesh temp_mesh;
         const std::string mesh_stem =
             zmeshDeck.d_filename.empty()
                 ? std::string()
                 : util::io::removeExtensionFromFile(zmeshDeck.d_filename);
-        mesh_gen::generateSymmetricParticleMeshGmsh(zgeomDeck.d_geomName, zgeomDeck.d_geomParams,
+        mesh_gen::generateBuiltinParticleMeshGmsh(zgeomDeck.d_geomName, zgeomDeck.d_geomParams,
                                                     zmeshDeck.d_h, mesh_stem, false,
                                                     zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
                                                     d_modelDeck_p.get());

@@ -9,7 +9,7 @@
  *
  * Two-particle circle test with fully in-process setup:
  * - No input file on disk (deck built in C++ only).
- * - Particle meshes from in-process Gmsh (gmsh_circle_symmetric).
+ * - Particle meshes from in-process Gmsh (CreateMesh.Info = gmsh_builtin_mesh).
  *
  * Default layout under the current working directory:
  *   ./out/   — VTU results and log.txt (Output.Path must end with a separator)
@@ -125,13 +125,13 @@ json buildInputJson(const std::string &output_path_for_deck,
                         {"File", f1},
                         {"CreateMesh",
                          {{"Flag", true},
-                          {"Info", "gmsh_circle_symmetric"},
+                          {"Info", "gmsh_builtin_mesh"},
                           {"Write_Mesh_File", true}}}});
   auto meshSet2 = json({{"Mesh_Size", mesh_size},
                         {"File", f2},
                         {"CreateMesh",
                          {{"Flag", true},
-                          {"Info", "gmsh_circle_symmetric"},
+                          {"Info", "gmsh_builtin_mesh"},
                           {"Write_Mesh_File", true}}}});
   pDeckJson["Mesh"] = json({{"Sets", 2}, {"Set_1", meshSet1}, {"Set_2", meshSet2}});
 

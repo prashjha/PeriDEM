@@ -99,12 +99,18 @@ json getInputJson() {
   // Bottom particle (Zone 1)
   std::vector<double> p1_center = center;
   std::string mesh1_file_name = input_dir + "mesh_cir_1";
-  mesh_gen::circleMeshSymmetric(p1_center, R1, mesh_size, mesh1_file_name, false, true);
+  mesh_gen::generateBuiltinParticleMeshGmsh(
+      "circle",
+      std::vector<double>{R1, p1_center[0], p1_center[1], p1_center[2]},
+      mesh_size, mesh1_file_name, false, true, nullptr, nullptr, nullptr);
 
   // Top particle (Zone 2)
   std::vector<double> p2_center = center;
   std::string mesh2_file_name = input_dir + "mesh_cir_2";
-  mesh_gen::circleMeshSymmetric(p2_center, R2, mesh_size, mesh2_file_name, false, true);
+  mesh_gen::generateBuiltinParticleMeshGmsh(
+      "circle",
+      std::vector<double>{R2, p2_center[0], p2_center[1], p2_center[2]},
+      mesh_size, mesh2_file_name, false, true, nullptr, nullptr, nullptr);
 
   // Model deck
   size_t num_steps = 20000;

@@ -12,65 +12,47 @@
 #include "util/io.h"
 #include <filesystem>
 #include <format>
+#include <vector>
 
 namespace fs = std::filesystem;
 
 /**
- * @brief Test circle mesh generation with symmetric and non-symmetric options
+ * @brief Test circle mesh via the same path as other 2D geometries (OCC disk).
  */
 bool testCircleMesh() {
-  util::io::log("Testing circle mesh generation...\n");
+  util::io::log("Testing circle mesh generation (gmsh_builtin_mesh / built-in Gmsh path)...\n");
 
-  // Test parameters
-  std::vector<double> center = {0.0, 0.0, 0.0};  // 3D coordinates
-  double radius = 0.001;  // 1mm radius
-  double meshSize = radius / 5.0;
+  const std::vector<double> center = {0.0, 0.0, 0.0};
+  const double radius = 0.001;
+  const double meshSize = radius / 5.0;
 
-  // Create output directory if it doesn't exist
-  fs::path outputDir = "test_output/mesh_gen";
+  const fs::path outputDir = "test_output/mesh_gen";
   fs::create_directories(outputDir);
 
   try {
-    // Test symmetric mesh generation
-    util::io::log("Testing symmetric circle mesh...\n");
-    mesh_gen::circleMeshSymmetric(
-        center,
-        radius,
+    mesh_gen::generateBuiltinParticleMeshGmsh(
+        "circle",
+        std::vector<double>{radius, center[0], center[1], center[2]},
         meshSize,
-        (outputDir / "circle_symmetric").string(),
-        true,   // output vtk
-        true    // symmetric mesh
-    );
+        (outputDir / "circle").string(),
+        true,  // vtk
+        true,  // write .msh
+        nullptr,
+        nullptr,
+        nullptr);
 
-    // Test non-symmetric mesh generation
-    util::io::log("Testing non-symmetric circle mesh...\n");
-    mesh_gen::circleMeshSymmetric(
-        center,
-        radius,
-        meshSize,
-        (outputDir / "circle_full").string(),
-        true,    // output vtk
-        false    // non-symmetric mesh
-    );
-
-    // Check if files were created
-    bool symMshExists = fs::exists(outputDir / "circle_symmetric.msh");
-    bool symVtkExists = fs::exists(outputDir / "circle_symmetric.vtk");
-    bool fullMshExists = fs::exists(outputDir / "circle_full.msh");
-    bool fullVtkExists = fs::exists(outputDir / "circle_full.vtk");
-
-    if (!symMshExists || !symVtkExists || !fullMshExists || !fullVtkExists) {
-      util::io::log("Error: Some mesh files were not created.\n");
-      if (!symMshExists) util::io::log("Missing: circle_symmetric.msh\n");
-      if (!symVtkExists) util::io::log("Missing: circle_symmetric.vtk\n");
-      if (!fullMshExists) util::io::log("Missing: circle_full.msh\n");
-      if (!fullVtkExists) util::io::log("Missing: circle_full.vtk\n");
+    const bool mshOk = fs::exists(outputDir / "circle.msh");
+    const bool vtkOk = fs::exists(outputDir / "circle.vtk");
+    if (!mshOk || !vtkOk) {
+      util::io::log("Error: Expected circle.msh and circle.vtk under test_output/mesh_gen.\n");
+      if (!mshOk) util::io::log("Missing: circle.msh\n");
+      if (!vtkOk) util::io::log("Missing: circle.vtk\n");
       return false;
     }
 
-    util::io::log("Circle mesh generation tests passed.\n");
+    util::io::log("Circle mesh generation test passed.\n");
     return true;
-  } catch (const std::exception& e) {
+  } catch (const std::exception &e) {
     util::io::log(std::format("Error in mesh generation: {}\n", e.what()));
     return false;
   }
@@ -84,7 +66,7 @@ int main() {
 
   bool allTestsPassed = true;
 
-  // Test circle mesh generation (both symmetric and non-symmetric)
+  // Test circle mesh generation (unified path)
   if (!testCircleMesh()) {
     util::io::log("Circle mesh tests failed.\n");
     allTestsPassed = false;

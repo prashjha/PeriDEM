@@ -42,7 +42,8 @@ struct MeshDeck {
   bool d_createMesh;
 
   /*!
-   * @brief Information that will be used when creating a mesh using in-built routines
+   * @brief Selector for in-built mesh creation (e.g. uniform rectangle, gmsh_builtin_mesh
+   *        for built-in geometries meshed in-process with Gmsh).
    */
   std::string d_createMeshInfo;
 
