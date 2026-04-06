@@ -140,7 +140,8 @@ const std::vector<std::string> acceptable_geometries = {"circle",
                                                     "sphere_minus_sphere",
                                                     "rectangle_minus_rectangle",
                                                     "cuboid_minus_cuboid",
-                                                    "open_rect_channel_2d"};
+                                                    "open_rect_channel_2d",
+                                                    "open_cuboid_channel_3d"};
 
 
 
@@ -225,6 +226,23 @@ void createGeomObject(const std::string &geom_type,
                   std::shared_ptr<geom::GeomObject> &obj,
                   bool perform_check = true);
 
+/*!
+ * @brief Canonical parameter vector for examples, mesh smoke tests, and demos.
+ *
+ * Convention matches `twop_general_inbuilt`: reference center @p c and length scale @p s (typical
+ * outer half-width). Names must be from getAcceptableGeometries().
+ */
+std::vector<double> exampleGeomParams(const std::string &geom_type,
+                                      const util::Point &c = util::Point(0., 0., 0.),
+                                      double s = 0.001);
+
+/*!
+ * @brief One-liner: createGeomObject(exampleGeomParams(...)). Prefer this over per-class static
+ *        factories so annulus and composite types stay in one place.
+ */
+std::shared_ptr<GeomObject> makeExampleGeomObject(const std::string &geom_type,
+                                                  const util::Point &c = util::Point(0., 0., 0.),
+                                                  double s = 0.001);
 
 void createGeomObject(GeomData &geomData,
                   bool perform_check = true);

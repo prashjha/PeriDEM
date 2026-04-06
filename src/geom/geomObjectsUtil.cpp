@@ -8,6 +8,7 @@
 #include "geomObjects.h"
 #include "complexGeomObjects.h"
 #include "openRectChannel2D.h"
+#include "openCuboidChannel3D.h"
 #include "geomObjectsUtil.h"
 #include <iostream>
 #include "geomUtilFunctions.h"
@@ -82,6 +83,8 @@ namespace geom {
         return {5};
       else if (geom_type == "open_rect_channel_2d")
         return {6};
+      else if (geom_type == "open_cuboid_channel_3d")
+        return {8};
       else {
         std::cerr << "Error: Invalid geometry type: " << geom_type << std::endl;
         exit(1);
@@ -142,7 +145,8 @@ namespace geom {
                                                  "cuboid_minus_cuboid",
                                                  "circle_minus_circle",
                                                  "sphere_minus_sphere",
-                                                 "open_rect_channel_2d"};
+                                                 "open_rect_channel_2d",
+                                                 "open_cuboid_channel_3d"};
 
       bool check_passed; // true means check passed
       if (type != "complex")
@@ -565,6 +569,23 @@ namespace geom {
           exit(1);
         }
       } // open_rect_channel_2d
+      else if (type == "open_cuboid_channel_3d") {
+
+        if (check_passed) {
+          obj = std::make_shared<geom::OpenCuboidChannel3D>(
+                  params[0], params[1], params[2], params[3], params[4], params[5], params[6],
+                  static_cast<int>(params[7]));
+        } else {
+          std::cerr << "Error: need " << 8
+                    << " parameters for open_cuboid_channel_3d "
+                       "(x0,y0,z0,x1,y1,z1,t,open_face 0..5). "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // open_cuboid_channel_3d
       else if (type == "complex") {
 
         if (check_passed) {
@@ -1042,6 +1063,25 @@ namespace geom {
           }
         }
       } // open_rect_channel_2d
+      else if (geom_type == "open_cuboid_channel_3d") {
+
+        num_params_needed = {8};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 8) {
+              const int face = static_cast<int>(params[7]);
+              if (face < 0 || face > 5)
+                throw std::runtime_error(
+                    "open_cuboid_channel_3d: open_face must be 0..5 (±x,±y,±z).");
+              obj = std::make_shared<geom::OpenCuboidChannel3D>(
+                      params[0], params[1], params[2], params[3], params[4], params[5], params[6],
+                      face);
+              return;
+            }
+          }
+        }
+      } // open_cuboid_channel_3d
       else if (geom_type == "complex") {
 
         /*
@@ -1122,6 +1162,76 @@ namespace geom {
                        geomData.d_geomComplexInfo.first,
                        geomData.d_geomComplexInfo.second,
                        geomData.d_geom_p, perform_check);
+    }
+
+    std::vector<double> exampleGeomParams(const std::string &geom_type, const util::Point &c,
+                                          double s) {
+      if (geom_type == "circle")
+        return {s, c.d_x, c.d_y, c.d_z};
+      if (geom_type == "square")
+        return {c.d_x - s, c.d_y - s, c.d_z, c.d_x + s, c.d_y + s, c.d_z};
+      if (geom_type == "rectangle")
+        return {c.d_x - 1.2 * s, c.d_y - 0.8 * s, c.d_z, c.d_x + 1.2 * s, c.d_y + 0.8 * s, c.d_z};
+      if (geom_type == "triangle")
+        return {s, c.d_x, c.d_y, c.d_z, 1.0, 0.0, 0.0};
+      if (geom_type == "hexagon")
+        return {s, c.d_x, c.d_y, c.d_z, 1.0, 0.0, 0.0};
+      if (geom_type == "drum2d") {
+        const double r = 1.2 * s;
+        const double w = 0.35 * s;
+        return {r, w, c.d_x, c.d_y, c.d_z, 1.0, 0.0, 0.0};
+      }
+      if (geom_type == "sphere")
+        return {s, c.d_x, c.d_y, c.d_z};
+      if (geom_type == "cube")
+        return {2.0 * s, c.d_x, c.d_y, c.d_z};
+      if (geom_type == "cuboid")
+        return {c.d_x - s, c.d_y - 0.75 * s, c.d_z - 0.6 * s, c.d_x + s, c.d_y + 0.75 * s,
+                c.d_z + 0.6 * s};
+      if (geom_type == "cylinder")
+        return {0.5 * s, c.d_x, c.d_y - s, c.d_z, 0., 2. * s, 0.};
+      if (geom_type == "ellipse")
+        return {1.2 * s, 0.85 * s, 0.25, c.d_x, c.d_y, c.d_z};
+      if (geom_type == "ellipsoid")
+        return {2. * s, 1. * s, 1.5 * s, c.d_x, c.d_y, c.d_z};
+      if (geom_type == "circle_minus_circle")
+        return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
+      if (geom_type == "sphere_minus_sphere")
+        return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
+      if (geom_type == "rectangle_minus_rectangle") {
+        const double ri = 0.35 * s;
+        const double lo_ix = c.d_x - ri, lo_iy = c.d_y - ri, lo_iz = c.d_z;
+        const double hi_ix = c.d_x + ri, hi_iy = c.d_y + ri, hi_iz = c.d_z;
+        const double lo_ox = c.d_x - s, lo_oy = c.d_y - s, lo_oz = c.d_z;
+        const double hi_ox = c.d_x + s, hi_oy = c.d_y + s, hi_oz = c.d_z;
+        return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
+      }
+      if (geom_type == "cuboid_minus_cuboid") {
+        const double sx = s, sy = 0.75 * s, sz = 0.6 * s;
+        const double f = 0.35;
+        const double lo_ix = c.d_x - f * sx, lo_iy = c.d_y - f * sy, lo_iz = c.d_z - f * sz;
+        const double hi_ix = c.d_x + f * sx, hi_iy = c.d_y + f * sy, hi_iz = c.d_z + f * sz;
+        const double lo_ox = c.d_x - sx, lo_oy = c.d_y - sy, lo_oz = c.d_z - sz;
+        const double hi_ox = c.d_x + sx, hi_oy = c.d_y + sy, hi_oz = c.d_z + sz;
+        return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
+      }
+      if (geom_type == "open_rect_channel_2d") {
+        const double wall_t = 0.35 * s;
+        return {c.d_x - s, c.d_y - s, c.d_x + s, c.d_y + s, wall_t, c.d_z};
+      }
+      if (geom_type == "open_cuboid_channel_3d") {
+        const double wall_t = 0.35 * s;
+        const double open_face = 4.; // +z (matches 2D “open up”)
+        return {c.d_x - s, c.d_y - s, c.d_z - s, c.d_x + s, c.d_y + s, c.d_z + s, wall_t, open_face};
+      }
+      throw std::runtime_error("exampleGeomParams: unknown geometry \"" + geom_type + "\"");
+    }
+
+    std::shared_ptr<GeomObject> makeExampleGeomObject(const std::string &geom_type, const util::Point &c,
+                                                      double s) {
+      std::shared_ptr<GeomObject> obj;
+      createGeomObject(geom_type, exampleGeomParams(geom_type, c, s), {}, {}, obj, false);
+      return obj;
     }
 
     void geom::GeomData::copyGeometry(geom::GeomData &z) {
@@ -1246,6 +1356,8 @@ namespace geom {
       return new AnnulusGeomObject(*dynamic_cast<const AnnulusGeomObject *>(obj));
     if (type == "open_rect_channel_2d")
       return new OpenRectChannel2D(*dynamic_cast<const OpenRectChannel2D *>(obj));
+    if (type == "open_cuboid_channel_3d")
+      return new OpenCuboidChannel3D(*dynamic_cast<const OpenCuboidChannel3D *>(obj));
 
     std::cerr << "Error: Unsupported object type '" << type << "' in createGeomDeepCopy\n";
     exit(1);

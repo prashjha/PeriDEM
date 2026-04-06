@@ -27,6 +27,8 @@ namespace mesh_gen {
  * meshGenerator also allows that name (deck types are circle_minus_circle / rectangle_minus_rectangle / …).
  * open_rect_channel_2d: U-channel polygon (geom::OpenRectChannel2D) + optional physical groups via
  * openBoundaryWalls2D.
+ * open_cuboid_channel_3d: cuboidal shell with one outer face slab removed (geom::OpenCuboidChannel3D) +
+ * physical groups via openBoundaryWalls3D.
  */
 void buildGmshGeometryInCurrentModel(const geom::GeomObject &geom, double h);
 

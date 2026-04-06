@@ -36,7 +36,9 @@ namespace geom {
     {"ellipsoid", 3},
     {"cube", 3},
     {"cuboid", 3},
-    {"open_rect_channel_2d", 2}
+    {"cylinder", 3},
+    {"open_rect_channel_2d", 2},
+    {"open_cuboid_channel_3d", 3}
   };
 
   /*! @brief Returns list of acceptable geometries for PeriDEM simulation */

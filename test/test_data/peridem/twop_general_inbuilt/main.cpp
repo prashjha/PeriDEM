@@ -49,71 +49,9 @@ std::string directoryPathWithTrailingSep(const std::filesystem::path &dir) {
   return s;
 }
 
-/** Valid geom::GeomData parameters with center c; uses length scale s for sizes. */
-std::vector<double> geomParamsFor(const std::string &geomName, const util::Point &c, double s) {
-  if (geomName == "circle")
-    return {s, c.d_x, c.d_y, c.d_z};
-  if (geomName == "square")
-    return {c.d_x - s, c.d_y - s, c.d_z, c.d_x + s, c.d_y + s, c.d_z};
-  if (geomName == "rectangle")
-    return {c.d_x - 1.2 * s, c.d_y - 0.8 * s, c.d_z, c.d_x + 1.2 * s, c.d_y + 0.8 * s, c.d_z};
-  if (geomName == "triangle")
-    return {s, c.d_x, c.d_y, c.d_z, 1.0, 0.0, 0.0};
-  if (geomName == "hexagon")
-    return {s, c.d_x, c.d_y, c.d_z, 1.0, 0.0, 0.0};
-  if (geomName == "drum2d") {
-    const double r = 1.2 * s;
-    const double w = 0.35 * s;
-    return {r, w, c.d_x, c.d_y, c.d_z, 1.0, 0.0, 0.0};
-  }
-  if (geomName == "sphere")
-    return {s, c.d_x, c.d_y, c.d_z};
-  if (geomName == "cube")
-    return {2.0 * s, c.d_x, c.d_y, c.d_z};
-  if (geomName == "cuboid")
-    return {c.d_x - s, c.d_y - 0.75 * s, c.d_z - 0.6 * s, c.d_x + s, c.d_y + 0.75 * s, c.d_z + 0.6 * s};
-  if (geomName == "cylinder") {
-    // radius, center of beginning cross-section, vector from beginning to end of cylinder
-    return {0.5*s, c.d_x, c.d_y - s, c.d_z, 0, 2*s, 0};
-  }
-  if (geomName == "ellipse")
-    return {1.2 * s, 0.85 * s, 0.25, c.d_x, c.d_y, c.d_z};
-  if (geomName == "ellipsoid")
-    return {2 * s, 1 * s, 1.5 * s, c.d_x, c.d_y, c.d_z};
-  // Concentric annuli: cx, cy, cz, r_outer, r_inner (0 < r_inner < r_outer)
-  if (geomName == "circle_minus_circle")
-    return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
-  if (geomName == "sphere_minus_sphere")
-    return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
-  // 12 params: inner (x1,y1,z1)–(x2,y2,z2), then outer corners — matches createGeomObject order.
-  if (geomName == "rectangle_minus_rectangle") {
-    const double ri = 0.35 * s;
-    const double lo_ix = c.d_x - ri, lo_iy = c.d_y - ri, lo_iz = c.d_z;
-    const double hi_ix = c.d_x + ri, hi_iy = c.d_y + ri, hi_iz = c.d_z;
-    const double lo_ox = c.d_x - s, lo_oy = c.d_y - s, lo_oz = c.d_z;
-    const double hi_ox = c.d_x + s, hi_oy = c.d_y + s, hi_oz = c.d_z;
-    return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
-  }
-  if (geomName == "cuboid_minus_cuboid") {
-    const double sx = s, sy = 0.75 * s, sz = 0.6 * s;
-    const double f = 0.35;
-    const double lo_ix = c.d_x - f * sx, lo_iy = c.d_y - f * sy, lo_iz = c.d_z - f * sz;
-    const double hi_ix = c.d_x + f * sx, hi_iy = c.d_y + f * sy, hi_iz = c.d_z + f * sz;
-    const double lo_ox = c.d_x - sx, lo_oy = c.d_y - sy, lo_oz = c.d_z - sz;
-    const double hi_ox = c.d_x + sx, hi_oy = c.d_y + sy, hi_oz = c.d_z + sz;
-    return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
-  }
-  // U-channel open at +y: x0, y0, x1, y1, t, z — outer half-width s (matches testMeshGen scale).
-  if (geomName == "open_rect_channel_2d") {
-    const double wall_t = 0.35 * s;
-    return {c.d_x - s, c.d_y - s, c.d_x + s, c.d_y + s, wall_t, c.d_z};
-  }
-  throw std::runtime_error("geomParamsFor: unknown geometry " + geomName);
-}
-
 bool is3DGeometry(const std::string &g) {
   return g == "sphere" || g == "ellipsoid" || g == "cube" || g == "cuboid" || g == "cylinder" ||
-         g == "sphere_minus_sphere" || g == "cuboid_minus_cuboid";
+         g == "sphere_minus_sphere" || g == "cuboid_minus_cuboid" || g == "open_cuboid_channel_3d";
 }
 
 bool isAcceptableGeometryName(const std::string &g) {
@@ -159,7 +97,7 @@ json buildInputJson(const std::string &geomName, const std::string &output_path_
 
   /* Reference shapes at origin for both mesh groups (same as twop_circ_inbuilt). */
   const util::Point origin(0.0, 0.0, 0.0);
-  const std::vector<double> gp_ref = geomParamsFor(geomName, origin, s);
+  const std::vector<double> gp_ref = geom::exampleGeomParams(geomName, origin, s);
 
   /* Same integration window and IC gap as twop_circ_inbuilt (stable dt). */
   const double final_time = 0.0001; // 0.012;

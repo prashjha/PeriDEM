@@ -11,7 +11,7 @@
 #include "mesh_gen/meshGenerator.h"
 #include "geom/complexGeomObjects.h"
 #include "geom/geomObjects.h"
-#include "geom/openRectChannel2D.h"
+#include "geom/geomObjectsUtil.h"
 #include "inp/meshDeck.h"
 #include "inp/modelDeck.h"
 #include "mesh/mesh.h"
@@ -25,11 +25,22 @@
 
 namespace fs = std::filesystem;
 
+namespace {
+
 /**
- * @brief Test circle mesh via the same path as other 2D geometries (OCC disk).
+ * @brief Model dimension for mesh deck (annulus deck names map to annulus_object with d_dim set).
  */
-bool testCircleMesh() {
-  util::io::log("Testing circle mesh generation (gmsh_builtin_mesh / built-in Gmsh path)...\n");
+size_t meshDimForBuiltin(const std::string &deckName, const std::shared_ptr<geom::GeomObject> &obj) {
+  if (obj->d_name == "annulus_object")
+    return static_cast<const geom::AnnulusGeomObject &>(*obj).d_dim;
+  return geom::getGeomTypeToDim(deckName);
+}
+
+/**
+ * @brief Circle: write .msh and .vtk via the built-in Gmsh path (file I/O smoke).
+ */
+bool testCircleMeshWritesFiles() {
+  util::io::log("Testing circle mesh file output (gmsh_builtin_mesh)...\n");
 
   const std::vector<double> center = {0.0, 0.0, 0.0};
   const double radius = 0.001;
@@ -48,12 +59,14 @@ bool testCircleMesh() {
     const bool vtkOk = fs::exists(outputDir / "circle.vtk");
     if (!mshOk || !vtkOk) {
       util::io::log("Error: Expected circle.msh and circle.vtk under test_output/mesh_gen.\n");
-      if (!mshOk) util::io::log("Missing: circle.msh\n");
-      if (!vtkOk) util::io::log("Missing: circle.vtk\n");
+      if (!mshOk)
+        util::io::log("Missing: circle.msh\n");
+      if (!vtkOk)
+        util::io::log("Missing: circle.vtk\n");
       return false;
     }
 
-    util::io::log("Circle mesh generation test passed.\n");
+    util::io::log("Circle mesh file output test passed.\n");
     return true;
   } catch (const std::exception &e) {
     util::io::log(std::format("Error in mesh generation: {}\n", e.what()));
@@ -62,439 +75,79 @@ bool testCircleMesh() {
 }
 
 /**
- * @brief Cylinder mesh: tetra path + every node inside the axis-aligned bounding box from
- *        geom::Cylinder::box() (with tolerance).
+ * @brief For one acceptable geometry name: exampleGeomParams → mesh in memory → non-empty nodes,
+ *        every node inside geom::box() (loose tolerance).
  */
-bool testCylinderMesh() {
-  util::io::log("Testing cylinder mesh generation (OCC cylinder / 3D tets)...\n");
-
-  const double r = 0.001;
-  const double L = 0.002;
-  const double meshSize = r / 5.0;
-
+bool builtinMeshSmokeTestForGeometry(const std::string &geomName, double s) {
   try {
-    auto cyl = std::make_shared<geom::Cylinder>(
-        r, util::Point(0.0, 0.0, 0.0), util::Point(0.0, 0.0, L));
+    auto geom = geom::makeExampleGeomObject(geomName, util::Point(0., 0., 0.), s);
+    const double meshSize = s / 5.0;
 
     inp::MeshDeck meshDeck;
     meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "cylinder_test.msh";
+    meshDeck.d_filename = std::string("smoke_") + geomName + ".msh";
     meshDeck.d_computeMeshSize = false;
 
+    const size_t dim = meshDimForBuiltin(geomName, geom);
     const auto modelJson =
-        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
+        inp::ModelDeck::getExampleJson(dim, 0.001, 10, "finite_difference", "central_difference", true,
+                                       2, "Multi_Particle", 0);
     inp::ModelDeck modelDeck(modelJson);
 
     mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(cyl, meshSize, "", false, false, &mesh, &meshDeck,
-                                                &modelDeck);
-
-    const auto box = cyl->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: mesh node ({},{},{}) outside Cylinder::box() axis-aligned bounds (tol {}).\n",
-            p.d_x, p.d_y, p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("Cylinder mesh generation and bounding-box check passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in cylinder mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief Ellipse: 2D triangles + nodes inside geom::Ellipse::box().
- */
-bool testEllipseMesh() {
-  util::io::log("Testing ellipse mesh generation (OCC disk / 2D triangles)...\n");
-
-  const double a = 0.0012;
-  const double b = 0.00085;
-  const double theta = 0.35;
-  const double meshSize = std::min(a, b) / 5.0;
-
-  try {
-    auto el = std::make_shared<geom::Ellipse>(a, b, theta, util::Point(0.0, 0.0, 0.0));
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "ellipse_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(el, meshSize, "", false, false, &mesh, &meshDeck,
+    mesh_gen::generateBuiltinParticleMeshGmsh(geom, meshSize, "", false, false, &mesh, &meshDeck,
                                               &modelDeck);
 
-    const auto box = el->box();
+    if (mesh.getNodes().empty()) {
+      util::io::log(std::format("Error: mesh smoke: {} produced zero nodes.\n", geomName));
+      return false;
+    }
+
+    const auto box = geom->box();
     const double tol = 4.0 * meshSize;
     for (const auto &p : mesh.getNodes()) {
       if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
           p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
         util::io::log(std::format(
-            "Error: ellipse mesh node ({},{},{}) outside Ellipse::box() bounds (tol {}).\n", p.d_x,
+            "Error: mesh smoke {}: node ({},{},{}) outside geometry box (tol {}).\n", geomName, p.d_x,
             p.d_y, p.d_z, tol));
         return false;
       }
     }
 
-    util::io::log("Ellipse mesh generation and bounding-box check passed.\n");
+    util::io::log(std::format("  mesh smoke [ {} ] passed.\n", geomName));
     return true;
   } catch (const std::exception &e) {
-    util::io::log(std::format("Error in ellipse mesh test: {}\n", e.what()));
+    util::io::log(std::format("Error: mesh smoke {}: {}\n", geomName, e.what()));
     return false;
   }
 }
 
-/**
- * @brief Ellipsoid: 3D tets + nodes inside geom::Ellipsoid::box().
- */
-bool testEllipsoidMesh() {
-  util::io::log("Testing ellipsoid mesh generation (OCC unit sphere + affine / 3D tets)...\n");
+} // namespace
 
-  const double a = 0.001;
-  const double b = 0.0009;
-  const double c = 0.00085;
-  const double meshSize = std::min(a, std::min(b, c)) / 5.0;
-
-  try {
-    auto e =
-        std::make_shared<geom::Ellipsoid>(a, b, c, util::Point(0.0, 0.0, 0.0));
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "ellipsoid_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(e, meshSize, "", false, false, &mesh, &meshDeck,
-                                              &modelDeck);
-
-    const auto box = e->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: ellipsoid mesh node ({},{},{}) outside Ellipsoid::box() bounds (tol {}).\n",
-            p.d_x, p.d_y, p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("Ellipsoid mesh generation and bounding-box check passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in ellipsoid mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief 2D rectangle annulus: OCC cut + triangles; nodes inside outer rectangle box.
- */
-bool testAnnulusRectangle2DMesh() {
-  util::io::log("Testing 2D rectangle−rectangle annulus (OCC cut / 2D triangles)...\n");
-
-  const double meshSize = 0.00015;
-  try {
-    auto *rin = new geom::Rectangle(util::Point(0.0005, 0.0005, 0.0), util::Point(0.0015, 0.0015, 0.0));
-    auto *rout = new geom::Rectangle(util::Point(0.0, 0.0, 0.0), util::Point(0.002, 0.002, 0.0));
-    auto ann = std::make_shared<geom::AnnulusGeomObject>(rin, rout);
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "annulus2d_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
-                                              &modelDeck);
-
-    const auto box = rout->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: annulus 2D mesh node ({},{},{}) outside outer rectangle box (tol {}).\n", p.d_x,
-            p.d_y, p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("2D annulus mesh generation passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in 2D annulus mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief 3D cuboid shell: OCC cut + tets; nodes inside outer cuboid box.
- */
-bool testAnnulusCuboid3DMesh() {
-  util::io::log("Testing 3D cuboid−cuboid annulus (OCC cut / 3D tets)...\n");
-
-  const double meshSize = 0.00015;
-  try {
-    auto *cin = new geom::Cuboid(util::Point(0.0005, 0.0005, 0.0005),
-                                 util::Point(0.0015, 0.0015, 0.0015));
-    auto *cout = new geom::Cuboid(util::Point(0.0, 0.0, 0.0), util::Point(0.002, 0.002, 0.002));
-    auto ann = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "annulus3d_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
-                                            &modelDeck);
-
-    const auto box = cout->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: annulus 3D mesh node ({},{},{}) outside outer cuboid box (tol {}).\n", p.d_x,
-            p.d_y, p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("3D annulus mesh generation passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in 3D annulus mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief 2D circular annulus: OCC disk − disk.
- */
-bool testAnnulusCircle2DMesh() {
-  util::io::log("Testing 2D circle−circle annulus (OCC disk cut / 2D triangles)...\n");
-
-  const double meshSize = 0.00015;
-  try {
-    auto *cin = new geom::Circle(0.00035, util::Point(0.0, 0.0, 0.0));
-    auto *cout = new geom::Circle(0.001, util::Point(0.0, 0.0, 0.0));
-    auto ann = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "annulus_circle2d_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
-                                              &modelDeck);
-
-    const auto box = cout->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: circle annulus mesh node ({},{},{}) outside outer circle AABB (tol {}).\n", p.d_x,
-            p.d_y, p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("2D circle annulus mesh generation passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in 2D circle annulus mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief 3D spherical shell: OCC sphere − sphere.
- */
-bool testAnnulusSphere3DMesh() {
-  util::io::log("Testing 3D sphere−sphere annulus (OCC sphere cut / 3D tets)...\n");
-
-  const double meshSize = 0.00015;
-  try {
-    auto *cin = new geom::Sphere(0.00035, util::Point(0.0, 0.0, 0.0));
-    auto *cout = new geom::Sphere(0.001, util::Point(0.0, 0.0, 0.0));
-    auto ann = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "annulus_sphere3d_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
-                                              &modelDeck);
-
-    const auto box = cout->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: sphere annulus mesh node ({},{},{}) outside outer sphere AABB (tol {}).\n", p.d_x,
-            p.d_y, p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("3D sphere annulus mesh generation passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in 3D sphere annulus mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief 2D open rectangular channel (U-shape, open +y): geo polygon + optional physical groups.
- */
-bool testOpenRectChannel2DMesh() {
-  util::io::log("Testing open_rect_channel_2d (U-channel / 2D triangles)...\n");
-
-  const double meshSize = 0.00015;
-  try {
-    auto ch = std::make_shared<geom::OpenRectChannel2D>(0.0, 0.0, 0.002, 0.002, 0.0004, 0.0);
-
-    inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
-    meshDeck.d_filename = "open_channel2d_test.msh";
-    meshDeck.d_computeMeshSize = false;
-
-    const auto modelJson =
-        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
-                                       "Multi_Particle", 0);
-    inp::ModelDeck modelDeck(modelJson);
-
-    mesh::Mesh mesh;
-    mesh_gen::generateBuiltinParticleMeshGmsh(ch, meshSize, "", false, false, &mesh, &meshDeck,
-                                              &modelDeck);
-
-    const auto box = ch->box();
-    const double tol = 4.0 * meshSize;
-    for (const auto &p : mesh.getNodes()) {
-      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
-          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
-        util::io::log(std::format(
-            "Error: open channel mesh node ({},{},{}) outside geometry box (tol {}).\n", p.d_x, p.d_y,
-            p.d_z, tol));
-        return false;
-      }
-    }
-
-    util::io::log("open_rect_channel_2d mesh generation passed.\n");
-    return true;
-  } catch (const std::exception &e) {
-    util::io::log(std::format("Error in open channel mesh test: {}\n", e.what()));
-    return false;
-  }
-}
-
-/**
- * @brief Main test function
- */
 int main() {
-  util::io::log("Starting mesh generator tests...\n");
+  util::io::log("Starting mesh generator tests (loop over geom::getAcceptableGeometries)...\n");
 
   bool allTestsPassed = true;
 
-  // Test circle mesh generation (unified path)
-  if (!testCircleMesh()) {
-    util::io::log("Circle mesh tests failed.\n");
+  if (!testCircleMeshWritesFiles()) {
+    util::io::log("Circle mesh file output test failed.\n");
     allTestsPassed = false;
   }
 
-  if (!testEllipseMesh()) {
-    util::io::log("Ellipse mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testCylinderMesh()) {
-    util::io::log("Cylinder mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testEllipsoidMesh()) {
-    util::io::log("Ellipsoid mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testAnnulusRectangle2DMesh()) {
-    util::io::log("2D annulus mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testAnnulusCuboid3DMesh()) {
-    util::io::log("3D annulus mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testAnnulusCircle2DMesh()) {
-    util::io::log("2D circle annulus mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testAnnulusSphere3DMesh()) {
-    util::io::log("3D sphere annulus mesh tests failed.\n");
-    allTestsPassed = false;
-  }
-
-  if (!testOpenRectChannel2DMesh()) {
-    util::io::log("open_rect_channel_2d mesh tests failed.\n");
-    allTestsPassed = false;
+  const double s = 0.001;
+  util::io::log("Builtin Gmsh mesh smoke tests (exampleGeomParams + bounding box)...\n");
+  for (const std::string &name : geom::getAcceptableGeometries()) {
+    if (!builtinMeshSmokeTestForGeometry(name, s)) {
+      util::io::log(std::format("Mesh smoke failed for geometry: {}\n", name));
+      allTestsPassed = false;
+    }
   }
 
   if (allTestsPassed) {
     util::io::log("All mesh generator tests passed.\n");
     return 0;
-  } else {
-    util::io::log("Some mesh generator tests failed.\n");
-    return 1;
   }
-} 
+  util::io::log("Some mesh generator tests failed.\n");
+  return 1;
+}
