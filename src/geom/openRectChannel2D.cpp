@@ -92,15 +92,19 @@ OpenRectChannel2D &OpenRectChannel2D::operator=(const OpenRectChannel2D &other) 
 void OpenRectChannel2D::buildVertices() {
   const double x0 = d_x0, y0 = d_y0, x1 = d_x1, y1 = d_y1, t = d_t, z = d_z;
   d_vertices.clear();
-  d_vertices.reserve(8);
-  // CCW U-cavity boundary (open at +y between inner top corners)
+  d_vertices.reserve(10);
+  // CCW boundary of U-shaped solid with uniform wall thickness t everywhere: bottom slab
+  // [x0,x1]×[y0,y0+t], left/right columns [x0,x0+t]×[y0+t,y1] and [x1-t,x1]×[y0+t,y1]. Cavity
+  // (x0+t,x1-t)×(y0+t,y1) open at +y. Flat tops at y=y1 on each side wall.
   d_vertices.push_back({x0, y0, z});
   d_vertices.push_back({x1, y0, z});
   d_vertices.push_back({x1, y1, z});
+  d_vertices.push_back({x1 - t, y1, z});
   d_vertices.push_back({x1 - t, y1 - t, z});
   d_vertices.push_back({x1 - t, y0 + t, z});
   d_vertices.push_back({x0 + t, y0 + t, z});
   d_vertices.push_back({x0 + t, y1 - t, z});
+  d_vertices.push_back({x0 + t, y1, z});
   d_vertices.push_back({x0, y1, z});
 }
 

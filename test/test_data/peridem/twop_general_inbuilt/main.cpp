@@ -103,6 +103,11 @@ std::vector<double> geomParamsFor(const std::string &geomName, const util::Point
     const double hi_ox = c.d_x + sx, hi_oy = c.d_y + sy, hi_oz = c.d_z + sz;
     return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
   }
+  // U-channel open at +y: x0, y0, x1, y1, t, z — outer half-width s (matches testMeshGen scale).
+  if (geomName == "open_rect_channel_2d") {
+    const double wall_t = 0.35 * s;
+    return {c.d_x - s, c.d_y - s, c.d_x + s, c.d_y + s, wall_t, c.d_z};
+  }
   throw std::runtime_error("geomParamsFor: unknown geometry " + geomName);
 }
 

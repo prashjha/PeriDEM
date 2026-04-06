@@ -23,6 +23,9 @@ namespace geom {
  * Parameters (createGeomObject): x0, y0, x1, y1, t, z — outer axis-aligned box
  * [x0,x1]×[y0,y1] in the plane z = const, wall thickness t. Requires
  * x1 − x0 > 2t, y1 − y0 > 2t, t > 0.
+ *
+ * The polygon uses only horizontal/vertical edges: the top of each side wall at the
+ * opening is flat at y = y1 (not diagonal to the inner corner).
  */
 class OpenRectChannel2D : public GeomObject {
 public:
@@ -32,7 +35,7 @@ public:
   double d_y1 = 0.;
   double d_t = 0.;
   double d_z = 0.;
-  /*! @brief CCW boundary of the U-shaped domain (closed polygon). */
+  /*! @brief CCW boundary of the U-shaped solid (10 vertices, uniform thickness t). */
   std::vector<util::Point> d_vertices;
 
   OpenRectChannel2D();
