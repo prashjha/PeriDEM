@@ -26,12 +26,14 @@ namespace geom {
   /*! @brief Geometry type to dimension map */
   const std::map<std::string, size_t> geom_type_to_dim = {
     {"circle", 2},
+    {"ellipse", 2},
     {"square", 2},
     {"rectangle", 2},
     {"hexagon", 2},
     {"triangle", 2},
     {"drum2d", 2},
     {"sphere", 3},
+    {"ellipsoid", 3},
     {"cube", 3},
     {"cuboid", 3}
   };
@@ -2571,6 +2573,96 @@ public:
   };
 
   /*!
+   * @brief Filled ellipse in the plane z = center.d_z, semi-axes in the xy plane
+   */
+  class Ellipse : public GeomObject {
+  public:
+    /*! @brief Center */
+    util::Point d_x;
+
+    /*! @brief Semi-axis along local x before rotation (in-plane) */
+    double d_a;
+
+    /*! @brief Semi-axis along local y before rotation (in-plane) */
+    double d_b;
+
+    /*! @brief Counter-clockwise rotation about +z through the center (radians) */
+    double d_theta;
+
+  public:
+    Ellipse()
+      : GeomObject("ellipse", ""),
+        d_x(util::Point()),
+        d_a(0.),
+        d_b(0.),
+        d_theta(0.) {};
+
+    /*!
+     * @param a Semi-axis (local x)
+     * @param b Semi-axis (local y)
+     * @param theta Rotation about +z (radians)
+     * @param x Center (z sets the plane of the ellipse)
+     */
+    Ellipse(double a, double b, double theta, util::Point x = util::Point(),
+            std::string description = "")
+      : GeomObject("ellipse", description),
+        d_x(x),
+        d_a(a),
+        d_b(b),
+        d_theta(theta) {};
+
+    Ellipse(const Ellipse &other)
+      : GeomObject(other.d_name, other.d_description),
+        d_x(other.d_x),
+        d_a(other.d_a),
+        d_b(other.d_b),
+        d_theta(other.d_theta) {
+      d_tags = other.d_tags;
+    }
+
+    Ellipse &operator=(const Ellipse &other) {
+      if (this != &other) {
+        d_tags = other.d_tags;
+        d_x = other.d_x;
+        d_a = other.d_a;
+        d_b = other.d_b;
+        d_theta = other.d_theta;
+      }
+      return *this;
+    }
+
+    void transform(const util::Point &center, const double &scale, const double &angle,
+                   const util::Point &axis) override {
+      d_a *= scale;
+      d_b *= scale;
+      d_theta += angle;
+      d_x = center;
+    }
+
+    double volume() const override;
+    util::Point center() const override;
+    std::pair<util::Point, util::Point> box() const override;
+    std::pair<util::Point, util::Point> box(const double &tol) const override;
+    double inscribedRadius() const override;
+    double boundingRadius() const override;
+
+    bool isInside(const util::Point &x) const override;
+    bool isOutside(const util::Point &x) const override;
+    bool isNear(const util::Point &x, const double &tol) const override;
+    bool isNearBoundary(const util::Point &x, const double &tol, const bool &within) const override;
+    bool doesIntersect(const util::Point &x) const override;
+
+    bool isInside(const std::pair<util::Point, util::Point> &box) const override;
+    bool isOutside(const std::pair<util::Point, util::Point> &box) const override;
+    bool isNear(const std::pair<util::Point, util::Point> &box, const double &tol) const override;
+    bool doesIntersect(const std::pair<util::Point, util::Point> &box) const override;
+
+    std::string printStr(int nt, int lvl) const override;
+    void print(int nt, int lvl) const override { std::cout << printStr(nt, lvl); };
+    void print() const override { print(0, 0); };
+  };
+
+  /*!
   * @brief Defines sphere
   */
   class Sphere : public GeomObject {
@@ -2759,6 +2851,121 @@ public:
     /*!
      * @copydoc GeomObject::print() const
      */
+    void print() const override { print(0, 0); };
+  };
+
+  /*!
+   * @brief Ellipsoid: center \f$\mathbf c\f$, semi-axes \f$r_1,r_2,r_3\f$ in a body frame
+   * rotated from world by axis–angle \f$(\hat{\mathbf a},\theta)\f$ (Rodrigues).
+   * Axis-aligned case: \f$\theta=0\f$ (axis ignored).
+   */
+  class Ellipsoid : public GeomObject {
+  public:
+    util::Point d_x;
+    double d_a;
+    double d_b;
+    double d_c;
+    /*! @brief Unit rotation axis (axis–angle); default (0,0,1) when \f$\theta=0\f$ */
+    util::Point d_axis;
+    /*! @brief Rotation angle (radians) about d_axis */
+    double d_theta;
+
+  public:
+    Ellipsoid()
+      : GeomObject("ellipsoid", ""),
+        d_x(util::Point()),
+        d_a(0.),
+        d_b(0.),
+        d_c(0.),
+        d_axis(0., 0., 1.),
+        d_theta(0.) {};
+
+    /*!
+     * @param a First semi-axis (body frame)
+     * @param b Second semi-axis (body frame)
+     * @param c Third semi-axis (body frame)
+     */
+    Ellipsoid(double a, double b, double c, util::Point x = util::Point(),
+              std::string description = "")
+      : GeomObject("ellipsoid", description),
+        d_x(x),
+        d_a(a),
+        d_b(b),
+        d_c(c),
+        d_axis(0., 0., 1.),
+        d_theta(0.) {};
+
+    /*!
+     * @brief General orientation: same semi-axes, rotation \f$\theta\f$ about unit axis
+     * (normalized internally; zero axis with \f$\theta\neq 0\f$ is invalid).
+     */
+    Ellipsoid(double a, double b, double c, double theta, util::Point x, util::Point axis,
+              std::string description = "")
+      : GeomObject("ellipsoid", description),
+        d_x(x),
+        d_a(a),
+        d_b(b),
+        d_c(c),
+        d_axis(axis),
+        d_theta(theta) {
+      
+      if (std::abs(theta) > 1.0e-12 and axis.length() > 1.0e-12) {
+        d_axis = axis / axis.length();
+      }
+    }
+
+    Ellipsoid(const Ellipsoid &other)
+      : GeomObject(other.d_name, other.d_description),
+        d_x(other.d_x),
+        d_a(other.d_a),
+        d_b(other.d_b),
+        d_c(other.d_c),
+        d_axis(other.d_axis),
+        d_theta(other.d_theta) {
+      d_tags = other.d_tags;
+    }
+
+    Ellipsoid &operator=(const Ellipsoid &other) {
+      if (this != &other) {
+        d_tags = other.d_tags;
+        d_x = other.d_x;
+        d_a = other.d_a;
+        d_b = other.d_b;
+        d_c = other.d_c;
+        d_axis = other.d_axis;
+        d_theta = other.d_theta;
+      }
+      return *this;
+    }
+
+    void transform(const util::Point &center, const double &scale, const double &angle,
+                   const util::Point &axis) override {
+      d_a *= scale;
+      d_b *= scale;
+      d_c *= scale;
+      d_x = center;
+    }
+
+    double volume() const override;
+    util::Point center() const override;
+    std::pair<util::Point, util::Point> box() const override;
+    std::pair<util::Point, util::Point> box(const double &tol) const override;
+    double inscribedRadius() const override;
+    double boundingRadius() const override;
+
+    bool isInside(const util::Point &x) const override;
+    bool isOutside(const util::Point &x) const override;
+    bool isNear(const util::Point &x, const double &tol) const override;
+    bool isNearBoundary(const util::Point &x, const double &tol, const bool &within) const override;
+    bool doesIntersect(const util::Point &x) const override;
+
+    bool isInside(const std::pair<util::Point, util::Point> &box) const override;
+    bool isOutside(const std::pair<util::Point, util::Point> &box) const override;
+    bool isNear(const std::pair<util::Point, util::Point> &box, const double &tol) const override;
+    bool doesIntersect(const std::pair<util::Point, util::Point> &box) const override;
+
+    std::string printStr(int nt, int lvl) const override;
+    void print(int nt, int lvl) const override { std::cout << printStr(nt, lvl); };
     void print() const override { print(0, 0); };
   };
 

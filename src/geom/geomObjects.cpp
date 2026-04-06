@@ -10,6 +10,7 @@
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
+#include <cmath>
 #include <set>
 #include <stdexcept>
 #include <vector>
@@ -1355,6 +1356,161 @@ namespace geom {
 }// Circle
 
 //
+// Ellipse
+//
+namespace geom {
+
+    namespace {
+    bool ellipseMetricInside(double u, double v, double a, double b) {
+      if (a <= 0. || b <= 0.)
+        return false;
+      return util::isLess(u * u / (a * a) + v * v / (b * b), 1. + 1.0E-12);
+    }
+
+    void ellipseLocal(const Ellipse &e, const util::Point &x, double &u, double &v) {
+      const double dx = x.d_x - e.d_x.d_x;
+      const double dy = x.d_y - e.d_x.d_y;
+      const double c = std::cos(e.d_theta);
+      const double s = std::sin(e.d_theta);
+      u = c * dx + s * dy;
+      v = -s * dx + c * dy;
+    }
+    } // namespace
+
+    double Ellipse::volume() const {
+      return M_PI * d_a * d_b;
+    }
+
+    util::Point Ellipse::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Ellipse::box() const {
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Ellipse::box(const double &tol) const {
+
+      const double at = d_a + tol;
+      const double bt = d_b + tol;
+      const double ex = std::hypot(at * std::cos(d_theta), bt * std::sin(d_theta));
+      const double ey = std::hypot(at * std::sin(d_theta), bt * std::cos(d_theta));
+
+      return {util::Point(d_x.d_x - ex, d_x.d_y - ey, 0.),
+              util::Point(d_x.d_x + ex, d_x.d_y + ey, 0.)};
+    }
+
+    double Ellipse::inscribedRadius() const {
+      return (d_a < d_b) ? d_a : d_b;
+    }
+
+    double Ellipse::boundingRadius() const {
+      return (d_a > d_b) ? d_a : d_b;
+    }
+
+    bool Ellipse::isInside(const util::Point &x) const {
+      double u = 0., v = 0.;
+      ellipseLocal(*this, x, u, v);
+      return ellipseMetricInside(u, v, d_a, d_b);
+    }
+
+    bool Ellipse::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Ellipse::isNear(const util::Point &x, const double &tol) const {
+      double u = 0., v = 0.;
+      ellipseLocal(*this, x, u, v);
+      return ellipseMetricInside(u, v, d_a + tol, d_b + tol);
+    }
+
+    bool Ellipse::isNearBoundary(const util::Point &x, const double &tol, const bool &within) const {
+
+      double u = 0., v = 0.;
+      ellipseLocal(*this, x, u, v);
+      const bool inOuter = ellipseMetricInside(u, v, d_a + tol, d_b + tol);
+      const bool inInner = ellipseMetricInside(u, v, d_a - tol, d_b - tol);
+      if (within)
+        return inOuter && !inInner;
+      return inOuter;
+    }
+
+    bool Ellipse::doesIntersect(const util::Point &x) const {
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Ellipse::isInside(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Ellipse::isOutside(const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p : geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Ellipse::isNear(const std::pair<util::Point, util::Point> &box, const double &tol) const {
+
+      if (this->isInside(box))
+        return true;
+
+      for (auto p : geom::getCornerPoints(2, box)) {
+        if (isNear(p, tol))
+          return true;
+      }
+
+      auto dxc = geom::getCenter(2, box) - d_x;
+      auto r = geom::inscribedRadiusInBox(2, box);
+      if (util::isLess(dxc.length(), boundingRadius() + r + tol))
+        return true;
+
+      r = geom::circumscribedRadiusInBox(2, box);
+      return util::isLess(dxc.length(), boundingRadius() + r + tol);
+    }
+
+    bool Ellipse::doesIntersect(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Ellipse::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Ellipse --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Semi-axes a, b = " << d_a << ", " << d_b << std::endl;
+      oss << tabS << "Theta (rad) = " << d_theta << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+
+}// Ellipse
+
+//
 // Cylinder
 //
 namespace geom {
@@ -1697,4 +1853,179 @@ namespace geom {
     }
 
 }// Sphere
+
+//
+// Ellipsoid
+//
+namespace geom {
+
+    namespace {
+
+    void ellipsoidBodyCoords(const Ellipsoid &e, const util::Point &p, double R[9], double &v0,
+                             double &v1, double &v2) {
+      ellipsoidRotationMatrix(e, R);
+      v0 = R[0] * p.d_x + R[3] * p.d_y + R[6] * p.d_z;
+      v1 = R[1] * p.d_x + R[4] * p.d_y + R[7] * p.d_z;
+      v2 = R[2] * p.d_x + R[5] * p.d_y + R[8] * p.d_z;
+    }
+
+    double ellipsoidMetric(const Ellipsoid &e, const util::Point &x, double R[9], const double &ra,
+                           const double &rb, const double &rc) {
+      const util::Point p{x.d_x - e.d_x.d_x, x.d_y - e.d_x.d_y, x.d_z - e.d_x.d_z};
+      double v0, v1, v2;
+      ellipsoidBodyCoords(e, p, R, v0, v1, v2);
+      const double dx = v0 / ra;
+      const double dy = v1 / rb;
+      const double dz = v2 / rc;
+      return dx * dx + dy * dy + dz * dz;
+    }
+
+    } // namespace
+
+    double Ellipsoid::volume() const {
+      return (4. / 3.) * M_PI * d_a * d_b * d_c;
+    }
+
+    util::Point Ellipsoid::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Ellipsoid::box() const {
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Ellipsoid::box(const double &tol) const {
+
+      const double ra = d_a + tol;
+      const double rb = d_b + tol;
+      const double rc = d_c + tol;
+
+      double R[9];
+      ellipsoidRotationMatrix(*this, R);
+
+      const double hx =
+              std::sqrt((ra * R[0]) * (ra * R[0]) + (rb * R[3]) * (rb * R[3]) + (rc * R[6]) * (rc * R[6]));
+      const double hy =
+              std::sqrt((ra * R[1]) * (ra * R[1]) + (rb * R[4]) * (rb * R[4]) + (rc * R[7]) * (rc * R[7]));
+      const double hz =
+              std::sqrt((ra * R[2]) * (ra * R[2]) + (rb * R[5]) * (rb * R[5]) + (rc * R[8]) * (rc * R[8]));
+
+      return {util::Point(d_x.d_x - hx, d_x.d_y - hy, d_x.d_z - hz),
+              util::Point(d_x.d_x + hx, d_x.d_y + hy, d_x.d_z + hz)};
+    }
+
+    double Ellipsoid::inscribedRadius() const {
+      double m = d_a;
+      if (d_b < m)
+        m = d_b;
+      if (d_c < m)
+        m = d_c;
+      return m;
+    }
+
+    double Ellipsoid::boundingRadius() const {
+      double m = d_a;
+      if (d_b > m)
+        m = d_b;
+      if (d_c > m)
+        m = d_c;
+      return m;
+    }
+
+    bool Ellipsoid::isInside(const util::Point &x) const {
+      if (d_a <= 0. || d_b <= 0. || d_c <= 0.)
+        return false;
+      double R[9];
+      return util::isLess(ellipsoidMetric(*this, x, R, d_a, d_b, d_c), 1. + 1.0E-12);
+    }
+
+    bool Ellipsoid::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Ellipsoid::isNear(const util::Point &x, const double &tol) const {
+      if (d_a + tol <= 0. || d_b + tol <= 0. || d_c + tol <= 0.)
+        return false;
+      double R[9];
+      return util::isLess(ellipsoidMetric(*this, x, R, d_a + tol, d_b + tol, d_c + tol),
+                          1. + 1.0E-12);
+    }
+
+    bool Ellipsoid::isNearBoundary(const util::Point &x, const double &tol, const bool &within) const {
+
+      const bool inOuter = isNear(x, tol);
+      Ellipsoid shrunk = *this;
+      shrunk.d_a = d_a - tol;
+      shrunk.d_b = d_b - tol;
+      shrunk.d_c = d_c - tol;
+      if (shrunk.d_a <= 0. || shrunk.d_b <= 0. || shrunk.d_c <= 0.)
+        return inOuter;
+      const bool inInner = shrunk.isInside(x);
+      if (within)
+        return inOuter && !inInner;
+      return inOuter;
+    }
+
+    bool Ellipsoid::doesIntersect(const util::Point &x) const {
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Ellipsoid::isInside(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(3, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Ellipsoid::isOutside(const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p : geom::getCornerPoints(3, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Ellipsoid::isNear(const std::pair<util::Point, util::Point> &box, const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 3);
+    }
+
+    bool Ellipsoid::doesIntersect(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(3, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Ellipsoid::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Ellipsoid --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Semi-axes a, b, c = " << d_a << ", " << d_b << ", " << d_c << std::endl;
+      if (std::abs(d_theta) > 1.0e-14)
+        oss << tabS << "Rotation axis (unit) = " << d_axis.printStr(0, lvl) << ", theta = " << d_theta
+            << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+
+}// Ellipsoid
 

@@ -49,6 +49,12 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
 
   try {
     buildGmshGeometryInCurrentModel(*geomObj, h);
+    // OCC-built 3D shapes (e.g. sphere, ellipsoid) do not attach `h` to geometry; without this,
+    // Gmsh uses a default size and can produce far too few tets so mesh spacing > PD horizon.
+    if (h > 0.) {
+      gmsh::option::setNumber("Mesh.MeshSizeMin", h);
+      gmsh::option::setNumber("Mesh.MeshSizeMax", h);
+    }
     gmsh::model::mesh::generate(gmshMeshGenerateDim(modelDeck));
   } catch (...) {
     gmsh::finalize();

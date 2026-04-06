@@ -6,7 +6,9 @@
 // ////////////////////////////////////////////////////////////////////////////////
 
 #include "geomUtilFunctions.h"
+#include "geomObjects.h"
 #include "util/function.h"
+#include <cmath>
 #include "util/io.h"
 #include "util/transformationFunctions.h"
 #include "nsearch/nsearch.h"
@@ -673,6 +675,32 @@ void computeNonlocalNeighborhood(const std::vector<util::Point> &nodes,
         }
     }
   }
+}
+
+void ellipsoidRotationMatrix(const Ellipsoid &e, double R[9]) {
+
+  if (std::abs(e.d_theta) < 1.0e-15) {
+    R[0] = R[4] = R[8] = 1.;
+    R[1] = R[2] = R[3] = R[5] = R[6] = R[7] = 0.;
+    return;
+  }
+
+  const double kx = e.d_axis.d_x;
+  const double ky = e.d_axis.d_y;
+  const double kz = e.d_axis.d_z;
+  const double c = std::cos(e.d_theta);
+  const double s = std::sin(e.d_theta);
+  const double t = 1.0 - c;
+
+  R[0] = t * kx * kx + c;
+  R[1] = t * kx * ky - kz * s;
+  R[2] = t * kx * kz + ky * s;
+  R[3] = t * kx * ky + kz * s;
+  R[4] = t * ky * ky + c;
+  R[5] = t * ky * kz - kx * s;
+  R[6] = t * kx * kz - ky * s;
+  R[7] = t * ky * kz + kx * s;
+  R[8] = t * kz * kz + c;
 }
 
 } // namespace geom

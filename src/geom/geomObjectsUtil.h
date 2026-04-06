@@ -125,12 +125,14 @@ void print(int nt = 0, int lvl = 0) const {
 
 /*! @brief List of acceptable geometries for particles in PeriDEM */
 const std::vector<std::string> acceptable_geometries = {"circle",
+                                                    "ellipse",
                                                     "square",
                                                     "rectangle",
                                                     "hexagon",
                                                     "triangle",
                                                     "drum2d",
                                                     "sphere",
+                                                    "ellipsoid",
                                                     "cube",
                                                     "cuboid",
                                                     "cylinder"};
@@ -260,6 +262,10 @@ inline GeomObject* createGeomDeepCopy(GeomObject* obj) {
     return new Sphere(*dynamic_cast<const Sphere*>(obj));
   else if (type == "cylinder")
     return new Cylinder(*dynamic_cast<const Cylinder*>(obj));
+  else if (type == "ellipse")
+    return new Ellipse(*dynamic_cast<const Ellipse*>(obj));
+  else if (type == "ellipsoid")
+    return new Ellipsoid(*dynamic_cast<const Ellipsoid*>(obj));
   else {
     std::cerr << "Error: Unsupported object type '" << type 
               << "' in createGeomDeepCopy\n";

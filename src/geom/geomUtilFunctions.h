@@ -358,6 +358,13 @@ void computeNonlocalNeighborhood(const std::vector<util::Point> &nodes,
                                  double horizon,
                                  std::vector<std::vector<size_t>> &nodeNeighs);
 
+class Ellipsoid;
+
+/*!
+ * @brief Row-major 3×3 rotation \f$\mathbf R\f$ from ellipsoid axis–angle (identity if \f$\theta=0\f$).
+ */
+void ellipsoidRotationMatrix(const Ellipsoid &e, double R[9]);
+
 } // namespace geom
 
 #endif // GEOM_GEOMUTILFUNCTIONS_H

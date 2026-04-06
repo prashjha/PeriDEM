@@ -80,8 +80,12 @@ void buildGmshGeometryInCurrentModel(const geom::GeomObject &g, double h) {
 
   if (n == "circle")
     return buildCircleOcc(static_cast<const geom::Circle &>(g), h);
+  if (n == "ellipse")
+    return buildEllipseOcc(static_cast<const geom::Ellipse &>(g), h);
   if (n == "sphere")
     return buildSphereOcc(static_cast<const geom::Sphere &>(g));
+  if (n == "ellipsoid")
+    return buildEllipsoidOcc(static_cast<const geom::Ellipsoid &>(g));
   if (n == "cube")
     return buildOccBoxFromAabb(g);
   if (n == "cuboid")

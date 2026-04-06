@@ -59,6 +59,10 @@ namespace geom {
         return {1, 4};
       else if (geom_type == "sphere")
         return {1, 4};
+      else if (geom_type == "ellipse")
+        return {6};
+      else if (geom_type == "ellipsoid")
+        return {6, 10};
       else if (geom_type == "cylinder")
         return {7, 8};
       else if (geom_type == "angled_rectangle")
@@ -334,6 +338,45 @@ namespace geom {
                                                          util::Point());
         }// if else check_failed
       }// if sphere
+      else if (type == "ellipse") {
+
+        if (check_passed) {
+          obj = std::make_shared<geom::Ellipse>(
+                  params[0], params[1], params[2],
+                  util::Point(params[3], params[4], params[5]));
+        } else {
+          std::cerr << "Error: need at least " << 6
+                    << " parameters for creating ellipse (a, b, theta, cx, cy, cz). "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // ellipse
+      else if (type == "ellipsoid") {
+
+        if (check_passed) {
+          if (params.size() == 6) {
+            obj = std::make_shared<geom::Ellipsoid>(
+                    params[0], params[1], params[2], 
+                    util::Point(params[4], params[5], params[6]));
+          } else {
+            obj = std::make_shared<geom::Ellipsoid>(
+                    params[0], params[1], params[2], params[3],
+                    util::Point(params[4], params[5], params[6]),
+                    util::Point(params[7], params[8], params[9]));
+          }
+        } else {
+          std::cerr << "Error: need 6 parameters (cx, cy, cz, r1, r2, r3) or 10 parameters "
+                       "(cx, cy, cz, r1, r2, r3, ax, ay, az, theta) for creating ellipsoid. "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // ellipsoid
       else if (type == "cuboid") {
 
         if (check_passed) {
@@ -725,6 +768,43 @@ namespace geom {
           } // if params.size() == n
         } // loop over n
       } // Sphere
+      else if (geom_type == "ellipse") {
+
+        num_params_needed = {6};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 6) {
+              obj = std::make_shared<geom::Ellipse>(
+                      params[0], params[1], params[2],
+                      util::Point(params[3], params[4], params[5]));
+              return;
+            }
+          }
+        }
+      } // Ellipse
+      else if (geom_type == "ellipsoid") {
+
+        num_params_needed = {6, 10};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 6) {
+              obj = std::make_shared<geom::Ellipsoid>(
+                      params[0], params[1], params[2],
+                      util::Point(params[3], params[4], params[5]));
+              return;
+            }
+            if (n == 10) {
+              obj = std::make_shared<geom::Ellipsoid>(
+                      params[0], params[1], params[2], params[3],
+                      util::Point(params[4], params[5], params[6]),
+                      util::Point(params[7], params[8], params[9]));
+              return;
+            }
+          }
+        }
+      } // Ellipsoid
       else if (geom_type == "cylinder") {
 
         num_params_needed = {7, 8};

@@ -15,6 +15,7 @@
 #include "mesh/mesh.h"
 #include "util/io.h"
 #include "util/point.h"
+#include <cmath>
 #include <filesystem>
 #include <format>
 #include <memory>
@@ -108,6 +109,103 @@ bool testCylinderMesh() {
 }
 
 /**
+ * @brief Ellipse: 2D triangles + nodes inside geom::Ellipse::box().
+ */
+bool testEllipseMesh() {
+  util::io::log("Testing ellipse mesh generation (OCC disk / 2D triangles)...\n");
+
+  const double a = 0.0012;
+  const double b = 0.00085;
+  const double theta = 0.35;
+  const double meshSize = std::min(a, b) / 5.0;
+
+  try {
+    auto el = std::make_shared<geom::Ellipse>(a, b, theta, util::Point(0.0, 0.0, 0.0));
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "ellipse_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(el, meshSize, "", false, false, &mesh, &meshDeck,
+                                              &modelDeck);
+
+    const auto box = el->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: ellipse mesh node ({},{},{}) outside Ellipse::box() bounds (tol {}).\n", p.d_x,
+            p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("Ellipse mesh generation and bounding-box check passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in ellipse mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
+ * @brief Ellipsoid: 3D tets + nodes inside geom::Ellipsoid::box().
+ */
+bool testEllipsoidMesh() {
+  util::io::log("Testing ellipsoid mesh generation (OCC unit sphere + affine / 3D tets)...\n");
+
+  const double a = 0.001;
+  const double b = 0.0009;
+  const double c = 0.00085;
+  const double meshSize = std::min(a, std::min(b, c)) / 5.0;
+
+  try {
+    auto e =
+        std::make_shared<geom::Ellipsoid>(a, b, c, util::Point(0.0, 0.0, 0.0));
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "ellipsoid_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(e, meshSize, "", false, false, &mesh, &meshDeck,
+                                              &modelDeck);
+
+    const auto box = e->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: ellipsoid mesh node ({},{},{}) outside Ellipsoid::box() bounds (tol {}).\n",
+            p.d_x, p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("Ellipsoid mesh generation and bounding-box check passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in ellipsoid mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
  * @brief Main test function
  */
 int main() {
@@ -121,8 +219,18 @@ int main() {
     allTestsPassed = false;
   }
 
+  if (!testEllipseMesh()) {
+    util::io::log("Ellipse mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
   if (!testCylinderMesh()) {
     util::io::log("Cylinder mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
+  if (!testEllipsoidMesh()) {
+    util::io::log("Ellipsoid mesh tests failed.\n");
     allTestsPassed = false;
   }
 
