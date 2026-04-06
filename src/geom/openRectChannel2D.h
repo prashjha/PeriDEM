@@ -38,6 +38,9 @@ public:
   /*! @brief CCW boundary of the U-shaped solid (10 vertices, uniform thickness t). */
   std::vector<util::Point> d_vertices;
 
+  /*! @brief Area centroid of the polygon (same convention as `d_x` on other `GeomObject`s). */
+  util::Point d_x;
+
   OpenRectChannel2D();
 
   OpenRectChannel2D(double x0, double y0, double x1, double y1, double t, double z,
@@ -49,12 +52,8 @@ public:
 
   void buildVertices();
 
-  static bool pointInPolygon2D(const util::Point &p, const std::vector<util::Point> &poly);
-  static double polygonArea2D(const std::vector<util::Point> &poly);
-  static util::Point polygonCentroid2D(const std::vector<util::Point> &poly);
-
-  void transform(const util::Point &center, const double &scale, const double &angle,
-                 const util::Point &axis) override;
+  void transform(const util::Point &translation, const double &scale, const double &angle,
+                 const util::Point &axis, const util::Point *rotationPoint) override;
 
   double volume() const override;
   util::Point center() const override;
@@ -77,6 +76,11 @@ public:
   std::string printStr(int nt = 0, int lvl = 0) const override;
   void print(int nt = 0, int lvl = 0) const override { std::cout << printStr(nt, lvl); };
   void print() const override { print(0, 0); };
+
+private:
+  bool pointInPolygon2D(const util::Point &p) const;
+  double polygonArea2D() const;
+  util::Point polygonCentroid2D() const;
 };
 
 } // namespace geom

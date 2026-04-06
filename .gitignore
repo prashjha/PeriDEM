@@ -37,6 +37,9 @@
 # Debugger
 #core.*
 
+# CMake compile database (generated; used by clangd / C++ extension)
+compile_commands.json
+
 # build directory
 build
 build_2

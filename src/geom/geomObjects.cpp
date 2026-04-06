@@ -10,6 +10,7 @@
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
+#include <algorithm>
 #include <cmath>
 #include <set>
 #include <stdexcept>
@@ -1861,6 +1862,66 @@ namespace geom {
 
     namespace {
 
+    static void quatMul(double aw, double ax, double ay, double az,
+                        double bw, double bx, double by, double bz,
+                        double &cw, double &cx, double &cy, double &cz) {
+      cw = aw * bw - ax * bx - ay * by - az * bz;
+      cx = aw * bx + ax * bw + ay * bz - az * by;
+      cy = aw * by - ax * bz + ay * bw + az * bx;
+      cz = aw * bz + ax * by - ay * bx + az * bw;
+    }
+
+    static void axisAngleToQuatSafe(const util::Point &axisIn, double theta,
+                                    double &w, double &x, double &y, double &z) {
+      if (std::abs(theta) < 1.0e-30) {
+        w = 1.;
+        x = y = z = 0.;
+        return;
+      }
+      const double L = axisIn.length();
+      if (L < 1.0e-30) {
+        w = 1.;
+        x = y = z = 0.;
+        return;
+      }
+      const util::Point k = axisIn / L;
+      const double half = 0.5 * theta;
+      w = std::cos(half);
+      const double s = std::sin(half);
+      x = s * k.d_x;
+      y = s * k.d_y;
+      z = s * k.d_z;
+    }
+
+    static void quatToAxisAngle(double qw, double qx, double qy, double qz,
+                                util::Point &axis, double &theta) {
+      double n = std::sqrt(qw * qw + qx * qx + qy * qy + qz * qz);
+      if (n < 1.0e-30) {
+        axis = util::Point(0., 0., 1.);
+        theta = 0.;
+        return;
+      }
+      qw /= n;
+      qx /= n;
+      qy /= n;
+      qz /= n;
+      if (qw < 0.) {
+        qw = -qw;
+        qx = -qx;
+        qy = -qy;
+        qz = -qz;
+      }
+      qw = std::max(-1., std::min(1., qw));
+      theta = 2. * std::acos(qw);
+      const double sv = std::sqrt(qx * qx + qy * qy + qz * qz);
+      if (sv < 1.0e-15) {
+        axis = util::Point(0., 0., 1.);
+        theta = 0.;
+        return;
+      }
+      axis = util::Point(qx / sv, qy / sv, qz / sv);
+    }
+
     void ellipsoidBodyCoords(const Ellipsoid &e, const util::Point &p, double R[9], double &v0,
                              double &v1, double &v2) {
       ellipsoidRotationMatrix(e, R);
@@ -1881,6 +1942,26 @@ namespace geom {
     }
 
     } // namespace
+
+    void Ellipsoid::transform(const util::Point &translation, const double &scale, const double &angle,
+                              const util::Point &axis, const util::Point *rotationPoint) {
+      const util::Point c0 = d_x;
+      d_a *= scale;
+      d_b *= scale;
+      d_c *= scale;
+
+      double ow, ox, oy, oz;
+      axisAngleToQuatSafe(d_axis, d_theta, ow, ox, oy, oz);
+
+      double rw, rx, ry, rz;
+      axisAngleToQuatSafe(axis, angle, rw, rx, ry, rz);
+
+      double nw, nx, ny, nz;
+      quatMul(rw, rx, ry, rz, ow, ox, oy, oz, nw, nx, ny, nz);
+
+      quatToAxisAngle(nw, nx, ny, nz, d_axis, d_theta);
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
+    }
 
     double Ellipsoid::volume() const {
       return (4. / 3.) * M_PI * d_a * d_b * d_c;

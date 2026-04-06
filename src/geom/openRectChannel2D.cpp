@@ -71,7 +71,8 @@ OpenRectChannel2D::OpenRectChannel2D(const OpenRectChannel2D &other)
     d_y1(other.d_y1),
     d_t(other.d_t),
     d_z(other.d_z),
-    d_vertices(other.d_vertices) {
+    d_vertices(other.d_vertices),
+    d_x(other.d_x) {
   d_tags = other.d_tags;
 }
 
@@ -85,6 +86,7 @@ OpenRectChannel2D &OpenRectChannel2D::operator=(const OpenRectChannel2D &other) 
     d_t = other.d_t;
     d_z = other.d_z;
     d_vertices = other.d_vertices;
+    d_x = other.d_x;
   }
   return *this;
 }
@@ -106,9 +108,11 @@ void OpenRectChannel2D::buildVertices() {
   d_vertices.push_back({x0 + t, y1 - t, z});
   d_vertices.push_back({x0 + t, y1, z});
   d_vertices.push_back({x0, y1, z});
+  d_x = polygonCentroid2D();
 }
 
-bool OpenRectChannel2D::pointInPolygon2D(const util::Point &p, const std::vector<util::Point> &v) {
+bool OpenRectChannel2D::pointInPolygon2D(const util::Point &p) const {
+  const auto &v = d_vertices;
   if (v.size() < 3)
     return false;
   bool c = false;
@@ -123,7 +127,8 @@ bool OpenRectChannel2D::pointInPolygon2D(const util::Point &p, const std::vector
   return c;
 }
 
-double OpenRectChannel2D::polygonArea2D(const std::vector<util::Point> &v) {
+double OpenRectChannel2D::polygonArea2D() const {
+  const auto &v = d_vertices;
   if (v.size() < 3)
     return 0.;
   double a = 0.;
@@ -135,7 +140,8 @@ double OpenRectChannel2D::polygonArea2D(const std::vector<util::Point> &v) {
   return 0.5 * std::abs(a);
 }
 
-util::Point OpenRectChannel2D::polygonCentroid2D(const std::vector<util::Point> &v) {
+util::Point OpenRectChannel2D::polygonCentroid2D() const {
+  const auto &v = d_vertices;
   if (v.size() < 3)
     return {};
   double cx = 0., cy = 0.;
@@ -154,12 +160,16 @@ util::Point OpenRectChannel2D::polygonCentroid2D(const std::vector<util::Point> 
   return {cx / (6. * a), cy / (6. * a), v[0].d_z};
 }
 
-void OpenRectChannel2D::transform(const util::Point &center, const double &scale,
-                                  const double &angle, const util::Point &axis) {
-  util::Point oc((d_x0 + d_x1) * 0.5, (d_y0 + d_y1) * 0.5, d_z);
+void OpenRectChannel2D::transform(const util::Point &translation, const double &scale,
+                                  const double &angle, const util::Point &axis,
+                                  const util::Point *rotationPoint) {
+  // Default pivot: cached centroid `d_x` (same as other geoms). Matches demModel when it passes
+  // p_geom->center().
+  const util::Point pivot = rotationPoint != nullptr ? *rotationPoint : d_x;
   d_t *= scale;
+  // Same map as geom::mapSimilarity: p + s R(x-p) + t
   for (auto &v : d_vertices) {
-    v = util::rotate((v - oc) * scale, angle, axis) + center;
+    v = pivot + util::rotate(v - pivot, angle, axis) * scale + translation;
   }
   d_x0 = d_x1 = d_vertices[0].d_x;
   d_y0 = d_y1 = d_vertices[0].d_y;
@@ -171,15 +181,14 @@ void OpenRectChannel2D::transform(const util::Point &center, const double &scale
     d_y1 = std::max(d_y1, v.d_y);
     d_z = v.d_z;
   }
+  d_x = polygonCentroid2D();
 }
 
 double OpenRectChannel2D::volume() const {
-  return polygonArea2D(d_vertices);
+  return polygonArea2D();
 }
 
-util::Point OpenRectChannel2D::center() const {
-  return polygonCentroid2D(d_vertices);
-}
+util::Point OpenRectChannel2D::center() const { return d_x; }
 
 std::pair<util::Point, util::Point> OpenRectChannel2D::box() const {
   return box(0.);
@@ -206,7 +215,7 @@ double OpenRectChannel2D::inscribedRadius() const {
 }
 
 double OpenRectChannel2D::boundingRadius() const {
-  const util::Point c = center();
+  const util::Point &c = d_x;
   double r = 0.;
   for (const auto &v : d_vertices)
     r = std::max(r, (v - c).length());
@@ -216,7 +225,7 @@ double OpenRectChannel2D::boundingRadius() const {
 bool OpenRectChannel2D::isInside(const util::Point &x) const {
   if (std::abs(x.d_z - d_z) > 1.0e-9)
     return false;
-  return pointInPolygon2D(x, d_vertices);
+  return pointInPolygon2D(x);
 }
 
 bool OpenRectChannel2D::isOutside(const util::Point &x) const {

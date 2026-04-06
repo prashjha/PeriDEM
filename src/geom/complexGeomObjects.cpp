@@ -37,6 +37,7 @@ namespace {
 // AnnulusGeomObject
 //
 namespace geom {
+
     double AnnulusGeomObject::volume() const {
       return d_outObj_p->volume() - d_inObj_p->volume();
     }

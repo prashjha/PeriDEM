@@ -1194,12 +1194,10 @@ void model::DEMModel::createParticleUsingParticleZoneGeomObject() {
   // we need to create identity transform
   auto p_transform = geom::ParticleTransform();
 
-  // add default values for particle group
-  std::map<std::string, size_t> p_group({{"geom_id", 0}, {"mat_id", 0}, {"contact_id", 0}});
-
   for (size_t z = 0; z < d_particleDeck_p->d_pMeshVec.size(); z++) {
 
-    p_group["geom_id"] = z;
+    // add default values for particle group
+    std::map<std::string, size_t> p_group({{"geom_id", z}, {"mat_id", 0}, {"contact_id", 0}});
     
     auto ref_p = d_referenceParticles[z];
 
@@ -1268,6 +1266,9 @@ void model::DEMModel::createParticlesFromFile() {
     }
 
     auto axis = util::Point(p_data.value("ax", 0.), p_data.value("ay", 0.), p_data.value("az", 1.));
+    const bool has_rotationPoint =
+        p_data.find("rotx") != p_data.end() && p_data.find("roty") != p_data.end() &&
+        p_data.find("rotz") != p_data.end();
 
     // there are two steps:
     // 1. create geometrical object at the site with correct scaling and orientation
@@ -1279,11 +1280,17 @@ void model::DEMModel::createParticlesFromFile() {
 
     // create geometrical object by scaling the reference particle geometry at the site
     auto p_geom = std::make_shared<geom::GeomObject>(*rep_geom_p); // copy constructor
-    // scale the geometry
-    p_geom->transform(site, scale, angle, axis);
+    // Rigid displacement t = site - c0 so composite/simple centroid lands at site when pivot is c0.
+    const util::Point c0 = p_geom->center();
+    const util::Point t = site - c0;
+    util::Point rotationPivot =
+        has_rotationPoint ? util::Point(p_data.value("rotx", 0.), p_data.value("roty", 0.),
+                                        p_data.value("rotz", 0.))
+                          : c0;
+    p_geom->transform(t, scale, angle, axis, &rotationPivot);
 
-    // create transform with location, orientation and scale
-    auto p_transform = geom::ParticleTransform(site, axis, angle, scale);
+    // Same map as geometry: y = p + s R(v-p) + t
+    auto p_transform = geom::ParticleTransform(t, axis, angle, scale, rotationPivot);
 
     // create particle
     auto p = new particle::BaseParticle(

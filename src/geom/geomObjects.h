@@ -45,6 +45,17 @@ namespace geom {
   };
 
   /*!
+   * Rigid similarity then displacement: \f$\mathbf y = \mathbf p + s\,\mathbf R(\mathbf x-\mathbf p) + \mathbf t\f$.
+   * Pivot \f$\mathbf p\f$ is @p rotationPoint if non-null, else @p pivotDefault (typically old center).
+   */
+  inline util::Point mapSimilarity(const util::Point &x, const util::Point &pivotDefault,
+      const util::Point &t, double scale, double angle, const util::Point &axis,
+      const util::Point *rotationPoint) {
+    const util::Point &p = (rotationPoint != nullptr) ? *rotationPoint : pivotDefault;
+    return p + util::rotate(x - p, angle, axis) * scale + t;
+  }
+
+  /*!
 * @brief Defines simple rectangle domain
 */
 struct BoxPartition {
@@ -291,14 +302,20 @@ public:
     virtual void print() const { print(0, 0); };
 
     /*!
-     * @brief Transforms the geometry by applying translation, scaling, and rotation
-     * @param center New center position
-     * @param scale Scale factor to apply
-     * @param angle Rotation angle in radians
+     * @brief Similarity about pivot \f$\mathbf p\f$ (default: old center `d_x`), then rigid
+     * displacement \f$\mathbf t\f$ = @p translation:
+     * \f$\mathbf y = \mathbf p + s\,\mathbf R(\mathbf x-\mathbf p) + \mathbf t\f$.
+     * When \f$\theta=0\f$ and \f$s=1\f$, \f$\mathbf y = \mathbf x + \mathbf t\f$ for every point and the center.
+     *
+     * @param translation Rigid translation vector \f$\mathbf t\f$ (added after rotate+scale about \f$\mathbf p\f$)
+     * @param scale Uniform scale factor
+     * @param angle Rotation angle (radians)
      * @param axis Axis of rotation
+     * @param rotationPoint If non-null, use as \f$\mathbf p\f$; if null, use old `d_x` as pivot.
      */
-    virtual void transform(const util::Point &center, const double &scale, 
-                         const double &angle, const util::Point &axis) {
+    virtual void transform(const util::Point &translation, const double &scale, 
+                         const double &angle, const util::Point &axis,
+                         const util::Point *rotationPoint = nullptr) {
       // Base implementation does nothing
     }
   };
@@ -336,9 +353,14 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
-      // do nothing
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis,
+                  const util::Point *rotationPoint) override {
+      (void)translation;
+      (void)scale;
+      (void)angle;
+      (void)axis;
+      (void)rotationPoint;
     }
 
     /*!
@@ -463,19 +485,18 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the length
       d_L *= scale;
       d_r *= scale;
 
+      const util::Point c0 = d_x;
       // Rotate and translate vertices
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -697,18 +718,16 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the radius
       d_r *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center and orientation
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
       d_a = util::rotate(d_a, angle, axis);
     }
 
@@ -937,19 +956,17 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the dimensions
       d_L *= scale;
       d_r *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -1189,20 +1206,18 @@ public:
 
 
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the dimensions
       d_Lx *= scale;
       d_Ly *= scale;
       d_r *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -1422,18 +1437,16 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the radius
       d_r *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center and orientation
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
       d_a = util::rotate(d_a, angle, axis);
     }
 
@@ -1675,19 +1688,17 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the dimensions
       d_r *= scale;
       d_w *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center and orientation
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
       d_a = util::rotate(d_a, angle, axis);
     }  
 
@@ -1948,19 +1959,17 @@ public:
     }
 
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the dimensions
       d_L *= scale;
       d_r *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -2244,21 +2253,19 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the dimensions
       d_Lx *= scale;
       d_Ly *= scale;
       d_Lz *= scale;
       d_r *= scale;
 
-      // Rotate and translate vertices
+      const util::Point c0 = d_x;
       for (auto &v : d_vertices) {
-        v = util::rotate(v - d_x, angle, axis) * scale + center;
+        v = mapSimilarity(v, c0, translation, scale, angle, axis, rotationPoint);
       }
-
-      // Update center
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -2444,13 +2451,11 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
-      // Scale the radius
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
+      const util::Point c0 = d_x;
       d_r *= scale;
-
-      // Update center (rotation doesn't affect circle)
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -2632,12 +2637,14 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, const double &angle,
-                   const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, const double &angle,
+                   const util::Point &axis, const util::Point *rotationPoint) override {
+      const util::Point c0 = d_x;
+      // Assumption: axis of rotation is the z-axis; d_theta is in-plane on top of world map
       d_a *= scale;
       d_b *= scale;
       d_theta += angle;
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     double volume() const override;
@@ -2726,13 +2733,11 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
-      // Scale the radius
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
+      const util::Point c0 = d_x;
       d_r *= scale;
-
-      // Update center (rotation doesn't affect sphere)
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!
@@ -2856,7 +2861,7 @@ public:
   };
 
   /*!
-   * @brief Ellipsoid: center \f$\mathbf c\f$, semi-axes \f$r_1,r_2,r_3\f$ in a body frame
+  * @brief Ellipsoid: center \f$\mathbf c\f$, semi-axes \f$r_1,r_2,r_3\f$ in a body frame
    * rotated from world by axis–angle \f$(\hat{\mathbf a},\theta)\f$ (Rodrigues).
    * Axis-aligned case: \f$\theta=0\f$ (axis ignored).
    */
@@ -2939,13 +2944,8 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, const double &angle,
-                   const util::Point &axis) override {
-      d_a *= scale;
-      d_b *= scale;
-      d_c *= scale;
-      d_x = center;
-    }
+    void transform(const util::Point &translation, const double &scale, const double &angle,
+                   const util::Point &axis, const util::Point *rotationPoint) override;
 
     double volume() const override;
     util::Point center() const override;
@@ -3019,7 +3019,7 @@ public:
         d_xa(xa / xa.length()),
         d_r(r),
         d_l(l),
-        d_x(x_begin + 0.5 * l * xa) {
+        d_x(x_begin + 0.5 * l * (xa / xa.length())) {
     };
 
     /*!
@@ -3038,7 +3038,7 @@ public:
               d_xa(xa / xa.length()),
               d_r(r),
               d_l(xa.length()),
-              d_x(x_begin + 0.5 * xa.length() * xa) {};
+              d_x(x_begin + 0.5 * xa) {};
 
     /*!
      * @brief Copy constructor
@@ -3074,18 +3074,16 @@ public:
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis, const util::Point *rotationPoint) override {
       // Scale the dimensions
       d_r *= scale;
       d_l *= scale;
 
-      // Rotate and translate points
-      d_xBegin = util::rotate(d_xBegin - d_x, angle, axis) * scale + center;
+      const util::Point c0 = d_x;
+      d_xBegin = mapSimilarity(d_xBegin, c0, translation, scale, angle, axis, rotationPoint);
       d_xa = util::rotate(d_xa, angle, axis);
-
-      // Update center
-      d_x = center;
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
 
     /*!

@@ -111,11 +111,30 @@ namespace geom {
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
-      // Transform both inner and outer objects
-      if (d_inObj_p) d_inObj_p->transform(center, scale, angle, axis);
-      if (d_outObj_p) d_outObj_p->transform(center, scale, angle, axis);
+    /*!
+     * @copydoc GeomObject::transform
+     * If @p rotationPoint is null and both inner and outer exist, pivot is `center()` (composite
+     * centroid of the annular solid). If only one child is present, that child’s `center()` is used.
+     */
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis,
+                  const util::Point *rotationPoint) override {
+      const util::Point *pivot = rotationPoint;
+      util::Point pivotStore;
+      if (pivot == nullptr) {
+        if (d_inObj_p && d_outObj_p) {
+          pivotStore = center();
+          pivot = &pivotStore;
+        } else if (d_inObj_p) {
+          pivotStore = d_inObj_p->center();
+          pivot = &pivotStore;
+        } else if (d_outObj_p) {
+          pivotStore = d_outObj_p->center();
+          pivot = &pivotStore;
+        }
+      }
+      if (d_inObj_p) d_inObj_p->transform(translation, scale, angle, axis, pivot);
+      if (d_outObj_p) d_outObj_p->transform(translation, scale, angle, axis, pivot);
     }
 
     /*!
@@ -359,11 +378,20 @@ namespace geom {
       return *this;
     }
 
-    void transform(const util::Point &center, const double &scale, 
-                  const double &angle, const util::Point &axis) override {
-      // Transform all component objects
+    /*!
+     * If @p rotationPoint is null, pivot is `center()` (signed-volume centroid of the composite).
+     */
+    void transform(const util::Point &translation, const double &scale, 
+                  const double &angle, const util::Point &axis,
+                  const util::Point *rotationPoint) override {
+      const util::Point *pivot = rotationPoint;
+      util::Point pivotStore;
+      if (pivot == nullptr) {
+        pivotStore = center();
+        pivot = &pivotStore;
+      }
       for (auto &obj : d_obj) {
-        if (obj) obj->transform(center, scale, angle, axis);
+        if (obj) obj->transform(translation, scale, angle, axis, pivot);
       }
     }
 
