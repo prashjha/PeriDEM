@@ -7,6 +7,7 @@
 
 
 #include "geomObjects.h"
+#include "openRectChannel2D.h"
 #include "geomObjectsUtil.h"
 #include "complexGeomObjects.h"
 #include "geomUtilFunctions.h"

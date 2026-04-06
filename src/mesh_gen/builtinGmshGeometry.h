@@ -25,6 +25,8 @@ namespace mesh_gen {
  * New shapes: add a branch here or in helpers (e.g. primitiveOccMesh.cpp), and register the name in
  * geom::acceptable_geometries / createGeomObject. AnnulusGeomObject uses d_name annulus_object;
  * meshGenerator also allows that name (deck types are circle_minus_circle / rectangle_minus_rectangle / …).
+ * open_rect_channel_2d: U-channel polygon (geom::OpenRectChannel2D) + optional physical groups via
+ * openBoundaryWalls2D.
  */
 void buildGmshGeometryInCurrentModel(const geom::GeomObject &geom, double h);
 

@@ -11,6 +11,7 @@
 #include "mesh_gen/meshGenerator.h"
 #include "geom/complexGeomObjects.h"
 #include "geom/geomObjects.h"
+#include "geom/openRectChannel2D.h"
 #include "inp/meshDeck.h"
 #include "inp/modelDeck.h"
 #include "mesh/mesh.h"
@@ -392,6 +393,50 @@ bool testAnnulusSphere3DMesh() {
 }
 
 /**
+ * @brief 2D open rectangular channel (U-shape, open +y): geo polygon + optional physical groups.
+ */
+bool testOpenRectChannel2DMesh() {
+  util::io::log("Testing open_rect_channel_2d (U-channel / 2D triangles)...\n");
+
+  const double meshSize = 0.00015;
+  try {
+    auto ch = std::make_shared<geom::OpenRectChannel2D>(0.0, 0.0, 0.002, 0.002, 0.0004, 0.0);
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "open_channel2d_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(ch, meshSize, "", false, false, &mesh, &meshDeck,
+                                              &modelDeck);
+
+    const auto box = ch->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: open channel mesh node ({},{},{}) outside geometry box (tol {}).\n", p.d_x, p.d_y,
+            p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("open_rect_channel_2d mesh generation passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in open channel mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
  * @brief Main test function
  */
 int main() {
@@ -437,6 +482,11 @@ int main() {
 
   if (!testAnnulusSphere3DMesh()) {
     util::io::log("3D sphere annulus mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
+  if (!testOpenRectChannel2DMesh()) {
+    util::io::log("open_rect_channel_2d mesh tests failed.\n");
     allTestsPassed = false;
   }
 

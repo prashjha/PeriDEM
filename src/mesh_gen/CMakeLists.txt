@@ -12,6 +12,8 @@ set(MESH_GEN_SOURCES
     builtinGmshGeometry.cpp
     gmshMeshPipeline.cpp
     meshGenerator.cpp
+    openBoundaryWalls2D.cpp
+    openBoundaryWalls3D.cpp
     primitiveOccMesh.cpp
 )
 

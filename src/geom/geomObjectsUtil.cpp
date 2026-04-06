@@ -7,6 +7,7 @@
 
 #include "geomObjects.h"
 #include "complexGeomObjects.h"
+#include "openRectChannel2D.h"
 #include "geomObjectsUtil.h"
 #include <iostream>
 #include "geomUtilFunctions.h"
@@ -79,6 +80,8 @@ namespace geom {
         return {5};
       else if (geom_type == "sphere_minus_sphere")
         return {5};
+      else if (geom_type == "open_rect_channel_2d")
+        return {6};
       else {
         std::cerr << "Error: Invalid geometry type: " << geom_type << std::endl;
         exit(1);
@@ -138,7 +141,8 @@ namespace geom {
                                                  "rectangle_minus_rectangle",
                                                  "cuboid_minus_cuboid",
                                                  "circle_minus_circle",
-                                                 "sphere_minus_sphere"};
+                                                 "sphere_minus_sphere",
+                                                 "open_rect_channel_2d"};
 
       bool check_passed; // true means check passed
       if (type != "complex")
@@ -546,6 +550,21 @@ namespace geom {
           exit(1);
         }
       } // sphere_minus_sphere
+      else if (type == "open_rect_channel_2d") {
+
+        if (check_passed) {
+          obj = std::make_shared<geom::OpenRectChannel2D>(
+                  params[0], params[1], params[2], params[3], params[4], params[5]);
+        } else {
+          std::cerr << "Error: need " << 6
+                    << " parameters for open_rect_channel_2d (x0,y0,x1,y1,t,z). "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // open_rect_channel_2d
       else if (type == "complex") {
 
         if (check_passed) {
@@ -1009,6 +1028,20 @@ namespace geom {
           }
         }
       } // sphere_minus_sphere
+      else if (geom_type == "open_rect_channel_2d") {
+
+        num_params_needed = {6};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 6) {
+              obj = std::make_shared<geom::OpenRectChannel2D>(
+                      params[0], params[1], params[2], params[3], params[4], params[5]);
+              return;
+            }
+          }
+        }
+      } // open_rect_channel_2d
       else if (geom_type == "complex") {
 
         /*
@@ -1211,6 +1244,8 @@ namespace geom {
       return new Ellipsoid(*dynamic_cast<const Ellipsoid *>(obj));
     if (type == "annulus_object")
       return new AnnulusGeomObject(*dynamic_cast<const AnnulusGeomObject *>(obj));
+    if (type == "open_rect_channel_2d")
+      return new OpenRectChannel2D(*dynamic_cast<const OpenRectChannel2D *>(obj));
 
     std::cerr << "Error: Unsupported object type '" << type << "' in createGeomDeepCopy\n";
     exit(1);

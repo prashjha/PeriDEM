@@ -11,10 +11,13 @@
 #include "builtinGmshGeometry.h"
 #include "annulusMesh2D.h"
 #include "annulusMesh3D.h"
+#include "openBoundaryWalls2D.h"
 #include "primitiveOccMesh.h"
 #include "geom/complexGeomObjects.h"
 #include "geom/geomObjects.h"
+#include "geom/openRectChannel2D.h"
 #include "util/point.h"
+#include <cmath>
 #include <gmsh.h>
 #include <stdexcept>
 #include <vector>
@@ -40,6 +43,16 @@ void meshPolygon2DGeoFromVertices(const std::vector<util::Point> &verts, double 
   int cl = gmsh::model::geo::addCurveLoop(lines);
   gmsh::model::geo::addPlaneSurface({cl});
   gmsh::model::geo::synchronize();
+}
+
+void buildOpenRectChannel2DGeo(const geom::OpenRectChannel2D &g, double h) {
+  meshPolygon2DGeoFromVertices(g.d_vertices, h);
+  std::vector<std::pair<int, int>> ents;
+  gmsh::model::getEntities(ents, 2);
+  if (!ents.empty()) {
+    const double tol = std::max(1.0e-9, 1.0e-6 * std::max(g.d_y1 - g.d_y0, g.d_x1 - g.d_x0));
+    physicalGroupsWallOpenFromY2D(ents.back().second, g.d_y1, tol);
+  }
 }
 
 /** Closed boundary vertex order for Drum2D mesh (matches prior param-based path). */
@@ -116,6 +129,8 @@ void buildGmshGeometryInCurrentModel(const geom::GeomObject &g, double h) {
   if (n == "drum2d")
     return meshPolygon2DGeoFromVertices(drum2dPolygonBoundary(static_cast<const geom::Drum2D &>(g)),
                                         h);
+  if (n == "open_rect_channel_2d")
+    return buildOpenRectChannel2DGeo(static_cast<const geom::OpenRectChannel2D &>(g), h);
 
   throw std::runtime_error("buildGmshGeometryInCurrentModel: no Gmsh recipe for geometry \"" + n +
                            "\".");
