@@ -10,8 +10,9 @@
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
-#include <vector>
 #include <set>
+#include <stdexcept>
+#include <vector>
 
 namespace {
   std::string printErrMsg(const std::string &geom_type,

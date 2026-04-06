@@ -22,8 +22,8 @@ namespace mesh_gen {
 /**
  * Build OCC/geo entities in the current Gmsh model from a concrete geom::GeomObject.
  *
- * New shapes: add a branch in builtinGmshGeometry.cpp (and register the name in
- * geom::acceptable_geometries / createGeomObject).
+ * New shapes: add a branch here or in helpers (e.g. primitiveOccMesh.cpp), and register the name in
+ * geom::acceptable_geometries / createGeomObject.
  */
 void buildGmshGeometryInCurrentModel(const geom::GeomObject &geom, double h);
 

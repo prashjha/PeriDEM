@@ -10,6 +10,9 @@
 
 #include "mesh_gen/meshGenerator.h"
 #include "geom/geomObjects.h"
+#include "inp/meshDeck.h"
+#include "inp/modelDeck.h"
+#include "mesh/mesh.h"
 #include "util/io.h"
 #include "util/point.h"
 #include <filesystem>
@@ -56,6 +59,55 @@ bool testCircleMesh() {
 }
 
 /**
+ * @brief Cylinder mesh: tetra path + every node inside the axis-aligned bounding box from
+ *        geom::Cylinder::box() (with tolerance).
+ */
+bool testCylinderMesh() {
+  util::io::log("Testing cylinder mesh generation (OCC cylinder / 3D tets)...\n");
+
+  const double r = 0.001;
+  const double L = 0.002;
+  const double meshSize = r / 5.0;
+
+  try {
+    auto cyl = std::make_shared<geom::Cylinder>(
+        r, util::Point(0.0, 0.0, 0.0), util::Point(0.0, 0.0, L));
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "cylinder_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(cyl, meshSize, "", false, false, &mesh, &meshDeck,
+                                                &modelDeck);
+
+    const auto box = cyl->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: mesh node ({},{},{}) outside Cylinder::box() axis-aligned bounds (tol {}).\n",
+            p.d_x, p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("Cylinder mesh generation and bounding-box check passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in cylinder mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
  * @brief Main test function
  */
 int main() {
@@ -69,7 +121,10 @@ int main() {
     allTestsPassed = false;
   }
 
-  // Add more tests here as we add more geometry types
+  if (!testCylinderMesh()) {
+    util::io::log("Cylinder mesh tests failed.\n");
+    allTestsPassed = false;
+  }
 
   if (allTestsPassed) {
     util::io::log("All mesh generator tests passed.\n");

@@ -10,6 +10,7 @@ set(MESH_GEN_SOURCES
     builtinGmshGeometry.cpp
     gmshMeshPipeline.cpp
     meshGenerator.cpp
+    primitiveOccMesh.cpp
 )
 
 add_library(MeshGen ${MESH_GEN_SOURCES})

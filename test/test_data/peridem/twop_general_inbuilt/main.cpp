@@ -72,11 +72,15 @@ std::vector<double> geomParamsFor(const std::string &geomName, const util::Point
     return {2.0 * s, c.d_x, c.d_y, c.d_z};
   if (geomName == "cuboid")
     return {c.d_x - s, c.d_y - 0.75 * s, c.d_z - 0.6 * s, c.d_x + s, c.d_y + 0.75 * s, c.d_z + 0.6 * s};
+  if (geomName == "cylinder") {
+    // radius, center of beginning cross-section, vector from beginning to end of cylinder
+    return {0.5*s, c.d_x, c.d_y - s, c.d_z, 0, 2*s, 0};
+  }
   throw std::runtime_error("geomParamsFor: unknown geometry " + geomName);
 }
 
 bool is3DGeometry(const std::string &g) {
-  return g == "sphere" || g == "cube" || g == "cuboid";
+  return g == "sphere" || g == "cube" || g == "cuboid" || g == "cylinder";
 }
 
 bool isAcceptableGeometryName(const std::string &g) {

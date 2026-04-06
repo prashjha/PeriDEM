@@ -25,6 +25,7 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
                                      const std::string &filenameStem, bool vtk_out,
                                      bool write_mesh_file, mesh::Mesh *out_mesh,
                                      const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck) {
+  // Geometry is only `geomObj`; decks supply mesh/model metadata for `out_mesh` fill — no parallel param arrays.
 
   if (!geomObj)
     throw std::runtime_error("generateBuiltinParticleMeshGmsh: GeomObject pointer is null.");

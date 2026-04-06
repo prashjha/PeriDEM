@@ -132,7 +132,8 @@ const std::vector<std::string> acceptable_geometries = {"circle",
                                                     "drum2d",
                                                     "sphere",
                                                     "cube",
-                                                    "cuboid"};
+                                                    "cuboid",
+                                                    "cylinder"};
 
 
 
@@ -193,6 +194,8 @@ isNumberOfParamForComplexGeometryValid(size_t n, std::string geom_type,
 
 /*!
 * @brief Create geometrical object from the given data
+*
+* Parameter ordering matches `GeomData` / `getNumParamsRequired` (see struct `GeomData` above).
 *
 * @param type Type of object
 * @param params Vector of parameters

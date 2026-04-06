@@ -380,7 +380,7 @@ namespace geom {
       else if (type == "cylinder") {
 
         if (check_passed) {
-          // if check is passed
+          // Seven params: r, center of beginning cross-section, vector from beginning to end of cylinder
           obj = std::make_shared<geom::Cylinder>(
                   params[0], util::Point(params[1], params[2], params[3]),
                   util::Point(params[4], params[5], params[6]));
@@ -732,12 +732,14 @@ namespace geom {
         for (auto n: num_params_needed) {
           if (params.size() == n) {
             if (n == 7) {
+              // r, center begin, axis vector (no normalization as length of axis is length of cylinder)
               obj = std::make_shared<geom::Cylinder>(
                       params[0],
                       util::Point(params[1], params[2], params[3]),
                       util::Point(params[4], params[5], params[6]));
               return;
             } else if (n == 8) {
+              // r, length, center begin, unit axis vector
               obj = std::make_shared<geom::Cylinder>(
                       params[0], params[1],
                       util::Point(params[2], params[3], params[4]),

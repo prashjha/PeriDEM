@@ -9,6 +9,7 @@
  */
 
 #include "builtinGmshGeometry.h"
+#include "primitiveOccMesh.h"
 #include "geom/geomObjects.h"
 #include "util/point.h"
 #include <gmsh.h>
@@ -85,6 +86,8 @@ void buildGmshGeometryInCurrentModel(const geom::GeomObject &g, double h) {
     return buildOccBoxFromAabb(g);
   if (n == "cuboid")
     return buildOccBoxFromAabb(g);
+  if (n == "cylinder")
+    return buildCylinderOcc(static_cast<const geom::Cylinder &>(g));
 
   if (n == "square")
     return meshPolygon2DGeoFromVertices(static_cast<const geom::Square &>(g).d_vertices, h);
