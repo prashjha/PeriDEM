@@ -9,6 +9,7 @@
  */
 
 #include "mesh_gen/meshGenerator.h"
+#include "geom/complexGeomObjects.h"
 #include "geom/geomObjects.h"
 #include "inp/meshDeck.h"
 #include "inp/modelDeck.h"
@@ -206,6 +207,191 @@ bool testEllipsoidMesh() {
 }
 
 /**
+ * @brief 2D rectangle annulus: OCC cut + triangles; nodes inside outer rectangle box.
+ */
+bool testAnnulusRectangle2DMesh() {
+  util::io::log("Testing 2D rectangle−rectangle annulus (OCC cut / 2D triangles)...\n");
+
+  const double meshSize = 0.00015;
+  try {
+    auto *rin = new geom::Rectangle(util::Point(0.0005, 0.0005, 0.0), util::Point(0.0015, 0.0015, 0.0));
+    auto *rout = new geom::Rectangle(util::Point(0.0, 0.0, 0.0), util::Point(0.002, 0.002, 0.0));
+    auto ann = std::make_shared<geom::AnnulusGeomObject>(rin, rout);
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "annulus2d_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
+                                              &modelDeck);
+
+    const auto box = rout->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: annulus 2D mesh node ({},{},{}) outside outer rectangle box (tol {}).\n", p.d_x,
+            p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("2D annulus mesh generation passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in 2D annulus mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
+ * @brief 3D cuboid shell: OCC cut + tets; nodes inside outer cuboid box.
+ */
+bool testAnnulusCuboid3DMesh() {
+  util::io::log("Testing 3D cuboid−cuboid annulus (OCC cut / 3D tets)...\n");
+
+  const double meshSize = 0.00015;
+  try {
+    auto *cin = new geom::Cuboid(util::Point(0.0005, 0.0005, 0.0005),
+                                 util::Point(0.0015, 0.0015, 0.0015));
+    auto *cout = new geom::Cuboid(util::Point(0.0, 0.0, 0.0), util::Point(0.002, 0.002, 0.002));
+    auto ann = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "annulus3d_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
+                                            &modelDeck);
+
+    const auto box = cout->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: annulus 3D mesh node ({},{},{}) outside outer cuboid box (tol {}).\n", p.d_x,
+            p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("3D annulus mesh generation passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in 3D annulus mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
+ * @brief 2D circular annulus: OCC disk − disk.
+ */
+bool testAnnulusCircle2DMesh() {
+  util::io::log("Testing 2D circle−circle annulus (OCC disk cut / 2D triangles)...\n");
+
+  const double meshSize = 0.00015;
+  try {
+    auto *cin = new geom::Circle(0.00035, util::Point(0.0, 0.0, 0.0));
+    auto *cout = new geom::Circle(0.001, util::Point(0.0, 0.0, 0.0));
+    auto ann = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "annulus_circle2d_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(2, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
+                                              &modelDeck);
+
+    const auto box = cout->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: circle annulus mesh node ({},{},{}) outside outer circle AABB (tol {}).\n", p.d_x,
+            p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("2D circle annulus mesh generation passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in 2D circle annulus mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
+ * @brief 3D spherical shell: OCC sphere − sphere.
+ */
+bool testAnnulusSphere3DMesh() {
+  util::io::log("Testing 3D sphere−sphere annulus (OCC sphere cut / 3D tets)...\n");
+
+  const double meshSize = 0.00015;
+  try {
+    auto *cin = new geom::Sphere(0.00035, util::Point(0.0, 0.0, 0.0));
+    auto *cout = new geom::Sphere(0.001, util::Point(0.0, 0.0, 0.0));
+    auto ann = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+
+    inp::MeshDeck meshDeck;
+    meshDeck.d_h = meshSize;
+    meshDeck.d_filename = "annulus_sphere3d_test.msh";
+    meshDeck.d_computeMeshSize = false;
+
+    const auto modelJson =
+        inp::ModelDeck::getExampleJson(3, 0.001, 10, "finite_difference", "central_difference", true, 2,
+                                       "Multi_Particle", 0);
+    inp::ModelDeck modelDeck(modelJson);
+
+    mesh::Mesh mesh;
+    mesh_gen::generateBuiltinParticleMeshGmsh(ann, meshSize, "", false, false, &mesh, &meshDeck,
+                                              &modelDeck);
+
+    const auto box = cout->box();
+    const double tol = 4.0 * meshSize;
+    for (const auto &p : mesh.getNodes()) {
+      if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
+          p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
+        util::io::log(std::format(
+            "Error: sphere annulus mesh node ({},{},{}) outside outer sphere AABB (tol {}).\n", p.d_x,
+            p.d_y, p.d_z, tol));
+        return false;
+      }
+    }
+
+    util::io::log("3D sphere annulus mesh generation passed.\n");
+    return true;
+  } catch (const std::exception &e) {
+    util::io::log(std::format("Error in 3D sphere annulus mesh test: {}\n", e.what()));
+    return false;
+  }
+}
+
+/**
  * @brief Main test function
  */
 int main() {
@@ -231,6 +417,26 @@ int main() {
 
   if (!testEllipsoidMesh()) {
     util::io::log("Ellipsoid mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
+  if (!testAnnulusRectangle2DMesh()) {
+    util::io::log("2D annulus mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
+  if (!testAnnulusCuboid3DMesh()) {
+    util::io::log("3D annulus mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
+  if (!testAnnulusCircle2DMesh()) {
+    util::io::log("2D circle annulus mesh tests failed.\n");
+    allTestsPassed = false;
+  }
+
+  if (!testAnnulusSphere3DMesh()) {
+    util::io::log("3D sphere annulus mesh tests failed.\n");
     allTestsPassed = false;
   }
 

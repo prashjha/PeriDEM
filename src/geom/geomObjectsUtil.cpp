@@ -8,13 +8,15 @@
 #include "geomObjects.h"
 #include "complexGeomObjects.h"
 #include "geomObjectsUtil.h"
+#include <iostream>
 #include "geomUtilFunctions.h"
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
 #include "util/json.h"
-#include <vector>
 #include <set>
+#include <stdexcept>
+#include <vector>
 
 namespace {
   std::string printErrMsg(const std::string &geom_type,
@@ -73,6 +75,10 @@ namespace geom {
         return {12};
       else if (geom_type == "cuboid_minus_cuboid")
         return {12};
+      else if (geom_type == "circle_minus_circle")
+        return {5};
+      else if (geom_type == "sphere_minus_sphere")
+        return {5};
       else {
         std::cerr << "Error: Invalid geometry type: " << geom_type << std::endl;
         exit(1);
@@ -130,7 +136,9 @@ namespace geom {
       // sufficient regardless of perform_check value
       std::vector<std::string> no_default_obj = {"cylinder", "complex",
                                                  "rectangle_minus_rectangle",
-                                                 "cuboid_minus_cuboid"};
+                                                 "cuboid_minus_cuboid",
+                                                 "circle_minus_circle",
+                                                 "sphere_minus_sphere"};
 
       bool check_passed; // true means check passed
       if (type != "complex")
@@ -490,6 +498,54 @@ namespace geom {
           exit(1);
         }// if else check_failed
       }// if cuboid_minus_cuboid
+      else if (type == "circle_minus_circle") {
+
+        if (check_passed) {
+          const double cx = params[0];
+          const double cy = params[1];
+          const double cz = params[2];
+          const double r_outer = params[3];
+          const double r_inner = params[4];
+          if (r_inner <= 0. || r_outer <= r_inner)
+            throw std::runtime_error(
+                    "circle_minus_circle: require 0 < r_inner < r_outer (params: cx,cy,cz,r_outer,r_inner).");
+          auto *cin = new geom::Circle(r_inner, util::Point(cx, cy, cz));
+          auto *cout = new geom::Circle(r_outer, util::Point(cx, cy, cz));
+          obj = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+        } else {
+          std::cerr << "Error: need " << 5
+                    << " parameters for creating circle_minus_circle (cx, cy, cz, r_outer, r_inner). "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // circle_minus_circle
+      else if (type == "sphere_minus_sphere") {
+
+        if (check_passed) {
+          const double cx = params[0];
+          const double cy = params[1];
+          const double cz = params[2];
+          const double r_outer = params[3];
+          const double r_inner = params[4];
+          if (r_inner <= 0. || r_outer <= r_inner)
+            throw std::runtime_error(
+                    "sphere_minus_sphere: require 0 < r_inner < r_outer (params: cx,cy,cz,r_outer,r_inner).");
+          auto *cin = new geom::Sphere(r_inner, util::Point(cx, cy, cz));
+          auto *cout = new geom::Sphere(r_outer, util::Point(cx, cy, cz));
+          obj = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+        } else {
+          std::cerr << "Error: need " << 5
+                    << " parameters for creating sphere_minus_sphere (cx, cy, cz, r_outer, r_inner). "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // sphere_minus_sphere
       else if (type == "complex") {
 
         if (check_passed) {
@@ -906,7 +962,53 @@ namespace geom {
             }
           } // if params.size() == n
         } // loop over n
-      } // rectangle_minus_rectangle
+      } // cuboid_minus_cuboid
+      else if (geom_type == "circle_minus_circle") {
+
+        num_params_needed = {5};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 5) {
+              const double cx = params[0];
+              const double cy = params[1];
+              const double cz = params[2];
+              const double r_outer = params[3];
+              const double r_inner = params[4];
+              if (r_inner <= 0. || r_outer <= r_inner)
+                throw std::runtime_error(
+                        "circle_minus_circle: require 0 < r_inner < r_outer (cx,cy,cz,r_outer,r_inner).");
+              auto *cin = new geom::Circle(r_inner, util::Point(cx, cy, cz));
+              auto *cout = new geom::Circle(r_outer, util::Point(cx, cy, cz));
+              obj = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+              return;
+            }
+          }
+        }
+      } // circle_minus_circle
+      else if (geom_type == "sphere_minus_sphere") {
+
+        num_params_needed = {5};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 5) {
+              const double cx = params[0];
+              const double cy = params[1];
+              const double cz = params[2];
+              const double r_outer = params[3];
+              const double r_inner = params[4];
+              if (r_inner <= 0. || r_outer <= r_inner)
+                throw std::runtime_error(
+                        "sphere_minus_sphere: require 0 < r_inner < r_outer (cx,cy,cz,r_outer,r_inner).");
+              auto *cin = new geom::Sphere(r_inner, util::Point(cx, cy, cz));
+              auto *cout = new geom::Sphere(r_outer, util::Point(cx, cy, cz));
+              obj = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
+              return;
+            }
+          }
+        }
+      } // sphere_minus_sphere
       else if (geom_type == "complex") {
 
         /*
@@ -1073,4 +1175,45 @@ namespace geom {
     for (auto a: j.at("Parameters"))
       geomData.d_geomParams.push_back(a);
   }
+
+  GeomObject* createGeomDeepCopy(GeomObject* obj) {
+    if (!obj)
+      return nullptr;
+
+    const std::string &type = obj->d_name;
+    if (type == "null")
+      return new NullGeomObject(*dynamic_cast<const NullGeomObject *>(obj));
+    if (type == "line")
+      return new Line(*dynamic_cast<const Line *>(obj));
+    if (type == "triangle")
+      return new Triangle(*dynamic_cast<const Triangle *>(obj));
+    if (type == "square")
+      return new Square(*dynamic_cast<const Square *>(obj));
+    if (type == "rectangle")
+      return new Rectangle(*dynamic_cast<const Rectangle *>(obj));
+    if (type == "hexagon")
+      return new Hexagon(*dynamic_cast<const Hexagon *>(obj));
+    if (type == "drum2d")
+      return new Drum2D(*dynamic_cast<const Drum2D *>(obj));
+    if (type == "cube")
+      return new Cube(*dynamic_cast<const Cube *>(obj));
+    if (type == "cuboid")
+      return new Cuboid(*dynamic_cast<const Cuboid *>(obj));
+    if (type == "circle")
+      return new Circle(*dynamic_cast<const Circle *>(obj));
+    if (type == "sphere")
+      return new Sphere(*dynamic_cast<const Sphere *>(obj));
+    if (type == "cylinder")
+      return new Cylinder(*dynamic_cast<const Cylinder *>(obj));
+    if (type == "ellipse")
+      return new Ellipse(*dynamic_cast<const Ellipse *>(obj));
+    if (type == "ellipsoid")
+      return new Ellipsoid(*dynamic_cast<const Ellipsoid *>(obj));
+    if (type == "annulus_object")
+      return new AnnulusGeomObject(*dynamic_cast<const AnnulusGeomObject *>(obj));
+
+    std::cerr << "Error: Unsupported object type '" << type << "' in createGeomDeepCopy\n";
+    exit(1);
+  }
+
 }

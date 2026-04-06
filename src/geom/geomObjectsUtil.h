@@ -135,7 +135,11 @@ const std::vector<std::string> acceptable_geometries = {"circle",
                                                     "ellipsoid",
                                                     "cube",
                                                     "cuboid",
-                                                    "cylinder"};
+                                                    "cylinder",
+                                                    "circle_minus_circle",
+                                                    "sphere_minus_sphere",
+                                                    "rectangle_minus_rectangle",
+                                                    "cuboid_minus_cuboid"};
 
 
 
@@ -234,43 +238,6 @@ void writeGeometry(json &j, const geom::GeomData &geomData);
  * @param obj Pointer to the object to copy
  * @return Pointer to the newly created copy
  */
-inline GeomObject* createGeomDeepCopy(GeomObject* obj) {
-  if (!obj) return nullptr;
-
-  const std::string& type = obj->d_name;
-  if (type == "null")
-    return new NullGeomObject(*dynamic_cast<const NullGeomObject*>(obj));
-  else if (type == "line")
-    return new Line(*dynamic_cast<const Line*>(obj));
-  else if (type == "triangle")
-    return new Triangle(*dynamic_cast<const Triangle*>(obj));
-  else if (type == "square")
-    return new Square(*dynamic_cast<const Square*>(obj));
-  else if (type == "rectangle")
-    return new Rectangle(*dynamic_cast<const Rectangle*>(obj));
-  else if (type == "hexagon")
-    return new Hexagon(*dynamic_cast<const Hexagon*>(obj));
-  else if (type == "drum2d")
-    return new Drum2D(*dynamic_cast<const Drum2D*>(obj));
-  else if (type == "cube")
-    return new Cube(*dynamic_cast<const Cube*>(obj));
-  else if (type == "cuboid")
-    return new Cuboid(*dynamic_cast<const Cuboid*>(obj));
-  else if (type == "circle")
-    return new Circle(*dynamic_cast<const Circle*>(obj));
-  else if (type == "sphere")
-    return new Sphere(*dynamic_cast<const Sphere*>(obj));
-  else if (type == "cylinder")
-    return new Cylinder(*dynamic_cast<const Cylinder*>(obj));
-  else if (type == "ellipse")
-    return new Ellipse(*dynamic_cast<const Ellipse*>(obj));
-  else if (type == "ellipsoid")
-    return new Ellipsoid(*dynamic_cast<const Ellipsoid*>(obj));
-  else {
-    std::cerr << "Error: Unsupported object type '" << type 
-              << "' in createGeomDeepCopy\n";
-    exit(1);
-  }
-}
+GeomObject* createGeomDeepCopy(GeomObject* obj);
 
 } // namespace geom

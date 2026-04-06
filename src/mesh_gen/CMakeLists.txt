@@ -7,6 +7,8 @@
 # file LICENSE)
 
 set(MESH_GEN_SOURCES
+    annulusMesh2D.cpp
+    annulusMesh3D.cpp
     builtinGmshGeometry.cpp
     gmshMeshPipeline.cpp
     meshGenerator.cpp

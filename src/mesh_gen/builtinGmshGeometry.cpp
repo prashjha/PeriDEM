@@ -9,7 +9,10 @@
  */
 
 #include "builtinGmshGeometry.h"
+#include "annulusMesh2D.h"
+#include "annulusMesh3D.h"
 #include "primitiveOccMesh.h"
+#include "geom/complexGeomObjects.h"
 #include "geom/geomObjects.h"
 #include "util/point.h"
 #include <gmsh.h>
@@ -77,6 +80,15 @@ void buildOccBoxFromAabb(const geom::GeomObject &g) {
 
 void buildGmshGeometryInCurrentModel(const geom::GeomObject &g, double h) {
   const std::string &n = g.d_name;
+
+  if (n == "annulus_object") {
+    const auto &ag = static_cast<const geom::AnnulusGeomObject &>(g);
+    if (ag.d_dim == 2)
+      return buildAnnulus2DInCurrentModel(ag, h);
+    if (ag.d_dim == 3)
+      return buildAnnulus3DInCurrentModel(ag, h);
+    throw std::runtime_error("buildGmshGeometryInCurrentModel: annulus_object has invalid d_dim.");
+  }
 
   if (n == "circle")
     return buildCircleOcc(static_cast<const geom::Circle &>(g), h);

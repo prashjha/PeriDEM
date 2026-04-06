@@ -80,11 +80,35 @@ std::vector<double> geomParamsFor(const std::string &geomName, const util::Point
     return {1.2 * s, 0.85 * s, 0.25, c.d_x, c.d_y, c.d_z};
   if (geomName == "ellipsoid")
     return {2 * s, 1 * s, 1.5 * s, c.d_x, c.d_y, c.d_z};
+  // Concentric annuli: cx, cy, cz, r_outer, r_inner (0 < r_inner < r_outer)
+  if (geomName == "circle_minus_circle")
+    return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
+  if (geomName == "sphere_minus_sphere")
+    return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
+  // 12 params: inner (x1,y1,z1)–(x2,y2,z2), then outer corners — matches createGeomObject order.
+  if (geomName == "rectangle_minus_rectangle") {
+    const double ri = 0.35 * s;
+    const double lo_ix = c.d_x - ri, lo_iy = c.d_y - ri, lo_iz = c.d_z;
+    const double hi_ix = c.d_x + ri, hi_iy = c.d_y + ri, hi_iz = c.d_z;
+    const double lo_ox = c.d_x - s, lo_oy = c.d_y - s, lo_oz = c.d_z;
+    const double hi_ox = c.d_x + s, hi_oy = c.d_y + s, hi_oz = c.d_z;
+    return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
+  }
+  if (geomName == "cuboid_minus_cuboid") {
+    const double sx = s, sy = 0.75 * s, sz = 0.6 * s;
+    const double f = 0.35;
+    const double lo_ix = c.d_x - f * sx, lo_iy = c.d_y - f * sy, lo_iz = c.d_z - f * sz;
+    const double hi_ix = c.d_x + f * sx, hi_iy = c.d_y + f * sy, hi_iz = c.d_z + f * sz;
+    const double lo_ox = c.d_x - sx, lo_oy = c.d_y - sy, lo_oz = c.d_z - sz;
+    const double hi_ox = c.d_x + sx, hi_oy = c.d_y + sy, hi_oz = c.d_z + sz;
+    return {lo_ix, lo_iy, lo_iz, hi_ix, hi_iy, hi_iz, lo_ox, lo_oy, lo_oz, hi_ox, hi_oy, hi_oz};
+  }
   throw std::runtime_error("geomParamsFor: unknown geometry " + geomName);
 }
 
 bool is3DGeometry(const std::string &g) {
-  return g == "sphere" || g == "ellipsoid" || g == "cube" || g == "cuboid" || g == "cylinder";
+  return g == "sphere" || g == "ellipsoid" || g == "cube" || g == "cuboid" || g == "cylinder" ||
+         g == "sphere_minus_sphere" || g == "cuboid_minus_cuboid";
 }
 
 bool isAcceptableGeometryName(const std::string &g) {

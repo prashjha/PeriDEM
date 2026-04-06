@@ -32,11 +32,15 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
 
   const std::string &geomName = geomObj->d_name;
 
-  bool known = false;
-  for (const auto &g : geom::getAcceptableGeometries()) {
-    if (g == geomName) {
-      known = true;
-      break;
+  // AnnulusGeomObject always uses d_name == "annulus_object" (deck may say
+  // circle_minus_circle / rectangle_minus_rectangle / etc.).
+  bool known = (geomName == "annulus_object");
+  if (!known) {
+    for (const auto &g : geom::getAcceptableGeometries()) {
+      if (g == geomName) {
+        known = true;
+        break;
+      }
     }
   }
   if (!known)
