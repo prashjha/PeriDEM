@@ -11,3 +11,11 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 add_library(Mesh ${SOURCES})
 
 target_link_libraries(Mesh PUBLIC ${METIS_LIB} FE Util Geom Inp RW)
+
+target_include_directories(Mesh
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
+)

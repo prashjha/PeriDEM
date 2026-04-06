@@ -20,8 +20,9 @@ set(MESH_GEN_SOURCES
 add_library(MeshGen ${MESH_GEN_SOURCES})
 
 target_include_directories(MeshGen PUBLIC
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/external
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
     ${GMSH_INCLUDE_DIRS}
 )
 

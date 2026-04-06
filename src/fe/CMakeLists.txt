@@ -13,3 +13,11 @@ add_library(FE ${SOURCES})
 target_link_libraries(FE PUBLIC
         Util
         Geom)
+
+target_include_directories(FE
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
+)

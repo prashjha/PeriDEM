@@ -14,3 +14,12 @@ add_library(Model ${SOURCES})
 target_include_directories(Model PUBLIC ${VTK_INCLUDE_DIRS})
 
 target_link_libraries(Model PUBLIC Util RW Inp FE Mesh Material Loading Fracture Geom Particle NSearch MeshGen)
+
+target_include_directories(Model
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
+)

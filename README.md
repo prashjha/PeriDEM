@@ -1,6 +1,6 @@
 # PeriDEM - High-fidelity modeling of granular media consisting of deformable complex-shaped particles
 
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues) [![Join the chat at https://gitter.im/PeriDEM/community](https://badges.gitter.im/PeriDEM/community.svg)](https://gitter.im/PeriDEM/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub repo size](https://img.shields.io/github/repo-size/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13888588.svg)](https://zenodo.org/records/13888588)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues) [![Join the chat at https://gitter.im/PeriDEM/community](https://badges.gitter.im/PeriDEM/community.svg)](https://gitter.im/PeriDEM/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub repo size](https://img.shields.io/github/repo-size/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13888588.svg)](https://zenodo.org/records/13888588) [![DOI](https://joss.theoj.org/papers/10.21105/joss.07525/status.svg)](https://doi.org/10.21105/joss.07525)
 
 
 <p align="center"> <img src="./assets/logo/logo.png" width="400"> </p>
@@ -16,6 +16,7 @@
     * [Dependencies](#Dependencies)
     * [Building the code](#Building-the-code)
     * [Recommendations for quick build](#Recommendations-for-quick-build)
+    * [Install & use as a CMake package](#install--use-as-a-cmake-package)
   - [Running simulations](#Running-simulations)
     * [Two-particle with wall](#Two-particle-with-wall)
     * [Compressive test](#Compressive-test)
@@ -25,11 +26,12 @@
   - [Developers](#Developers)
 
 ## Introduction
+
 Implementation of the high-fidelity model of granular media that combines the advantages 
-of peridynamics and discrete element method (DEM). 
+of peridynamics and the discrete element method (DEM). 
 The model has the following advantages over existing mechanical models for granular media:
   - handle intra-particle deformation and breakage/damage
-  - handle arbitrary shape of the particle. Inter-particle contact is not specific to any shape of the particle
+  - handle the arbitrary shape of the particle. Inter-particle contact is not specific to any shape of the particle
   - tunable inter-particle contact parameters
   - easy to add different mechanical constitutive laws within peridynamics for individual particle deformation
 
@@ -37,9 +39,14 @@ For more details about the model and results, we refer to the paper:
 
 > Prashant K. Jha, Prathamesh S. Desai, Debdeep Bhattacharya, Robert P Lipton (2020). 
 > **Peridynamics-based discrete element method (PeriDEM) model of granular systems involving breakage of arbitrarily shaped particles**. 
-> *Journal of the Mechanics and Physics of Solids, 151*, p.104376. Doi https://doi.org/10.1016/j.jmps.2021.104376.
+> *Journal of the Mechanics and Physics of Solids*, 151, p.104376. Doi https://doi.org/10.1016/j.jmps.2021.104376.
+> Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-peridem.pdf).
 
-Download pdf [here](https://prashjha.github.io/publication/jha-2020-peridem/jha-2020-peridem.pdf).
+**PeriDEM is published as a software article in the Journal of Open Source Software:**
+> Prashant K. Jha (2025).
+> **PeriDEM -- High-fidelity modeling of granular media consisting of deformable complex-shaped particles**
+> *Journal of Open Source Software*, vol. 10, 116, p.7525, DOI 10.21105/joss.07525.
+> Download pdf [here](https://doi.org/10.21105/joss.07525).
 
 We have created channels on various platforms: 
 - [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
@@ -48,14 +55,17 @@ We have created channels on various platforms:
   * Email us if interested in joining the workspace.
 
 ## Documentation
+
 [Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
 
 ## Tutorial
+
 We explain the setting-up of simulations in further details in [tutorial](./tutorial/README.md). 
 We consider `two-particle` test setup with non-circular particles and `compressive-test` to 
 discuss the various aspects of simulations.
 
 ## Examples
+
 We next highlight some key examples. Further details are available in [examples/README.md](./examples/README.md). 
 
 ### Two-particle tests
@@ -75,6 +85,7 @@ We next highlight some key examples. Further details are available in [examples/
 | Concave particles |
 
 ### Compressive tests
+
 Setup for this test consists of 502 circular and hexagonal-shaped particles of varying 
 radius and orientation inside a rectangle container. The container's top wall is moving 
 downward at a prescribed speed, resulting in the compression of the particle system. 
@@ -91,6 +102,7 @@ yielding of the system. For more details, we refer to
 
 
 ### Attrition tests
+
 We consider mix of different particles in a rotating container. Particles considered include circular, triangular, hexagonal, and drum shaped. Particles come in large and small shapes (their sizes are purturbed randomly). In order to to introduce diversity of material properties, we considered large particles to be tougher compared to the smaller ones. Setup files are in [examples/PeriDEM/attrition_tests](./examples/PeriDEM/attrition_tests)
 
 |                                         <img src="./assets/attrition_test_sim1.gif" width="250">                                         |                                                                              <img src="./assets/attrition_test_sim2.gif" width="250">                                                                               | 
@@ -102,14 +114,17 @@ Complex container geometries can be considered as well. For example, the image b
 <img src="./examples/PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container/init_view.png" width="600">
 
 ### Single particle deformation
+
 We can use `PeriDEM` executable or `Peridynamics` executable in `apps` directory to simulate the deformation of single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
 
 ## Brief implementation details
+
 The main implementation of the model is carried out in the model directory [dem](./src/model/dem). 
 The model is implemented in class [DEMModel](./src/model/dem/demModel.cpp). 
 Function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more details:
 
 ### DEMModel::run()
+
 This function does three tasks:
 ```cpp
 void model::DEMModel::run(inp::Input *deck) {
@@ -129,6 +144,7 @@ In `DEMModel::init()`, the simulation is prepared by reading the input
 files (such as `.yaml`, `.msh`, `particle_locations.csv` files). 
 
 ### DEMModel::integrate()
+
 Key steps in  `DEMModel::integrate()` are 
 ```cpp
 void model::DEMModel::run(inp::Input *deck) {
@@ -197,6 +213,7 @@ void model::DEMModel::integrateVerlet() {
 ```
 
 ### DEMModel::computeForces()
+
 The key method in time integration is `DEMModel::computeForces()`
 In this function, we compute internal and external forces at each node of a particle 
 and also account for the external boundary conditions. This function looks like
@@ -220,13 +237,19 @@ void model::DEMModel::computeForces() {
 ```
 
 ### Further reading
+
 Above gives the basic idea of simulation steps. For more thorough understanding of 
 the implementation, interested readers can look at 
-[demModel.cpp](.n/src/model/dem/demModel.cpp).
+[demModel.cpp](./src/model/dem/demModel.cpp).
 
 ## Installation
 
+The [pixi.toml](pixi.toml) file defines the dependencies and build instructions for the library. It should be used to create a reproducible environment and build the code using Pixi and CMake.
+
+To install the Pixi package manager, follow the instructions at the official [installation page](https://pixi.sh/dev/installation/#update).
+
 ### Dependencies
+
 Core dependencies are:
   - [cmake](https://cmake.org/) (>= 3.10.2) 
   - [vtk](https://vtk.org/) (>= 7.1.1)
@@ -241,6 +264,7 @@ Following dependencies are included in the `PeriDEM` library in `external` folde
   - [nlohmann_json](https://github.com/nlohmann/json) (>= 3.12.0)
 
 ### Building the code
+
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
 commands for building the PeriDEM code is as simple as
 ```sh
@@ -260,14 +284,63 @@ make -j 4
 directory. You can create the `build` directory either inside or outside the 
 repository. 
 
-> :exclamation: As of now, we can only build the library and not install it. 
- This means you will have to build the package in the `build` directory, and 
- use the `build/bin/PeriDEM` executable. We plan to provide the method to `install` 
- the library in the future.  
+### Install & use as a CMake package
+- Build and install (starting from a fresh clone, e.g., `git clone ... && cd PeriDEM`; create a build dir wherever you like—`build` inside the source is assumed below):
+  ```sh
+  # from the source root
+  mkdir -p build
+  cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+  cmake --build build -- -j$(sysctl -n hw.ncpu)
 
-We refer to [tools/README.md](./tools/README.md) for further details about installing dependencies and building the library in different ubuntu releases.
+  # install library in /tmp/peridem-install
+  cmake --install build --prefix /tmp/peridem-install
+  ```
+  This installs `bin/PeriDEM`, shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
+- Consume in another CMake project:
+  ```cmake
+  cmake_minimum_required(VERSION 3.18)
+  project(peridem_consumer LANGUAGES CXX)
+  find_package(PeriDEM REQUIRED)
+  add_executable(hello main.cpp)
+  target_link_libraries(hello PRIVATE PeriDEM::Model) # or another PeriDEM library target
+  ```
+  Place this in, e.g., `/tmp/peridem-consumer/CMakeLists.txt`. A minimal `main.cpp` in the same folder:
+  ```cpp
+  #include <iostream>
+  #include <PeriDEMConfig.h>
+  int main() {
+    std::cout << "PeriDEM version: "
+              << PERIDEM_VERSION_MAJOR << "."
+              << PERIDEM_VERSION_MINOR << "."
+              << PERIDEM_VERSION_PATCH << "\n";
+  }
+  ```
+  Configure and build the consumer (run these inside `/tmp/peridem-consumer`):
+  ```sh
+  cmake -S . -B build -DCMAKE_PREFIX_PATH=/tmp/peridem-install
+  cmake --build build -- -j$(sysctl -n hw.ncpu)
+  ./build/hello
+  ```
+- External dependencies required on the target system: MPI, Threads, yaml-cpp, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis (found via bundled `FindMetis.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers.
+
+### Using docker to test the library
+```sh
+# run ubuntu using docker (we are using the same image we use to test the library)
+docker run -it prashjha/peridem-base-noble
+
+# we install pixi and add it to the path
+curl -fsSL https://pixi.sh/install.sh | sh
+export PATH="/root/.pixi/bin:$PATH"
+
+# assuming we are now in root of docker image
+cd user/
+git clone git@github.com:prashjha/PeriDEM.git
+cd PeriDEM/
+pixi run test
+```
 
 ### Future plans
+
 We are trying to make PeriDEM MPI-friendly so that we can target large problems. 
 We are moving in following key directions:
 - MPI parallelism for Peridynamics simulations (deformation of single body subjected to external loading)
@@ -284,6 +357,7 @@ If any of the above future directions interest you or if you have new directions
 in mind, please do reach out to us.    
 
 ### Ask for help
+
 In the past, `PeriDEM` library depended on large libraries such as `HPX`, `PCL`, `Boost` (explicitly dependence). 
 We have put a lot of efforts into reducing the dependencies to absolutely minimum 
 so that it is easier to build and run `PeriDEM` in different operating systems and clusters. 
@@ -300,6 +374,7 @@ If you like some help, want to contribute, extend the code, or discuss new ideas
 please do reach out to us.
 
 ## Running simulations
+
 Assuming that the input file is `input.yaml` and all other files such as `.msh` 
 file for particle/wall and particle locations file are created and their filenames 
 with paths are correctly provided in `input.yaml`, we will run the problem (using 4 threads) 
@@ -310,6 +385,7 @@ with paths are correctly provided in `input.yaml`, we will run the problem (usin
 Some examples are listed below.
 
 ### Two-particle with wall
+
 Navigate to the example directory [examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp](.examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp) 
 and run the example as follows
 ```sh
@@ -333,6 +409,7 @@ to modify simulation parameters and run the simulation using
 > Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
 
 ### Compressive test
+
 Navigate to the example directory [examples/PeriDEM/compressive_test/compression_large_set/inp](./examples/PeriDEM/compressive_test/compression_large_set/inp) 
 and run the example as follows (note that this is a computationally expensive example)
 ```sh
@@ -348,6 +425,7 @@ As before:
   - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/compression_large_set//run.sh).
 
 ## Visualizing results
+
 Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) 
  or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit). 
 
@@ -370,12 +448,14 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
     regions with elastic deformation and region with fracture.
 
 ## Contributing
+
 We welcome contributions to the code. In `Future plans` section above, some 
 potential directions are listed.
 Please fork this repository, make changes, and make a pull request to the 
 source branch.  
  
 ## Citations
+
 If this library was useful in your work, we recommend citing the following article:
 
 > Jha, P.K., Desai, P.S., Bhattacharya, D. and Lipton, R., 2021. 
@@ -387,5 +467,6 @@ You can also cite the PeriDEM using zenodo doi:
 > Prashant K., J. (2024). Peridynamics-based discrete element method (PeriDEM) model of granular systems. Zenodo. https://doi.org/10.5281/zenodo.13888588
 
 ## Developers
+
   - [Prashant K. Jha](https://prashjha.github.io/) 
     (pjha.sci@gmail.com, prashant.jha@sdsmt.edu)
