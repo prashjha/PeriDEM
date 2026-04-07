@@ -263,6 +263,23 @@ Following dependencies are included in the `PeriDEM` library in `external` folde
   - [doxygen-awesome-css](https://github.com/jothepro/doxygen-awesome-css) (>= v2.3.3) 
   - [nlohmann_json](https://github.com/nlohmann/json) (>= 3.12.0)
 
+### Pixi: Easiest method to build the library on ubuntu and mac
+
+```sh
+# run ubuntu using docker (we are using the same image we use to test the library)
+docker run -it prashjha/peridem-base-noble
+
+# we install pixi and add it to the path
+curl -fsSL https://pixi.sh/install.sh | sh
+export PATH="/root/.pixi/bin:$PATH"
+
+# assuming we are now in root of docker image
+cd user/
+git clone git@github.com:prashjha/PeriDEM.git
+cd PeriDEM/
+pixi run test
+```
+
 ### Building the code
 
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
@@ -322,22 +339,6 @@ repository.
   ./build/hello
   ```
 - External dependencies required on the target system: MPI, Threads, yaml-cpp, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis (found via bundled `FindMetis.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers.
-
-### Using docker to test the library
-```sh
-# run ubuntu using docker (we are using the same image we use to test the library)
-docker run -it prashjha/peridem-base-noble
-
-# we install pixi and add it to the path
-curl -fsSL https://pixi.sh/install.sh | sh
-export PATH="/root/.pixi/bin:$PATH"
-
-# assuming we are now in root of docker image
-cd user/
-git clone git@github.com:prashjha/PeriDEM.git
-cd PeriDEM/
-pixi run test
-```
 
 ### Future plans
 
