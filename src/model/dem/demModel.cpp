@@ -1278,8 +1278,9 @@ void model::DEMModel::createParticlesFromFile() {
     auto &ref_p = d_referenceParticles[p_group["geom_id"]];
     const auto &rep_geom_p = ref_p->d_geom_p;
 
-    // create geometrical object by scaling the reference particle geometry at the site
-    auto p_geom = std::make_shared<geom::GeomObject>(*rep_geom_p); // copy constructor
+    // Deep-copy derived geometry: slicing to base GeomObject would make center() return (0,0,0) and
+    // double-translate reference meshes that are already built in world coordinates (Gmsh from deck).
+    std::shared_ptr<geom::GeomObject> p_geom(geom::createGeomDeepCopy(rep_geom_p.get()));
     // Rigid displacement t = site - c0 so composite/simple centroid lands at site when pivot is c0.
     const util::Point c0 = p_geom->center();
     const util::Point t = site - c0;

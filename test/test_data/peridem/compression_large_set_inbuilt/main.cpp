@@ -4,18 +4,6 @@
  * -------------------------------------------
  * PeriDEM https://github.com/prashjha/PeriDEM
  *
- * Multi-particle compression example (translation of
- * test/test_data/peridem/compression_large_set/inp/problem_setup.py):
- * - Ten geometry / mesh groups: eight particle shapes (small/large × circle/triangle/drum2d/hex),
- *   fixed U-channel wall (rectangle_minus_rectangle), moving top rectangle.
- * - Particle packing follows problem_setup.py::particle_locations (method 1) with std::mt19937(30);
- *   draws differ from NumPy so particle count/positions are not bit-identical to the Python CSV.
- * - Fixed-container annulus: builtin Gmsh requires the “remove” rectangle strictly inside the outer
- *   box; the removal top is inset by 1e-7 from problem_setup.py (which shared an edge with the outer).
- * - Optional flag: -numSteps <N> overrides Model time steps (ctest uses 50 for a quick smoke run;
- *   default 4000 matches problem_setup.py).
- *
- * Layout: ./out/ (VTU, log.txt), ./inp/ (input.json, meshes). Same CLI as twop_circ_inbuilt.
  */
 
 #include "geom/geomObjectsUtil.h"
@@ -187,6 +175,26 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
   return particles;
 }
 
+/** Axis-aligned bounds of the pack using the same center±r proxy as packing / contact. */
+struct PackedBounds {
+  double min_x{}, max_x{}, min_y{}, max_y{};
+};
+
+PackedBounds packedAxisBounds(const std::vector<PackedParticle> &packed) {
+  PackedBounds b;
+  b.min_x = std::numeric_limits<double>::infinity();
+  b.max_x = -std::numeric_limits<double>::infinity();
+  b.min_y = std::numeric_limits<double>::infinity();
+  b.max_y = -std::numeric_limits<double>::infinity();
+  for (const auto &p : packed) {
+    b.min_x = std::min(b.min_x, p.x - p.r);
+    b.max_x = std::max(b.max_x, p.x + p.r);
+    b.min_y = std::min(b.min_y, p.y - p.r);
+    b.max_y = std::max(b.max_y, p.y + p.r);
+  }
+  return b;
+}
+
 json contactPairJson(double R_contact_factor, bool damping_on, bool friction_on, double Kn, double beta_n_eps,
                      double friction_coeff, double Kn_factor, double beta_n_factor) {
   json j;
@@ -222,43 +230,26 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   const double Lin = 0.05;
   const double Win = 0.04;
-  const double L = Lin + 1.5 * horizon;
-  const double W = Win + 1.5 * horizon;
 
-  const std::vector<double> in_rect = {center[0] - 0.5 * Lin, center[1] - 0.5 * Win, center[2],
-                                       center[0] + 0.5 * Lin, center[1] + 0.5 * Win, center[2]};
-  const std::vector<double> out_rect = {center[0] - 0.5 * L, center[1] - 0.5 * W, center[2],
-                                        center[0] + 0.5 * L, center[1] + 0.5 * W, center[2]};
-
-  const double moving_wall_y = 0.5 * Win - 1.5 * horizon;
-  std::vector<double> moving_rect = {center[0] - 0.5 * Lin, center[1] + moving_wall_y, center[2],
-                                     center[0] + 0.5 * Lin, center[1] + moving_wall_y + 1.5 * horizon, center[2]};
-
-  std::vector<double> remove_rect = {in_rect[0], in_rect[1], in_rect[2], in_rect[3], out_rect[4], in_rect[5]};
-  if (moving_rect[4] > out_rect[4])
-    remove_rect[4] = out_rect[4];
-
-  /* Builtin Gmsh annulus requires the inner rectangle strictly inside the outer (annulusMesh2D.cpp). */
+  constexpr double wall_top_inset = 1e-7;
   constexpr double annulus_inset = 1e-7;
-  if (remove_rect[4] >= out_rect[4] - annulus_inset)
-    remove_rect[4] = out_rect[4] - annulus_inset;
-
-  /* C++ AnnulusGeomObject: inner (hole) first, outer second — see geomObjectsUtil.cpp */
-  std::vector<double> fixed_container_params;
-  fixed_container_params.insert(fixed_container_params.end(), remove_rect.begin(), remove_rect.end());
-  fixed_container_params.insert(fixed_container_params.end(), out_rect.begin(), out_rect.end());
+  /* Clearance between void floor / plate and particle circum-bounds (~1–2 mesh). */
+  constexpr double clearance_mesh = 1.5;
+  /* Meshed triangles/hex/drum can extend slightly beyond circumcircle r in VTU. */
+  const double geom_pad = 0.25 * mesh_size;
+  const double plate_thickness = std::max(3.0 * mesh_size, 2.0 * mesh_size);
 
   const double w_small_drum2d = R_small * 0.2;
   const double w_large_drum2d = R_large * 0.2;
 
-  const double final_time = 0.01;
-  size_t num_steps = 4000;
+  const double final_time = 0.1;
+  size_t num_steps = 40000;
   if (input.cmdOptionExists("-numSteps"))
     num_steps = static_cast<size_t>(std::stoul(input.getCmdOption("-numSteps")));
 
-  const size_t num_outputs = 10;
+  const size_t num_outputs = 100;
   const size_t dt_out_n = num_steps / num_outputs;
-  const size_t test_dt_out_n = dt_out_n / 10;
+  const size_t test_dt_out_n = dt_out_n / 100;
 
   const double rho_wall = 600.;
   const double poisson_wall = 0.25;
@@ -283,13 +274,64 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   const double R_contact_factor = 0.95;
   const double padding = 1.1 * R_contact_factor * mesh_size;
-  const double max_y = moving_wall_y - 3.0 * mesh_size;
   const int N1 = 300;
   const int N2 = 200;
 
+  const std::vector<double> in_rect = {center[0] - 0.5 * Lin, center[1] - 0.5 * Win, center[2],
+                                       center[0] + 0.5 * Lin, center[1] + 0.5 * Win, center[2]};
+
   std::mt19937 gen(30);
+  const double max_y = in_rect[4] - clearance_mesh * mesh_size;
   std::vector<PackedParticle> packed =
       generateParticleLocations(in_rect, max_y, mesh_size, R_small, R_large, N1, N2, padding, gen);
+  if (packed.empty())
+    throw std::runtime_error("compression_large_set_inbuilt: particle pack is empty");
+  for (auto &p : packed)
+    p.z = 0.0;
+
+  const double m = clearance_mesh * mesh_size;
+  /* Seat bed: lowest circum-bottom = void_floor + m (void floor = seed inner bottom). */
+  {
+    const PackedBounds bb0 = packedAxisBounds(packed);
+    const double delta_y = (in_rect[1] + m) - bb0.min_y;
+    for (auto &p : packed)
+      p.y += delta_y;
+  }
+
+  const PackedBounds bb = packedAxisBounds(packed);
+
+  /* Inner void (Gmsh “remove” rectangle): circum-bounds ± m ± geom_pad in x; floor at seed; top = domain. */
+  const double void_lox = bb.min_x - m - geom_pad;
+  const double void_hix = bb.max_x + m + geom_pad;
+  const double void_loy = in_rect[1];
+  /* Moving plate: bottom = top of bed + clearance + pad so FE nodes stay under the plate. */
+  const double plate_bottom_y = bb.max_y + m + geom_pad;
+  double plate_top_y = plate_bottom_y + plate_thickness;
+
+  /* Outer solid: wrap void with wall thickness; extend upward just past the plate (no huge empty band). */
+  const double side = std::max(1.5 * horizon, 2.0 * mesh_size);
+  const double out_lox = void_lox - side;
+  const double out_hix = void_hix + side;
+  const double out_loy = void_loy - side;
+  const double out_hiy = plate_top_y + wall_top_inset + 2.5 * mesh_size;
+
+  std::vector<double> out_rect = {out_lox, out_loy, center[2], out_hix, out_hiy, center[2]};
+
+  /* Open-top void: inner cut runs to outer top (inset for Gmsh strict-inside). */
+  const double void_hi_y = out_rect[4] - annulus_inset;
+  std::vector<double> remove_rect = {void_lox, void_loy, center[2], void_hix, void_hi_y, center[2]};
+
+  util::io::print(std::format(
+      "[compression_large_set_inbuilt] bbox(center±r) x∈[{:.6f},{:.6f}] y∈[{:.6f},{:.6f}]; "
+      "void x∈[{:.6f},{:.6f}] y_lo {:.6f}; plate y [{:.6f},{:.6f}]; void_hi {:.6f}; outer y∈[{:.6f},{:.6f}]\n",
+      bb.min_x, bb.max_x, bb.min_y, bb.max_y, void_lox, void_hix, void_loy, plate_bottom_y, plate_top_y,
+      void_hi_y, out_rect[1], out_rect[4]));
+
+  std::vector<double> moving_rect = {void_lox, plate_bottom_y, center[2], void_hix, plate_top_y, center[2]};
+
+  std::vector<double> fixed_container_params;
+  fixed_container_params.insert(fixed_container_params.end(), remove_rect.begin(), remove_rect.end());
+  fixed_container_params.insert(fixed_container_params.end(), out_rect.begin(), out_rect.end());
 
   const size_t n_pack = packed.size();
   const size_t n_wall_fixed = n_pack;
@@ -321,8 +363,11 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   for (auto &g : pGeomVec)
     geom::createGeomObject(g);
 
-  const util::Point site_wall_fixed = pGeomVec[8].d_geom_p->center();
-  const util::Point site_wall_moving = pGeomVec[9].d_geom_p->center();
+  /* Annulus composite centroid can pick up tiny numerical z; 2D setup keeps all sites on z = 0. */
+  const util::Point cfix = pGeomVec[8].d_geom_p->center();
+  const util::Point cmov = pGeomVec[9].d_geom_p->center();
+  const util::Point site_wall_fixed(cfix.d_x, cfix.d_y, 0.0);
+  const util::Point site_wall_moving(cmov.d_x, cmov.d_y, 0.0);
 
   auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps, "finite_difference",
                                                         "central_difference", true, 2, "Multi_Particle", 0);
@@ -334,7 +379,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
    * points are written (appendNodes) and ParaView’s default “Surface” view looks empty — use
    * Representation → Points, or enable this flag. problem_setup.yaml used false for huge runs. */
   auto outputDeckJson = inp::OutputDeck::getExampleJson("vtu", output_path_for_deck, out_tags, dt_out_n, 2,
-                                                          false, "zlib", true, test_dt_out_n, "0", true);
+                                                          true, "zlib", true, test_dt_out_n, "0", true);
 
   auto bcDeckJson = inp::BCDeck::getExampleJson(0, 2, 0, true, util::Point(0, -10, 0));
 
@@ -391,7 +436,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   const double beta_n_eps = 0.95;
   const double friction_coeff = 0.5;
-  const bool damping_on = false;
+  const bool damping_on = true;
   const bool friction_on = false;
   const double beta_n_factor = 100.;
   const double Kn_factor = 1.;
@@ -436,7 +481,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   for (size_t pi = 0; pi < n_pack; ++pi) {
     const auto &p = packed[pi];
     pGenJson["Data"][std::to_string(pi)] = json{
-        {"x", p.x},         {"y", p.y},         {"z", p.z},         {"theta", p.theta},
+        {"x", p.x},         {"y", p.y},         {"z", 0.0},         {"theta", p.theta},
         {"s", 1.0},         {"geom_id", static_cast<size_t>(p.zone)},
         {"mat_id", static_cast<size_t>(p.zone)},
         {"contact_id", static_cast<size_t>(p.zone)},
@@ -445,7 +490,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   pGenJson["Data"][std::to_string(n_pack)] = json{{"x", site_wall_fixed.d_x},
                                                   {"y", site_wall_fixed.d_y},
-                                                  {"z", site_wall_fixed.d_z},
+                                                  {"z", 0.0},
                                                   {"theta", 0.0},
                                                   {"s", 1.0},
                                                   {"geom_id", size_t(8)},
@@ -454,7 +499,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   pGenJson["Data"][std::to_string(n_pack + 1)] = json{{"x", site_wall_moving.d_x},
                                                        {"y", site_wall_moving.d_y},
-                                                       {"z", site_wall_moving.d_z},
+                                                       {"z", 0.0},
                                                        {"theta", 0.0},
                                                        {"s", 1.0},
                                                        {"geom_id", size_t(9)},
@@ -463,7 +508,10 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   pDeckJson["Particle_Generation"] = pGenJson;
 
-  return json{{"Model", modelDeckJson},
+  /* Top-level comment only: ignored by inp::Input (only known sections are parsed). */
+  return json{{"Comment",
+               "compression_large_set_inbuilt: void from packed bbox+margin; plate separate; see console log."},
+              {"Model", modelDeckJson},
               {"Output", outputDeckJson},
               {"Force_BC", bcDeckJson["Force_BC"]},
               {"Displacement_BC", bcDeckJson["Displacement_BC"]},
@@ -520,6 +568,12 @@ int main(int argc, char *argv[]) {
 
   util::io::print(std::format("Output directory (VTU, log.txt): {}\n", fs::absolute(out_dir).string()));
   util::io::print(std::format("Input directory (input.json, meshes): {}\n", fs::absolute(inp_dir).string()));
+  util::io::print(std::format(
+      "Binary build timestamp: {} {} (if this never changes, you are not recompiling this target.)\n",
+      __DATE__, __TIME__));
+  util::io::print(
+      "Before trusting ParaView: delete the out/ folder next to input.json so old VTU cannot be mistaken "
+      "for new output; open output.pvd timestep 0 (output_0_0.vtu), not the last frame.\n");
 
   auto inputJson = buildInputJson(output_path_for_deck, inp_dir, argc, argv);
 
