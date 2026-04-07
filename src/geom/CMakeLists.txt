@@ -11,3 +11,11 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 add_library(Geom ${SOURCES})
 
 target_link_libraries(Geom PUBLIC Util) 
+
+target_include_directories(Geom
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
+)

@@ -16,5 +16,6 @@ target_include_directories(Util
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
     $<INSTALL_INTERFACE:include>
 )

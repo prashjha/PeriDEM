@@ -240,7 +240,7 @@ target_include_directories(PeriDEM
 )
 target_link_libraries(PeriDEM PUBLIC Model)
 
-install(TARGETS PeriDEM Model Util RW Inp Material Loading Geometry FE Particle NSearch
+install(TARGETS FE Fracture Geom Inp Loading Material Mesh MeshGen Model PeriDEM NSearch Particle RW Util 
   EXPORT PeriDEMTargets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
@@ -262,7 +262,6 @@ install(DIRECTORY src/ DESTINATION include FILES_MATCHING PATTERN "*.h")
 install(FILES external/csv/csv.h DESTINATION include/csv)
 install(DIRECTORY external/nanoflann/ DESTINATION include/nanoflann FILES_MATCHING PATTERN "*.hpp")
 install(DIRECTORY external/taskflow/taskflow/ DESTINATION include/taskflow)
-install(DIRECTORY external/fmt/include/ DESTINATION include)
 
 configure_package_config_file(
   cmake/PeriDEMConfig.cmake.in
