@@ -69,26 +69,22 @@ bool doesParticleIntersect(const PackedParticle &p, const std::vector<PackedPart
 }
 
 /**
- * Mirrors problem_setup.py::particle_locations (method_to_use == 1) with std::mt19937(30).
+ * Random row-wise packing (same spirit as problem_setup.py method 1) with std::mt19937(30).
+ * One characteristic radius R; zones 0–7 pick among eight geometry types.
  */
 std::vector<PackedParticle> generateParticleLocations(const std::vector<double> &in_rect, double max_y,
-                                                        double mesh_size, double R1, double R2,
-                                                        int N1, int N2, double padding, std::mt19937 &gen) {
+                                                      double mesh_size, double R, int N_target,
+                                                      double padding, std::mt19937 &gen) {
   std::vector<PackedParticle> particles;
-  std::uniform_real_distribution<double> u01(0.0, 1.0);
-  std::uniform_real_distribution<double> u_small_r(-0.1 * R1, 0.1 * R1);
-  std::uniform_real_distribution<double> u_large_r(-0.1 * R2, 0.1 * R2);
-  std::uniform_int_distribution<int> pick01(0, 1);
-  std::uniform_int_distribution<int> pick_zone_small(0, 3);
-  std::uniform_int_distribution<int> pick_zone_large(0, 3);
+  std::uniform_real_distribution<double> u_r(-0.1 * R, 0.1 * R);
+  std::uniform_int_distribution<int> pick_zone(0, 7);
 
-  const double check_r = std::min(R1, R2);
+  const double check_r = R;
   const int rows = static_cast<int>((max_y - in_rect[1]) / (2.0 * check_r));
   const double rect_L = in_rect[3] - in_rect[0];
   const int cols = static_cast<int>(rect_L / (2.0 * check_r));
 
-  int counter1 = 0;
-  int counter2 = 0;
+  int counter = 0;
   double x_old = in_rect[0];
   double x_old_right = in_rect[3];
   double y_old = in_rect[1];
@@ -97,12 +93,12 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
   std::vector<double> cy_accptd;
   cy_accptd.push_back(y_old);
 
-  std::vector<double> row_rads_prev{R1, R2};
+  std::vector<double> row_rads_prev{R, R};
   for (int i = 0; i < rows; ++i) {
     if (i > 0)
       y_old = maxElem(cy_accptd) + maxElem(row_rads_prev);
 
-    std::vector<double> row_rads{R1, R2};
+    std::vector<double> row_rads{R};
 
     if (y_old + padding + maxElem(row_rads) >= max_y)
       break;
@@ -110,9 +106,9 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
     int num_p_cols = 0;
     int j = 0;
     while (true) {
-      if (num_p_cols > cols - 1 || j > 100 * (N1 + N2))
+      if (num_p_cols > cols - 1 || j > 100 * N_target)
         break;
-      if (counter1 >= N1 && counter2 >= N2)
+      if (counter >= N_target)
         break;
 
       if (j == 0) {
@@ -120,20 +116,9 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
         x_old_right = in_rect[3];
       }
 
-      int p_type = pick01(gen);
-      if (counter1 >= N1)
-        p_type = 1;
-      if (counter2 >= N2)
-        p_type = 0;
-
-      const double r0 = (p_type == 0) ? R1 : R2;
-      int p_zone = 0;
-      if (p_type == 0)
-        p_zone = pick_zone_small(gen);
-      else
-        p_zone = 4 + pick_zone_large(gen);
-
-      double r = r0 + ((p_type == 0) ? u_small_r(gen) : u_large_r(gen));
+      const int p_zone = pick_zone(gen);
+      const double r0 = R;
+      double r = r0 + u_r(gen);
 
       double cx = 0., cy = 0.;
       if (i % 2 == 0) {
@@ -162,10 +147,7 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
         else
           x_old = cx + trial.r;
 
-        if (p_type == 0)
-          counter1++;
-        else
-          counter2++;
+        ++counter;
         num_p_cols++;
       }
       ++j;
@@ -223,9 +205,8 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   util::io::InputParser input(argc, argv);
 
   const std::vector<double> center = {0.0, 0.0, 0.0};
-  const double R_small = 0.001;
-  const double R_large = 0.001;
-  const double mesh_size = R_small / 5.0;
+  const double R = 0.001;
+  const double mesh_size = R / 5.0;
   const double horizon = 2.0 * mesh_size;
 
   const double Lin = 0.05;
@@ -239,17 +220,16 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double geom_pad = 0.25 * mesh_size;
   const double plate_thickness = std::max(3.0 * mesh_size, 2.0 * mesh_size);
 
-  const double w_small_drum2d = R_small * 0.2;
-  const double w_large_drum2d = R_large * 0.2;
+  const double w_drum2d = R * 0.2;
 
-  const double final_time = 0.1;
-  size_t num_steps = 40000;
+  const double final_time = 0.001;
+  size_t num_steps = 400;
   if (input.cmdOptionExists("-numSteps"))
     num_steps = static_cast<size_t>(std::stoul(input.getCmdOption("-numSteps")));
 
-  const size_t num_outputs = 100;
+  const size_t num_outputs = 10;
   const size_t dt_out_n = num_steps / num_outputs;
-  const size_t test_dt_out_n = dt_out_n / 100;
+  const size_t test_dt_out_n = dt_out_n / 10;
 
   const double rho_wall = 600.;
   const double poisson_wall = 0.25;
@@ -258,24 +238,16 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double G_wall = material::toGE(E_wall, poisson_wall);
   const double Gc_wall = 100.;
 
-  const double rho_small = 600.;
-  const double poisson_small = poisson_wall;
-  const double K_small = 5.e+3;
-  const double E_small = material::toE(K_small, poisson_small);
-  const double G_small = material::toGE(E_small, poisson_small);
-  const double Gc_small = 100.;
-
-  const double rho_large = rho_small;
-  const double poisson_large = poisson_small;
-  const double K_large = K_small;
-  const double E_large = E_small;
-  const double G_large = G_small;
-  const double Gc_large = Gc_small;
+  const double rho_p = 600.;
+  const double poisson_p = poisson_wall;
+  const double K_p = 5.e+3;
+  const double E_p = material::toE(K_p, poisson_p);
+  const double G_p = material::toGE(E_p, poisson_p);
+  const double Gc_p = 100.;
 
   const double R_contact_factor = 0.95;
   const double padding = 1.1 * R_contact_factor * mesh_size;
-  const int N1 = 300;
-  const int N2 = 200;
+  const int N_target = 500;
 
   const std::vector<double> in_rect = {center[0] - 0.5 * Lin, center[1] - 0.5 * Win, center[2],
                                        center[0] + 0.5 * Lin, center[1] + 0.5 * Win, center[2]};
@@ -283,7 +255,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   std::mt19937 gen(30);
   const double max_y = in_rect[4] - clearance_mesh * mesh_size;
   std::vector<PackedParticle> packed =
-      generateParticleLocations(in_rect, max_y, mesh_size, R_small, R_large, N1, N2, padding, gen);
+      generateParticleLocations(in_rect, max_y, mesh_size, R, N_target, padding, gen);
   if (packed.empty())
     throw std::runtime_error("compression_large_set_inbuilt: particle pack is empty");
   for (auto &p : packed)
@@ -338,23 +310,32 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const size_t n_wall_moving = n_pack + 1;
   const size_t n_total = n_pack + 2;
 
+  /* Reference geometries at origin; packing uses circum-radius ~ R for all zones. */
+  const double ell_a = 0.95 * R;
+  const double ell_b = 0.58 * R;
+  const double ell_theta = 0.35;
+  const double sq_half = R / std::sqrt(2.0);
+  /* Axis-aligned rectangle (~same circum extent as R). */
+  const double rx = 0.82 * R;
+  const double ry = 0.62 * R;
+
   std::vector<geom::GeomData> pGeomVec(10);
   pGeomVec[0].d_geomName = "circle";
-  pGeomVec[0].d_geomParams = {R_small, center[0], center[1], center[2]};
+  pGeomVec[0].d_geomParams = {R, center[0], center[1], center[2]};
   pGeomVec[1].d_geomName = "triangle";
-  pGeomVec[1].d_geomParams = {R_small, center[0], center[1], center[2]};
+  pGeomVec[1].d_geomParams = {R, center[0], center[1], center[2]};
   pGeomVec[2].d_geomName = "drum2d";
-  pGeomVec[2].d_geomParams = {R_small, w_small_drum2d, center[0], center[1], center[2]};
+  pGeomVec[2].d_geomParams = {R, w_drum2d, center[0], center[1], center[2]};
   pGeomVec[3].d_geomName = "hexagon";
-  pGeomVec[3].d_geomParams = {R_small, center[0], center[1], center[2]};
-  pGeomVec[4].d_geomName = "circle";
-  pGeomVec[4].d_geomParams = {R_large, center[0], center[1], center[2]};
-  pGeomVec[5].d_geomName = "triangle";
-  pGeomVec[5].d_geomParams = {R_large, center[0], center[1], center[2]};
-  pGeomVec[6].d_geomName = "drum2d";
-  pGeomVec[6].d_geomParams = {R_large, w_large_drum2d, center[0], center[1], center[2]};
-  pGeomVec[7].d_geomName = "hexagon";
-  pGeomVec[7].d_geomParams = {R_large, center[0], center[1], center[2]};
+  pGeomVec[3].d_geomParams = {R, center[0], center[1], center[2]};
+  pGeomVec[4].d_geomName = "ellipse";
+  pGeomVec[4].d_geomParams = {ell_a, ell_b, ell_theta, center[0], center[1], center[2]};
+  pGeomVec[5].d_geomName = "rectangle";
+  pGeomVec[5].d_geomParams = {-rx, -ry, center[2], rx, ry, center[2]};
+  pGeomVec[6].d_geomName = "square";
+  pGeomVec[6].d_geomParams = {-sq_half, -sq_half, center[2], sq_half, sq_half, center[2]};
+  pGeomVec[7].d_geomName = "circle_minus_circle";
+  pGeomVec[7].d_geomParams = {center[0], center[1], center[2], R, 0.35 * R};
   pGeomVec[8].d_geomName = "rectangle_minus_rectangle";
   pGeomVec[8].d_geomParams = fixed_container_params;
   pGeomVec[9].d_geomName = "rectangle";
@@ -399,8 +380,8 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   pDeckJson["Particle"] = inp::ParticleDeck::getParticleGeomExampleJson(pGeomVec);
 
   json meshRoot = json{{"Sets", 10}};
-  const char *mesh_names[] = {"mesh_cir_small",   "mesh_tri_small",   "mesh_drum2d_small", "mesh_hex_small",
-                              "mesh_cir_large",   "mesh_tri_large",   "mesh_drum2d_large", "mesh_hex_large",
+  const char *mesh_names[] = {"mesh_cir",      "mesh_tri",      "mesh_drum2d",   "mesh_hex",
+                              "mesh_ellipse",  "mesh_rect",     "mesh_square",   "mesh_circirc",
                               "mesh_fixed_container", "mesh_moving_container"};
   for (int zi = 0; zi < 10; ++zi) {
     const std::string fname = (inp_dir / (std::string(mesh_names[zi]) + ".msh")).string();
@@ -412,26 +393,21 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   pDeckJson["Mesh"] = meshRoot;
 
   json matRoot = json{{"Sets", 10}};
-  matRoot["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_small, K_small, G_small,
-                                                       Gc_small, true, 1);
+  matRoot["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_p, K_p, G_p, Gc_p, true, 1);
   matRoot["Set_2"] = json{{"Copy_Data", 1}};
   matRoot["Set_3"] = json{{"Copy_Data", 1}};
   matRoot["Set_4"] = json{{"Copy_Data", 1}};
-  matRoot["Set_5"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_large, K_large, G_large,
-                                                       Gc_large, true, 1);
-  matRoot["Set_6"] = json{{"Copy_Data", 5}};
-  matRoot["Set_7"] = json{{"Copy_Data", 5}};
-  matRoot["Set_8"] = json{{"Copy_Data", 5}};
+  matRoot["Set_5"] = json{{"Copy_Data", 1}};
+  matRoot["Set_6"] = json{{"Copy_Data", 1}};
+  matRoot["Set_7"] = json{{"Copy_Data", 1}};
+  matRoot["Set_8"] = json{{"Copy_Data", 1}};
   matRoot["Set_9"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_wall, K_wall, G_wall,
                                                        Gc_wall, true, 1);
   matRoot["Set_10"] = json{{"Copy_Data", 9}};
   pDeckJson["Material"] = matRoot;
 
-  const double Kn_ss = KnFromBulk(K_small, K_small, horizon);
-  const double Kn_ll = KnFromBulk(K_large, K_large, horizon);
-  const double Kn_sl = KnFromBulk(K_small, K_large, horizon);
-  const double Kn_sw = KnFromBulk(K_small, K_wall, horizon);
-  const double Kn_lw = KnFromBulk(K_large, K_wall, horizon);
+  const double Kn_pp = KnFromBulk(K_p, K_p, horizon);
+  const double Kn_pw = KnFromBulk(K_p, K_wall, horizon);
   const double Kn_ww = 0.0;
 
   const double beta_n_eps = 0.95;
@@ -442,22 +418,15 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double Kn_factor = 1.;
 
   auto KnForPair = [&](int i, int j) -> double {
-    auto is_s = [](int z) { return z >= 0 && z <= 3; };
-    auto is_l = [](int z) { return z >= 4 && z <= 7; };
+    auto is_p = [](int z) { return z >= 0 && z <= 7; };
     auto is_w = [](int z) { return z >= 8; };
     if (is_w(i) && is_w(j))
       return Kn_ww;
-    if (is_s(i) && is_s(j))
-      return Kn_ss;
-    if (is_l(i) && is_l(j))
-      return Kn_ll;
-    if ((is_s(i) && is_l(j)) || (is_l(i) && is_s(j)))
-      return Kn_sl;
-    if ((is_s(i) && is_w(j)) || (is_w(i) && is_s(j)))
-      return Kn_sw;
-    if ((is_l(i) && is_w(j)) || (is_w(i) && is_l(j)))
-      return Kn_lw;
-    return Kn_ss;
+    if (is_p(i) && is_p(j))
+      return Kn_pp;
+    if ((is_p(i) && is_w(j)) || (is_w(i) && is_p(j)))
+      return Kn_pw;
+    return Kn_pp;
   };
 
   json contactRoot = inp::ContactDeck::getExampleJson(10);

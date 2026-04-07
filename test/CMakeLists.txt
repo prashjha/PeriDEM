@@ -128,11 +128,11 @@ add_test(NAME Test_PeriDEM_twop_general_inbuilt
 )
 set_tests_properties(Test_PeriDEM_twop_general_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
 
-# add_test(NAME Test_PeriDEM_compression_large_set_inbuilt
-#   COMMAND Test_PeriDEM_compression_large_set_inbuilt -numSteps 50
-#   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_compression_large_set_inbuilt>
-# )
-# set_tests_properties(Test_PeriDEM_compression_large_set_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
+add_test(NAME Test_PeriDEM_compression_large_set_inbuilt
+  COMMAND Test_PeriDEM_compression_large_set_inbuilt -numSteps 50
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_compression_large_set_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_compression_large_set_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
 
 # ---------------------------------------------------------------------------
 # PeriDEM: optional high-load integration tests (shell-driven)
