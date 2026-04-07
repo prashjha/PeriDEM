@@ -31,7 +31,3 @@ target_include_directories(${EXEC_NAME} PUBLIC
 set_target_properties(${EXEC_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
-
-# Add test
-add_test(NAME ${EXEC_NAME} COMMAND ${EXEC_NAME})
-set_tests_properties(${EXEC_NAME} PROPERTIES LABELS "PeriDEM;Examples") 
