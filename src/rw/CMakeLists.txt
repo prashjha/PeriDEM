@@ -10,7 +10,7 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(RW ${SOURCES})
 
-target_link_libraries(RW PUBLIC ${VTK_LIBRARIES})
+target_link_libraries(RW PUBLIC Util ${VTK_LIBRARIES})
 
 target_include_directories(RW
   PUBLIC
