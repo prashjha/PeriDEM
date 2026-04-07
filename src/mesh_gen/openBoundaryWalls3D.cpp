@@ -41,7 +41,8 @@ void physicalGroupsWallOpenFromFace3D(int volumeTag, int openFace, const util::P
   const double horizTol = std::max(tol, 1.0e-9 * std::max({Lx, Ly, Lz, 1.0}));
 
   std::vector<std::pair<int, int>> bnd;
-  gmsh::model::getBoundary({{3, volumeTag}}, bnd, false);
+  // Request unoriented boundary entities so tags are always valid entity IDs.
+  gmsh::model::getBoundary({{3, volumeTag}}, bnd, false, false);
 
   std::vector<int> wallTags;
   std::vector<int> openTags;
@@ -51,8 +52,9 @@ void physicalGroupsWallOpenFromFace3D(int volumeTag, int openFace, const util::P
   for (const auto &pr : bnd) {
     if (pr.first != 2)
       continue;
+    const int surfTag = std::abs(pr.second);
     double xmin = 0., ymin = 0., zmin = 0., xmax = 0., ymax = 0., zmax = 0.;
-    gmsh::model::getBoundingBox(pr.first, pr.second, xmin, ymin, zmin, xmax, ymax, zmax);
+    gmsh::model::getBoundingBox(pr.first, surfTag, xmin, ymin, zmin, xmax, ymax, zmax);
     const double dx = xmax - xmin;
     const double dy = ymax - ymin;
     const double dz = zmax - zmin;
@@ -90,9 +92,9 @@ void physicalGroupsWallOpenFromFace3D(int volumeTag, int openFace, const util::P
     }
 
     if (isOpen)
-      openTags.push_back(pr.second);
+      openTags.push_back(surfTag);
     else
-      wallTags.push_back(pr.second);
+      wallTags.push_back(surfTag);
   }
 
   if (!wallTags.empty()) {
