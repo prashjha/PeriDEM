@@ -6,12 +6,12 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.10...4.3)
 
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
 #----------------------------------#
-project(PeriDEM LANGUAGES CXX C)
+project(PeriDEM VERSION 0.2.1 LANGUAGES CXX C)
 
 # Homebrew LLVM on macOS: default CMAKE_AR is /usr/bin/ar while CMAKE_RANLIB may be
 # llvm-ranlib; mixing them produces invalid .a archives (bogus members like "/").
@@ -26,18 +26,24 @@ endif()
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
 set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamics-based high-fidelity model for granular media")
 
-# version
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 2)
-set(VERSION_UPDATE 0)
-
 #----------------------------------#
 #<<<<<<<<<< Project setting >>>>>>>>>>#
 #----------------------------------#
 
-# config files
-configure_file("${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in"
-        "${PROJECT_SOURCE_DIR}/src/PeriDEMConfig.h")
+# Configure header with version info
+configure_file(
+  "${PROJECT_SOURCE_DIR}/PeriDEMConfig.h.in"
+  "${PROJECT_BINARY_DIR}/PeriDEMConfig.h"
+  @ONLY
+)
+
+# Use version from project() for CMake package config
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/PeriDEMConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
+)
 
 # executable directory
 set(EXECUTABLE_OUTPUT_PATH "${PROJECT_BINARY_DIR}/bin")
@@ -170,9 +176,9 @@ include_directories(${GMSH_INCLUDE_DIRS})
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "Including key directories")
 endif()
-include_directories(SYSTEM external)
-include_directories(${MPI_INCLUDE_PATH})
-include_directories(src)
+# include_directories(SYSTEM external)
+# include_directories(${MPI_INCLUDE_PATH})
+# include_directories(src)
 
 #----------------------------------#
 #<<<<<<<<<< Subdirectories >>>>>>>>>>#
@@ -226,12 +232,51 @@ endif()
 #----------------------------------#
 add_executable(PeriDEM src/main.cpp)
 
+target_include_directories(PeriDEM
+  PUBLIC
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+    $<INSTALL_INTERFACE:include>
+)
 target_link_libraries(PeriDEM PUBLIC Model)
+
+install(TARGETS FE Fracture Geom Inp Loading Material Mesh MeshGen Model PeriDEM NSearch Particle RW Util 
+  EXPORT PeriDEMTargets
+  RUNTIME DESTINATION bin
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+)
+
+install(EXPORT PeriDEMTargets
+  FILE PeriDEMTargets.cmake
+  NAMESPACE PeriDEM::
+  DESTINATION lib/cmake/PeriDEM
+)
+
 
 #----------------------------------#
 #<<<<<<<<<< PeriDEM install >>>>>>>>>>#
 #----------------------------------#
-install(TARGETS PeriDEM DESTINATION bin)
+install(FILES ${PROJECT_BINARY_DIR}/PeriDEMConfig.h DESTINATION include)
+install(DIRECTORY src/ DESTINATION include FILES_MATCHING PATTERN "*.h")
+install(FILES external/csv/csv.h DESTINATION include/csv)
+install(DIRECTORY external/nanoflann/ DESTINATION include/nanoflann FILES_MATCHING PATTERN "*.hpp")
+install(DIRECTORY external/taskflow/taskflow/ DESTINATION include/taskflow)
+
+configure_package_config_file(
+  cmake/PeriDEMConfig.cmake.in
+  ${CMAKE_CURRENT_BINARY_DIR}/PeriDEMConfig.cmake
+  INSTALL_DESTINATION lib/cmake/PeriDEM
+)
+
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/PeriDEMConfig.cmake
+  ${CMAKE_CURRENT_BINARY_DIR}/PeriDEMConfigVersion.cmake
+  ${PROJECT_SOURCE_DIR}/cmake/FindMetis.cmake
+  DESTINATION lib/cmake/PeriDEM
+)
+
+
 
 #----------------------------------#
 #<<<<<<<<<< Post build operations >>>>>>>>>>#

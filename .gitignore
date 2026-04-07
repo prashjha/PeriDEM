@@ -47,6 +47,9 @@ build2
 build*
 cmake-build*
 
+# pixi lock file
+pixi.lock
+
 # ide directory
 .idea
 .idea/workspace.xml

@@ -19,14 +19,16 @@ set(MESH_GEN_SOURCES
 
 add_library(MeshGen ${MESH_GEN_SOURCES})
 
-target_include_directories(MeshGen PUBLIC
-    ${CMAKE_SOURCE_DIR}/src
-    ${CMAKE_SOURCE_DIR}/external
-    ${GMSH_INCLUDE_DIRS}
-)
-
 target_link_libraries(MeshGen PUBLIC
     Util
     Mesh
     Geom
     ${GMSH_LIBRARIES}) 
+
+target_include_directories(MeshGen
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
+)

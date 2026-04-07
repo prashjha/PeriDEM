@@ -8,6 +8,7 @@ from util import *
 from geom_util import *
 
 
+
 def circle_mesh_symmetric(xc = [0., 0., 0.], r = 1., h = 0.1, filename = 'mesh', vtk_out = False, symmetric_mesh = True):
   """
   Create a circular mesh, either symmetric or full.
@@ -77,6 +78,9 @@ def circle_mesh_symmetric(xc = [0., 0., 0.], r = 1., h = 0.1, filename = 'mesh',
 
     # generate mesh
     gmsh.model.mesh.generate(3)
+
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
 
   # write
   gmsh.write(filename + '.msh')
@@ -157,6 +161,9 @@ def ellipse_mesh_symmetric(xc = [0., 0., 0.], rx = 1., ry = 0.5, h = 0.1, filena
 
     # generate mesh
     gmsh.model.mesh.generate(3)
+
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
 
   # Write output files
   gmsh.write(filename + '.msh')
@@ -243,6 +250,9 @@ def sphere_mesh_symmetric(xc = [0., 0., 0.], r = 1., h = 0.1, filename = 'mesh',
     # Generate 3D mesh
     gmsh.model.mesh.generate(3)
   
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
+
   # Write output files
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -328,6 +338,9 @@ def rectangle_mesh_symmetric(xc = [0., 0., 0.], Lx = 1., Ly = 1., h = 0.1, filen
     # generate mesh
     gmsh.model.mesh.generate(3)
 
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
+
   # write
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -408,6 +421,9 @@ def hexagon_mesh_symmetric(xc = [0., 0., 0.], r = 1., h = 0.1, filename = 'mesh'
 
     # generate mesh
     gmsh.model.mesh.generate(3)
+
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
 
   # Write output files
   gmsh.write(filename + '.msh')
@@ -497,6 +513,9 @@ def drum2d_mesh_symmetric(xc = [0., 0., 0.], r = 1., width = 1., h = 0.1, filena
     # generate mesh
     gmsh.model.mesh.generate(3)
 
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
+
   # Write output files
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -565,6 +584,9 @@ def polygon_mesh_symmetric(points, theta, xc=[0., 0., 0.], h=0.1, filename='mesh
   
   # Translate to final position if needed
   gmsh_translate(xc)
+
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
   
   # Write output files
   gmsh.write(filename + '.msh')
@@ -636,9 +658,17 @@ def cylindrical2d_wall_mesh(center=[0., 0., 0.], outer_radius=1.0, inner_radius=
   # Create surface with hole
   s1 = gmsh.model.geo.addPlaneSurface([outer_loop, inner_loop])
   
-  # Synchronize and generate mesh
+  # Synchronize geometry before adding physical groups
   gmsh.model.geo.synchronize()
+  
+  # Add physical group for the surface
+  gmsh.model.addPhysicalGroup(2, [s1], 1)
+  
+  # Generate mesh
   gmsh.model.mesh.generate(2)
+  
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
   
   # Write output files
   gmsh.write(filename + '.msh')
@@ -729,6 +759,9 @@ def triangle_mesh_symmetric(xc=[0., 0., 0.], r=1., h=0.1, filename='mesh', vtk_o
     # Generate mesh
     gmsh.model.mesh.generate(3)
   
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
+  
   # Write output files
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -807,6 +840,9 @@ def cuboid_mesh_symmetric(xc = [0., 0., 0.], Lx = 1., Ly = 1., Lz = 1., h = 0.1,
     # Generate 3D mesh
     gmsh.model.mesh.generate(3)
   
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
+
   # Write output files
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -890,6 +926,9 @@ def ellipsoid_mesh_symmetric(xc = [0., 0., 0.], rx = 1., ry = 0.5, rz = 0.3, h =
     
     # Generate 3D mesh
     gmsh.model.mesh.generate(3)
+  
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
   
   # Write output files
   gmsh.write(filename + '.msh')
@@ -978,6 +1017,9 @@ def cylinder_mesh_symmetric(xc = [0., 0., 0.], r = 1., h = 1., mesh_size = 0.1, 
     
     # Generate 3D mesh
     gmsh.model.mesh.generate(3)
+  
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
   
   # Write output files
   gmsh.write(filename + '.msh')
@@ -1071,12 +1113,17 @@ def annulus_circle_mesh_symmetric(xc = [0., 0., 0.], r_outer = 1., r_inner = 0.5
     # surface
     s1 = gmsh.model.geo.addPlaneSurface([outer_loop, inner_loop])
 
-    # designate surface as physical surface
-    gmsh.model.addPhysicalGroup(2, [s1], 1)
-    
-    # Synchronize and generate mesh
+    # Synchronize geometry before adding physical groups
     gmsh.model.geo.synchronize()
+
+    # Add physical group for the surface
+    gmsh.model.addPhysicalGroup(2, [s1], 1)
+
+    # Generate mesh
     gmsh.model.mesh.generate(2)
+
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
     
   # Write output files
   gmsh.write(filename + '.msh')
@@ -1194,6 +1241,9 @@ def annulus_rectangle_mesh(xc=[0., 0., 0.], Lx=1., Ly=1., hole_Lx=0.3, hole_Ly=0
     gmsh.model.geo.synchronize()
     gmsh.model.mesh.generate(2)
 
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
+
   # Write mesh files
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -1256,6 +1306,9 @@ def open_rectangle_mesh(xc = [0., 0., 0.], Lx = 1., Ly = 1., hole_Lx = 0.5, hole
   gmsh_transform(m, 1000, 1000000, 1000000, -1, 1, 1)
   gmsh.model.mesh.removeDuplicateNodes()
   gmsh_translate(xc)
+
+  # Check for hanging nodes before writing
+  check_hanging_nodes()
 
   gmsh.write(filename + '.msh')
   if vtk_out:
@@ -1340,6 +1393,9 @@ def open_pipe_mesh(xc=[0., 0., 0.], axis=[0., 0., 1.], length=2., outer_radius=1
     
     # Generate 3D mesh
     gmsh.model.mesh.generate(3)
+
+    # Check for hanging nodes before writing
+    check_hanging_nodes()
     
     # Write mesh files
     gmsh.write(filename + '.msh')
@@ -1353,7 +1409,9 @@ def open_pipe_mesh(xc=[0., 0., 0.], axis=[0., 0., 1.], length=2., outer_radius=1
 if __name__ == "__main__":
   inp_dir = './'
 
-  test_meshes = ['circle', 'ellipse', 'sphere', 'cuboid', 'ellipsoid', 'rectangle', 'hexagon', 'drum2d', 'triangle', 'polygon', 'cylindrical2d_wall', 'cylinder', 'annulus_circle', 'annulus_rectangle', 'open_rectangle', 'open_pipe']
+  test_meshes = ['circle', 'ellipse', 'sphere', 'cuboid', 'ellipsoid', 'rectangle', \
+                 'hexagon', 'drum2d', 'triangle', 'polygon', 'cylindrical2d_wall', \
+                 'cylinder', 'annulus_circle', 'annulus_rectangle', 'open_rectangle', 'open_pipe']
   test_meshes = ['open_pipe']
   symm_flag = 0 # 0 - both, 1 - symmetric, 2 - non-symmetric
   

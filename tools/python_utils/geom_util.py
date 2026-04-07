@@ -71,15 +71,15 @@ def get_ref_triangle_points(center, radius, add_center = False):
 
   Reference triangle:
               
-      + v2
-      | \
-      |      \
-      |            \  
-      |    o           + v1
-      |            /
-      |      /
-      | /
-      + v3
+  #    + v2
+  #    | \
+  #    |      \
+  #    |            \  
+  #    |    o           + v1
+  #    |            /
+  #    |      /
+  #    | /
+  #    + v3
   
   Radius: o-v1 
   Axis vector: o-v1
@@ -379,3 +379,38 @@ def gmsh_translate(xc):
         # Handle paramCoord properly - use empty list if paramCoord is None or empty
         param = paramCoord[3*i:3*(i+1)] if paramCoord is not None and len(paramCoord) > 0 else []
         gmsh.model.mesh.setNode(nodeTag, new_coord, param)
+
+def check_hanging_nodes():
+    """Check for hanging/orphan nodes in the GMSH mesh that are not connected to any elements.
+    
+    Returns:
+    -------
+    list
+        List of node tags that are hanging (not connected to any elements)
+    bool
+        True if hanging nodes were found, False otherwise
+    """
+    # Get all nodes in the mesh
+    all_node_tags, _, _ = gmsh.model.mesh.getNodes()
+    all_node_tags = set(all_node_tags)
+    
+    # Get all nodes that are part of elements
+    connected_nodes = set()
+    
+    # Iterate through all entities in the model
+    for entity in gmsh.model.getEntities():
+        # Get elements for this entity
+        elem_types, elem_tags, elem_node_tags = gmsh.model.mesh.getElements(entity[0], entity[1])
+        
+        # Add all nodes from elements to connected set
+        for nodes in elem_node_tags:
+            connected_nodes.update(nodes)
+    
+    # Find hanging nodes (nodes that exist but aren't in any elements)
+    hanging_nodes = list(all_node_tags - connected_nodes)
+    
+    has_hanging = len(hanging_nodes) > 0
+    if has_hanging:
+        print(f"Warning: Found {len(hanging_nodes)} hanging nodes with tags: {hanging_nodes}")
+    
+    return hanging_nodes, has_hanging

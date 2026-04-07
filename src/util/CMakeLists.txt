@@ -11,3 +11,11 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 add_library(Util ${SOURCES})
 
 target_link_libraries(Util PUBLIC ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES} Threads::Threads MPI::MPI_CXX )
+
+target_include_directories(Util
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
+    $<INSTALL_INTERFACE:include>
+)

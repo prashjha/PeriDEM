@@ -13,8 +13,12 @@
 
 #include<cstddef>
 
-size_t const MAJOR_VERSION = 0;
-size_t const MINOR_VERSION = 2;
-size_t const UPDATE_VERSION = 0;
+#define PERIDEM_VERSION_MAJOR 0
+#define PERIDEM_VERSION_MINOR 2
+#define PERIDEM_VERSION_PATCH 1
+
+const size_t MAJOR_VERSION = PERIDEM_VERSION_MAJOR;
+const size_t MINOR_VERSION = PERIDEM_VERSION_MINOR;
+const size_t UPDATE_VERSION = PERIDEM_VERSION_PATCH;
 
 #endif
