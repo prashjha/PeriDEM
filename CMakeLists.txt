@@ -8,20 +8,13 @@
 
 cmake_minimum_required(VERSION 3.10...4.3)
 
+include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/PeriDEM_Apple_LLVM.cmake")
+peridem_apple_llvm_before_project()
+
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
 #----------------------------------#
 project(PeriDEM VERSION 0.2.1 LANGUAGES CXX C)
-
-# Homebrew LLVM on macOS: default CMAKE_AR is /usr/bin/ar while CMAKE_RANLIB may be
-# llvm-ranlib; mixing them produces invalid .a archives (bogus members like "/").
-if(APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  get_filename_component(_PDEM_LLVM_BIN "${CMAKE_CXX_COMPILER}" DIRECTORY)
-  if(EXISTS "${_PDEM_LLVM_BIN}/llvm-ar" AND EXISTS "${_PDEM_LLVM_BIN}/llvm-ranlib")
-    set(CMAKE_AR "${_PDEM_LLVM_BIN}/llvm-ar" CACHE FILEPATH "Archiver for static libraries" FORCE)
-    set(CMAKE_RANLIB "${_PDEM_LLVM_BIN}/llvm-ranlib" CACHE FILEPATH "Ranlib for static libraries" FORCE)
-  endif()
-endif()
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
 set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamics-based high-fidelity model for granular media")
@@ -82,8 +75,10 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif ()
 
-# set standard to 23
-set(CMAKE_CXX_STANDARD 23)
+peridem_apple_llvm_after_project()
+
+# C++20: std::format and related library facilities; no C++23-only features required in-tree.
+set(CMAKE_CXX_STANDARD 20)
 
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
