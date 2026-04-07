@@ -126,8 +126,8 @@ if(APPLE AND CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
   unset(_PDEM_LLVM_BIN)
 endif()
 
-# set standard to 23
-set(CMAKE_CXX_STANDARD 23)
+# C++20: std::format and related library facilities; no C++23-only features required in-tree.
+set(CMAKE_CXX_STANDARD 20)
 
 if (${Enable_CMAKE_Debug_Build})
     message(STATUS "CMAKE_CXX_COMPILER_ID = ${CMAKE_CXX_COMPILER_ID}")
