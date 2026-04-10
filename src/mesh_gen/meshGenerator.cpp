@@ -16,10 +16,52 @@
 #include "inp/meshDeck.h"
 #include "inp/modelDeck.h"
 #include "mesh/mesh.h"
+#include "util/feElementDefs.h"
+#include <fstream>
 #include <gmsh.h>
+#include <iomanip>
 #include <stdexcept>
+#include <string>
 
 namespace mesh_gen {
+
+namespace {
+
+/** One-shot Gmsh 2.2 ASCII from filled 2D triangle mesh (nodes z=0; matches fillMeshFromActiveGmshModel). */
+void writeGmshMsh22From2DTriangleMesh(const mesh::Mesh &m, const std::string &path) {
+  if (m.getElementType() != util::vtk_type_triangle)
+    throw std::runtime_error("writeGmshMsh22From2DTriangleMesh: only triangle meshes are supported.");
+  if (m.getDimension() != 2)
+    throw std::runtime_error("writeGmshMsh22From2DTriangleMesh: dimension must be 2.");
+
+  const auto &nodes = m.getNodes();
+  const auto &enc = m.getElementConnectivities();
+  const size_t n = nodes.size();
+  const size_t ne = enc.size() / 3;
+
+  std::ofstream out(path);
+  if (!out)
+    throw std::runtime_error("writeGmshMsh22From2DTriangleMesh: cannot open " + path);
+
+  out << std::setprecision(17);
+  out << "$MeshFormat\n2.2 0 8\n$EndMeshFormat\n";
+  out << "$Nodes\n" << n << "\n";
+  for (size_t i = 0; i < n; ++i) {
+    const auto &p = nodes[i];
+    out << (i + 1) << " " << p.d_x << " " << p.d_y << " 0\n";
+  }
+  out << "$EndNodes\n";
+  out << "$Elements\n" << ne << "\n";
+  for (size_t e = 0; e < ne; ++e) {
+    const size_t a = enc[3 * e] + 1;
+    const size_t b = enc[3 * e + 1] + 1;
+    const size_t c = enc[3 * e + 2] + 1;
+    out << (e + 1) << " 2 2 0 1 " << a << " " << b << " " << c << "\n";
+  }
+  out << "$EndElements\n";
+}
+
+} // namespace
 
 void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &geomObj, double h,
                                      const std::string &filenameStem, bool vtk_out,
@@ -59,7 +101,10 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
       gmsh::option::setNumber("Mesh.MeshSizeMin", h);
       gmsh::option::setNumber("Mesh.MeshSizeMax", h);
     }
-    gmsh::model::mesh::generate(gmshMeshGenerateDim(modelDeck));
+    const int genDim = gmshMeshGenerateDim(modelDeck);
+    if (genDim == 2)
+      gmsh::option::setNumber("Mesh.Algorithm", 5); // 2D Delaunay (default 6 = Frontal-Delaunay breaks some geo polygons)
+    gmsh::model::mesh::generate(genDim);
   } catch (...) {
     gmsh::finalize();
     throw;
@@ -80,7 +125,11 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
     if (filenameStem.empty())
       throw std::runtime_error(
           "generateBuiltinParticleMeshGmsh: non-empty filename stem is required when writing a .msh file.");
-    gmsh::write(filenameStem + ".msh");
+    const std::string mshPath = filenameStem + ".msh";
+    if (modelDeck != nullptr && modelDeck->d_dim == 2 && out_mesh != nullptr)
+      writeGmshMsh22From2DTriangleMesh(*out_mesh, mshPath);
+    else
+      gmsh::write(mshPath);
   }
 
   if (vtk_out) {

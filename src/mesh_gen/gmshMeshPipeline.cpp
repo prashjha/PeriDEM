@@ -36,6 +36,11 @@ void fillMeshFromActiveGmshModel(mesh::Mesh *mesh_p, const inp::MeshDeck *meshDe
   std::vector<double> paramCoord;
   gmsh::model::mesh::getNodes(nodeTags, coord, paramCoord);
 
+  if (modelDeck != nullptr && modelDeck->d_dim == 2) {
+    for (size_t i = 0; i < nodeTags.size(); ++i)
+      coord[3 * i + 2] = 0.;
+  }
+
   std::unordered_map<std::size_t, std::size_t> tagToIdx;
   tagToIdx.reserve(nodeTags.size());
   for (size_t i = 0; i < nodeTags.size(); ++i)

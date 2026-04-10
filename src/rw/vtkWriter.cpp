@@ -17,6 +17,7 @@
 #include <vtkIntArray.h>
 #include <vtkPointData.h>
 #include <vtkPoints.h>
+#include <vtkUnsignedCharArray.h>
 #include <vtkUnsignedIntArray.h>
 
 rw::writer::VtkWriter::VtkWriter(const std::string &filename,
@@ -72,24 +73,23 @@ void rw::writer::VtkWriter::appendMesh(
   //
   // element node connectivity
   auto cells = vtkSmartPointer<vtkCellArray>::New();
-  cells->Allocate(num_vertex, num_elems);
+  cells->AllocateEstimate(static_cast<vtkIdType>(num_elems), static_cast<vtkIdType>(num_vertex));
 
-  // element type
-  int cell_types[num_elems];
+  auto cellTypeArray = vtkSmartPointer<vtkUnsignedCharArray>::New();
+  cellTypeArray->SetNumberOfValues(static_cast<vtkIdType>(num_elems));
 
-  vtkIdType ids[num_vertex];
+  vtkIdType ids[8];
   for (size_t i = 0; i < num_elems; i++) {
 
     // get ids of vertex of this element
     for (size_t k = 0; k < num_vertex; k++)
       ids[k] = (*en_con)[num_vertex*i + k];
 
-    cells->InsertNextCell(num_vertex, ids);
-    cell_types[i] = element_type;
+    cells->InsertNextCell(static_cast<int>(num_vertex), ids);
+    cellTypeArray->SetValue(static_cast<vtkIdType>(i), static_cast<unsigned char>(element_type));
   }
 
-  // element node connectivity
-  d_grid_p->SetCells(cell_types, cells);
+  d_grid_p->SetCells(cellTypeArray, cells);
 }
 
 void rw::writer::VtkWriter::appendPointData(const std::string &name,

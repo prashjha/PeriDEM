@@ -17,6 +17,7 @@
 #include <vtkIntArray.h>
 #include <vtkPointData.h>
 #include <vtkPoints.h>
+#include <vtkUnsignedCharArray.h>
 #include <vtkUnsignedIntArray.h>
 
 #include "mesh/mesh.h"
@@ -306,10 +307,12 @@ void rw::writer::VtkParticleWriter::appendMesh(
 
   // element node connectivity
   auto cells = vtkSmartPointer<vtkCellArray>::New();
-  cells->Allocate(num_vertex, num_elems);
+  // VTK 9+: legacy Allocate(sz,ext) maps to AllocateExact(sz,sz); use AllocateEstimate.
+  cells->AllocateEstimate(static_cast<vtkIdType>(num_elems), static_cast<vtkIdType>(num_vertex));
 
-  // element type
-  std::vector<int> cell_types(num_elems);
+  // VTK 9+: prefer vtkUnsignedCharArray for cell types (XML writer path).
+  auto cellTypeArray = vtkSmartPointer<vtkUnsignedCharArray>::New();
+  cellTypeArray->SetNumberOfValues(static_cast<vtkIdType>(num_elems));
 
   // loop over particles
   size_t global_elem_counter = 0;
@@ -322,24 +325,24 @@ void rw::writer::VtkParticleWriter::appendMesh(
 
     // loop over elements of this particle
     size_t num_vertex_p = util::vtk_map_element_to_num_nodes[element_type];
-    vtkIdType ids[num_vertex_p];
-    for (size_t e =0; e < mesh->getNumElements(); e++) {
+    vtkIdType ids[8];
+    for (size_t e = 0; e < mesh->getNumElements(); e++) {
       auto elem = mesh->getElementConnectivity(e);
 
       // assign global ids to the nodes
-      for (size_t n=0; n<elem.size(); n++)
+      for (size_t n = 0; n < elem.size(); n++)
         ids[n] = elem[n] + p->d_globStart;
 
-      cells->InsertNextCell(num_vertex_p, ids);
-      cell_types[global_elem_counter] = element_type;
+      cells->InsertNextCell(static_cast<int>(num_vertex_p), ids);
+      cellTypeArray->SetValue(static_cast<vtkIdType>(global_elem_counter),
+                              static_cast<unsigned char>(element_type));
 
       // increment global element counter
       global_elem_counter++;
     }
   }
 
-  // element node connectivity
-  d_grid_p->SetCells(cell_types.data(), cells);
+  d_grid_p->SetCells(cellTypeArray, cells);
 }
 
 void rw::writer::VtkParticleWriter::addTimeStep(const double &timestep) {
@@ -378,6 +381,9 @@ void rw::writer::VtkParticleWriter::appendContactData(
   const size_t num_nodes = processed_nodes->size();
   const size_t num_elems = processed_elems->size();
 
+  if (num_elems == 0)
+    return;
+
   // get all the nodes first
   for (const auto &i : *processed_nodes) {
     const auto &x = model->d_x[i];
@@ -393,10 +399,10 @@ void rw::writer::VtkParticleWriter::appendContactData(
   const size_t num_vertex = 2;
   // element node connectivity
   auto cells = vtkSmartPointer<vtkCellArray>::New();
-  cells->Allocate(num_vertex, num_elems);
+  cells->AllocateEstimate(static_cast<vtkIdType>(num_elems), static_cast<vtkIdType>(num_vertex));
 
-  // element type
-  int cell_types[num_elems];
+  auto cellTypeArray = vtkSmartPointer<vtkUnsignedCharArray>::New();
+  cellTypeArray->SetNumberOfValues(static_cast<vtkIdType>(num_elems));
 
   vtkIdType ids[num_vertex];
   for (size_t i = 0; i < num_elems; i++) {
@@ -404,12 +410,11 @@ void rw::writer::VtkParticleWriter::appendContactData(
     ids[0] = (*processed_elems)[i].first;
     ids[1] = (*processed_elems)[i].second;
 
-    cells->InsertNextCell(num_vertex, ids);
-    cell_types[i] = vtk_element_type;
+    cells->InsertNextCell(static_cast<int>(num_vertex), ids);
+    cellTypeArray->SetValue(static_cast<vtkIdType>(i), static_cast<unsigned char>(vtk_element_type));
   }
 
-  // element node connectivity
-  d_grid_p->SetCells(cell_types, cells);
+  d_grid_p->SetCells(cellTypeArray, cells);
 
   // write cell data (normal direction)
   {

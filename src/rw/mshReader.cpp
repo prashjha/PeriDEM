@@ -135,7 +135,11 @@ void rw::reader::MshReader::readMesh(size_t dim,
           std::cerr << "Error: MshReader: node id out of range in file " << d_filename << "\n";
           exit(EXIT_FAILURE);
         }
-        (*nodes)[id - 1] = util::Point(x, y, z);
+        // 2D: planar meshes use xy; some .msh exports leave z as denormal/garbage — ignore file z.
+        if (dim == 2)
+          (*nodes)[id - 1] = util::Point(x, y, 0.);
+        else
+          (*nodes)[id - 1] = util::Point(x, y, z);
       }
     } else if (line == "$Elements" || line == "$ELM") {
       read_elements = true;

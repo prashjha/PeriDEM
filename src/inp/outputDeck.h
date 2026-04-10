@@ -170,6 +170,8 @@ namespace inp {
 
       d_outFormat = j.value("File_Format", "vtu");
       d_path = j.value("Path", "./");
+      if (d_path.empty())
+        d_path = "./";
       d_dtOut = j.value("Output_Interval", size_t(1));
       d_dtOutOld = d_dtOut;
       d_dtOutCriteria = d_dtOut;

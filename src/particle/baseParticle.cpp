@@ -86,8 +86,9 @@ particle::BaseParticle::BaseParticle(size_t id,
 
     for (size_t i = 0; i < d_rp_p->getNumNodes(); i++) {
 
-      d_modelData_p->d_xRef.push_back(d_tform.apply(d_rp_p->getNode(i)));
-      d_modelData_p->d_x.push_back(d_tform.apply(d_rp_p->getNode(i)));
+      util::Point x0 = d_tform.apply(d_rp_p->getNode(i));
+      d_modelData_p->d_xRef.push_back(x0);
+      d_modelData_p->d_x.push_back(x0);
       d_modelData_p->d_u.push_back(util::Point());
       d_modelData_p->d_v.push_back(util::Point());
       d_modelData_p->d_vMag.push_back(0.);

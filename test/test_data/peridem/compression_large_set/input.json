@@ -14,7 +14,7 @@
     "Seed": 0
   },
   "Output": {
-    "Path": "",
+    "Path": "./",
     "Perform_Out": true,
     "Tags": [
       "Displacement",
