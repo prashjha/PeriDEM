@@ -28,11 +28,11 @@ namespace mesh {
 Mesh::Mesh(size_t dim)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
       d_h(0.), d_dim(dim), d_encDataPopulated(false), d_needEncData(false),
-      d_nPart(0){}
+      d_nPart(0) {}
 
 Mesh::Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck)
     : d_numNodes(0), d_numElems(0), d_eType(1), d_eNumVertex(0), d_numDofs(0),
-      d_h(meshDeck->d_h), d_dim(modelDeck->d_dim),
+      d_h(0.), d_dim(modelDeck->d_dim),
       d_spatialDiscretization(modelDeck->d_spatialDiscretization),
       d_filename(meshDeck->d_filename), d_encDataPopulated(false),
       d_needEncData(modelDeck->d_populateElementNodeConnectivity),
@@ -172,8 +172,6 @@ void Mesh::createData(const std::string &filename, bool ref_config) {
   //
   computeBBox();
 
-  // check if we need to compute mesh size
-  //if (deck->d_computeMeshSize)
   computeMeshSize();
 
   // check nodal volume
@@ -216,7 +214,6 @@ void Mesh::loadFromTriangleElements2D(std::vector<util::Point> nodes,
   d_numElems = d_enc.size() / 3;
   d_dim = modelDeck->d_dim;
   d_spatialDiscretization = modelDeck->d_spatialDiscretization;
-  d_h = meshDeck->d_h;
   d_filename = meshDeck->d_filename;
   d_needEncData = modelDeck->d_populateElementNodeConnectivity;
   d_encDataPopulated = true;
@@ -282,7 +279,6 @@ void Mesh::loadFromTetraElements3D(std::vector<util::Point> nodes,
   d_numElems = d_enc.size() / 4;
   d_dim = modelDeck->d_dim;
   d_spatialDiscretization = modelDeck->d_spatialDiscretization;
-  d_h = meshDeck->d_h;
   d_filename = meshDeck->d_filename;
   d_needEncData = modelDeck->d_populateElementNodeConnectivity;
   d_encDataPopulated = true;

@@ -533,7 +533,7 @@ public:
   /*! @brief Bounding box */
   std::pair<std::vector<double>, std::vector<double>> d_bbox;
 
-  /*! @brief Mesh size */
+  /*! @brief Characteristic mesh spacing (minimum nodal distance); always from computeMeshSize() after nodes exist. */
   double d_h;
 };
 

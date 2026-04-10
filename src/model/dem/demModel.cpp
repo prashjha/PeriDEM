@@ -1129,7 +1129,7 @@ void model::DEMModel::createParticles() {
           if (span <= 0.)
             throw std::runtime_error(d_name + ": uniform mesh: non-positive axis extent from geom box "
                                                  "(axis " + std::to_string(i) + ").");
-          nGrid[i] = static_cast<size_t>(span / zmeshDeck.d_h);
+          nGrid[i] = static_cast<size_t>(span / zmeshDeck.d_hMeshing);
         }
 
         mesh::Mesh temp_mesh;
@@ -1146,7 +1146,7 @@ void model::DEMModel::createParticles() {
             zmeshDeck.d_filename.empty()
                 ? std::string()
                 : util::io::removeExtensionFromFile(zmeshDeck.d_filename);
-        mesh_gen::generateBuiltinParticleMeshGmsh(zgeomDeck.d_geom_p, zmeshDeck.d_h, mesh_stem, false,
+        mesh_gen::generateBuiltinParticleMeshGmsh(zgeomDeck.d_geom_p, zmeshDeck.d_hMeshing, mesh_stem, false,
                                                   zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
                                                   d_modelDeck_p.get());
         mesh = std::make_shared<mesh::Mesh>(temp_mesh);

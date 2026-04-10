@@ -386,9 +386,9 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   for (int zi = 0; zi < 10; ++zi) {
     const std::string fname = (inp_dir / (std::string(mesh_names[zi]) + ".msh")).string();
     meshRoot["Set_" + std::to_string(zi + 1)] =
-        json{{"Mesh_Size", mesh_size},
-             {"File", fname},
-             {"CreateMesh", json{{"Flag", true}, {"Info", "gmsh_builtin_mesh"}, {"Write_Mesh_File", true}}}};
+        json{{"File", fname},
+             {"CreateMesh",
+              json{{"Flag", true}, {"Info", "gmsh_builtin_mesh"}, {"Mesh_Size", mesh_size}, {"Write_Mesh_File", true}}}};
   }
   pDeckJson["Mesh"] = meshRoot;
 
@@ -417,28 +417,24 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double beta_n_factor = 100.;
   const double Kn_factor = 1.;
 
-  auto KnForPair = [&](int i, int j) -> double {
-    auto is_p = [](int z) { return z >= 0 && z <= 7; };
-    auto is_w = [](int z) { return z >= 8; };
-    if (is_w(i) && is_w(j))
-      return Kn_ww;
-    if (is_p(i) && is_p(j))
-      return Kn_pp;
-    if ((is_p(i) && is_w(j)) || (is_w(i) && is_p(j)))
-      return Kn_pw;
-    return Kn_pp;
-  };
+  /* Contact zones are decoupled from geometry: 0 = granular, 1 = fixed wall, 2 = moving wall (3×3 matrix). */
+  const json j_contact_pp =
+      contactPairJson(R_contact_factor, damping_on, friction_on, Kn_pp, beta_n_eps, friction_coeff, Kn_factor,
+                      beta_n_factor);
+  const json j_contact_pw =
+      contactPairJson(R_contact_factor, damping_on, friction_on, Kn_pw, beta_n_eps, friction_coeff, Kn_factor,
+                      beta_n_factor);
+  const json j_contact_ww =
+      contactPairJson(R_contact_factor, damping_on, friction_on, Kn_ww, beta_n_eps, friction_coeff, Kn_factor,
+                      beta_n_factor);
 
-  json contactRoot = inp::ContactDeck::getExampleJson(10);
-  for (int i = 0; i < 10; ++i) {
-    for (int k = i; k < 10; ++k) {
-      const std::string name = "Set_" + std::to_string(i + 1) + "_" + std::to_string(k + 1);
-      const double Kn = KnForPair(i, k);
-      contactRoot[name] =
-          contactPairJson(R_contact_factor, damping_on, friction_on, Kn, beta_n_eps, friction_coeff, Kn_factor,
-                          beta_n_factor);
-    }
-  }
+  json contactRoot = inp::ContactDeck::getExampleJson(3);
+  contactRoot["Set_1_1"] = j_contact_pp;
+  contactRoot["Set_1_2"] = j_contact_pw;
+  contactRoot["Set_1_3"] = json{{"Copy_Data", json::array({1, 2})}};
+  contactRoot["Set_2_2"] = j_contact_ww;
+  contactRoot["Set_2_3"] = json{{"Copy_Data", json::array({2, 2})}};
+  contactRoot["Set_3_3"] = json{{"Copy_Data", json::array({2, 2})}};
   pDeckJson["Contact"] = contactRoot;
 
   pDeckJson["Neighbor"] = inp::PNeighborDeck::getExampleJson("simple_all", 10.0, 100, 0.5);
@@ -447,13 +443,17 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   pGenJson["Random_Rotation"] = false;
   pGenJson["Data"]["N"] = n_total;
 
+  constexpr size_t k_contact_grains = 0;
+  constexpr size_t k_contact_wall_fixed = 1;
+  constexpr size_t k_contact_wall_moving = 2;
+
   for (size_t pi = 0; pi < n_pack; ++pi) {
     const auto &p = packed[pi];
     pGenJson["Data"][std::to_string(pi)] = json{
         {"x", p.x},         {"y", p.y},         {"z", 0.0},         {"theta", p.theta},
         {"s", 1.0},         {"geom_id", static_cast<size_t>(p.zone)},
         {"mat_id", static_cast<size_t>(p.zone)},
-        {"contact_id", static_cast<size_t>(p.zone)},
+        {"contact_id", k_contact_grains},
     };
   }
 
@@ -464,7 +464,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
                                                   {"s", 1.0},
                                                   {"geom_id", size_t(8)},
                                                   {"mat_id", size_t(8)},
-                                                  {"contact_id", size_t(8)}};
+                                                  {"contact_id", k_contact_wall_fixed}};
 
   pGenJson["Data"][std::to_string(n_pack + 1)] = json{{"x", site_wall_moving.d_x},
                                                        {"y", site_wall_moving.d_y},
@@ -473,13 +473,14 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
                                                        {"s", 1.0},
                                                        {"geom_id", size_t(9)},
                                                        {"mat_id", size_t(9)},
-                                                       {"contact_id", size_t(9)}};
+                                                       {"contact_id", k_contact_wall_moving}};
 
   pDeckJson["Particle_Generation"] = pGenJson;
 
   /* Top-level comment only: ignored by inp::Input (only known sections are parsed). */
   return json{{"Comment",
-               "compression_large_set_inbuilt: void from packed bbox+margin; plate separate; see console log."},
+               "compression_large_set_inbuilt: void from packed bbox+margin; plate separate; Contact.Sets=3 "
+               "(contact_id 0/1/2 = grains / fixed wall / moving wall), geom/mat still 10 groups; see log."},
               {"Model", modelDeckJson},
               {"Output", outputDeckJson},
               {"Force_BC", bcDeckJson["Force_BC"]},

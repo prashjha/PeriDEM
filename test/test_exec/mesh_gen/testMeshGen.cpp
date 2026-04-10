@@ -84,9 +84,8 @@ bool builtinMeshSmokeTestForGeometry(const std::string &geomName, double s) {
     const double meshSize = s / 5.0;
 
     inp::MeshDeck meshDeck;
-    meshDeck.d_h = meshSize;
+    meshDeck.d_hMeshing = meshSize;
     meshDeck.d_filename = std::string("smoke_") + geomName + ".msh";
-    meshDeck.d_computeMeshSize = false;
 
     const size_t dim = meshDimForBuiltin(geomName, geom);
     const auto modelJson =

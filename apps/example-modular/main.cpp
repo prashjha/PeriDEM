@@ -180,28 +180,28 @@ int main(int argc, char *argv[]) {
   pDeckJson["Mesh"] = pMeshJson;
 
   //// create particle material json
-  auto pMatJson = inp::ParticleDeck::getParticleMaterialExampleJson(2); // two material groups
+  /* One PDState block; duplicate sets use Copy_Data = <1-based source set index> (see materialDeck). */
+  auto pMatJson = inp::ParticleDeck::getParticleMaterialExampleJson(3);
 
-  // material 1
   pMatJson["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, -1.,
-    2.2, 1200., 25000., 1200., 500., true, 1);
+                                                         2.2, 1200., 25000., 1200., 500., true, 1);
+  pMatJson["Set_2"] = json{{"Copy_Data", 1}};
+  pMatJson["Set_3"] = json{{"Copy_Data", 1}};
 
-  // material 2 (copy from material 1)
-  pMatJson["Set_2"] = {{"Copy_Data", 1}};
-
-  // add to the json
   pDeckJson["Material"] = pMatJson;
 
   //// create particle contact json
-  auto pContactJson = inp::ParticleDeck::getParticleContactExampleJson(2);
+  /* One contact pair definition; duplicates use Copy_Data = [i,j] (1-based) referencing Set_i_j. */
+  auto pContactJson = inp::ParticleDeck::getParticleContactExampleJson(3);
 
-  // contact pair 1 - 1
   pContactJson["Set_1_1"] = inp::ContactPairDeck::getExampleJson(0.95,
-      true, false, false,
-      1e+22, 0.95, 0., 1., 1., 1., 0., 25000.);
-  // copy other pairs
-  pContactJson["Set_1_2"] = {{"Copy_Data", std::vector<int>({1, 1})}};
-  pContactJson["Set_2_2"] = {{"Copy_Data", std::vector<int>({1, 1})}};
+                                                                 true, false, false,
+                                                                 1e+22, 0.95, 0., 1., 1., 1., 0., 25000.);
+  pContactJson["Set_1_2"] = json{{"Copy_Data", json::array({1, 1})}};
+  pContactJson["Set_1_3"] = json{{"Copy_Data", json::array({1, 1})}};
+  pContactJson["Set_2_2"] = json{{"Copy_Data", json::array({1, 1})}};
+  pContactJson["Set_2_3"] = json{{"Copy_Data", json::array({1, 1})}};
+  pContactJson["Set_3_3"] = json{{"Copy_Data", json::array({1, 1})}};
 
   // add to the json
   pDeckJson["Contact"] = pContactJson;
@@ -215,17 +215,14 @@ int main(int argc, char *argv[]) {
   // add data that will be used to create particles
   pGenJson["Data"]["N"] = 3; // three particles
 
-  // p1
   pGenJson["Data"]["0"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"theta", 0.}, {"s", 1.},
                            {"geom_id", 0}, {"mat_id", 0}, {"contact_id", 0}};
 
-  // p1
   pGenJson["Data"]["1"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"theta", 0.}, {"s", 1.},
                            {"geom_id", 1}, {"mat_id", 1}, {"contact_id", 1}};
 
-  // p1
   pGenJson["Data"]["2"] = {{"x", 0.}, {"y", 0.}, {"z", 0.}, {"theta", 0.}, {"s", 1.},
-                           {"geom_id", 2}, {"mat_id", 1}, {"contact_id", 1}};
+                           {"geom_id", 2}, {"mat_id", 2}, {"contact_id", 2}};
 
   // add to json
   pDeckJson["Particle_Generation"] = pGenJson;

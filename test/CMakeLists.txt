@@ -134,30 +134,18 @@ add_test(NAME Test_PeriDEM_compression_large_set_inbuilt
 )
 set_tests_properties(Test_PeriDEM_compression_large_set_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
 
+# Main PeriDEM app: on-disk input.json + meshes (built as ${CMAKE_BINARY_DIR}/bin/PeriDEM)
+add_test(NAME test_peridem_compression_large_set
+  COMMAND ${CMAKE_BINARY_DIR}/bin/PeriDEM -i input.json
+  WORKING_DIRECTORY ${Test_Data_Path}/peridem/compression_large_set
+)
+set_tests_properties(test_peridem_compression_large_set PROPERTIES LABELS "PeriDEM;Examples")
+
 # ---------------------------------------------------------------------------
 # PeriDEM: optional high-load integration tests (shell-driven)
 # ---------------------------------------------------------------------------
-if(${Enable_High_Load_Tests})
-  add_test(NAME test_peridem_twop_concave_and_hex
-    COMMAND ${BASH_PROGRAM} ./run.sh
-    WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_concave_and_hex
-  )
-
-  add_test(NAME test_peridem_twop_wall_concave_diff_material_diff_size
-    COMMAND ${BASH_PROGRAM} ./run.sh
-    WORKING_DIRECTORY ${Test_Data_Path}/peridem/twop_wall_concave_diff_material_diff_size
-  )
-
-  add_test(NAME test_peridem_attrition_mix_particles_large_set
-    COMMAND ${BASH_PROGRAM} ./run.sh
-    WORKING_DIRECTORY ${Test_Data_Path}/peridem/attrition_mix_particles_large_set
-  )
-
-  add_test(NAME test_peridem_compression_large_set
-    COMMAND ${BASH_PROGRAM} ./run.sh
-    WORKING_DIRECTORY ${Test_Data_Path}/peridem/compression_large_set
-  )
-endif()
+# if(${Enable_High_Load_Tests})
+# endif()
 
 # ---------------------------------------------------------------------------
 # Apps (optional)

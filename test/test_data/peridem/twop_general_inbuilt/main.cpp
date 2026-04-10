@@ -136,17 +136,17 @@ json buildInputJson(const std::string &geomName, const std::string &output_path_
 
   const std::string f1 = mesh_file_1.string();
   const std::string f2 = mesh_file_2.string();
-  auto meshSet1 = json({{"Mesh_Size", mesh_size},
-                        {"File", f1},
+  auto meshSet1 = json({{"File", f1},
                         {"CreateMesh",
                          {{"Flag", true},
                           {"Info", "gmsh_builtin_mesh"},
+                          {"Mesh_Size", mesh_size},
                           {"Write_Mesh_File", true}}}});
-  auto meshSet2 = json({{"Mesh_Size", mesh_size},
-                        {"File", f2},
+  auto meshSet2 = json({{"File", f2},
                         {"CreateMesh",
                          {{"Flag", true},
                           {"Info", "gmsh_builtin_mesh"},
+                          {"Mesh_Size", mesh_size},
                           {"Write_Mesh_File", true}}}});
   pDeckJson["Mesh"] = json({{"Sets", 2}, {"Set_1", meshSet1}, {"Set_2", meshSet2}});
 

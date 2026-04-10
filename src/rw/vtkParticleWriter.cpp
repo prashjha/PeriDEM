@@ -25,6 +25,7 @@
 #include "particle/baseParticle.h"
 
 #include "util/vecMethods.h"
+#include <vector>
 
 rw::writer::VtkParticleWriter::VtkParticleWriter(const std::string &filename,
                                  const std::string &compress_type)
@@ -300,12 +301,15 @@ void rw::writer::VtkParticleWriter::appendMesh(
       num_vertex = n;
   }
 
+  if (num_elems == 0)
+    return;
+
   // element node connectivity
   auto cells = vtkSmartPointer<vtkCellArray>::New();
   cells->Allocate(num_vertex, num_elems);
 
   // element type
-  int cell_types[num_elems];
+  std::vector<int> cell_types(num_elems);
 
   // loop over particles
   size_t global_elem_counter = 0;
@@ -335,7 +339,7 @@ void rw::writer::VtkParticleWriter::appendMesh(
   }
 
   // element node connectivity
-  d_grid_p->SetCells(cell_types, cells);
+  d_grid_p->SetCells(cell_types.data(), cells);
 }
 
 void rw::writer::VtkParticleWriter::addTimeStep(const double &timestep) {

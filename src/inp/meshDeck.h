@@ -28,11 +28,14 @@ struct MeshDeck {
   /*! @brief Filename to read mesh data */
   std::string d_filename;
 
-  /*! @brief Flag which indicates if mesh size is to be computed */
-  bool d_computeMeshSize;
-
-  /*! @brief Mesh size */
-  double d_h;
+  /*!
+   * @brief Target spacing for in-built meshers only (Gmsh uniform / uniform rectangle grid).
+   *
+   * Read from @c CreateMesh.Mesh_Size in JSON. It drives mesh generation only; the
+   * characteristic length stored on @c mesh::Mesh is always computed from the generated
+   * nodes (same as for meshes read from file).
+   */
+  double d_hMeshing;
 
   /*!
    * @brief Specify if we create mesh using in-built gmsh
@@ -52,38 +55,32 @@ struct MeshDeck {
   /*!
    * @brief Constructor
    */
-  MeshDeck(const json &j = json({})) : d_computeMeshSize(false),
-               d_h(0.), d_createMesh(false), d_writeMeshFile(true) {
+  MeshDeck(const json &j = json({})) : d_hMeshing(0.), d_createMesh(false), d_writeMeshFile(true) {
     readFromJson(j);
   };
 
   /*!
-   * @brief Constructor
+   * @brief Constructor for programmatic use (optional meshing size for tests).
    */
-  MeshDeck(std::string filename, double h = -1.)
-    : d_createMesh(false), d_filename(filename), d_writeMeshFile(true) {
-
-    if (h <= 0)
-      d_computeMeshSize = true;
-    else {
-      d_h = h;
-      d_computeMeshSize = false;
-    }
-  };
+  MeshDeck(std::string filename, double h_meshing = -1.)
+      : d_filename(std::move(filename)), d_hMeshing(h_meshing > 0. ? h_meshing : 0.),
+        d_createMesh(false), d_writeMeshFile(true) {}
 
   /*!
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
-  static json getExampleJson(std::string filename = "", double h = -1.) {
+  static json getExampleJson(std::string filename = "", double h_meshing = -1.) {
 
     auto j = json({});
-    if (!filename.empty()) j["File"] = filename;
-    if (h > 0)
-      j["Mesh_Size"] = h;
-
-    // TODO Add create mesh block
-
+    if (!filename.empty())
+      j["File"] = filename;
+    if (filename.empty() && h_meshing > 0.) {
+      j["CreateMesh"] = json{{"Flag", true},
+                             {"Info", "gmsh_builtin_mesh"},
+                             {"Mesh_Size", h_meshing},
+                             {"Write_Mesh_File", true}};
+    }
     return j;
   }
 
@@ -95,21 +92,25 @@ struct MeshDeck {
       return;
 
     d_filename = j.value("File", std::string());
-    if (j.find("Mesh_Size") != j.end()) {
-      d_computeMeshSize = false;
-      d_h = j.at("Mesh_Size").get<double>();
-    } else {
-      d_computeMeshSize = true;
-    }
+    d_hMeshing = 0.;
+    d_createMesh = false;
+    d_createMeshInfo = "uniform";
+    d_writeMeshFile = true;
 
     if (j.find("CreateMesh") != j.end()) {
-      d_createMesh = j.at("CreateMesh").value("Flag", false);
-      d_createMeshInfo = j.at("CreateMesh").value("Info", std::string("uniform"));
-      d_writeMeshFile = j.at("CreateMesh").value("Write_Mesh_File", true);
-
-      if (d_createMesh && j.find("Mesh_Size") == j.end())
-        throw std::runtime_error("Need Mesh_Size to create mesh using inbuilt function.");
+      const auto &cm = j.at("CreateMesh");
+      d_createMesh = cm.value("Flag", false);
+      d_createMeshInfo = cm.value("Info", std::string("uniform"));
+      d_writeMeshFile = cm.value("Write_Mesh_File", true);
+      if (cm.find("Mesh_Size") != cm.end())
+        d_hMeshing = cm.at("Mesh_Size").get<double>();
+      else if (d_createMesh && j.find("Mesh_Size") != j.end())
+        d_hMeshing = j.at("Mesh_Size").get<double>();
     }
+
+    if (d_createMesh && d_hMeshing <= 0.)
+      throw std::runtime_error(
+          "In-built mesh creation requires CreateMesh.Mesh_Size (or legacy top-level Mesh_Size).");
 
     if (d_filename.empty() && !d_createMesh) {
       throw std::runtime_error("Mesh filename can not be empty unless CreateMesh is enabled.");
@@ -129,8 +130,7 @@ struct MeshDeck {
     std::ostringstream oss;
     oss << tabS << "------- MeshDeck --------" << std::endl << std::endl;
     oss << tabS << "Filename = " << d_filename << std::endl;
-    oss << tabS << "Compute mesh size = " << d_computeMeshSize << std::endl;
-    oss << tabS << "Mesh size = " << d_h << std::endl;
+    oss << tabS << "Meshing size (in-built only) = " << d_hMeshing << std::endl;
     oss << tabS << "Create mesh = " << d_createMesh << std::endl;
     oss << tabS << "Create mesh info = " << d_createMeshInfo << std::endl;
     oss << tabS << "Write mesh file (Gmsh) = " << d_writeMeshFile << std::endl;
