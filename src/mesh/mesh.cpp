@@ -162,39 +162,8 @@ void Mesh::createData(const std::string &filename, bool ref_config) {
   if (d_spatialDiscretization == "weak_finite_element")
     compute_vol = false;
 
-  if (compute_vol) {
-    util::io::log("Mesh: Computing nodal volume.\n");
-    computeVol();
-  }
-
-  //
-  // compute bounding box
-  //
-  computeBBox();
-
-  computeMeshSize();
-
-  // check nodal volume
-  size_t counter = 0;
-  for (const auto &v : d_vol) {
-
-    if (v < 0.01 * std::pow(d_h, d_dim)) {
-
-      std::cerr << "Error: Check nodal volume " << v
-                << " is less than " <<  0.01 * std::pow(d_h, d_dim)
-                << ", Node = " << counter
-                << " at position = " << d_nodes[counter].printStr() << "\n"
-                << "mesh filename = " << filename << "\n"
-                << printStr() << "\n";
-
-      exit(1);
-    }
-
-    counter++;
-  }
-
-  if (d_needEncData and (!d_encDataPopulated or d_enc.empty()))
-    readElementData(d_filename);
+  finalizeMeshDerivedFieldsFromCurrentNodes(
+      compute_vol, std::string("mesh filename = ") + filename);
 }
 
 void Mesh::loadFromTriangleElements2D(std::vector<util::Point> nodes,
@@ -230,36 +199,9 @@ void Mesh::loadFromTriangleElements2D(std::vector<util::Point> nodes,
 
   d_numDofs = d_numNodes * d_dim;
 
-  bool is_fd = (d_spatialDiscretization == "finite_difference");
-
-  if (is_fd) {
-    util::io::log("Mesh: Computing nodal volume.\n");
-    computeVol();
-  }
-
-  computeBBox();
-  computeMeshSize();
-
-  size_t counter = 0;
-  for (const auto &v : d_vol) {
-
-    if (v < 0.01 * std::pow(d_h, d_dim)) {
-
-      std::cerr << "Error: Check nodal volume " << v
-                << " is less than " << 0.01 * std::pow(d_h, d_dim)
-                << ", Node = " << counter << " at position = " << d_nodes[counter].printStr()
-                << "\n"
-                << "(in-memory triangle mesh)\n"
-                << printStr() << "\n";
-
-      exit(1);
-    }
-
-    counter++;
-  }
-
-  if (d_needEncData and (!d_encDataPopulated or d_enc.empty()))
-    readElementData(d_filename);
+  finalizeMeshDerivedFieldsFromCurrentNodes(
+      d_spatialDiscretization == "finite_difference",
+      "(in-memory triangle mesh)");
 }
 
 void Mesh::loadFromTetraElements3D(std::vector<util::Point> nodes,
@@ -295,14 +237,21 @@ void Mesh::loadFromTetraElements3D(std::vector<util::Point> nodes,
 
   d_numDofs = d_numNodes * d_dim;
 
-  bool is_fd = (d_spatialDiscretization == "finite_difference");
+  finalizeMeshDerivedFieldsFromCurrentNodes(
+      d_spatialDiscretization == "finite_difference",
+      "(in-memory tetrahedron mesh)");
+}
 
-  if (is_fd) {
+void Mesh::finalizeMeshDerivedFieldsFromCurrentNodes(
+    bool compute_vol_from_elements, const std::string &volume_error_note) {
+
+  setZCoordinateZero();
+  computeBBox();
+  if (compute_vol_from_elements) {
     util::io::log("Mesh: Computing nodal volume.\n");
     computeVol();
   }
 
-  computeBBox();
   computeMeshSize();
 
   size_t counter = 0;
@@ -312,10 +261,11 @@ void Mesh::loadFromTetraElements3D(std::vector<util::Point> nodes,
 
       std::cerr << "Error: Check nodal volume " << v
                 << " is less than " << 0.01 * std::pow(d_h, d_dim)
-                << ", Node = " << counter << " at position = " << d_nodes[counter].printStr()
-                << "\n"
-                << "(in-memory tetrahedron mesh)\n"
-                << printStr() << "\n";
+                << ", Node = " << counter << " at position = "
+                << d_nodes[counter].printStr() << "\n";
+      if (!volume_error_note.empty())
+        std::cerr << volume_error_note << "\n";
+      std::cerr << printStr() << "\n";
 
       exit(1);
     }
@@ -454,6 +404,13 @@ void Mesh::computeVol() {
   ); // for_each
   
   executor.run(taskflow).get();
+}
+
+void Mesh::setZCoordinateZero() {
+  if (d_dim != 2)
+    return;
+  for (auto &p : d_nodes)
+    p.d_z = 0.;
 }
 
 void Mesh::computeBBox() {

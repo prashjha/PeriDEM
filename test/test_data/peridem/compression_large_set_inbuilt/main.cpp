@@ -257,7 +257,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   std::vector<PackedParticle> packed =
       generateParticleLocations(in_rect, max_y, mesh_size, R, N_target, padding, gen);
   if (packed.empty())
-    throw std::runtime_error("compression_large_set_inbuilt: particle pack is empty");
+    throw std::runtime_error("compression_large_set_inbuilt_2mat2contact: particle pack is empty");
   for (auto &p : packed)
     p.z = 0.0;
 
@@ -294,7 +294,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   std::vector<double> remove_rect = {void_lox, void_loy, center[2], void_hix, void_hi_y, center[2]};
 
   util::io::print(std::format(
-      "[compression_large_set_inbuilt] bbox(center±r) x∈[{:.6f},{:.6f}] y∈[{:.6f},{:.6f}]; "
+      "[compression_large_set_inbuilt_2mat2contact] bbox(center±r) x∈[{:.6f},{:.6f}] y∈[{:.6f},{:.6f}]; "
       "void x∈[{:.6f},{:.6f}] y_lo {:.6f}; plate y [{:.6f},{:.6f}]; void_hi {:.6f}; outer y∈[{:.6f},{:.6f}]\n",
       bb.min_x, bb.max_x, bb.min_y, bb.max_y, void_lox, void_hix, void_loy, plate_bottom_y, plate_top_y,
       void_hi_y, out_rect[1], out_rect[4]));
@@ -392,18 +392,11 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   }
   pDeckJson["Mesh"] = meshRoot;
 
-  json matRoot = json{{"Sets", 10}};
+  /* Two material laws: 0 = particle, 1 = wall (fixed + moving). geom_id still selects mesh shape (10 meshes). */
+  json matRoot = json{{"Sets", 2}};
   matRoot["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_p, K_p, G_p, Gc_p, true, 1);
-  matRoot["Set_2"] = json{{"Copy_Data", 1}};
-  matRoot["Set_3"] = json{{"Copy_Data", 1}};
-  matRoot["Set_4"] = json{{"Copy_Data", 1}};
-  matRoot["Set_5"] = json{{"Copy_Data", 1}};
-  matRoot["Set_6"] = json{{"Copy_Data", 1}};
-  matRoot["Set_7"] = json{{"Copy_Data", 1}};
-  matRoot["Set_8"] = json{{"Copy_Data", 1}};
-  matRoot["Set_9"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_wall, K_wall, G_wall,
-                                                       Gc_wall, true, 1);
-  matRoot["Set_10"] = json{{"Copy_Data", 9}};
+  matRoot["Set_2"] =
+      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_wall, K_wall, G_wall, Gc_wall, true, 1);
   pDeckJson["Material"] = matRoot;
 
   const double Kn_pp = KnFromBulk(K_p, K_p, horizon);
@@ -417,7 +410,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double beta_n_factor = 100.;
   const double Kn_factor = 1.;
 
-  /* Contact zones are decoupled from geometry: 0 = granular, 1 = fixed wall, 2 = moving wall (3×3 matrix). */
+  /* Contact zones: 0 = granular, 1 = wall (fixed + moving). 2×2 matrix → three unique pairs (1-1, 1-2, 2-2). */
   const json j_contact_pp =
       contactPairJson(R_contact_factor, damping_on, friction_on, Kn_pp, beta_n_eps, friction_coeff, Kn_factor,
                       beta_n_factor);
@@ -428,13 +421,10 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
       contactPairJson(R_contact_factor, damping_on, friction_on, Kn_ww, beta_n_eps, friction_coeff, Kn_factor,
                       beta_n_factor);
 
-  json contactRoot = inp::ContactDeck::getExampleJson(3);
+  json contactRoot = inp::ContactDeck::getExampleJson(2);
   contactRoot["Set_1_1"] = j_contact_pp;
   contactRoot["Set_1_2"] = j_contact_pw;
-  contactRoot["Set_1_3"] = json{{"Copy_Data", json::array({1, 2})}};
   contactRoot["Set_2_2"] = j_contact_ww;
-  contactRoot["Set_2_3"] = json{{"Copy_Data", json::array({2, 2})}};
-  contactRoot["Set_3_3"] = json{{"Copy_Data", json::array({2, 2})}};
   pDeckJson["Contact"] = contactRoot;
 
   pDeckJson["Neighbor"] = inp::PNeighborDeck::getExampleJson("simple_all", 10.0, 100, 0.5);
@@ -443,16 +433,17 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   pGenJson["Random_Rotation"] = false;
   pGenJson["Data"]["N"] = n_total;
 
+  constexpr size_t k_mat_particle = 0;
+  constexpr size_t k_mat_wall = 1;
   constexpr size_t k_contact_grains = 0;
-  constexpr size_t k_contact_wall_fixed = 1;
-  constexpr size_t k_contact_wall_moving = 2;
+  constexpr size_t k_contact_wall = 1;
 
   for (size_t pi = 0; pi < n_pack; ++pi) {
     const auto &p = packed[pi];
     pGenJson["Data"][std::to_string(pi)] = json{
         {"x", p.x},         {"y", p.y},         {"z", 0.0},         {"theta", p.theta},
         {"s", 1.0},         {"geom_id", static_cast<size_t>(p.zone)},
-        {"mat_id", static_cast<size_t>(p.zone)},
+        {"mat_id", k_mat_particle},
         {"contact_id", k_contact_grains},
     };
   }
@@ -463,8 +454,8 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
                                                   {"theta", 0.0},
                                                   {"s", 1.0},
                                                   {"geom_id", size_t(8)},
-                                                  {"mat_id", size_t(8)},
-                                                  {"contact_id", k_contact_wall_fixed}};
+                                                  {"mat_id", k_mat_wall},
+                                                  {"contact_id", k_contact_wall}};
 
   pGenJson["Data"][std::to_string(n_pack + 1)] = json{{"x", site_wall_moving.d_x},
                                                        {"y", site_wall_moving.d_y},
@@ -472,15 +463,14 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
                                                        {"theta", 0.0},
                                                        {"s", 1.0},
                                                        {"geom_id", size_t(9)},
-                                                       {"mat_id", size_t(9)},
-                                                       {"contact_id", k_contact_wall_moving}};
+                                                       {"mat_id", k_mat_wall},
+                                                       {"contact_id", k_contact_wall}};
 
   pDeckJson["Particle_Generation"] = pGenJson;
 
   /* Top-level comment only: ignored by inp::Input (only known sections are parsed). */
   return json{{"Comment",
-               "compression_large_set_inbuilt: void from packed bbox+margin; plate separate; Contact.Sets=3 "
-               "(contact_id 0/1/2 = grains / fixed wall / moving wall), geom/mat still 10 groups; see log."},
+               "compression_large_set_inbuilt"},
               {"Model", modelDeckJson},
               {"Output", outputDeckJson},
               {"Force_BC", bcDeckJson["Force_BC"]},
@@ -538,12 +528,6 @@ int main(int argc, char *argv[]) {
 
   util::io::print(std::format("Output directory (VTU, log.txt): {}\n", fs::absolute(out_dir).string()));
   util::io::print(std::format("Input directory (input.json, meshes): {}\n", fs::absolute(inp_dir).string()));
-  util::io::print(std::format(
-      "Binary build timestamp: {} {} (if this never changes, you are not recompiling this target.)\n",
-      __DATE__, __TIME__));
-  util::io::print(
-      "Before trusting ParaView: delete the out/ folder next to input.json so old VTU cannot be mistaken "
-      "for new output; open output.pvd timestep 0 (output_0_0.vtu), not the last frame.\n");
 
   auto inputJson = buildInputJson(output_path_for_deck, inp_dir, argc, argv);
 

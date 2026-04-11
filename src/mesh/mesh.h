@@ -14,6 +14,7 @@
 #include "util/point.h" // definition of struct Point
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
+#include <string>
 #include <vector>
 
 // forward declaration of geometry deck
@@ -374,7 +375,13 @@ public:
    */
   void computeVol();
 
-  /*! @brief Compute the bounding box  */
+  /*!
+   * @brief For \f$d_{\mathrm{dim}} = 2\f$, set \f$z = 0\f$ on all reference nodes (x–y plane).
+   * Call before computeBBox() when nodes may carry numerical noise in \f$z\f$.
+   */
+  void setZCoordinateZero();
+
+  /*! @brief Compute the bounding box from d_nodes (after setZCoordinateZero() for 2D if applicable). */
   void computeBBox();
 
   /*!
@@ -535,6 +542,15 @@ public:
 
   /*! @brief Characteristic mesh spacing (minimum nodal distance); always from computeMeshSize() after nodes exist. */
   double d_h;
+
+private:
+  /*!
+   * @brief After nodes, enc, nec, and dof-related fields are set: 2D z clear, bbox, optional nodal volume,
+   *        mesh size h, volume sanity check, and optional connectivity read from file.
+   * @param volume_error_note Optional extra line for the volume check failure message (e.g. filename or in-memory hint).
+   */
+  void finalizeMeshDerivedFieldsFromCurrentNodes(bool compute_vol_from_elements,
+                                                 const std::string &volume_error_note);
 };
 
 } // namespace mesh
