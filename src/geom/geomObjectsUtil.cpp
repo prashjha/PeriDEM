@@ -748,8 +748,9 @@ namespace geom {
               obj = std::make_shared<geom::Hexagon>(params[0]);
               return;
             } else if (n == 4) {
+              // r, cx, cy, cz — same layout as triangle/circle 4-param branches (not params[2..4]).
               obj = std::make_shared<geom::Hexagon>(
-                      params[0], util::Point(params[2], params[3], params[4]));
+                      params[0], util::Point(params[1], params[2], params[3]));
               return;
             } else if (n == 7) {
               obj = std::make_shared<geom::Hexagon>(

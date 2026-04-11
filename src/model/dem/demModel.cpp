@@ -32,6 +32,9 @@
 #include "loading/particleIC.h"
 #include "util/io.h"
 
+#include <cmath>
+#include <cstdio>
+#include <cstdlib>
 #include <filesystem>
 #include <format>
 #include <random>

@@ -14,6 +14,7 @@
 #include "material/materialUtil.h"
 #include "util/feElementDefs.h"
 #include "geom/geomIncludes.h"
+#include <cmath>
 #include <iostream>
 
 particle::BaseParticle::BaseParticle(size_t id)
@@ -86,7 +87,9 @@ particle::BaseParticle::BaseParticle(size_t id,
 
     for (size_t i = 0; i < d_rp_p->getNumNodes(); i++) {
 
-      util::Point x0 = d_tform.apply(d_rp_p->getNode(i));
+      const util::Point vn = d_rp_p->getNode(i);
+      util::Point x0 = d_tform.apply(vn);
+
       d_modelData_p->d_xRef.push_back(x0);
       d_modelData_p->d_x.push_back(x0);
       d_modelData_p->d_u.push_back(util::Point());

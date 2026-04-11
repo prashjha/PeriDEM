@@ -3,7 +3,7 @@
   "Model": {
     "Dimension": 2,
     "Final_Time": 0.001,
-    "Time_Steps": 400,
+    "Time_Steps": 40,
     "Discretization_Type": {
       "Spatial": "finite_difference",
       "Time": "central_difference"
@@ -32,7 +32,7 @@
       "No_Fail_Node",
       "Boundary_Node_Flag"
     ],
-    "Output_Interval": 40,
+    "Output_Interval": 4,
     "Debug": 2,
     "Perform_FE_Out": true,
     "Compress_Type": "zlib",
