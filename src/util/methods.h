@@ -257,9 +257,9 @@ inline bool isFree(const uint8_t &i, const unsigned int &dof) {
 
 /*!
  * @brief Find if data is in the list
- * @param tag Tag to search
- * @param tags List of tags
- * @return True True if tag exists
+ * @param i Item to search
+ * @param list Vector of elements
+ * @return True True if item exists
  */
 template <typename T>
 inline bool isInList(const T &i, const std::vector<T> &list) {
