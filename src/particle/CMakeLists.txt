@@ -7,6 +7,7 @@
 # file LICENSE)
 
 AUX_SOURCE_DIRECTORY(./ SOURCES)
+list(FILTER SOURCES EXCLUDE REGEX "createParticles\\.cpp$")
 
 add_library(Particle ${SOURCES})
 

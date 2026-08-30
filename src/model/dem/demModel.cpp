@@ -10,6 +10,13 @@
 
 #include "demModel.h"
 
+#include "contact/contact.h"
+#include "pd/pdForce.h"
+#include "nsearch/neighborPolicy.h"
+#include "time_int/integrator.h"
+#include "rw/particleOutput.h"
+#include "postprocess/postprocess.h"
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -34,6 +41,7 @@
 #include "mesh_gen/meshGenerator.h"
 #include "loading/particleIC.h"
 #include "util/io.h"
+#include "particle/createParticles.h"
 
 #include <cmath>
 #include <cstdio>
@@ -47,12 +55,15 @@
 
 
 model::DEMModel::DEMModel(std::shared_ptr<inp::Input> & deck, std::string modelName)
-  : ModelData(deck),
-    d_name(modelName) {
+  : ModelData(deck) {
+
+  d_name = std::move(modelName);
 
   // initialize logger
   util::io::initLogger(d_outputDeck_p->d_debug,
                        d_outputDeck_p->d_path + "log.txt");
+  if (!d_postprocess_p)
+    d_postprocess_p = std::make_unique<postprocess::Postprocess>();
 }
 
 void model::DEMModel::log(std::ostringstream &oss, int priority, bool check_condition, int override_priority,
@@ -107,8 +118,8 @@ void model::DEMModel::restart(std::shared_ptr<inp::Input> & deck) {
 }
 
 void model::DEMModel::close() {
-  if (d_ppFile.is_open())
-    d_ppFile.close();
+  if (d_postprocess_p)
+    d_postprocess_p->close(*this);
 }
 
 void model::DEMModel::init() {
@@ -165,6 +176,8 @@ void model::DEMModel::init() {
 
   // setup contact
   if (d_input_p->isMultiParticle()) {
+    if (!d_contact_p)
+      d_contact_p = std::make_unique<contact::Contact>();
     log(d_name + ": Setting up contact.\n");
     setupContact();
   }
@@ -359,36 +372,7 @@ void model::DEMModel::integrateStep() {
 }
 
 void model::DEMModel::integrateCD() {
-
-  // update velocity and displacement
-  d_currentDt = d_modelDeck_p->d_dt;
-  const auto dim = d_modelDeck_p->d_dim;
-
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  // update current position, displacement, and velocity of nodes
-  taskflow.for_each_index(
-    (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-      [this, dim](std::size_t II) {
-        auto i = this->d_fPdCompNodes[II];
-
-        const auto rho = this->getDensity(i);
-        const auto &fix = this->d_fix[i];
-
-        for (int dof = 0; dof < dim; dof++) {
-          if (util::methods::isFree(fix, dof)) {
-            this->d_v[i][dof] += (this->d_currentDt / rho) * this->d_f[i][dof];
-            this->d_u[i][dof] += this->d_currentDt * this->d_v[i][dof];
-            this->d_x[i][dof] += this->d_currentDt * this->d_v[i][dof];
-          }
-        }
-
-        this->d_vMag[i] = this->d_v[i].length();
-      } // loop over nodes
-  ); // for_each
-
-  executor.run(taskflow).get();
+  time_int::updateCentralDifference(*this);
 
   // advance time
   d_n++;
@@ -402,38 +386,7 @@ void model::DEMModel::integrateCD() {
 }
 
 void model::DEMModel::integrateVerlet() {
-
-  // update velocity and displacement
-  d_currentDt = d_modelDeck_p->d_dt;
-  const auto dim = d_modelDeck_p->d_dim;
-
-  // update current position, displacement, and velocity of nodes
-  {
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
-
-    taskflow.for_each_index(
-      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-        [this, dim](std::size_t II) {
-          auto i = this->d_fPdCompNodes[II];
-
-          const auto rho = this->getDensity(i);
-          const auto &fix = this->d_fix[i];
-
-          for (int dof = 0; dof < dim; dof++) {
-            if (util::methods::isFree(fix, dof)) {
-              this->d_v[i][dof] += 0.5 * (this->d_currentDt / rho) * this->d_f[i][dof];
-              this->d_u[i][dof] += this->d_currentDt * this->d_v[i][dof];
-              this->d_x[i][dof] += this->d_currentDt * this->d_v[i][dof];
-            }
-
-            this->d_vMag[i] = this->d_v[i].length();
-          }
-        } // loop over nodes
-    ); // for_each
-
-    executor.run(taskflow).get();
-  }
+  time_int::updateVerletHalfKickAndDrift(*this);
 
   // advance time
   d_n++;
@@ -445,30 +398,7 @@ void model::DEMModel::integrateVerlet() {
   // compute force
   computeForces();
 
-  // update velocity of nodes
-  {
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
-
-    taskflow.for_each_index(
-      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-      [this, dim](std::size_t II) {
-        auto i = this->d_fPdCompNodes[II];
-
-        const auto rho = this->getDensity(i);
-        const auto &fix = this->d_fix[i];
-        for (int dof = 0; dof < dim; dof++) {
-          if (util::methods::isFree(fix, dof)) {
-            this->d_v[i][dof] += 0.5 * (this->d_currentDt / rho) * this->d_f[i][dof];
-          }
-
-          this->d_vMag[i] = this->d_v[i].length();
-        }
-      } // loop over nodes
-    ); // for_each
-
-    executor.run(taskflow).get();
-  }
+  time_int::updateVerletSecondKick(*this);
 }
 
 void model::DEMModel::computeForces() {
@@ -612,192 +542,7 @@ void model::DEMModel::computeForces() {
 }
 
 void model::DEMModel::computePeridynamicForces() {
-
-  log("    Computing peridynamic force \n", 3);
-
-  const auto dim = d_modelDeck_p->d_dim;
-  const bool is_state = d_particlesListTypeAll[0]->getMaterial()->isStateActive();
-
-  // compute state-based helper quantities
-  if (is_state) {
-
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
-
-    taskflow.for_each_index(
-      (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
-        auto i = this->d_fPdCompNodes[II];
-
-        const auto rho = this->getDensity(i);
-        const auto &fix = this->d_fix[i];
-        const auto &ptId = this->getPtId(i);
-        auto &pi = this->getParticleFromAllList(ptId);
-
-        if (pi->d_material_p->isStateActive()) {
-
-          const double horizon = pi->getHorizon();
-          const double mesh_size = pi->getMeshSize();
-          const auto &xi = this->d_xRef[i];
-          const auto &ui = this->d_u[i];
-
-          // update bond state and compute thetax
-          const auto &m = this->d_mX[i];
-          double theta = 0.;
-
-          // upper and lower bound for volume correction
-          auto check_up = horizon + 0.5 * mesh_size;
-          auto check_low = horizon - 0.5 * mesh_size;
-
-          size_t k = 0;
-          for (size_t j : this->d_neighPd[i]) {
-
-            const auto &xj = this->d_xRef[j];
-            const auto &uj = this->d_u[j];
-            double rji = (xj - xi).length();
-            // double rji = std::sqrt(this->d_neighPdSqdDist[i][k]);
-            double change_length = (xj - xi + uj - ui).length() - rji;
-
-            // step 1: update the bond state
-            double s = change_length / rji;
-            double sc = pi->d_material_p->getSc(rji);
-
-            // get fracture state, modify, and set
-            auto fs = this->d_fracture_p->getBondState(i, k);
-            if (!fs && util::isGreater(std::abs(s), sc + 1.0e-10))
-              fs = true;
-            this->d_fracture_p->setBondState(i, k, fs);
-
-            if (!fs) {
-
-              // get corrected volume of node j
-              auto volj = this->d_vol[j];
-
-              if (util::isGreater(rji, check_low))
-                volj *= (check_up - rji) / mesh_size;
-
-              theta += rji * change_length * pi->d_material_p->getInfFn(rji) *
-                        volj;
-            } // if bond is not broken
-
-            k += 1;
-          } // loop over neighbors
-
-          this->d_thetaX[i] = 3. * theta / m;
-        } // if it is state-based
-      } // loop over nodes
-    ); // for_each
-
-    executor.run(taskflow).get();
-  }
-
-  // compute the internal forces
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  taskflow.for_each_index(
-    (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1, [this](std::size_t II) {
-      auto i = this->d_fPdCompNodes[II];
-
-      // local variable to hold force
-      util::Point force_i = util::Point();
-      double scalar_f = 0.;
-
-      // for damage
-      float Zi = 0.;
-
-      const auto rhoi = this->getDensity(i);
-      const auto &ptIdi = this->getPtId(i);
-      auto &pi = this->getParticleFromAllList(ptIdi);
-
-      const double horizon = pi->getHorizon();
-      const double mesh_size = pi->getMeshSize();
-      const auto &xi = this->d_xRef[i];
-      const auto &ui = this->d_u[i];
-      const auto &mi = this->d_mX[i];
-      const auto &thetai = this->d_thetaX[i];
-
-      // upper and lower bound for volume correction
-      auto check_up = horizon + 0.5 * mesh_size;
-      auto check_low = horizon - 0.5 * mesh_size;
-
-      // loop over neighbors
-      {
-        size_t k = 0;
-        for (size_t j : this->d_neighPd[i]) {
-          auto fs = this->d_fracture_p->getBondState(i, k);
-          const auto &xj = this->d_xRef[j];
-          const auto &uj = this->d_u[j];
-          auto volj = this->d_vol[j];
-          double rji = (xj - xi).length();
-          double Sji = pi->d_material_p->getS(xj - xi, uj - ui);
-
-          if (!fs) {
-            const auto &mj = this->d_mX[j];
-            const auto &thetaj = this->d_thetaX[j];
-
-            // get corrected volume of node j
-            if (util::isGreater(rji, check_low))
-              volj *= (check_up - rji) / mesh_size;
-
-            // handle two cases differently
-            if (pi->d_material_p->isStateActive()) {
-
-              auto ef_i =
-                  pi->d_material_p->getBondEF(rji, Sji, fs, mi, thetai);
-              auto ef_j =
-                  pi->d_material_p->getBondEF(rji, Sji, fs, mj, thetaj);
-
-              // compute the contribution of bond force to force at i
-              scalar_f = (ef_i.second + ef_j.second) * volj;
-
-              force_i += scalar_f * pi->d_material_p->getBondForceDirection(
-                                        xj - xi, uj - ui);
-            } // if state-based
-            else {
-
-              // Debug
-              bool break_bonds = true;
-
-              auto ef =
-                  pi->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
-              this->d_fracture_p->setBondState(i, k, fs);
-
-              // compute the contribution of bond force to force at i
-              scalar_f = ef.second * volj;
-
-              force_i += scalar_f * pi->d_material_p->getBondForceDirection(
-                                        xj - xi, uj - ui);
-            } // if bond-based
-          }   // if bond not broken
-          else {
-            // add normal contact force
-            auto yji = xj + uj - (xi + ui);
-            auto Rji = yji.length();
-            scalar_f = pi->d_Kn * volj * (Rji - pi->d_Rc) / Rji;
-            if (scalar_f > 0.)
-              scalar_f = 0.;
-            force_i += scalar_f * yji;
-          } // if bond is broken
-
-          // calculate damage
-          auto Sc = pi->d_material_p->getSc(rji);
-          if (util::isGreater(std::abs(Sji / Sc), Zi))
-            Zi = std::abs(Sji / Sc);
-
-          k++;
-        } // loop over neighbors
-
-      } // peridynamic force
-
-      // update force (we remove any force from
-      // previous steps and add peridynamics force)
-      this->d_f[i] = force_i;
-
-      this->d_Z[i] = Zi;
-    }
-  ); // for_each
-
-  executor.run(taskflow).get();
+  pd::computeForces(*this);
 }
 
 void model::DEMModel::computeExternalForces() {
@@ -830,251 +575,8 @@ void model::DEMModel::computeExternalDisplacementBC() {
 }
 
 void model::DEMModel::computeContactForces() {
-
-  log("    Computing normal contact force \n", 3);
-
-  // Description:
-  // 1. Normal contact is applied between nodes of particles and walls
-  // 2. Normal damping is applied between particle centers
-  // 3. Normal damping is applied between nodes of particle and wall pairs
-
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  taskflow.for_each_index((std::size_t) 0,
-                          d_fContCompNodes.size(),
-                          (std::size_t) 1,
-                          [this](std::size_t II) {
-
-                              auto i = this->d_fContCompNodes[II];
-
-                              // local variable to hold force
-                              util::Point force_i = util::Point();
-                              double scalar_f = 0.;
-
-                              const auto &ptIdi = this->getPtId(i);
-                              auto &pi = this->getParticleFromAllList(ptIdi);
-                              double horizon = pi->d_material_p->getHorizon();
-                              double search_r = this->d_maxContactR;
-
-                              // particle data
-                              double rhoi = pi->getDensity();
-
-                              const auto &yi = this->d_x[i]; // current coordinates
-                              const auto &ui = this->d_u[i];
-                              const auto &vi = this->d_v[i];
-                              const auto &voli = this->d_vol[i];
-
-                              const std::vector<size_t> &neighs = this->d_neighC[i];
-
-                              if (neighs.size() > 0) {
-
-                                for (const auto &j_id: neighs) {
-
-                                  //auto &j_id = neighs[j];
-                                  const auto &yj = this->d_x[j_id]; // current coordinates
-                                  double Rji = (yj - yi).length();
-                                  auto &ptIdj = this->d_ptId[j_id];
-                                  auto &pj = this->getParticleFromAllList(ptIdj);
-                                  double rhoj = pj->getDensity();
-
-                                  bool both_walls =
-                                          (pi->isWall() and pj->isWall());
-
-                                  if (j_id != i) {
-                                    if (ptIdj != ptIdi && !both_walls) {
-
-                                      // apply particle-particle or particle-wall contact here
-                                      const auto &contact =
-                                              d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
-
-                                      if (util::isLess(Rji, contact.d_contactR)) {
-
-                                        auto yji = this->d_x[j_id] - yi;
-                                        auto volj = this->d_vol[j_id];
-                                        auto vji = this->d_v[j_id] - vi;
-
-                                        // resolve velocity vector in normal and tangential components
-                                        auto en = yji / Rji;
-                                        auto vn_mag = (vji * en);
-                                        auto et = vji - vn_mag * en;
-                                        if (util::isGreater(et.length(), 0.))
-                                          et = et / et.length();
-                                        else
-                                          et = util::Point();
-
-                                        // Formula using bulk modulus and horizon
-                                        scalar_f = contact.d_Kn * (Rji - contact.d_contactR) *
-                                                   volj; // divided by voli
-                                        if (scalar_f > 0.)
-                                          scalar_f = 0.;
-                                        force_i += scalar_f * en;
-
-                                        // compute friction force (since f < 0, |f| = -f)
-                                        force_i += contact.d_mu * scalar_f * et;
-
-                                        // if particle-wall pair, apply damping contact here <--
-                                        // doesnt seem to work
-                                        bool node_lvl_damp = false;
-                                        // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
-                                        //   node_lvl_damp = true;
-
-                                        if (node_lvl_damp) {
-                                          // apply damping at the node level
-                                          auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
-                                          auto beta_n =
-                                                  contact.d_betan *
-                                                  std::sqrt(contact.d_K * contact.d_contactR * meq);
-
-                                          auto &pii = this->d_particlesListTypeAll[pi->getId()];
-                                          vji = this->d_v[j_id] - pii->getVCenter();
-                                          vn_mag = (vji * en);
-                                          if (vn_mag > 0.)
-                                            vn_mag = 0.;
-                                          force_i += beta_n * vn_mag * en / voli;
-                                        }
-                                      } // within contact radius
-                                    }   // particle-particle contact
-                                  }     // if j_id is not i
-                                }       // loop over neighbors
-                              }         // contact neighbor
-
-                              this->d_f[i] += force_i;
-                          }
-  ); // for_each
-
-  executor.run(taskflow).get();
-
-
-  // damping force
-  log("    Computing normal damping force \n", 3);
-  for (auto &pi : d_particlesListTypeParticle) {
-
-    auto pi_id = pi->getId();
-
-    double Ri = pi->d_geom_p->boundingRadius();
-    double vol_pi = M_PI * Ri * Ri;
-    auto pi_xc = pi->getXCenter();
-    auto pi_vc = pi->getVCenter();
-    auto rhoi = pi->getDensity();
-    util::Point force_i = util::Point();
-
-    // particle-particle
-    for (auto &pj : this->d_particlesListTypeParticle) {
-      if (pj->getId() != pi->getId()) {
-        auto Rj = pj->d_geom_p->boundingRadius();
-        auto xc_ji = pj->getXCenter() - pi_xc;
-        auto dist_xcji = xc_ji.length();
-
-        const auto &contact = d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
-
-        if (util::isLess(dist_xcji, Rj + Ri + 1.01 * contact.d_contactR)) {
-
-          auto vol_pj = M_PI * Rj * Rj;
-          auto rhoj = pj->getDensity();
-          // equivalent mass
-          auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * vol_pj);
-
-          // beta_n
-          auto beta_n = contact.d_betan *
-                        std::sqrt(contact.d_K * contact.d_contactR * meq);
-
-          // center-center vector
-          auto hat_xc_ji = util::Point();
-          if (util::isGreater(dist_xcji, 0.))
-            hat_xc_ji = xc_ji / dist_xcji;
-          else
-            hat_xc_ji = util::Point();
-
-          // center-center velocity
-          auto vc_ji = pj->getVCenter() - pi_vc;
-          auto vc_mag = vc_ji * hat_xc_ji;
-          if (vc_mag > 0.)
-            vc_mag = 0.;
-
-          // force at node of pi
-          force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
-        } // if within contact distance
-      }   // if not same particles
-    }     // other particles
-
-    // particle-wall
-    // Step 1: Create list of wall nodes that are within the Rc distance
-    // of at least one of the particle
-    // This is done already in updateContactNeighborList()
-
-    // step 2 - condensed wall nodes into one vector (has to be done serially
-    d_neighWallNodesCondensed[pi->getId()].clear();
-    {
-      for (size_t j=0; j<d_neighWallNodes[pi_id].size(); j++) {
-
-        const auto &j_id = pi->getNodeId(j);
-        const auto &yj = this->d_x[j_id];
-
-        for (size_t k=0; k<d_neighWallNodes[pi_id][j].size(); k++) {
-
-          const auto &k_id = d_neighWallNodes[pi_id][j][k];
-          const auto &pk = d_particlesListTypeAll[d_ptId[k_id]];
-
-          double Rjk = (this->d_x[k_id] - yj).length();
-
-          const auto &contact =
-              d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pk->getGroupId("contact_id"));
-
-          if (util::isLess(Rjk, contact.d_contactR))
-            util::methods::addToList(k_id, d_neighWallNodesCondensed[pi_id]);
-
-        } // loop over k
-      } // loop over j
-    } // step 2
-
-    // now loop over wall nodes and add force to center of particle
-    for (auto &j : d_neighWallNodesCondensed[pi_id]) {
-
-      auto &ptIdj = this->d_ptId[j];
-      auto &pj = this->d_particlesListTypeAll[ptIdj];
-      auto rhoj = pj->getDensity();
-      auto volj = this->d_vol[j];
-      auto meq = rhoi * vol_pi;
-      //auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
-
-      const auto &contact
-              = d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
-
-      // beta_n
-      auto beta_n = contact.d_betan *
-                    std::sqrt(contact.d_K * contact.d_contactR * meq);
-
-      // center-node vector
-      auto xc_ji = this->d_x[j] - pi_xc;
-      auto hat_xc_ji = util::Point();
-      if (util::isGreater(xc_ji.length(), 0.))
-        hat_xc_ji = xc_ji / xc_ji.length();
-
-      // center-node velocity
-      auto vc_ji = this->d_v[j] - pi_vc;
-      auto vc_mag = vc_ji * hat_xc_ji;
-      if (vc_mag > 0.)
-        vc_mag = 0.;
-
-      // force at node of pi
-      force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
-    }
-
-    // distribute force_i to all nodes of particle pi
-    {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
-
-      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1,
-                              [this, pi, force_i](std::size_t i) {
-                                  this->d_f[pi->getNodeId(i)] += force_i;
-                              }
-      ); // for_each
-
-      executor.run(taskflow).get();
-    }
-  } // loop over particle for damping
+  if (d_contact_p)
+    d_contact_p->computeForces(*this);
 }
 
 void model::DEMModel::applyInitialCondition() {
@@ -1085,304 +587,31 @@ void model::DEMModel::applyInitialCondition() {
 }
 
 void model::DEMModel::createParticles() {
+  particle::createReferenceParticles(*this);
 
-  d_particlesListTypeParticle.resize(0);
-  d_particlesListTypeAll.resize(0);
-  d_particlesListTypeWall.resize(0);
-  d_referenceParticles.clear();
-
-  if (d_particleDeck_p->d_pGeomVec.size() == 0)
-    throw std::runtime_error("No particle geometry groups found in particle deck");
-
-  if (d_particleDeck_p->d_pGeomVec.size() != d_particleDeck_p->d_pMeshVec.size())
-    throw std::runtime_error("Number of particle geometry groups must be equal to number of particle mesh groups");
-
-  // we first create the reference particles
-  for (size_t z = 0; z < d_particleDeck_p->d_pMeshVec.size(); z++) {
-
-    // get current size of particles data
-    auto psize = d_particlesListTypeAll.size();
-
-    // get particle mesh
-    auto &zmeshDeck = d_particleDeck_p->d_pMeshVec[z];
-
-    // Geometry for mesh creation and reference particle: Particle.Set_i only (same index as Mesh.Set_i).
-    auto &zgeomDeck = d_particleDeck_p->d_pGeomVec[z];
-
-    // read mesh data
-    log(d_name + ": Creating mesh for reference particle in mesh group = " +
-        std::to_string(z) + "\n");
-    std::shared_ptr<mesh::Mesh> mesh;
-    if (!zmeshDeck.d_createMesh) {
-      mesh = std::make_shared<mesh::Mesh>(&zmeshDeck, d_modelDeck_p.get());
-    }
-    else {
-      if (zmeshDeck.d_createMeshInfo == "uniform"
-          and zgeomDeck.d_geomName == "rectangle") {
-
-        if (!zgeomDeck.d_geom_p)
-          throw std::runtime_error(d_name + ": uniform mesh on rectangle requires particle geometry object "
-                                           "(geom::createGeomObject on Particle.Set_i).");
-
-        const size_t dim = d_modelDeck_p->d_dim;
-        const auto bb = zgeomDeck.d_geom_p->box();
-        std::pair<std::vector<double>, std::vector<double>> box;
-        box.first.reserve(dim);
-        box.second.reserve(dim);
-        for (size_t i = 0; i < dim; ++i) {
-          const double lo_i = (i == 0) ? bb.first.d_x : (i == 1) ? bb.first.d_y : bb.first.d_z;
-          const double hi_i = (i == 0) ? bb.second.d_x : (i == 1) ? bb.second.d_y : bb.second.d_z;
-          box.first.push_back(lo_i);
-          box.second.push_back(hi_i);
-        }
-
-        std::vector<size_t> nGrid(dim);
-        for (size_t i = 0; i < dim; ++i) {
-          const double span = box.second[i] - box.first[i];
-          if (span <= 0.)
-            throw std::runtime_error(d_name + ": uniform mesh: non-positive axis extent from geom box "
-                                                 "(axis " + std::to_string(i) + ").");
-          nGrid[i] = static_cast<size_t>(span / zmeshDeck.d_hMeshing);
-        }
-
-        mesh::Mesh temp_mesh;
-        mesh::createUniformMesh(&temp_mesh, dim, box, nGrid);
-        mesh = std::make_shared<mesh::Mesh>(temp_mesh);
-      }
-      else if (zmeshDeck.d_createMeshInfo == "gmsh_builtin_mesh") {
-
-        if (!zgeomDeck.d_geom_p)
-          throw std::runtime_error(d_name + ": gmsh_builtin_mesh requires particle geometry object "
-                                           "(geom::createGeomObject on Particle.Set_i).");
-        mesh::Mesh temp_mesh;
-        const std::string mesh_stem =
-            zmeshDeck.d_filename.empty()
-                ? std::string()
-                : util::io::removeExtensionFromFile(zmeshDeck.d_filename);
-        mesh_gen::generateBuiltinParticleMeshGmsh(zgeomDeck.d_geom_p, zmeshDeck.d_hMeshing, mesh_stem, false,
-                                                  zmeshDeck.d_writeMeshFile, &temp_mesh, &zmeshDeck,
-                                                  d_modelDeck_p.get());
-        mesh = std::make_shared<mesh::Mesh>(temp_mesh);
-      }
-      else {
-        std::cerr << "Error: Unsupported in-built mesh: CreateMesh.Info = " << zmeshDeck.d_createMeshInfo
-                  << " with geometry = " << zgeomDeck.d_geomName << std::endl;
-        exit(EXIT_FAILURE);
-      }
-    }
-
-    // create the reference particle
-    log(d_name + ": Creating reference particle in mesh group = " +
-        std::to_string(z) + "\n");
-
-    // get representative particle for this mesh group
-    auto &rep_geom_p = zgeomDeck.d_geom_p;
-    auto rep_geom_params = zgeomDeck.d_geomParams;
-
-    auto ref_p = std::make_shared<particle::RefParticle>(
-            d_referenceParticles.size(),
-            static_cast<std::shared_ptr<ModelData>>(this),
-            rep_geom_p,
-            mesh);
-
-    d_referenceParticles.emplace_back(ref_p);
-  }
-
-  // now create the particles
   if (d_particleDeck_p->d_pGenDeck.d_genMethod == "From_File") {
-      createParticlesFromFile();
-  } else if (d_particleDeck_p->d_pGenDeck.d_genMethod == "Use_Particle_Geometry") {
-      createParticleUsingParticleZoneGeomObject();
+    createParticlesFromFile();
+  } else if (d_particleDeck_p->d_pGenDeck.d_genMethod ==
+             "Use_Particle_Geometry") {
+    createParticleUsingParticleZoneGeomObject();
   } else {
-      throw std::runtime_error("Error: Particle generation method = " + d_particleDeck_p->d_pGenDeck.d_genMethod +
-                " is invalid.");
+    throw std::runtime_error(
+        "Error: Particle generation method = " +
+        d_particleDeck_p->d_pGenDeck.d_genMethod + " is invalid.");
   }
 }
 
-void model::DEMModel::createParticleUsingParticleZoneGeomObject() { 
-
-  log(d_name + ": Creating particle using Particle Zone Geometry Object\n", 1);
-
-  // ref_p has geometry and mesh which will be used in creating this particle
-  // we need to create identity transform
-  auto p_transform = geom::ParticleTransform();
-
-  for (size_t z = 0; z < d_particleDeck_p->d_pMeshVec.size(); z++) {
-
-    // add default values for particle group
-    std::map<std::string, size_t> p_group({{"geom_id", z}, {"mat_id", 0}, {"contact_id", 0}});
-    
-    auto ref_p = d_referenceParticles[z];
-
-    // create particle
-    auto p = new particle::BaseParticle(d_particlesListTypeAll.size(),
-            false,
-            ref_p->getDimension(),
-            p_group,
-            false,
-            ref_p->getNumNodes(),
-            0.,
-            static_cast<std::shared_ptr<ModelData>>(this),
-            ref_p,
-            ref_p->getGeomP(),
-            p_transform,
-            ref_p->getMeshP(),
-            d_particleDeck_p->d_pMaterialVec[0],
-            true);
-
-    // push p to list
-    d_particlesListTypeParticle.push_back(p);
-    d_particlesListTypeAll.push_back(p);
-  }  
+void model::DEMModel::createParticleUsingParticleZoneGeomObject() {
+  particle::createParticleUsingParticleZoneGeomObject(*this);
 }
 
 void model::DEMModel::createParticlesFromFile() {
-
-  log(d_name + ": Creating particle from file\n", 1);
-
-  // get particle generation data
-  auto &pgen_deck = d_particleDeck_p->d_pGenDeck;
-  auto &pgen_json = pgen_deck.d_pGenJson;
-
-  util::DistributionSample<UniformDistribution> uniform_dist(
-        0., 1., d_modelDeck_p->d_seed);
-
-  // get number of particles
-  size_t num_particles = pgen_json.value("N", 0);
-  if (num_particles == 0)
-    throw std::runtime_error("No particles found in particle generation data");
-
-  // for each particle in json
-  for (size_t i = 0; i < num_particles; i++) {
-    auto p_data = pgen_json.at(std::to_string(i));
-
-    // get particle group data
-    std::map<std::string, size_t> p_group({
-      {"geom_id", p_data.at("geom_id").get<size_t>()}, 
-      {"mat_id", p_data.at("mat_id").get<size_t>()},
-      {"contact_id", p_data.at("contact_id").get<size_t>()}
-    });
-
-    auto site = util::Point(p_data.at("x").get<double>(), 
-                 p_data.at("y").get<double>(), 
-                 p_data.at("z").get<double>());
-    
-    double angle = 0.;
-    double scale = p_data.value("s", double(1.));
-
-    if (p_data.find("theta") != p_data.end()) {
-      angle = p_data.at("theta").get<double>();
-    } else {
-      if (pgen_deck.d_genWithRandomRotation) {
-        angle = util::transform_to_uniform_dist(0., 2. * M_PI, uniform_dist());
-      }
-    }
-
-    auto axis = util::Point(p_data.value("ax", 0.), p_data.value("ay", 0.), p_data.value("az", 1.));
-    const bool has_rotationPoint =
-        p_data.find("rotx") != p_data.end() && p_data.find("roty") != p_data.end() &&
-        p_data.find("rotz") != p_data.end();
-
-    // there are two steps:
-    // 1. create geometrical object at the site with correct scaling and orientation
-    // 2. create transform that will take the reference particle mesh to the particle mesh at the site
-
-    // get representative particle for this zone
-    auto &ref_p = d_referenceParticles[p_group["geom_id"]];
-    const auto &rep_geom_p = ref_p->d_geom_p;
-
-    // Deep-copy derived geometry: slicing to base GeomObject would make center() return (0,0,0) and
-    // double-translate reference meshes that are already built in world coordinates (Gmsh from deck).
-    std::shared_ptr<geom::GeomObject> p_geom(geom::createGeomDeepCopy(rep_geom_p.get()));
-    // Rigid displacement t = site - c0 so composite/simple centroid lands at site when pivot is c0.
-    const util::Point c0 = p_geom->center();
-    const util::Point t = site - c0;
-    util::Point rotationPivot =
-        has_rotationPoint ? util::Point(p_data.value("rotx", 0.), p_data.value("roty", 0.),
-                                        p_data.value("rotz", 0.))
-                          : c0;
-    p_geom->transform(t, scale, angle, axis, &rotationPivot);
-
-    // Same map as geometry: y = p + s R(v-p) + t
-    auto p_transform = geom::ParticleTransform(t, axis, angle, scale, rotationPivot);
-
-    // create particle
-    auto p = new particle::BaseParticle(
-      d_particlesListTypeAll.size(),
-      false,
-      ref_p->getDimension(),
-      p_group,
-      false,
-      ref_p->getNumNodes(),
-      0.,
-      static_cast<std::shared_ptr<ModelData>>(this),
-      ref_p,
-      p_geom,
-      p_transform,
-      ref_p->getMeshP(),
-      d_particleDeck_p->d_pMaterialVec[p_group["mat_id"]],
-      true
-    );
-
-    // add to particle lists
-    d_particlesListTypeParticle.push_back(p);
-    d_particlesListTypeAll.push_back(p);
-  }
+  particle::createParticlesFromFile(*this);
 }
 
 void model::DEMModel::setupContact() {
-
-  // loop over all particle zones and get minimum value of mesh size
-  size_t c = 0;
-  for (const auto *p : d_particlesListTypeAll) {
-
-    auto h = p->getMeshSize();
-    if (c == 0) {
-      d_hMin = h;
-      d_hMax = h;
-      c++;
-    }
-
-    if (util::isGreater(d_hMin, h))
-      d_hMin = h;
-    if (util::isGreater(h, d_hMax))
-      d_hMax = h;
-  }
-
-  log(std::format("{}: Contact setup\n  hmin = {:.6f}, hmax = {:.6f} \n",
-                  d_name, d_hMin, d_hMax), 1);
-
-  d_maxContactR = 0.;
-
-  auto &contactDeck = d_particleDeck_p->d_contactDeck;
-
-  for (size_t i = 0; i < contactDeck.d_data.size(); i++) {
-    for (size_t j = 0; j < contactDeck.d_data.size(); j++) {
-
-      inp::ContactPairDeck *deck = &(contactDeck.d_data[i][j]);
-
-      if (deck->d_computeContactR)
-        deck->d_contactR *= d_hMin;
-
-      if (d_maxContactR < deck->d_contactR)
-        d_maxContactR = deck->d_contactR;
-
-      // Kn
-      deck->d_Kn *= deck->d_KnFactor;
-
-      // Beta n
-      double log_e = std::log(deck->d_eps);
-      deck->d_betan =
-          deck->d_betanFactor *
-          (-2. * log_e * std::sqrt(1. / (M_PI * M_PI + log_e * log_e)));
-
-      log(std::format("  contact_radius = {:.6f}, hmin = {:.6f}, Kn = {:5.3e}, "
-                      "Vmax = {:5.3e}, "
-                      "betan = {:7.5f}, mu = {:.4f}, kappa = {:5.3e}\n",
-                      deck->d_contactR, d_hMin, deck->d_Kn, deck->d_vMax,
-                      deck->d_betan, deck->d_mu, deck->d_K), 2);
-    }
-  }
+  if (d_contact_p)
+    d_contact_p->setup(*this);
 }
 
 void model::DEMModel::setupQuadratureData() {
@@ -1443,301 +672,18 @@ void model::DEMModel::setupQuadratureData() {
 }
 
 void model::DEMModel::updatePeridynamicNeighborlist() {
-
-  d_neighPd.resize(d_x.size());
-  // d_neighPdSqdDist.resize(d_x.size());
-  auto t1 = steady_clock::now();
-
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1, [this](std::size_t i) {
-      const auto &pi = this->d_ptId[i];
-      double search_r = this->d_particlesListTypeAll[pi]->d_material_p->getHorizon();
-
-      std::vector<size_t> neighs;
-      std::vector<double> sqr_dist;
-      if (this->d_nsearch_p->radiusSearchIncludeTag(this->d_x[i],
-                                                    search_r,
-                                                    neighs,
-                                                    sqr_dist,
-                                                    this->d_ptId[i],
-                                                    this->d_ptId) > 0) {
-        for (std::size_t j = 0; j < neighs.size(); ++j)
-          if (neighs[j] != i && this->d_ptId[neighs[j]] == pi) {
-            this->d_neighPd[i].push_back(size_t(neighs[j]));
-            // this->d_neighPdSqdDist[i].push_back(sqr_dist[j]);
-          }
-      }
-    }
-  ); // for_each
-
-  executor.run(taskflow).get();
-
-  auto t2 = steady_clock::now();
-  log(std::format("{}: Peridynamics neighbor update time = {}\n",
-                  d_name, util::methods::timeDiff(t1, t2)), 2);
+  nsearch::updatePeridynamicNeighborlist(*this);
 }
 
 void model::DEMModel::updateContactNeighborlist() {
-
-  auto update = updateContactNeighborSearchParameters();
-
-  if (!update)
-    return;
-
-  // update contact neighborlist
-
-  // update the point cloud (make sure that d_x is updated along with displacement)
-  auto pt_cloud_update_time = d_nsearch_p->setInputCloud();
-  setKeyData("pt_cloud_update_time", pt_cloud_update_time);
-  appendKeyData("tree_compute_time", pt_cloud_update_time);
-  appendKeyData("avg_tree_update_time", pt_cloud_update_time/d_infoN);
-
-  if (d_neighC.size() != d_x.size())
-    d_neighC.resize(d_x.size());
-
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
-
-  taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t) 1,
-                          [this](std::size_t i) {
-
-    const auto &pi = this->d_ptId[i];
-    const auto &pi_particle = this->d_particlesListTypeAll[pi];
-
-    // search?
-    bool perform_search_based_on_particle = true;
-    if (pi_particle->isWall()) // wall
-      perform_search_based_on_particle = false;
-
-    if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
-      perform_search_based_on_particle = false;
-
-    if (perform_search_based_on_particle) {
-
-      std::vector<size_t> neighs;
-      std::vector<double> sqr_dist;
-
-      this->d_neighC[i].clear();
-
-      auto n = this->d_nsearch_p->radiusSearchExcludeTag(
-              this->d_x[i],
-              this->d_contNeighSearchRadius,
-              neighs,
-              sqr_dist,
-              this->d_ptId[i],
-              this->d_ptId);
-
-      if (n > 0) {
-        for (auto neigh: neighs) {
-          if (neigh != i)
-            this->d_neighC[i].push_back(neigh);
-        }
-      }
-    }
-}
-  ); // for_each
-
-  executor.run(taskflow).get();
-
-
-  // handle particle-wall neighborlist (based on the d_neighC that we already computed)
-  d_neighWallNodes.resize(d_particlesListTypeAll.size());
-  d_neighWallNodesDistance.resize(d_particlesListTypeAll.size());
-  d_neighWallNodesCondensed.resize(d_particlesListTypeAll.size());
-
-  for (auto &pi : d_particlesListTypeParticle) {
-
-    d_neighWallNodes[pi->getId()].resize(pi->getNumNodes());
-    d_neighWallNodesDistance[pi->getId()].resize(pi->getNumNodes());
-
-    // get all wall nodes that are within contact distance to the nodes of this particle
-    {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
-
-      taskflow.for_each_index((std::size_t) 0,
-                              pi->getNumNodes(),
-                              (std::size_t) 1,
-                              [this, &pi](std::size_t i) {
-
-            auto i_glob = pi->getNodeId(i);
-            auto yi = this->d_x[i_glob];
-
-            const std::vector<size_t> &neighs = this->d_neighC[i_glob];
-
-            this->d_neighWallNodes[pi->getId()][i].clear();
-            this->d_neighWallNodesDistance[pi->getId()][i].clear();
-
-            for (const auto &j_id: neighs) {
-
-              auto &ptIdj = this->d_ptId[j_id];
-              auto &pj = this->getParticleFromAllList(
-                      ptIdj);
-
-              // we are only interested in nodes from wall
-              if (pj->isWall()) {
-                  this->d_neighWallNodes[pi->getId()][i].push_back(j_id);
-                  //this->d_neighWallNodesDistance[pi->getId()][i].push_back(Rji);
-              }
-            }
-        }
-      ); // for_each
-
-      executor.run(taskflow).get();
-    }
-  } // loop over particles
-
+  if (d_contact_p)
+    d_contact_p->updateNeighborlist(*this);
 }
 
 bool model::DEMModel::updateContactNeighborSearchParameters() {
-
-  // initialize parameters
-  if (d_contNeighUpdateInterval == 0 and
-      util::isLess(d_contNeighSearchRadius, 1.e-16)) {
-    d_contNeighUpdateInterval = d_particleDeck_p->d_pNeighDeck.d_neighUpdateInterval;
-    d_contNeighTimestepCounter = d_n % d_contNeighUpdateInterval;
-    d_contNeighSearchRadius = d_maxContactR * d_particleDeck_p->d_pNeighDeck.d_sFactor;
-  }
-
-  // at d_n = 0, this function will be called twice because updateContactNeighborlist() will be
-  // called twice: one inside init() and second inside computeForces()
-  // so to match d_n and d_contNeighTimestepCounter in the initial stage of simulation, we need to handle the special case
-  if (d_n == 0) {
-    appendKeyData("update_contact_neigh_search_params_init_call_count", 1);
-
-    if (int(getKeyData("update_contact_neigh_search_params_init_call_count")) == 1)
-      return true;
-
-    if (int(getKeyData("update_contact_neigh_search_params_init_call_count")) == 2) {
-      d_contNeighTimestepCounter++;
-      return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
-    }
-  }
-
-  // handle case of restart
-  if (d_modelDeck_p->d_isRestartActive and d_n == d_restartDeck_p->d_step) {
-    // assign correct value for restart step
-    d_contNeighTimestepCounter = d_n % d_contNeighUpdateInterval;
-  }
-
-  if (d_contNeighUpdateInterval == 1) {
-    // further optimization of parameters is not possible
-    d_contNeighSearchRadius = d_maxContactR;
-
-    // update counter and return condition for contact search
-    d_contNeighTimestepCounter++;
-    return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
-  }
-
-  // check if we should proceed with parameter update
-  // param update is done at smaller interval than the search itself to avoid
-  // scenarios where particles suddenly move with a high velocity
-  size_t update_param_interval =
-          d_contNeighUpdateInterval > 5 ? size_t(
-                  0.2 * d_contNeighUpdateInterval) : 1;
-
-  // check if we ought to update search parameters; if not, return
-  if (d_contNeighTimestepCounter > 0 and d_contNeighTimestepCounter % update_param_interval != 0) {
-    // update counter and return condition for contact search
-    d_contNeighTimestepCounter++;
-    return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
-  }
-
-  // first update the maximum velocity in all particles
-  for (auto &pi : d_particlesListTypeAll) {
-    auto max_v_node = util::methods::maxIndex(d_vMag,
-                                              pi->d_globStart, pi->d_globEnd);
-
-    if (max_v_node > pi->d_globEnd or max_v_node < pi->d_globStart) {
-      std::cerr << std::format("Error: max_v_node = {} for "
-                               "particle of id = {} is not in the limit.\n",
-                               max_v_node, pi->getId())
-                << "Particle info = \n"
-                << pi->printStr()
-                << "\n\n Magnitude of velocity = "
-                << d_vMag[max_v_node] << "\n";
-      exit(EXIT_FAILURE);
-    }
-
-    d_maxVelocityParticlesListTypeAll[pi->getId()]
-            = d_vMag[max_v_node];
-  }
-
-  // find max velocity among all particles
-  d_maxVelocity = util::methods::max(d_maxVelocityParticlesListTypeAll);
-
-  // now we find the best parameters for contact search
-  auto up_interval_old = d_contNeighUpdateInterval;
-
-  // TO ensure that in d_neighUpdateInterval time steps, the search radius is above the
-  // distance traveled by object with velocity d_maxVelocity
-  // also multiply by a safety factor
-  double safety_factor = d_particleDeck_p->d_pNeighDeck.d_sFactor > 5 ? d_particleDeck_p->d_pNeighDeck.d_sFactor : 10;
-  auto max_search_r_from_contact_R = d_particleDeck_p->d_pNeighDeck.d_sFactor * d_maxContactR;
-  auto max_search_r = d_maxVelocity * d_currentDt
-                      * d_particleDeck_p->d_pNeighDeck.d_neighUpdateInterval
-                      * safety_factor;
-
-
-  if (util::isGreater(max_search_r, max_search_r_from_contact_R )) {
-
-    d_contNeighUpdateInterval = size_t(d_maxContactR/(d_maxVelocity * d_currentDt));
-    if (up_interval_old > d_contNeighUpdateInterval) {
-      // issue warning
-      log(std::format("Warning: Contact search radius based on velocity is greater than "
-                      "the max contact radius.\n"
-                      "Warning: Adjusting contact neighborlist update interval.\n"
-                      "{:>13} = {:4.6e}, time step = {}, "
-                      "velocity-based r = {:4.6e}, max contact r = {:4.6e}\n",
-                      "Time", d_time, d_n, max_search_r, max_search_r_from_contact_R),
-          2, d_n % d_infoN == 0, 3);
-    }
-
-    d_contNeighSearchRadius = max_search_r_from_contact_R;
-    // reset time step counter for contact so that the contact list is updated in the current time step
-    // and the update cycle starts from the current time step
-    d_contNeighTimestepCounter = 0;
-
-    if (d_contNeighUpdateInterval < 1) {
-      d_contNeighUpdateInterval = 1;
-      d_contNeighSearchRadius = d_maxContactR;
-    }
-  }
-  else {
-    // update search radius
-    d_contNeighSearchRadius = d_contNeighUpdateInterval < 2 ? d_maxContactR : max_search_r_from_contact_R;
-  }
-
-  if (up_interval_old > d_contNeighUpdateInterval) {
-    log(std::format("    Contact neighbor parameters: \n"
-                    "      {:48s} = {:d}\n"
-                    "      {:48s} = {:d}\n"
-                    "      {:48s} = {:d}\n"
-                    "      {:48s} = {:4.6e}\n"
-                    "      {:48s} = {:4.6e}\n"
-                    "      {:48s} = {:4.6e}\n"
-                    "      {:48s} = {:4.6e}\n"
-                    "      {:48s} = {:4.6e}\n"
-                    "      {:48s} = {:4.6e}\n",
-                    "time step", d_n,
-                    "contact neighbor update interval",
-                    d_contNeighUpdateInterval,
-                    "contact neighbor update time step counter",
-                    d_contNeighTimestepCounter,
-                    "search radius", d_contNeighSearchRadius,
-                    "max contact radius", d_maxContactR,
-                    "search radius factor", d_particleDeck_p->d_pNeighDeck.d_sFactor,
-                    "max search r from velocity", max_search_r,
-                    "max search r from contact r", max_search_r_from_contact_R,
-                    "max velocity", d_maxVelocity),
-        2, d_n % d_infoN == 0, 3);
-  }
-
-  // update counter and return condition for contact search
-  d_contNeighTimestepCounter++;
-  return (d_contNeighTimestepCounter - 1) % d_contNeighUpdateInterval == 0;
+  if (!d_contact_p)
+    return false;
+  return d_contact_p->updateSearchParameters(*this);
 }
 
 void model::DEMModel::updateNeighborlistCombine() {
@@ -1746,310 +692,22 @@ void model::DEMModel::updateNeighborlistCombine() {
 }
 
 void model::DEMModel::output() {
-
-  // write out % completion of simulation at 10% interval
-  {
-    float p = float(d_n) * 100. / d_modelDeck_p->d_Nt;
-    int m = std::max(1, int(d_modelDeck_p->d_Nt / 10));
-    if (d_n % m == 0 && int(p) > 0)
-      log(std::format("{}: Simulation {}% complete\n",
-                      d_name, int(p)));
-    ;
-  }
-
-  log(std::format("{}: Output step = {}, time = {:.6f} \n",
-                  d_name, d_n, d_time),
-      2);
-
-  if (d_outputDeck_p->d_debug > 0 and getKeyData("debug_once") < 0) {
-
-    setKeyData("debug_once", 1);
-
-    size_t nt = 1;
-    auto tabS = util::io::getTabS(nt);
-    std::ostringstream oss;
-    oss << tabS << "*******************************************\n";
-    oss << tabS << "Debug various input decks\n\n\n";
-    oss << d_modelDeck_p->printStr(nt + 1);
-    oss << d_particleDeck_p->printStr(nt + 1);
-    oss << d_outputDeck_p->printStr(nt + 1);
-    oss << d_restartDeck_p->printStr(nt + 1);
-    oss << d_testDeck_p->printStr(nt + 1);
-    oss << d_bcDeck_p->printStr(nt + 1);
-    oss << tabS << "\n\n*******************************************\n";
-    oss << tabS << "Debug particle data\n\n\n";
-    oss << tabS << "Number of particles = " << d_particlesListTypeAll.size() << std::endl;
-    oss << tabS << "Number of particle zones = " << d_zInfo.size() << std::endl;
-    for (auto zone : d_zInfo) {
-      oss << tabS << "zone of d_zInfo: " << util::io::printStr(zone)
-          << std::endl;
-    }
-
-    // wall info
-    oss << tabS << "Number of walls = " << d_particlesListTypeWall.size() << std::endl;
-    for (auto &d_wall : d_particlesListTypeWall)
-      oss << tabS << "Number of nodes in wall " << d_wall->d_id
-          << " is " << d_wall->getNumNodes() << std::endl;
-
-    oss << tabS << "h_min = " << d_hMin << ", h_max = " << d_hMax << std::endl;
-
-    log(oss, 2);
-  } // end of debug
-
-  size_t dt_out = d_outputDeck_p->d_dtOutCriteria;
-  std::string out_filename = d_outputDeck_p->d_path + "output_";
-  if (d_outputDeck_p->d_tagPPFile.empty())
-    out_filename = out_filename + std::to_string(d_n / dt_out);
-  else
-    out_filename = out_filename + d_outputDeck_p->d_tagPPFile + "_" + std::to_string(d_n / dt_out);
-
-  auto writer = rw::writer::VtkParticleWriter(out_filename);
-  if (d_outputDeck_p->d_performFEOut)
-    writer.appendMesh(this, d_outputDeck_p->d_outTags);
-  else
-    writer.appendNodes(this, d_outputDeck_p->d_outTags);
-
-  writer.addTimeStep(d_time);
-  writer.close();
-
-  if (d_outputDeck_p->d_outFormat == "vtu" && d_outputDeck_p->d_pvdCollection) {
-    const std::filesystem::path stem(out_filename);
-    d_pvdParticleEntries.push_back(
-        {d_time, stem.filename().string() + ".vtu"});
-    rw::writePvdCollectionFile(d_outputDeck_p->d_path + "output.pvd",
-                               d_pvdParticleEntries);
-  }
-
-  if (util::methods::isTagInList("Strain_Stress", d_outputDeck_p->d_outTags)) {
-
-    // compute current position of quadrature points and strain/stress data
-    {
-      // if particle mat data is not computed, compute them
-      if (d_particlesMatDataList.empty()) {
-        for (auto &p: d_particlesListTypeAll) {
-          d_particlesMatDataList.push_back(p->getMaterial()->computeMaterialProperties(
-                  p->getMeshP()->getDimension()));
-        }
-      }
-
-      for (auto &p: d_particlesListTypeAll) {
-
-        const auto particle_mesh_p = p->getMeshP();
-
-        mesh::getCurrentQuadPoints(particle_mesh_p.get(), d_xRef, d_u, d_xQuadCur,
-                                 p->d_globStart,
-                                 p->d_globQuadStart,
-                                 d_modelDeck_p->d_quadOrder);
-
-        auto isPlaneStrain = p->d_material_p->isPlaneStrain();
-        mesh::getStrainStress(particle_mesh_p.get(), d_xRef, d_u,
-                            isPlaneStrain,
-                            d_strain, d_stress,
-                            p->d_globStart,
-                            p->d_globQuadStart,
-                            d_particlesMatDataList[p->getId()].d_nu,
-                            d_particlesMatDataList[p->getId()].d_lambda,
-                            d_particlesMatDataList[p->getId()].d_mu,
-                            true,
-                            d_modelDeck_p->d_quadOrder);
-      } // for loop over particles
-    } // compute strain/stress block
-
-    out_filename = d_outputDeck_p->d_path + "output_strain_";
-    if (d_outputDeck_p->d_tagPPFile.empty())
-      out_filename = out_filename + std::to_string(d_n / dt_out);
-    else
-      out_filename = out_filename + d_outputDeck_p->d_tagPPFile + "_" + std::to_string(d_n / dt_out);
-
-    auto writer1 = rw::writer::VtkParticleWriter(out_filename);
-    writer1.appendStrainStress(this);
-    writer1.addTimeStep(d_time);
-    writer1.close();
-
-    if (d_outputDeck_p->d_outFormat == "vtu" && d_outputDeck_p->d_pvdCollection) {
-      const std::filesystem::path stem(out_filename);
-      d_pvdStrainEntries.push_back(
-          {d_time, stem.filename().string() + ".vtu"});
-      rw::writePvdCollectionFile(d_outputDeck_p->d_path + "output_strain.pvd",
-                                 d_pvdStrainEntries);
-    }
-  }
-
-  // output particle locations to csv file
-  if (util::methods::isTagInList("Particle_Locations",
-                                 d_outputDeck_p->d_outTags)) {
-
-    out_filename = d_outputDeck_p->d_path + "particle_locations_";
-    if (d_outputDeck_p->d_tagPPFile.empty())
-      out_filename = out_filename + std::to_string(d_n / dt_out) + ".csv";
-    else
-      out_filename = out_filename + d_outputDeck_p->d_tagPPFile
-                      + "_" + std::to_string(d_n / dt_out) + ".csv";
-
-    std::ofstream oss(out_filename);
-    oss << "i, x, y, z, r\n";
-    for (const auto &p : d_particlesListTypeAll) {
-      auto xc = p->getXCenter();
-      oss << p->d_id << ", " << xc.d_x << ", " << xc.d_y << ", " << xc.d_z
-          << ", " << p->d_geom_p->boundingRadius() << "\n";
-    }
-    oss.close();
-  }
+  rw::writeOutput(*this);
 }
 
 std::string model::DEMModel::ppTwoParticleTest() {
-
-  bool continue_dt = false;
-  auto check_dt = d_outputDeck_p->d_dtTestOut;
-  if ((d_n % check_dt == 0) && (d_n >= check_dt))
-    continue_dt = true;
-
-  if (!continue_dt)
+  if (!d_postprocess_p)
     return "";
-
-  // get alias for particles
-  const auto &p0 = this->d_particlesListTypeAll[0];
-  const auto &p1 = this->d_particlesListTypeAll[1];
-
-  // get penetration distance
-  const auto &xc0 = p0->getXCenter();
-  const auto &xc1 = p1->getXCenter();
-  const double &r = p0->d_geom_p->boundingRadius();
-
-  const auto &contact = d_particleDeck_p->d_contactDeck.getContact(p0->getGroupId("contact_id"), p1->getGroupId("contact_id"));
-  double r_e = r + contact.d_contactR;
-
-  double pen_dist = xc1.dist(xc0) - r_e - r;
-  double contact_area_radius = 0.;
-  if (util::isLess(pen_dist, 0.))
-    contact_area_radius =
-        std::sqrt(std::pow(r_e, 2.) - std::pow(r_e + pen_dist, 2.));
-  else if (util::isGreater(pen_dist, 0.)) {
-    pen_dist = 0.;
-    contact_area_radius = 0.;
-  }
-
-  // get max distance of second particle (i.e. the y-coord of center + radius)
-  double max_dist = xc1.d_y + p1->d_geom_p->boundingRadius();
-
-  // compute maximum y coordinate of particle 2
-  double max_y_loc = p1->getXLocal(0).d_y;
-  double max_y = 0.;
-  for (size_t i = 0; i < p1->getNumNodes(); i++)
-    if (util::isLess(max_y_loc, p1->getXLocal(i).d_y))
-      max_y_loc = p1->getXLocal(i).d_y;
-
-  if (util::isLess(max_y, max_y_loc))
-    max_y = max_y_loc;
-
-  setKeyData("pen_dist", pen_dist);
-  setKeyData("contact_area_radius", contact_area_radius);
-  setKeyData("max_y", max_y);
-  setKeyData("max_dist", max_dist);
-  setKeyData("max_y_loc", max_y_loc);
-
-
-  return std::format("  Post-processing: max y = {:.6f} \n", max_y);
+  return d_postprocess_p->twoParticle(*this);
 }
 
 void model::DEMModel::checkStop() {
-
-  if (d_outputDeck_p->d_outCriteria == "max_particle_dist" &&
-      d_testDeck_p->d_testName == "two_particle") {
-
-    // compute max distance between two particles
-    // current center position
-    const auto &xci = d_particlesListTypeAll[0]->getXCenter();
-    const auto &xcj = d_particlesListTypeAll[1]->getXCenter();
-
-    // check
-    if (util::isGreater(xci.dist(xcj),
-                        d_outputDeck_p->d_outCriteriaParams[0])) {
-
-      if(d_ppFile.is_open())
-        d_ppFile.close();
-      exit(1);
-    }
-  }
-  else if (d_outputDeck_p->d_outCriteria == "max_node_dist") {
-
-    //    static int msg_printed = 0;
-    //    if (msg_printed == 0) {
-    //      std::cout << "Check = " << d_outputDeck_p->d_outCriteria
-    //              << " is no longer supported. In future, this test will be implemented when function util::methods::maxLength() is defined." << std::endl;
-    //      msg_printed = 1;
-    //    }
-    //exit(EXIT_FAILURE);
-    auto max_pt_and_index = util::methods::maxLengthAndMaxLengthIndex(d_x);
-    auto max_x = d_x[max_pt_and_index.second];
-
-    // check
-    if (util::isGreater(max_pt_and_index.first,
-                        d_outputDeck_p->d_outCriteriaParams[0])) {
-
-      // close open file
-      if(d_ppFile.is_open())
-        d_ppFile.close();
-
-      log(std::format("{}: Terminating simulation as one of the failing"
-                      " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
-                      "distance {:.6f} "
-                      "more than"
-                      " allowed distance {:.6f}\n",
-                      d_name, max_x.d_x, max_x.d_y, max_x.d_z, max_x.length(),
-                      d_outputDeck_p->d_outCriteriaParams[0]));
-      exit(1);
-    }
-  }
+  if (d_postprocess_p)
+    d_postprocess_p->checkStop(*this);
 }
 
 std::string model::DEMModel::ppCompressiveTest() {
-  bool continue_dt = false;
-  auto check_dt = d_outputDeck_p->d_dtTestOut;
-  if ((d_n % check_dt == 0) && (d_n >= check_dt))
-    continue_dt = true;
-
-  if (!continue_dt)
+  if (!d_postprocess_p)
     return "";
-
-  // get wall
-  auto w_id = d_testDeck_p->d_particleIdCompressiveTest;
-  auto f_dir = d_testDeck_p->d_particleForceDirectionCompressiveTest - 1;
-  const auto &wall = d_particlesListTypeAll[w_id];
-
-  // find the penetration of the wall from it's original location
-  auto dx = wall->getXLocal(0) - wall->getXRefLocal(0);
-  double wall_penetration = dx[f_dir];
-
-  // get the total reaction force on wall along the direction of loading
-  double tot_reaction_force = 0.;
-  for (size_t i = 0; i < wall->getNumNodes(); i++) {
-    tot_reaction_force += wall->getFLocal(i)[f_dir] * wall->getVolLocal(i);
-  }
-
-  // open file and write
-  bool use_static_file = true;
-  if (use_static_file) {
-    if (!d_ppFile.is_open()) {
-
-      std::string tag_pp_file = d_outputDeck_p->d_tagPPFile.empty() ? "0" : d_outputDeck_p->d_tagPPFile;
-      std::string filename = d_outputDeck_p->d_path + "pp_" +
-                             d_testDeck_p->d_testName + "_" +
-                             tag_pp_file + ".csv";
-      d_ppFile.open(filename.c_str(), std::ofstream::out | std::ofstream::app);
-
-      d_ppFile << "t, delta, force \n";
-    }
-
-    d_ppFile << std::format("%4.6e, %4.6e, %4.6e\n", d_time, wall_penetration,
-            tot_reaction_force);
-  }
-
-  setKeyData("wall_penetration", wall_penetration);
-  setKeyData("tot_reaction_force", tot_reaction_force);
-
-  return std::format("  Post-processing: wall penetration = {:"
-                     ".6f}, "
-                     "reaction force = {:5.3e} \n",
-                     wall_penetration, tot_reaction_force);
+  return d_postprocess_p->compressive(*this);
 }

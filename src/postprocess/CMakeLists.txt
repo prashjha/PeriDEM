@@ -6,16 +6,13 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-#include_directories(${PCL_INCLUDE_DIRS})
-#link_directories(${PCL_LIBRARY_DIRS})
-
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 
-add_library(NSearch ${SOURCES})
+add_library(Postprocess OBJECT ${SOURCES})
 
-target_link_libraries(NSearch PUBLIC Util Threads::Threads)
+target_link_libraries(Postprocess PUBLIC Util Particle Inp)
 
-target_include_directories(NSearch
+target_include_directories(Postprocess
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>

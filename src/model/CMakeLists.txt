@@ -9,11 +9,18 @@
 AUX_SOURCE_DIRECTORY(./ SOURCES)
 AUX_SOURCE_DIRECTORY(./dem SOURCES)
 
+list(FILTER SOURCES EXCLUDE REGEX "createParticles\\.cpp$")
+
 add_library(Model ${SOURCES})
 
 target_include_directories(Model PUBLIC ${VTK_INCLUDE_DIRS})
 
-target_link_libraries(Model PUBLIC Util RW Inp FE Mesh Material Loading Fracture Geom Particle NSearch MeshGen)
+target_sources(Model PRIVATE
+  ${PROJECT_SOURCE_DIR}/src/particle/createParticles.cpp
+  ${PROJECT_SOURCE_DIR}/src/rw/particleOutput.cpp
+)
+
+target_link_libraries(Model PUBLIC Util RW Inp FE Mesh Material Loading Fracture Geom Particle NSearch MeshGen Contact Pd TimeInt Postprocess)
 
 target_include_directories(Model
   PUBLIC

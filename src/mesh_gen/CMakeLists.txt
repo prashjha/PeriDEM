@@ -15,6 +15,7 @@ set(MESH_GEN_SOURCES
     openBoundaryWalls2D.cpp
     openBoundaryWalls3D.cpp
     primitiveOccMesh.cpp
+    particleMesh.cpp
 )
 
 add_library(MeshGen ${MESH_GEN_SOURCES})

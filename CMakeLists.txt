@@ -187,9 +187,13 @@ add_subdirectory(src/loading)
 add_subdirectory(src/material)
 add_subdirectory(src/mesh)
 add_subdirectory(src/mesh_gen)
-add_subdirectory(src/model)
 add_subdirectory(src/nsearch)
 add_subdirectory(src/particle)
+add_subdirectory(src/contact)
+add_subdirectory(src/pd)
+add_subdirectory(src/postprocess)
+add_subdirectory(src/time_int)
+add_subdirectory(src/model)
 add_subdirectory(src/rw)
 add_subdirectory(src/util)
 
@@ -212,12 +216,11 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< Applications >>>>>>>>>>#
 #----------------------------------#
-if(${Enable_Apps})
-    if (${Enable_CMAKE_Debug_Build})
-        message(STATUS "Building apps")
-    endif()
-    add_subdirectory(apps)
+# PeriDEM (apps/peridem) is always built. Extra apps: -DEnable_Apps=ON
+if (${Enable_CMAKE_Debug_Build})
+    message(STATUS "Building apps (PeriDEM always; extra apps Enable_Apps=${Enable_Apps})")
 endif()
+add_subdirectory(apps)
 
 if(${Enable_Examples})
     if (${Enable_CMAKE_Debug_Build})
@@ -226,20 +229,7 @@ if(${Enable_Examples})
     add_subdirectory(examples)
 endif()
 
-#----------------------------------#
-#<<<<<<<<<< PeriDEM executable >>>>>>>>>>#
-#----------------------------------#
-add_executable(PeriDEM src/main.cpp)
-
-target_include_directories(PeriDEM
-  PUBLIC
-    $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-    $<INSTALL_INTERFACE:include>
-)
-target_link_libraries(PeriDEM PUBLIC Model)
-
-install(TARGETS FE Fracture Geom Inp Loading Material Mesh MeshGen Model PeriDEM NSearch Particle RW Util 
+install(TARGETS FE Fracture Geom Inp Loading Material Mesh MeshGen Model PeriDEM NSearch Particle RW Util Contact Pd TimeInt Postprocess 
   EXPORT PeriDEMTargets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib

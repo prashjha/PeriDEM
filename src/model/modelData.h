@@ -27,6 +27,8 @@
 #include <map>
 #include <fstream>
 #include <iostream>
+#include <string>
+#include <utility>
 
 typedef nsearch::NFlannSearchKd<3> NSearch;
 
@@ -57,6 +59,7 @@ public:
         d_time(0.),
         d_currentDt(0.),
         d_infoN(1),
+        d_name("Model"),
         d_input_p(deck),
         d_modelDeck_p(deck->d_modelDeck_p),
         d_outputDeck_p(deck->d_outputDeck_p),
@@ -541,6 +544,15 @@ public:
 
   /*! @brief Print log step interval */
   size_t d_infoN;
+
+  /*! @brief Model name for log prefixes */
+  std::string d_name;
+
+  /*! @brief (simulation time, VTU filename) for output.pvd */
+  std::vector<std::pair<double, std::string>> d_pvdParticleEntries;
+
+  /*! @brief (simulation time, VTU filename) for output_strain.pvd */
+  std::vector<std::pair<double, std::string>> d_pvdStrainEntries;
 
   /*! @brief Debug data */
   std::map<std::string, double> d_dbgData;

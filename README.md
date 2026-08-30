@@ -115,7 +115,7 @@ Complex container geometries can be considered as well. For example, the image b
 
 ### Single particle deformation
 
-We can use `PeriDEM` executable or `Peridynamics` executable in `apps` directory to simulate the deformation of single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
+We can use the `PeriDEM` executable (`apps/peridem`, built as `bin/PeriDEM`) or the `Peridynamics` executable in `apps` to simulate the deformation of a single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
 
 ## Brief implementation details
 
@@ -312,7 +312,7 @@ repository.
   # install library in /tmp/peridem-install
   cmake --install build --prefix /tmp/peridem-install
   ```
-  This installs `bin/PeriDEM`, shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
+  This installs `bin/PeriDEM` (source: `apps/peridem`), shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
 - Consume in another CMake project:
   ```cmake
   cmake_minimum_required(VERSION 3.18)

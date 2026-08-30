@@ -12,6 +12,9 @@
 #define MODEL_FASTDEMMODEL_H
 
 #include "../modelData.h"
+#include "contact/contact.h"
+#include "postprocess/postprocess.h"
+#include <memory>
 #include <utility>
 #include <vector>
 
@@ -39,9 +42,6 @@ public:
    * @param deck The input deck
    */
   explicit DEMModel(std::shared_ptr<inp::Input> & deck, std::string modelName = "DEMModel");
-
-  /*! @brief Name of the model for logging purposes (useful if other classes are built on top of this class) */
-  std::string d_name;
 
   /*! @brief Prints message if any of these two conditions are true
    * 1. if check_condition == true and dbg_lvl > priority
@@ -219,13 +219,18 @@ public:
   /*! @brief Checks if simulation should be stopped due to abnormal state of system */
   virtual void checkStop();
 
+  /*! @brief Replace contact (call before run()). */
+  void setContact(std::unique_ptr<contact::Contact> c) { d_contact_p = std::move(c); }
+
+  /*! @brief Replace extra postprocess (call before run()). */
+  void setPostprocess(std::unique_ptr<postprocess::Postprocess> p) {
+    d_postprocess_p = std::move(p);
+  }
+
   /** @}*/
 
-private:
-  /*! @brief (simulation time, VTU filename) for output.pvd */
-  std::vector<std::pair<double, std::string>> d_pvdParticleEntries;
-  /*! @brief (simulation time, VTU filename) for output_strain.pvd */
-  std::vector<std::pair<double, std::string>> d_pvdStrainEntries;
+  std::unique_ptr<contact::Contact> d_contact_p;
+  std::unique_ptr<postprocess::Postprocess> d_postprocess_p;
 };
 
 /** @}*/
