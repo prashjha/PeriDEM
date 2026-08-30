@@ -8,9 +8,6 @@
 
 cmake_minimum_required(VERSION 3.10...4.3)
 
-include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/PeriDEM_Apple_LLVM.cmake")
-peridem_apple_llvm_before_project()
-
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
 #----------------------------------#
@@ -74,8 +71,6 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 endif ()
-
-peridem_apple_llvm_after_project()
 
 # C++20: std::format and related library facilities; no C++23-only features required in-tree.
 set(CMAKE_CXX_STANDARD 20)
