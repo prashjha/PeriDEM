@@ -19,7 +19,7 @@
 #include <vtkXMLUnstructuredGridReader.h>
 
 // forward declaration
-namespace model {
+namespace data {
 class ModelData;
 }
 
@@ -46,7 +46,7 @@ public:
    * @brief Writes the nodes to the file
    * @param model ModelData class object
    */
-  void readNodes(model::ModelData *model);
+  void readNodes(data::ModelData *model);
 
   /*! @brief Closes the file and store it to the hard disk */
   void close();

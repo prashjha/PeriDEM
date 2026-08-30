@@ -6,23 +6,19 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-AUX_SOURCE_DIRECTORY(./ SOURCES)
-AUX_SOURCE_DIRECTORY(./dem SOURCES)
-
-list(FILTER SOURCES EXCLUDE REGEX "createParticles\\.cpp$")
-
-add_library(Model ${SOURCES})
-
-target_include_directories(Model PUBLIC ${VTK_INCLUDE_DIRS})
-
-target_sources(Model PRIVATE
+add_library(PeriDEMModel periDEMModel.cpp
   ${PROJECT_SOURCE_DIR}/src/particle/createParticles.cpp
   ${PROJECT_SOURCE_DIR}/src/rw/particleOutput.cpp
 )
 
-target_link_libraries(Model PUBLIC Util RW Inp FE Mesh Material Loading Fracture Geom Particle NSearch MeshGen Contact Pd TimeInt Postprocess)
+target_include_directories(PeriDEMModel PUBLIC ${VTK_INCLUDE_DIRS})
 
-target_include_directories(Model
+target_link_libraries(PeriDEMModel PUBLIC
+  Data Util RW Inp FE Mesh Material Loading Fracture Geom Particle NSearch
+  MeshGen Contact Pd TimeInt Postprocess
+)
+
+target_include_directories(PeriDEMModel
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/src>
@@ -30,3 +26,7 @@ target_include_directories(Model
     $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/external>
     $<INSTALL_INTERFACE:include>
 )
+
+add_executable(PeriDEM main.cpp)
+
+target_link_libraries(PeriDEM PUBLIC PeriDEMModel)

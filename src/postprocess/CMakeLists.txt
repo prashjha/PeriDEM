@@ -10,7 +10,7 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Postprocess OBJECT ${SOURCES})
 
-target_link_libraries(Postprocess PUBLIC Util Particle Inp)
+target_link_libraries(Postprocess PUBLIC Util Particle Inp Data)
 
 target_include_directories(Postprocess
   PUBLIC

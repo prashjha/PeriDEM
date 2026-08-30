@@ -30,7 +30,7 @@
 #include "util/io.h"
 #include "util/function.h"
 #include "material/materialUtil.h"
-#include "model/dem/demModel.h"
+#include "periDEMModel.h"
 #include <cmath>
 #include <filesystem>
 #include <format>
@@ -246,7 +246,7 @@ int main(int argc, char *argv[]) {
 
   auto deck = std::make_shared<inp::Input>(inputJson);
 
-  model::DEMModel dem(deck);
+  PeriDEMModel dem(deck);
   dem.run(deck);
 
   return EXIT_SUCCESS;

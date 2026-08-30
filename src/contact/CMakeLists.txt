@@ -10,7 +10,7 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Contact OBJECT ${SOURCES})
 
-target_link_libraries(Contact PUBLIC Util Particle Inp NSearch Threads::Threads)
+target_link_libraries(Contact PUBLIC Util Particle Inp NSearch Threads::Threads Data)
 
 target_include_directories(Contact
   PUBLIC

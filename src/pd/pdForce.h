@@ -11,14 +11,14 @@
 #ifndef PD_PDFORCE_H
 #define PD_PDFORCE_H
 
-namespace model {
+namespace data {
 class ModelData;
 }
 
 namespace pd {
 
 /*! @brief Assemble nodal peridynamic force (constitutive response stays in material). */
-void computeForces(model::ModelData &data);
+void computeForces(data::ModelData &data);
 
 } // namespace pd
 

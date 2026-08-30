@@ -12,7 +12,7 @@
 
 // PeriDEM includes
 #include "inp/input.h"                          // Input class
-#include "model/dem/demModel.h"                 // Model class
+#include "periDEMModel.h"                 // Model class
 #include "inp/outputDeck.h"
 #include "util/vecMethods.h"
 #include "util/io.h"
@@ -34,7 +34,7 @@ std::string test::testPeriDEM(std::string filepath) {
 
   // check which model to run
   if (deck->isPeriDEM()) {
-    model::DEMModel dem(deck);
+    PeriDEMModel dem(deck);
     dem.run(deck);
   } else {
     std::cout << "PeriDEM model not found in input file.\n";

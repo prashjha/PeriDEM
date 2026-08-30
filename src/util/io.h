@@ -259,6 +259,21 @@ void log(const std::string &str, bool screen_out = false,
          int printMpiRank = print_default_mpi_rank);
 
 /*!
+ * @brief True if a message at this priority would be logged (uses LoggerDeck::d_debugLevel)
+ */
+bool logEnabled(int priority, bool check_condition = true,
+                int override_priority = -1);
+
+/*!
+ * @brief Log if LoggerDeck debug level passes the priority gate
+ */
+void log(int priority, const std::string &str, bool check_condition = true,
+         int override_priority = -1, bool screen_out = false);
+
+void log(int priority, std::ostringstream &oss, bool check_condition = true,
+         int override_priority = -1, bool screen_out = false);
+
+/*!
  * @brief Get filename removing path from the string
  * Source - https://stackoverflow.com/a/24386991
  *

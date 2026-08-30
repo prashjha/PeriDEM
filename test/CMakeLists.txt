@@ -141,6 +141,12 @@ add_test(NAME test_peridem_compression_large_set
 )
 set_tests_properties(test_peridem_compression_large_set PROPERTIES LABELS "PeriDEM;Examples")
 
+add_test(NAME test_twoparticle_custom
+  COMMAND ${CMAKE_BINARY_DIR}/bin/TwoParticle_Custom
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/apps/twoparticle_custom
+)
+set_tests_properties(test_twoparticle_custom PROPERTIES LABELS "PeriDEM;Apps")
+
 # ---------------------------------------------------------------------------
 # PeriDEM: optional high-load integration tests (shell-driven)
 # ---------------------------------------------------------------------------

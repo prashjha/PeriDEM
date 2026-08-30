@@ -10,7 +10,7 @@ set(EXEC_NAME example_compression_test)
 add_executable(${EXEC_NAME} main.cpp)
 
 target_link_libraries(${EXEC_NAME} PUBLIC
-    Model
+    PeriDEMModel
 )
 
 target_include_directories(${EXEC_NAME} PUBLIC

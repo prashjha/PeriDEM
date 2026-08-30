@@ -11,14 +11,14 @@
 #ifndef NSEARCH_NEIGHBOR_POLICY_H
 #define NSEARCH_NEIGHBOR_POLICY_H
 
-namespace model {
+namespace data {
 class ModelData;
 }
 
 namespace nsearch {
 
 /*! @brief Horizon search restricted to the same particle. */
-void updatePeridynamicNeighborlist(model::ModelData &data);
+void updatePeridynamicNeighborlist(data::ModelData &data);
 
 } // namespace nsearch
 

@@ -16,7 +16,7 @@
 #include <vtkXMLUnstructuredGridWriter.h>
 
 // forward declaration
-namespace model {
+namespace data {
 class ModelData;
 }
 
@@ -50,7 +50,7 @@ public:
    * @param model ModelData class object
    * @param tags Vector of tags (name of data, e.g., 'Displacement', 'Velocity') to append to the file
    */
-  void appendNodes(const model::ModelData *model,
+  void appendNodes(const data::ModelData *model,
                    const std::vector<std::string> &tags);
 
   /*!
@@ -58,7 +58,7 @@ public:
    * @param model ModelData class object
    * @param tags Vector of tags (name of data, e.g., 'Displacement', 'Velocity') to append to the file
    */
-  void appendMesh(const model::ModelData *model,
+  void appendMesh(const data::ModelData *model,
              const std::vector<std::string> &tags);
 
   /*!
@@ -68,7 +68,7 @@ public:
    * @param processed_nodes Nodes in the list for which we are writing contact data
    * @param processed_elems Number of line elements (two nodes)
    */
-  void appendContactData(const model::ModelData *model,
+  void appendContactData(const data::ModelData *model,
                          const std::vector<size_t> *processed_nodes,
                          const std::vector <
                              std::pair<size_t, size_t>> *processed_elems);
@@ -77,7 +77,7 @@ public:
    * @brief Writes strain/stress
    * @param model ModelData class object
    */
-  void appendStrainStress(const model::ModelData *model);
+  void appendStrainStress(const data::ModelData *model);
 
   /** @}*/
 

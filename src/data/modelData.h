@@ -8,8 +8,8 @@
  * file LICENSE)
  */
 
-#ifndef MODEL_MODELDATA_H
-#define MODEL_MODELDATA_H
+#ifndef DATA_MODELDATA_H
+#define DATA_MODELDATA_H
 
 #include "util/point.h"
 #include "util/matrix.h"
@@ -39,7 +39,7 @@ class RefParticle;
 class Particle;
 }
 
-namespace model {
+namespace data {
 
 /**
  * \defgroup Explicit Explicit
@@ -123,6 +123,57 @@ public:
    * @return eps Horizon
    */
   double getHorizon(size_t i);
+
+  /**
+   * @name Time integrator interface
+   *
+   * Accessors the time loop and dof update use. Field arrays are not
+   * read by name from src/time_int.
+   */
+  /**@{*/
+
+  int dimension() const { return d_modelDeck_p->d_dim; }
+
+  double timeStep() const { return d_modelDeck_p->d_dt; }
+
+  double currentDt() const { return d_currentDt; }
+
+  void setCurrentDt(double dt) { d_currentDt = dt; }
+
+  void advanceTime() {
+    ++d_n;
+    d_time += d_currentDt;
+  }
+
+  size_t numPdForceNodes() const { return d_fPdCompNodes.size(); }
+
+  size_t pdForceNode(size_t k) const { return d_fPdCompNodes[k]; }
+
+  bool isDofFree(size_t i, unsigned int dof) const {
+    return util::methods::isFree(d_fix[i], dof);
+  }
+
+  double getVMag(size_t i) const { return d_vMag[i]; }
+
+  void setVMag(size_t i, double mag) { d_vMag[i] = mag; }
+
+  size_t currentStep() const { return d_n; }
+
+  size_t numTimeSteps() const { return d_modelDeck_p->d_Nt; }
+
+  const std::string &timeDiscretization() const {
+    return d_modelDeck_p->d_timeDiscretization;
+  }
+
+  bool performOutput() const { return d_outputDeck_p->d_performOut; }
+
+  bool shouldOutput() const {
+    return d_outputDeck_p->d_performOut &&
+           (d_n % d_outputDeck_p->d_dtOut == 0) &&
+           (d_n >= d_outputDeck_p->d_dtOut);
+  }
+
+  /** @}*/
 
   /*!
    * @brief Get particle id given the location in particle list
@@ -771,8 +822,10 @@ public:
   /** @}*/
 };
 
+void setupQuadratureData(ModelData &data);
+
 /** @}*/
 
-} // namespace model
+} // namespace data
 
-#endif // MODEL_MODELDATA_H
+#endif // DATA_MODELDATA_H

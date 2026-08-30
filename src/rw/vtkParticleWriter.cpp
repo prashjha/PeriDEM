@@ -22,7 +22,7 @@
 
 #include "mesh/mesh.h"
 #include <cstdint>
-#include "model/modelData.h"
+#include "data/modelData.h"
 #include "particle/baseParticle.h"
 
 #include "util/vecMethods.h"
@@ -39,7 +39,7 @@ rw::writer::VtkParticleWriter::VtkParticleWriter(const std::string &filename,
 }
 
 void rw::writer::VtkParticleWriter::appendNodes(
-    const model::ModelData *model,
+    const data::ModelData *model,
     const std::vector<std::string> &tags) {
 
   if (model->d_x.size() == 0)
@@ -275,7 +275,7 @@ void rw::writer::VtkParticleWriter::appendNodes(
 }
 
 void rw::writer::VtkParticleWriter::appendMesh(
-    const model::ModelData *model,
+    const data::ModelData *model,
     const std::vector<std::string> &tags) {
 
   if (model->d_x.size() == 0)
@@ -366,7 +366,7 @@ void rw::writer::VtkParticleWriter::close() {
 }
 
 void rw::writer::VtkParticleWriter::appendContactData(
-    const model::ModelData *model,
+    const data::ModelData *model,
     const std::vector<size_t> *processed_nodes,
     const std::vector <
         std::pair<size_t, size_t>> *processed_elems) {
@@ -451,7 +451,7 @@ void rw::writer::VtkParticleWriter::appendContactData(
 
 
 void rw::writer::VtkParticleWriter::appendStrainStress(
-        const model::ModelData *model) {
+        const data::ModelData *model) {
 
   if (model->d_xQuadCur.size() == 0) {
     std::cout << "VtkParticleWriter::appendStrainStress: Nothing to write.\n";

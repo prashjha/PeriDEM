@@ -208,7 +208,7 @@ void updateBondFractureDataI(size_t i, const std::vector<util::Point> &nodes,
 
 } // anonymous namespace
 
-void material::computeStateMx(model::ModelData *model, bool compute_in_parallel) {
+void material::computeStateMx(data::ModelData *model, bool compute_in_parallel) {
 
   model->d_mX.resize(model->d_x.size());
   if (!compute_in_parallel) {
@@ -244,7 +244,7 @@ void material::computeStateMx(model::ModelData *model, bool compute_in_parallel)
   }
 }
 
-void material::computeStateThetax(model::ModelData *model, bool compute_in_parallel) {
+void material::computeStateThetax(data::ModelData *model, bool compute_in_parallel) {
 
   model->d_thetaX.resize(model->d_x.size());
   if (!compute_in_parallel) {
@@ -290,7 +290,7 @@ void material::computeStateThetax(model::ModelData *model, bool compute_in_paral
   }
 }
 
-void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in_parallel) {
+void material::computeHydrostaticStrain(data::ModelData *model, bool compute_in_parallel) {
 
   model->d_thetaX.resize(model->d_x.size());
   if (!compute_in_parallel) {
@@ -337,7 +337,7 @@ void material::computeHydrostaticStrain(model::ModelData *model, bool compute_in
 
 }
 
-void material::updateBondFractureData(model::ModelData *model, bool compute_in_parallel) {
+void material::updateBondFractureData(data::ModelData *model, bool compute_in_parallel) {
 
   if (!compute_in_parallel) {
     for (size_t i = 0; i < model->d_x.size(); i++) {

@@ -14,7 +14,7 @@
 #include "util/io.h"
 #include "util/function.h"
 #include "material/materialUtil.h"
-#include "model/dem/demModel.h"
+#include "periDEMModel.h"
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
   auto deck = std::make_shared<inp::Input>(inputJson);
 
   // PeriDEM
-  model::DEMModel dem(deck);
+  PeriDEMModel dem(deck);
   dem.run(deck);
 
   return EXIT_SUCCESS;

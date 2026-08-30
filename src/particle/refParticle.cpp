@@ -15,7 +15,7 @@
 
 // Reference particle class
 particle::RefParticle::RefParticle(size_t id,
-                                   std::shared_ptr<model::ModelData> model_data,
+                                   std::shared_ptr<data::ModelData> model_data,
                                    std::shared_ptr<geom::GeomObject> geom,
                                    std::shared_ptr<mesh::Mesh> mesh)
     : d_id(id),

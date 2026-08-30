@@ -10,8 +10,8 @@
 
 #include "postprocess.h"
 
-#include "model/modelData.h"
-#include "model/modelLog.h"
+#include "data/modelData.h"
+#include "util/io.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/vecMethods.h"
@@ -20,14 +20,14 @@
 #include <cstdlib>
 #include <format>
 
-void postprocess::Postprocess::close(model::ModelData &data) {
+void postprocess::Postprocess::close(data::ModelData &data) {
 
   if (data.d_ppFile.is_open())
     data.d_ppFile.close();
 
 }
 
-std::string postprocess::Postprocess::twoParticle(model::ModelData &data) {
+std::string postprocess::Postprocess::twoParticle(data::ModelData &data) {
 
 
   bool continue_dt = false;
@@ -84,7 +84,7 @@ std::string postprocess::Postprocess::twoParticle(model::ModelData &data) {
 
 }
 
-std::string postprocess::Postprocess::compressive(model::ModelData &data) {
+std::string postprocess::Postprocess::compressive(data::ModelData &data) {
 
   bool continue_dt = false;
   auto check_dt = data.d_outputDeck_p->d_dtTestOut;
@@ -137,7 +137,7 @@ std::string postprocess::Postprocess::compressive(model::ModelData &data) {
 
 }
 
-void postprocess::Postprocess::checkStop(model::ModelData &data) {
+void postprocess::Postprocess::checkStop(data::ModelData &data) {
 
 
   if (data.d_outputDeck_p->d_outCriteria == "max_particle_dist" &&
@@ -177,7 +177,7 @@ void postprocess::Postprocess::checkStop(model::ModelData &data) {
       if(data.d_ppFile.is_open())
         data.d_ppFile.close();
 
-      model::log(data, std::format("{}: Terminating simulation as one of the failing"
+      util::io::log(0, std::format("{}: Terminating simulation as one of the failing"
                       " criteria is met. Point ({:.6f}, {:.6f}, {:.6f}) is at "
                       "distance {:.6f} "
                       "more than"

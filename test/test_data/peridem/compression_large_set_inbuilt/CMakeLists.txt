@@ -11,7 +11,7 @@ set(EXEC_NAME Test_PeriDEM_compression_large_set_inbuilt)
 add_executable(${EXEC_NAME} main.cpp)
 
 target_link_libraries(${EXEC_NAME} PUBLIC
-    Model
+    PeriDEMModel
 )
 
 target_include_directories(${EXEC_NAME} PUBLIC

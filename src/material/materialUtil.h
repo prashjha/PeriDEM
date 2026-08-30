@@ -14,7 +14,7 @@
 #include "util/point.h"
 #include "mparticle/material.h"
 #include "fracture/fracture.h"
-#include "model/modelData.h"
+#include "data/modelData.h"
 #include <limits>
 #include <string>
 #include <vector>
@@ -143,14 +143,14 @@ namespace material {
    * @brief Computes the moment \f$ m_x \f$ term in state-based peridynamic
    * formulation
    */
-void computeStateMx(model::ModelData *model, bool compute_in_parallel = false);
+void computeStateMx(data::ModelData *model, bool compute_in_parallel = false);
 
-void computeStateThetax(model::ModelData *model, bool compute_in_parallel = false);
+void computeStateThetax(data::ModelData *model, bool compute_in_parallel = false);
 
 
-void computeHydrostaticStrain(model::ModelData *model, bool compute_in_parallel = false);
+void computeHydrostaticStrain(data::ModelData *model, bool compute_in_parallel = false);
 
-void updateBondFractureData(model::ModelData *model, bool compute_in_parallel = false);
+void updateBondFractureData(data::ModelData *model, bool compute_in_parallel = false);
 
 
 } // namespace material

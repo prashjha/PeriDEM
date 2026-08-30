@@ -10,14 +10,13 @@
 
 #include "rw/particleOutput.h"
 
-#include "model/modelData.h"
-#include "model/modelLog.h"
+#include "data/modelData.h"
+#include "util/io.h"
 #include "particle/baseParticle.h"
 #include "rw/vtkParticleWriter.h"
 #include "rw/pvdCollectionWriter.h"
 #include "mesh/meshUtil.h"
 #include "util/function.h"
-#include "util/io.h"
 #include "util/vecMethods.h"
 #include "inp/input.h"
 
@@ -26,7 +25,7 @@
 #include <fstream>
 #include <sstream>
 
-void rw::writeOutput(model::ModelData &data) {
+void rw::writeOutput(data::ModelData &data) {
 
 
   // write out % completion of simulation at 10% interval
@@ -34,14 +33,13 @@ void rw::writeOutput(model::ModelData &data) {
     float p = float(data.d_n) * 100. / data.d_modelDeck_p->d_Nt;
     int m = std::max(1, int(data.d_modelDeck_p->d_Nt / 10));
     if (data.d_n % m == 0 && int(p) > 0)
-      model::log(data, std::format("{}: Simulation {}% complete\n",
+      util::io::log(0, std::format("{}: Simulation {}% complete\n",
                       data.d_name, int(p)));
     ;
   }
 
-  model::log(data, std::format("{}: Output step = {}, time = {:.6f} \n",
-                  data.d_name, data.d_n, data.d_time),
-      2);
+  util::io::log(2, std::format("{}: Output step = {}, time = {:.6f} \n",
+                  data.d_name, data.d_n, data.d_time));
 
   if (data.d_outputDeck_p->d_debug > 0 and data.getKeyData("debug_once") < 0) {
 
@@ -75,7 +73,7 @@ void rw::writeOutput(model::ModelData &data) {
 
     oss << tabS << "h_min = " << data.d_hMin << ", h_max = " << data.d_hMax << std::endl;
 
-    model::log(data, oss, 2);
+    util::io::log(2, oss);
   } // end of debug
 
   size_t dt_out = data.d_outputDeck_p->d_dtOutCriteria;

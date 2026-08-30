@@ -11,14 +11,14 @@
 #ifndef RW_PARTICLE_OUTPUT_H
 #define RW_PARTICLE_OUTPUT_H
 
-namespace model {
+namespace data {
 class ModelData;
 }
 
 namespace rw {
 
 /*! @brief Write VTU/PVD (and optional strain VTU / particle-location CSV). */
-void writeOutput(model::ModelData &data);
+void writeOutput(data::ModelData &data);
 
 } // namespace rw
 

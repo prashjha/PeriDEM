@@ -16,8 +16,7 @@
 #include "geom/geomObjectsUtil.h"
 #include "inp/input.h"
 #include "mesh_gen/particleMesh.h"
-#include "model/modelData.h"
-#include "model/modelLog.h"
+#include "data/modelData.h"
 #include "util/io.h"
 #include "util/point.h"
 #include "util/randomDist.h"
@@ -30,16 +29,14 @@
 
 namespace {
 
-std::shared_ptr<model::ModelData> modelAlias(model::ModelData &data) {
-  return std::shared_ptr<model::ModelData>(&data, [](model::ModelData *) {});
+std::shared_ptr<data::ModelData> modelAlias(data::ModelData &data) {
+  return std::shared_ptr<data::ModelData>(&data, [](data::ModelData *) {});
 }
 
 } // namespace
 
-void particle::createParticleUsingParticleZoneGeomObject(model::ModelData &data) {
-  model::log(data,
-             data.d_name + ": Creating particle using Particle Zone Geometry Object\n",
-             1);
+void particle::createParticleUsingParticleZoneGeomObject(data::ModelData &data) {
+  util::io::log(1, data.d_name + ": Creating particle using Particle Zone Geometry Object\n");
 
   auto p_transform = geom::ParticleTransform();
   auto model_ptr = modelAlias(data);
@@ -61,8 +58,8 @@ void particle::createParticleUsingParticleZoneGeomObject(model::ModelData &data)
   }
 }
 
-void particle::createParticlesFromFile(model::ModelData &data) {
-  model::log(data, data.d_name + ": Creating particle from file\n", 1);
+void particle::createParticlesFromFile(data::ModelData &data) {
+  util::io::log(1, data.d_name + ": Creating particle from file\n");
 
   auto &pgen_deck = data.d_particleDeck_p->d_pGenDeck;
   auto &pgen_json = pgen_deck.d_pGenJson;
@@ -135,7 +132,7 @@ void particle::createParticlesFromFile(model::ModelData &data) {
   }
 }
 
-void particle::createReferenceParticles(model::ModelData &data) {
+void particle::createReferenceParticles(data::ModelData &data) {
   data.d_particlesListTypeParticle.resize(0);
   data.d_particlesListTypeAll.resize(0);
   data.d_particlesListTypeWall.resize(0);
@@ -157,16 +154,14 @@ void particle::createReferenceParticles(model::ModelData &data) {
     auto &zmeshDeck = data.d_particleDeck_p->d_pMeshVec[z];
     auto &zgeomDeck = data.d_particleDeck_p->d_pGeomVec[z];
 
-    model::log(data,
-               data.d_name +
+    util::io::log(0, data.d_name +
                    ": Creating mesh for reference particle in mesh group = " +
                    std::to_string(z) + "\n");
 
     auto mesh = mesh_gen::createParticleMesh(
         zmeshDeck, zgeomDeck, data.d_modelDeck_p.get(), data.d_name);
 
-    model::log(data,
-               data.d_name +
+    util::io::log(0, data.d_name +
                    ": Creating reference particle in mesh group = " +
                    std::to_string(z) + "\n");
 
@@ -179,7 +174,7 @@ void particle::createReferenceParticles(model::ModelData &data) {
   }
 }
 
-void particle::createParticles(model::ModelData &data) {
+void particle::createParticles(data::ModelData &data) {
   createReferenceParticles(data);
 
   if (data.d_particleDeck_p->d_pGenDeck.d_genMethod == "From_File") {

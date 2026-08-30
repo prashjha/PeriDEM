@@ -11,9 +11,9 @@
 #include "modelData.h"
 #include "particle/baseParticle.h"
 
-double model::ModelData::getDensity(size_t i) {
+double data::ModelData::getDensity(size_t i) {
   return d_particlesListTypeAll[d_ptId[i]]->getDensity();
 };
-double model::ModelData::getHorizon(size_t i) {
+double data::ModelData::getHorizon(size_t i) {
   return d_particlesListTypeAll[d_ptId[i]]->getHorizon();
 };

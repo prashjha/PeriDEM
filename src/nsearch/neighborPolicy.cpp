@@ -10,8 +10,8 @@
 
 #include "neighborPolicy.h"
 
-#include "model/modelData.h"
-#include "model/modelLog.h"
+#include "data/modelData.h"
+#include "util/io.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/vecMethods.h"
@@ -22,7 +22,7 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-void nsearch::updatePeridynamicNeighborlist(model::ModelData &data) {
+void nsearch::updatePeridynamicNeighborlist(data::ModelData &data) {
 
 
   data.d_neighPd.resize(data.d_x.size());
@@ -56,7 +56,7 @@ void nsearch::updatePeridynamicNeighborlist(model::ModelData &data) {
   executor.run(taskflow).get();
 
   auto t2 = steady_clock::now();
-  model::log(data, std::format("{}: Peridynamics neighbor update time = {}\n",
-                  data.d_name, util::methods::timeDiff(t1, t2)), 2);
+  util::io::log(2, std::format("{}: Peridynamics neighbor update time = {}\n",
+                  data.d_name, util::methods::timeDiff(t1, t2)));
 
 }

@@ -10,8 +10,8 @@
 
 #include "pdForce.h"
 
-#include "model/modelData.h"
-#include "model/modelLog.h"
+#include "data/modelData.h"
+#include "util/io.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/point.h"
@@ -20,10 +20,10 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-void pd::computeForces(model::ModelData &data) {
+void pd::computeForces(data::ModelData &data) {
 
 
-  model::log(data, "    Computing peridynamic force \n", 3);
+  util::io::log(3, "    Computing peridynamic force \n");
 
   const auto dim = data.d_modelDeck_p->d_dim;
   const bool is_state = data.d_particlesListTypeAll[0]->getMaterial()->isStateActive();

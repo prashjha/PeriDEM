@@ -11,28 +11,34 @@
 #ifndef CONTACT_CONTACT_H
 #define CONTACT_CONTACT_H
 
+#include "damping.h"
+#include "pairForce.h"
+
 #include <memory>
 
-namespace model {
+namespace data {
 class ModelData;
 }
 
 namespace contact {
 
-/*!
- * @brief Contact force and contact neighbor search.
- *
- * DEMModel holds a Contact object. An app can supply another implementation
- * (subclass or replacement) without editing src/.
- */
+/*! @brief Contact neighbor search and force assembly. Pair law and damping
+ *  are separate types on this object. */
 class Contact {
 public:
+  Contact();
   virtual ~Contact() = default;
 
-  virtual void setup(model::ModelData &data);
-  virtual bool updateSearchParameters(model::ModelData &data);
-  virtual void updateNeighborlist(model::ModelData &data);
-  virtual void computeForces(model::ModelData &data);
+  void setup(data::ModelData &data);
+  bool updateSearchParameters(data::ModelData &data);
+  void updateNeighborlist(data::ModelData &data);
+  void computeForces(data::ModelData &data);
+
+  void setPairForce(std::unique_ptr<PairForce> p) { d_pairForce = std::move(p); }
+  void setDamping(std::unique_ptr<Damping> d) { d_damping = std::move(d); }
+
+  std::unique_ptr<PairForce> d_pairForce;
+  std::unique_ptr<Damping> d_damping;
 };
 
 } // namespace contact

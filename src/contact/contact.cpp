@@ -9,9 +9,10 @@
  */
 
 #include "contact.h"
+#include "damping.h"
 
-#include "model/modelData.h"
-#include "model/modelLog.h"
+#include "data/modelData.h"
+#include "util/io.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/matrix.h"
@@ -22,11 +23,16 @@
 
 #include <cmath>
 #include <format>
+#include <memory>
 
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-void contact::Contact::setup(model::ModelData &data) {
+contact::Contact::Contact()
+    : d_pairForce(std::make_unique<PairForce>()),
+      d_damping(std::make_unique<Damping>()) {}
+
+void contact::Contact::setup(data::ModelData &data) {
 
 
   // loop over all particle zones and get minimum value of mesh size
@@ -46,8 +52,8 @@ void contact::Contact::setup(model::ModelData &data) {
       data.d_hMax = h;
   }
 
-  model::log(data, std::format("{}: Contact setup\n  hmin = {:.6f}, hmax = {:.6f} \n",
-                  data.d_name, data.d_hMin, data.d_hMax), 1);
+  util::io::log(1, std::format("{}: Contact setup\n  hmin = {:.6f}, hmax = {:.6f} \n",
+                  data.d_name, data.d_hMin, data.d_hMax));
 
   data.d_maxContactR = 0.;
 
@@ -73,17 +79,17 @@ void contact::Contact::setup(model::ModelData &data) {
           deck->d_betanFactor *
           (-2. * log_e * std::sqrt(1. / (M_PI * M_PI + log_e * log_e)));
 
-      model::log(data, std::format("  contact_radius = {:.6f}, hmin = {:.6f}, Kn = {:5.3e}, "
+      util::io::log(2, std::format("  contact_radius = {:.6f}, hmin = {:.6f}, Kn = {:5.3e}, "
                       "Vmax = {:5.3e}, "
                       "betan = {:7.5f}, mu = {:.4f}, kappa = {:5.3e}\n",
                       deck->d_contactR, data.d_hMin, deck->d_Kn, deck->d_vMax,
-                      deck->d_betan, deck->d_mu, deck->d_K), 2);
+                      deck->d_betan, deck->d_mu, deck->d_K));
     }
   }
 
 }
 
-bool contact::Contact::updateSearchParameters(model::ModelData &data) {
+bool contact::Contact::updateSearchParameters(data::ModelData &data) {
 
 
   // initialize parameters
@@ -179,13 +185,12 @@ bool contact::Contact::updateSearchParameters(model::ModelData &data) {
     data.d_contNeighUpdateInterval = size_t(data.d_maxContactR/(data.d_maxVelocity * data.d_currentDt));
     if (up_interval_old > data.d_contNeighUpdateInterval) {
       // issue warning
-      model::log(data, std::format("Warning: Contact search radius based on velocity is greater than "
+      util::io::log(2, std::format("Warning: Contact search radius based on velocity is greater than "
                       "the max contact radius.\n"
                       "Warning: Adjusting contact neighborlist update interval.\n"
                       "{:>13} = {:4.6e}, time step = {}, "
                       "velocity-based r = {:4.6e}, max contact r = {:4.6e}\n",
-                      "Time", data.d_time, data.d_n, max_search_r, max_search_r_from_contact_R),
-          2, data.d_n % data.d_infoN == 0, 3);
+                      "Time", data.d_time, data.d_n, max_search_r, max_search_r_from_contact_R), data.d_n % data.d_infoN == 0, 3);
     }
 
     data.d_contNeighSearchRadius = max_search_r_from_contact_R;
@@ -204,7 +209,7 @@ bool contact::Contact::updateSearchParameters(model::ModelData &data) {
   }
 
   if (up_interval_old > data.d_contNeighUpdateInterval) {
-    model::log(data, std::format("    Contact neighbor parameters: \n"
+    util::io::log(2, std::format("    Contact neighbor parameters: \n"
                     "      {:48s} = {:d}\n"
                     "      {:48s} = {:d}\n"
                     "      {:48s} = {:d}\n"
@@ -224,8 +229,7 @@ bool contact::Contact::updateSearchParameters(model::ModelData &data) {
                     "search radius factor", data.d_particleDeck_p->d_pNeighDeck.d_sFactor,
                     "max search r from velocity", max_search_r,
                     "max search r from contact r", max_search_r_from_contact_R,
-                    "max velocity", data.d_maxVelocity),
-        2, data.d_n % data.d_infoN == 0, 3);
+                    "max velocity", data.d_maxVelocity), data.d_n % data.d_infoN == 0, 3);
   }
 
   // update counter and return condition for contact search
@@ -234,7 +238,7 @@ bool contact::Contact::updateSearchParameters(model::ModelData &data) {
 
 }
 
-void contact::Contact::updateNeighborlist(model::ModelData &data) {
+void contact::Contact::updateNeighborlist(data::ModelData &data) {
 
 
   auto update = updateSearchParameters(data);
@@ -348,15 +352,11 @@ void contact::Contact::updateNeighborlist(model::ModelData &data) {
 
 }
 
-void contact::Contact::computeForces(model::ModelData &data) {
+void contact::Contact::computeForces(data::ModelData &data) {
 
+  util::io::log(3, "    Computing normal contact force \n");
 
-  model::log(data, "    Computing normal contact force \n", 3);
-
-  // Description:
-  // 1. Normal contact is applied between nodes of particles and walls
-  // 2. Normal damping is applied between particle centers
-  // 3. Normal damping is applied between nodes of particle and wall pairs
+  auto *pair = d_pairForce.get();
 
   tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
@@ -364,236 +364,54 @@ void contact::Contact::computeForces(model::ModelData &data) {
   taskflow.for_each_index((std::size_t) 0,
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
-                          [&data](std::size_t II) {
+                          [&data, pair](std::size_t II) {
 
                               auto i = data.d_fContCompNodes[II];
 
-                              // local variable to hold force
                               util::Point force_i = util::Point();
-                              double scalar_f = 0.;
 
                               const auto &ptIdi = data.getPtId(i);
                               auto &pi = data.getParticleFromAllList(ptIdi);
-                              double horizon = pi->d_material_p->getHorizon();
-                              double search_r = data.d_maxContactR;
 
-                              // particle data
-                              double rhoi = pi->getDensity();
-
-                              const auto &yi = data.d_x[i]; // current coordinates
-                              const auto &ui = data.d_u[i];
+                              const auto &yi = data.d_x[i];
                               const auto &vi = data.d_v[i];
-                              const auto &voli = data.d_vol[i];
-
                               const std::vector<size_t> &neighs = data.d_neighC[i];
 
-                              if (neighs.size() > 0) {
+                              for (const auto &j_id: neighs) {
+                                if (j_id == i)
+                                  continue;
 
-                                for (const auto &j_id: neighs) {
+                                const auto &ptIdj = data.d_ptId[j_id];
+                                if (ptIdj == ptIdi)
+                                  continue;
 
-                                  //auto &j_id = neighs[j];
-                                  const auto &yj = data.d_x[j_id]; // current coordinates
-                                  double Rji = (yj - yi).length();
-                                  auto &ptIdj = data.d_ptId[j_id];
-                                  auto &pj = data.getParticleFromAllList(ptIdj);
-                                  double rhoj = pj->getDensity();
+                                auto &pj = data.getParticleFromAllList(ptIdj);
+                                if (pi->isWall() and pj->isWall())
+                                  continue;
 
-                                  bool both_walls =
-                                          (pi->isWall() and pj->isWall());
+                                const auto &contact =
+                                    data.d_particleDeck_p->d_contactDeck.getContact(
+                                        pi->getGroupId("contact_id"),
+                                        pj->getGroupId("contact_id"));
 
-                                  if (j_id != i) {
-                                    if (ptIdj != ptIdi && !both_walls) {
-
-                                      // apply particle-particle or particle-wall contact here
-                                      const auto &contact =
-                                              data.d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
-
-                                      if (util::isLess(Rji, contact.d_contactR)) {
-
-                                        auto yji = data.d_x[j_id] - yi;
-                                        auto volj = data.d_vol[j_id];
-                                        auto vji = data.d_v[j_id] - vi;
-
-                                        // resolve velocity vector in normal and tangential components
-                                        auto en = yji / Rji;
-                                        auto vn_mag = (vji * en);
-                                        auto et = vji - vn_mag * en;
-                                        if (util::isGreater(et.length(), 0.))
-                                          et = et / et.length();
-                                        else
-                                          et = util::Point();
-
-                                        // Formula using bulk modulus and horizon
-                                        scalar_f = contact.d_Kn * (Rji - contact.d_contactR) *
-                                                   volj; // divided by voli
-                                        if (scalar_f > 0.)
-                                          scalar_f = 0.;
-                                        force_i += scalar_f * en;
-
-                                        // compute friction force (since f < 0, |f| = -f)
-                                        force_i += contact.d_mu * scalar_f * et;
-
-                                        // if particle-wall pair, apply damping contact here <--
-                                        // doesnt seem to work
-                                        bool node_lvl_damp = false;
-                                        // if (pi->getTypeIndex() == 0 and pj->getTypeIndex() == 1)
-                                        //   node_lvl_damp = true;
-
-                                        if (node_lvl_damp) {
-                                          // apply damping at the node level
-                                          auto meq = util::equivalentMass(rhoi * voli, rhoj * volj);
-                                          auto beta_n =
-                                                  contact.d_betan *
-                                                  std::sqrt(contact.d_K * contact.d_contactR * meq);
-
-                                          auto &pii = data.d_particlesListTypeAll[pi->getId()];
-                                          vji = data.d_v[j_id] - pii->getVCenter();
-                                          vn_mag = (vji * en);
-                                          if (vn_mag > 0.)
-                                            vn_mag = 0.;
-                                          force_i += beta_n * vn_mag * en / voli;
-                                        }
-                                      } // within contact radius
-                                    }   // particle-particle contact
-                                  }     // if j_id is not i
-                                }       // loop over neighbors
-                              }         // contact neighbor
+                                Pair p{contact,
+                                       yi, data.d_x[j_id],
+                                       vi, data.d_v[j_id],
+                                       i, j_id,
+                                       ptIdi, ptIdj,
+                                       data.d_vol[i], data.d_vol[j_id],
+                                       pi->getDensity(), pj->getDensity(),
+                                       data.d_currentDt,
+                                       pi->isWall(), pj->isWall()};
+                                force_i += pair->force(p);
+                              }
 
                               data.d_f[i] += force_i;
                           }
-  ); // for_each
+  );
 
   executor.run(taskflow).get();
 
-
-  // damping force
-  model::log(data, "    Computing normal damping force \n", 3);
-  for (auto &pi : data.d_particlesListTypeParticle) {
-
-    auto pi_id = pi->getId();
-
-    double Ri = pi->d_geom_p->boundingRadius();
-    double vol_pi = M_PI * Ri * Ri;
-    auto pi_xc = pi->getXCenter();
-    auto pi_vc = pi->getVCenter();
-    auto rhoi = pi->getDensity();
-    util::Point force_i = util::Point();
-
-    // particle-particle
-    for (auto &pj : data.d_particlesListTypeParticle) {
-      if (pj->getId() != pi->getId()) {
-        auto Rj = pj->d_geom_p->boundingRadius();
-        auto xc_ji = pj->getXCenter() - pi_xc;
-        auto dist_xcji = xc_ji.length();
-
-        const auto &contact = data.d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
-
-        if (util::isLess(dist_xcji, Rj + Ri + 1.01 * contact.d_contactR)) {
-
-          auto vol_pj = M_PI * Rj * Rj;
-          auto rhoj = pj->getDensity();
-          // equivalent mass
-          auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * vol_pj);
-
-          // beta_n
-          auto beta_n = contact.d_betan *
-                        std::sqrt(contact.d_K * contact.d_contactR * meq);
-
-          // center-center vector
-          auto hat_xc_ji = util::Point();
-          if (util::isGreater(dist_xcji, 0.))
-            hat_xc_ji = xc_ji / dist_xcji;
-          else
-            hat_xc_ji = util::Point();
-
-          // center-center velocity
-          auto vc_ji = pj->getVCenter() - pi_vc;
-          auto vc_mag = vc_ji * hat_xc_ji;
-          if (vc_mag > 0.)
-            vc_mag = 0.;
-
-          // force at node of pi
-          force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
-        } // if within contact distance
-      }   // if not same particles
-    }     // other particles
-
-    // particle-wall
-    // Step 1: Create list of wall nodes that are within the Rc distance
-    // of at least one of the particle
-    // This is done already in updateContactNeighborList()
-
-    // step 2 - condensed wall nodes into one vector (has to be done serially
-    data.d_neighWallNodesCondensed[pi->getId()].clear();
-    {
-      for (size_t j=0; j<data.d_neighWallNodes[pi_id].size(); j++) {
-
-        const auto &j_id = pi->getNodeId(j);
-        const auto &yj = data.d_x[j_id];
-
-        for (size_t k=0; k<data.d_neighWallNodes[pi_id][j].size(); k++) {
-
-          const auto &k_id = data.d_neighWallNodes[pi_id][j][k];
-          const auto &pk = data.d_particlesListTypeAll[data.d_ptId[k_id]];
-
-          double Rjk = (data.d_x[k_id] - yj).length();
-
-          const auto &contact =
-              data.d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pk->getGroupId("contact_id"));
-
-          if (util::isLess(Rjk, contact.d_contactR))
-            util::methods::addToList(k_id, data.d_neighWallNodesCondensed[pi_id]);
-
-        } // loop over k
-      } // loop over j
-    } // step 2
-
-    // now loop over wall nodes and add force to center of particle
-    for (auto &j : data.d_neighWallNodesCondensed[pi_id]) {
-
-      auto &ptIdj = data.d_ptId[j];
-      auto &pj = data.d_particlesListTypeAll[ptIdj];
-      auto rhoj = pj->getDensity();
-      auto volj = data.d_vol[j];
-      auto meq = rhoi * vol_pi;
-      //auto meq = util::equivalentMass(rhoi * vol_pi, rhoj * volj);
-
-      const auto &contact
-              = data.d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
-
-      // beta_n
-      auto beta_n = contact.d_betan *
-                    std::sqrt(contact.d_K * contact.d_contactR * meq);
-
-      // center-node vector
-      auto xc_ji = data.d_x[j] - pi_xc;
-      auto hat_xc_ji = util::Point();
-      if (util::isGreater(xc_ji.length(), 0.))
-        hat_xc_ji = xc_ji / xc_ji.length();
-
-      // center-node velocity
-      auto vc_ji = data.d_v[j] - pi_vc;
-      auto vc_mag = vc_ji * hat_xc_ji;
-      if (vc_mag > 0.)
-        vc_mag = 0.;
-
-      // force at node of pi
-      force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
-    }
-
-    // distribute force_i to all nodes of particle pi
-    {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
-
-      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1,
-                              [&data, pi, force_i](std::size_t i) {
-                                  data.d_f[pi->getNodeId(i)] += force_i;
-                              }
-      ); // for_each
-
-      executor.run(taskflow).get();
-    }
-  } // loop over particle for damping
-
+  if (d_damping)
+    d_damping->apply(data);
 }

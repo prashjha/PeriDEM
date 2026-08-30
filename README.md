@@ -115,132 +115,47 @@ Complex container geometries can be considered as well. For example, the image b
 
 ### Single particle deformation
 
-We can use the `PeriDEM` executable (`apps/peridem`, built as `bin/PeriDEM`) or the `Peridynamics` executable in `apps` to simulate the deformation of a single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
+We can use the `PeriDEM` executable (`PeriDEM/` at the repository root, built as `bin/PeriDEM`) or the `Peridynamics` executable in `apps` to simulate the deformation of a single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
 
 ## Brief implementation details
 
-The main implementation of the model is carried out in the model directory [dem](./src/model/dem). 
-The model is implemented in class [DEMModel](./src/model/dem/demModel.cpp). 
-Function `DEMModel::run()` performs the simulation. We next look at some key methods in `DEMModel` in more details:
+The simulation driver is class [PeriDEMModel](./PeriDEM/periDEMModel.cpp) in [PeriDEM/](./PeriDEM). Libraries live under `src/`. `PeriDEMModel::run()` initializes the simulation, optionally restarts, then hands the time loop to `time_int::Integrator`.
 
-### DEMModel::run()
+### PeriDEMModel::run()
 
-This function does three tasks:
 ```cpp
-void model::DEMModel::run(inp::Input *deck) {
-    // initialize data
+void PeriDEMModel::run(std::shared_ptr<inp::Input> &deck) {
     init();
-    
-    // check for restart
     if (d_modelDeck_p->d_isRestartActive)
       restart(deck);
-    
-    // integrate in time
-    integrate();
+    integrate();  // time_int::Integrator().integrate(*this)
+    close();
 }
 ```
 
-In `DEMModel::init()`, the simulation is prepared by reading the input 
-files (such as `.yaml`, `.msh`, `particle_locations.csv` files). 
+`init()` creates particles, sets up contact and quadrature data, builds neighbor lists and peridynamic bonds, and initializes loading.
 
-### DEMModel::integrate()
+### Time integration
 
-Key steps in  `DEMModel::integrate()` are 
+`PeriDEMModel::integrate()` calls `time_int::Integrator`. The integrator applies initial conditions, displacement BCs, and forces, then advances with central difference or velocity Verlet using `data::ModelData` kinematics accessors. After each step it writes output and calls `checkStop()`.
+
+### PeriDEMModel::computeForces()
+
 ```cpp
-void model::DEMModel::run(inp::Input *deck) {
-    // apply initial condition
-    if (d_n == 0)
-      applyInitialCondition();
-    
-    // apply loading
-    computeExternalDisplacementBC();
-    computeForces();
-    
-    // time step
-    for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {
-      // advance simulation to next step
-      integrateStep();
-      
-      // perform output if needed
-      output();
-    }
-}
-```
-
-In `DEMModel::integrateStep()`, we either utilize the central-difference scheme, 
-implemented in `DEMModel::integrateCD()`, or the velocity-verlet scheme, 
-implemented in `DEMModel::integrateVerlet()`. As an example, we look at `DEMModel::integrateCD()` method below:
-```cpp
-void model::DEMModel::integrateVerlet() {
-    // update current position, displacement, and velocity of nodes
-    {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
-    
-      taskflow.for_each_index(
-        (std::size_t) 0, d_fPdCompNodes.size(), (std::size_t) 1,
-          [this, dt, dim](std::size_t II) {
-            auto i = this->d_fPdCompNodes[II];
-    
-            const auto rho = this->getDensity(i);
-            const auto &fix = this->d_fix[i];
-    
-            for (int dof = 0; dof < dim; dof++) {
-              if (util::methods::isFree(fix, dof)) {
-                this->d_v[i][dof] += 0.5 * (dt / rho) * this->d_f[i][dof];
-                this->d_u[i][dof] += dt * this->d_v[i][dof];
-                this->d_x[i][dof] += dt * this->d_v[i][dof];
-              }
-            }
-          } // loop over nodes
-      ); // for_each
-    
-      executor.run(taskflow).get();
-    }
-    
-    // advance time
-    d_n++;
-    d_time += dt;
-    
-    // update displacement bc
-    computeExternalDisplacementBC();
-    
-    // compute force
-    computeForces();
-    
-    // update velocity of nodes (similar to the above) 
-}
-```
-
-### DEMModel::computeForces()
-
-The key method in time integration is `DEMModel::computeForces()`
-In this function, we compute internal and external forces at each node of a particle 
-and also account for the external boundary conditions. This function looks like
-```cpp
-void model::DEMModel::computeForces() {
-    // update the point cloud (make sure that d_x is updated along with displacment)
-    auto pt_cloud_update_time = d_nsearch_p->updatePointCloud(d_x, true);
-    pt_cloud_update_time += d_nsearch_p->setInputCloud();
-    
-    // reset forces to zero ...
-    
-    // compute peridynamic forces
-    computePeridynamicForces();
-    
-    // compute contact forces between particles
-    computeContactForces();
-        
-    // Compute external forces
+void PeriDEMModel::computeForces() {
+    // reset nodal force
+    pd::computeForces(*this);
+    if (multi-particle)
+      d_contact_p->computeForces(*this);
     computeExternalForces();
 }
 ```
 
+`Contact::computeForces` walks neighbors. The node-node relation is `contact::PairForce`; damping is `contact::Damping`. A different pair law is a `PairForce` subclass set with `Contact::setPairForce` — do not copy `contact.cpp`.
+
 ### Further reading
 
-Above gives the basic idea of simulation steps. For more thorough understanding of 
-the implementation, interested readers can look at 
-[demModel.cpp](./src/model/dem/demModel.cpp).
+See [periDEMModel.cpp](./PeriDEM/periDEMModel.cpp), [src/time_int/integrator.h](./src/time_int/integrator.h), and [src/contact](./src/contact).
 
 ## Installation
 
@@ -312,7 +227,7 @@ repository.
   # install library in /tmp/peridem-install
   cmake --install build --prefix /tmp/peridem-install
   ```
-  This installs `bin/PeriDEM` (source: `apps/peridem`), shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
+  This installs `bin/PeriDEM` (source: `PeriDEM/`), shared libs in `lib/`, headers in `include/`, and the CMake package files under `lib/cmake/PeriDEM`.
 - Consume in another CMake project:
   ```cmake
   cmake_minimum_required(VERSION 3.18)

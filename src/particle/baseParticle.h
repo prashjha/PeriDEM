@@ -13,7 +13,7 @@
 
 #include "refParticle.h"
 #include "material/mparticle/material.h"
-#include "model/modelData.h"
+#include "data/modelData.h"
 #include "geom/particleTransform.h"
 
 #include <cstdint> // uint8_t type
@@ -66,7 +66,7 @@ public:
                bool are_all_dofs_constrained,
                size_t num_nodes,
                double h,
-               std::shared_ptr<model::ModelData> model_data,
+               std::shared_ptr<data::ModelData> model_data,
                std::shared_ptr<particle::RefParticle> ref_particle,
                std::shared_ptr<geom::GeomObject> geom,
                geom::ParticleTransform &transform,
@@ -929,7 +929,7 @@ public:
   size_t d_globQuadEnd;
 
   /*! @brief Reference to model class */
-  std::shared_ptr<model::ModelData> d_modelData_p;
+  std::shared_ptr<data::ModelData> d_modelData_p;
 
   /*! @brief Pointer to reference particle */
   std::shared_ptr<particle::RefParticle> d_rp_p;

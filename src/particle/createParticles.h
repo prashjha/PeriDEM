@@ -11,23 +11,23 @@
 #ifndef PARTICLE_CREATE_PARTICLES_H
 #define PARTICLE_CREATE_PARTICLES_H
 
-namespace model {
+namespace data {
 class ModelData;
 }
 
 namespace particle {
 
 /*! @brief Build reference meshes from the particle deck (no placement). */
-void createReferenceParticles(model::ModelData &data);
+void createReferenceParticles(data::ModelData &data);
 
 /*! @brief Place particles from generation-file data; refs must already exist. */
-void createParticlesFromFile(model::ModelData &data);
+void createParticlesFromFile(data::ModelData &data);
 
 /*! @brief Place one particle per zone geometry; refs must already exist. */
-void createParticleUsingParticleZoneGeomObject(model::ModelData &data);
+void createParticleUsingParticleZoneGeomObject(data::ModelData &data);
 
 /*! @brief Build refs then place particles according to the generation method. */
-void createParticles(model::ModelData &data);
+void createParticles(data::ModelData &data);
 
 } // namespace particle
 

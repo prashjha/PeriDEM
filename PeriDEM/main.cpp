@@ -18,7 +18,7 @@
 
 // PeriDEM includes
 #include "inp/input.h"                          // Input class
-#include "model/dem/demModel.h"                 // Model class
+#include "periDEMModel.h"                 // Model class
 #include "util/io.h"                            // InputParser class
 #include "util/json.h"
 #include "util/parallelUtil.h"                  // MPI-related functions
@@ -71,7 +71,7 @@ int main(int argc, char *argv[]) {
 
   // run model
   if (deck->isPeriDEM()) {
-    model::DEMModel dem(deck);
+    PeriDEMModel dem(deck);
     dem.run(deck);
   } else {
     std::cout << "PeriDEM model not found in input file.\n";

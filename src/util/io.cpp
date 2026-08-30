@@ -48,3 +48,28 @@ void util::io::log(std::ostringstream &oss, bool screen_out, int printMpiRank) {
 
   logger_p->log(oss, screen_out, printMpiRank);
 }
+
+bool util::io::logEnabled(int priority, bool check_condition,
+                          int override_priority) {
+  int dbg = 0;
+  if (logger_p != nullptr && logger_p->d_deck_p != nullptr)
+    dbg = logger_p->d_deck_p->d_debugLevel;
+  int op = override_priority == -1 ? priority : override_priority;
+  return (check_condition && dbg > priority) || dbg > op;
+}
+
+void util::io::log(int priority, const std::string &str, bool check_condition,
+                   int override_priority, bool screen_out) {
+  if (logEnabled(priority, check_condition, override_priority))
+    log(str, screen_out);
+}
+
+void util::io::log(int priority, std::ostringstream &oss, bool check_condition,
+                   int override_priority, bool screen_out) {
+  if (logEnabled(priority, check_condition, override_priority))
+    log(oss, screen_out);
+  else {
+    oss.str("");
+    oss.clear();
+  }
+}

@@ -10,7 +10,7 @@
 
 #include <PeriDEMConfig.h>
 
-#include "model/dem/demModel.h"
+#include "periDEMModel.h"
 #include "material/materialUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
@@ -47,7 +47,7 @@ using util::io::log;
 /*!
  * @brief Main model class to simulate peridynamics deformation of single particle
  */
-class Model : public model::DEMModel {
+class Model : public PeriDEMModel {
 
 public:
 
@@ -57,76 +57,7 @@ public:
    * @param deck Input deck
    */
   explicit Model(std::shared_ptr<inp::Input> & deck)
-      : model::DEMModel(deck, "peridynamics::Model") {}
-
-  /*!
-   * @brief Compute forces
-   */
-  void computeForces() override {
-
-    bool dbg_condition = d_n % d_infoN == 0;
-
-    log("  Compute forces \n", 2, dbg_condition, 3);
-
-    // reset force
-    auto t1 = steady_clock::now();
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
-
-    taskflow.for_each_index(
-            (std::size_t) 0, d_x.size(), (std::size_t) 1,
-            [this](std::size_t i) { this->d_f[i] = util::Point(); }
-    ); // for_each
-
-    executor.run(taskflow).get();
-    auto force_reset_time = util::methods::timeDiff(t1, steady_clock::now());
-
-    // compute peridynamic forces
-    t1 = steady_clock::now();
-    computePeridynamicForces();
-    auto pd_time = util::methods::timeDiff(t1, steady_clock::now());
-    appendKeyData("pd_compute_time", pd_time);
-    appendKeyData("avg_peridynamics_force_time", pd_time/d_infoN);
-
-    // Compute external forces
-    t1 = steady_clock::now();
-    computeExternalForces();
-    auto extf_time = util::methods::timeDiff(t1, steady_clock::now());
-    appendKeyData("extf_compute_time", extf_time);
-    appendKeyData("avg_extf_compute_time", extf_time/d_infoN);
-
-    // output avg time info
-    if (dbg_condition) {
-      log(std::format("    Avg time (ms): \n"
-                      "      {:48s} = {:8d}\n"
-                      "      {:48s} = {:8d}\n",
-                      "peridynamics force", size_t(getKeyData("avg_peridynamics_force_time")),
-                      "external force", size_t(getKeyData("avg_extf_compute_time")/d_infoN)),
-          2, dbg_condition, 3);
-
-      appendKeyData("avg_peridynamics_force_time", 0.);
-      appendKeyData("avg_extf_compute_time", 0.);
-    }
-
-    log(std::format("    {:50s} = {:8d} \n",
-                    "Force reset time (ms)",
-                    size_t(force_reset_time)
-        ),
-        2, dbg_condition, 3);
-
-    log(std::format("    {:50s} = {:8d} \n",
-                    "External force time (ms)",
-                    size_t(extf_time)
-        ),
-        2, dbg_condition, 3);
-
-    log(std::format("    {:50s} = {:8d} \n",
-                    "Peridynamics force time (ms)",
-                    size_t(pd_time)
-        ),
-        2, dbg_condition, 3);
-  }
-
+      : PeriDEMModel(deck, "peridynamics::Model") {}
 };
 } // namespace peridynamics
 

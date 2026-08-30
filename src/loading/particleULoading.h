@@ -23,7 +23,7 @@ namespace particle {
 class BaseParticle;
 }
 
-namespace model {
+namespace data {
 class ModelData;
 }
 

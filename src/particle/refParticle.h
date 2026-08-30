@@ -18,7 +18,7 @@
 #include "geom/geomIncludes.h"
 #include "util/matrix.h" // definition of Matrix3
 #include "util/point.h"  // definition of Point
-#include "model/modelData.h"
+#include "data/modelData.h"
 
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
@@ -45,7 +45,7 @@ public:
    * @param mesh Pointer to mesh
    */
   RefParticle(size_t id,
-              std::shared_ptr<model::ModelData> model_data,
+              std::shared_ptr<data::ModelData> model_data,
               std::shared_ptr<geom::GeomObject> geom,
               std::shared_ptr<mesh::Mesh> mesh);
 
@@ -151,7 +151,7 @@ public:
   size_t d_id;
 
   /*! @brief Reference to model class */
-  std::shared_ptr<model::ModelData> d_modelData_p;
+  std::shared_ptr<data::ModelData> d_modelData_p;
 
   /*! @brief Pointer to mesh on reference particle */
   std::shared_ptr<mesh::Mesh> d_mesh_p;

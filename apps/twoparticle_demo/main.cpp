@@ -11,7 +11,7 @@
 #include <PeriDEMConfig.h>
 
 #include "inp/input.h"
-#include "model/dem/demModel.h"
+#include "periDEMModel.h"
 #include "material/materialUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
@@ -49,7 +49,7 @@ using util::io::log;
  * @brief Main model class to handle demo two-particle test implementation. Goal is to
  * show that it is easy to specialize the DEMModel class for different scenarios.
  */
-class Model : public model::DEMModel {
+class Model : public PeriDEMModel {
 
 public:
 
@@ -59,7 +59,7 @@ public:
    * @param deck Input deck
    */
   explicit Model(std::shared_ptr<inp::Input> & deck)
-      : model::DEMModel(deck, "twoparticle_demo::Model") {
+      : PeriDEMModel(deck, "twoparticle_demo::Model") {
 
     if (d_ppFile.is_open())
       d_ppFile.close();
@@ -139,7 +139,7 @@ public:
     if (d_n == 0) applyInitialCondition();
 
     // apply loading
-    computeExternalDisplacementBC();
+    applyDisplacementBC();
     computeExternalForces();
 
     for (size_t i = d_n; i < d_modelDeck_p->d_Nt; i++) {

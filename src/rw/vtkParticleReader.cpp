@@ -13,7 +13,7 @@
 #include "util/io.h"
 #include "mesh/mesh.h"
 #include "util/vecMethods.h"
-#include "model/modelData.h"
+#include "data/modelData.h"
 #include "particle/baseParticle.h"
 
 #include <cstdint>
@@ -39,7 +39,7 @@ rw::reader::VtkParticleReader::VtkParticleReader(const std::string &filename) {
 }
 
 void rw::reader::VtkParticleReader::readNodes(
-    model::ModelData *model) {
+    data::ModelData *model) {
 
   if (model->d_x.size() == 0)
     return;

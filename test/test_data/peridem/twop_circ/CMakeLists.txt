@@ -16,7 +16,7 @@ add_executable(${EXEC_NAME} main.cpp)
 # Link with required libraries
 target_link_libraries(${EXEC_NAME} PUBLIC
     MeshGen
-    Model
+    PeriDEMModel
 )
 
 # Add include directories

@@ -14,26 +14,21 @@
 #include <memory>
 #include <string>
 
-namespace model {
+namespace data {
 class ModelData;
 }
 
 namespace postprocess {
 
-/*!
- * @brief Extra postprocessing and stop criteria (VTU writing is in rw::).
- *
- * DEMModel holds a Postprocess object. An app can supply another
- * implementation without editing src/.
- */
+/*! @brief Extra postprocessing and stop criteria (VTU writing is in rw::). */
 class Postprocess {
 public:
   virtual ~Postprocess() = default;
 
-  virtual void close(model::ModelData &data);
-  virtual std::string twoParticle(model::ModelData &data);
-  virtual std::string compressive(model::ModelData &data);
-  virtual void checkStop(model::ModelData &data);
+  virtual void close(data::ModelData &data);
+  virtual std::string twoParticle(data::ModelData &data);
+  virtual std::string compressive(data::ModelData &data);
+  virtual void checkStop(data::ModelData &data);
 };
 
 } // namespace postprocess
