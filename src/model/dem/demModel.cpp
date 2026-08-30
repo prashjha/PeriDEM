@@ -10,6 +10,9 @@
 
 #include "demModel.h"
 
+#include <algorithm>
+#include <stdexcept>
+
 // utils
 #include "particle/baseParticle.h"
 #include "material/materialUtil.h"
@@ -113,8 +116,15 @@ void model::DEMModel::init() {
   // init time step
   d_n = 0;
   d_time = 0.;
+  if (d_outputDeck_p->d_dtOut < 1)
+    throw std::runtime_error(
+        "Output_Interval must be >= 1 (use 1 to write every step).");
+  if (d_outputDeck_p->d_dtOutCriteria < 1)
+    d_outputDeck_p->d_dtOutCriteria = d_outputDeck_p->d_dtOut;
+  if (d_outputDeck_p->d_dtOutOld < 1)
+    d_outputDeck_p->d_dtOutOld = d_outputDeck_p->d_dtOut;
   if (d_outputDeck_p->d_dtTestOut == 0)
-    d_outputDeck_p->d_dtTestOut = d_outputDeck_p->d_dtOut / 10;
+    d_outputDeck_p->d_dtTestOut = std::max<size_t>(1, d_outputDeck_p->d_dtOut / 10);
   d_infoN = d_outputDeck_p->d_dtOut;
 
   // debug/information variables

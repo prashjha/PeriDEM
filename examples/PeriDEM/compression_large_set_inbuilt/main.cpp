@@ -78,7 +78,8 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
                                                       double padding, std::mt19937 &gen) {
   std::vector<PackedParticle> particles;
   std::uniform_real_distribution<double> u_r(-0.1 * R, 0.1 * R);
-  std::uniform_int_distribution<int> pick_zone(0, 7);
+  /* Do not use uniform_int_distribution: libstdc++ vs libc++ map mt19937
+   * differently, so geom_id diverges while x,y,theta stay the same. */
 
   const double check_r = R;
   const int rows = static_cast<int>((max_y - in_rect[1]) / (2.0 * check_r));
@@ -117,7 +118,7 @@ std::vector<PackedParticle> generateParticleLocations(const std::vector<double> 
         x_old_right = in_rect[3];
       }
 
-      const int p_zone = pick_zone(gen);
+      const int p_zone = static_cast<int>(gen() % 8);
       const double r0 = R;
       double r = r0 + u_r(gen);
 
@@ -234,8 +235,8 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
     num_steps = static_cast<size_t>(std::stoul(input.getCmdOption("-numSteps")));
 
   const size_t num_outputs = 200;
-  const size_t dt_out_n = num_steps / num_outputs;
-  const size_t test_dt_out_n = dt_out_n / 10;
+  const size_t dt_out_n = std::max<size_t>(1, num_steps / num_outputs);
+  const size_t test_dt_out_n = std::max<size_t>(1, dt_out_n / 10);
 
   const double rho_wall = 1200.;
   const double poisson_wall = 0.25;

@@ -14,6 +14,7 @@
 #include "util/io.h"
 #include "util/json.h"
 #include "util/vecMethods.h"
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -173,6 +174,9 @@ namespace inp {
       if (d_path.empty())
         d_path = "./";
       d_dtOut = j.value("Output_Interval", size_t(1));
+      if (d_dtOut < 1)
+        throw std::runtime_error(
+            "Output_Interval must be >= 1 (use 1 to write every step).");
       d_dtOutOld = d_dtOut;
       d_dtOutCriteria = d_dtOut;
 
@@ -191,6 +195,9 @@ namespace inp {
         d_outCriteria = j.at("Output_Criteria").value("Type", std::string(""));
         d_dtOutCriteria = j.at("Output_Criteria").value("New_Interval", size_t(1));
         d_outCriteriaParams = j.at("Output_Criteria").value("Parameters", std::vector<double>());
+        if (d_dtOutCriteria < 1)
+          throw std::runtime_error(
+              "Output_Criteria.New_Interval must be >= 1 (use 1 to write every step).");
       }
     }
 
