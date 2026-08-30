@@ -1,5 +1,7 @@
 `PeriDEM` folder contains examples for multi-particle simulation and `Peridynamics` provides examples for single particle deformation.
 
+Some **C++ drivers** (for example `PeriDEM/compression_large_set_inbuilt/main.cpp`) are built only when CMake is configured with `-DEnable_Examples=ON`; see `PeriDEM/README.md` in this folder.
+
 # PeriDEM: Examples
 
 We next highlight some key examples. For more details, look at the `create_input_file()` 

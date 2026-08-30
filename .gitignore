@@ -81,3 +81,6 @@ __pycache__
 
 # ignore specific test directory
 test_ignored_dir
+
+# Local coding-agent helpers (not committed)
+.agent/

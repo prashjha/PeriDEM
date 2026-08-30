@@ -18,6 +18,7 @@
 #include <format>
 #include <fstream>
 #include <limits>
+#include <numeric>
 #include <random>
 #include <stdexcept>
 #include <string>
@@ -204,6 +205,11 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   util::io::InputParser input(argc, argv);
 
+  /* Constant initial velocity for each granular particle (particle ids 0 .. n_pack-1); walls excluded.
+   * Optional: -icVx <double> -icVy <double> (2D model uses x,y; z kept 0). */
+  double ic_vx = 0.0;
+  double ic_vy = -0.06;
+
   const std::vector<double> center = {0.0, 0.0, 0.0};
   const double R = 0.001;
   const double mesh_size = R / 5.0;
@@ -222,29 +228,29 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   const double w_drum2d = R * 0.2;
 
-  const double final_time = 0.001;
-  size_t num_steps = 400;
+  const double final_time = 0.06;
+  size_t num_steps = 600000;
   if (input.cmdOptionExists("-numSteps"))
     num_steps = static_cast<size_t>(std::stoul(input.getCmdOption("-numSteps")));
 
-  const size_t num_outputs = 10;
+  const size_t num_outputs = 200;
   const size_t dt_out_n = num_steps / num_outputs;
   const size_t test_dt_out_n = dt_out_n / 10;
 
-  const double rho_wall = 600.;
+  const double rho_wall = 1200.;
   const double poisson_wall = 0.25;
-  const double K_wall = 1.e+4;
+  const double K_wall = 2.16e+7;
   const double E_wall = material::toE(K_wall, poisson_wall);
   const double G_wall = material::toGE(E_wall, poisson_wall);
-  const double KIc_wall = 5e+6;
+  const double KIc_wall = 10e+6;
   const double Gc_wall = material::toGc(KIc_wall, poisson_wall, E_wall);
 
-  const double rho_p = 600.;
+  const double rho_p = 1200.;
   const double poisson_p = poisson_wall;
-  const double K_p = 5.e+3;
+  const double K_p = 2.16e+7;
   const double E_p = material::toE(K_p, poisson_p);
   const double G_p = material::toGE(E_p, poisson_p);
-  const double KIc_p = 5e+6;
+  const double KIc_p = 10e+6;
   const double Gc_p = material::toGc(KIc_p, poisson_p, E_p);
 
   const double R_contact_factor = 0.95;
@@ -364,7 +370,8 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   auto outputDeckJson = inp::OutputDeck::getExampleJson("vtu", output_path_for_deck, out_tags, dt_out_n, 2,
                                                           true, "zlib", true, test_dt_out_n, "0", true);
 
-  auto bcDeckJson = inp::BCDeck::getExampleJson(0, 2, 0, true, util::Point(0, -10, 0));
+  /* One IC set: Constant_Velocity (see loading::applyIC, inp::BCDeck "IC"). */
+  auto bcDeckJson = inp::BCDeck::getExampleJson(0, 2, 1, true, util::Point(0, -10, 0));
 
   bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("Displacement_BC", false, geom::GeomData(),
                                                                            {n_wall_fixed}, {}, "", {}, "", {},
@@ -377,6 +384,14 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   set2["Spatial_Function"] = json{{"Type", "constant"}};
   bcDeckJson["Displacement_BC"]["Set_2"] = set2;
 
+  {
+    std::vector<size_t> grain_particle_ids(n_pack);
+    std::iota(grain_particle_ids.begin(), grain_particle_ids.end(), size_t{0});
+    bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
+        "IC", false, geom::GeomData(), grain_particle_ids, {}, "", {}, "", {}, {}, false,
+        "Constant_Velocity", std::vector<double>{ic_vx, ic_vy, 0.0});
+  }
+
   json pDeckJson = json::object();
 
   pDeckJson["Particle"] = inp::ParticleDeck::getParticleGeomExampleJson(pGeomVec);
@@ -386,11 +401,9 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
                               "mesh_ellipse",  "mesh_rect",     "mesh_square",   "mesh_circirc",
                               "mesh_fixed_container", "mesh_moving_container"};
   for (int zi = 0; zi < 10; ++zi) {
-    const std::string fname = (inp_dir / (std::string(mesh_names[zi]) + ".msh")).string();
     meshRoot["Set_" + std::to_string(zi + 1)] =
-        json{{"File", fname},
-             {"CreateMesh",
-              json{{"Flag", true}, {"Info", "gmsh_builtin_mesh"}, {"Mesh_Size", mesh_size}, {"Write_Mesh_File", true}}}};
+        json{{"CreateMesh",
+              json{{"Flag", true}, {"Info", "gmsh_builtin_mesh"}, {"Mesh_Size", mesh_size}, {"Write_Mesh_File", false}}}};
   }
   pDeckJson["Mesh"] = meshRoot;
 
@@ -409,8 +422,8 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double friction_coeff = 0.5;
   const bool damping_on = true;
   const bool friction_on = false;
-  const double beta_n_factor = 100.;
-  const double Kn_factor = 1.;
+  const double beta_n_factor = 500.;
+  const double Kn_factor = 0.05;
 
   /* Contact zones: 0 = granular, 1 = wall (fixed + moving). 2×2 matrix → three unique pairs (1-1, 1-2, 2-2). */
   const json j_contact_pp =
@@ -477,6 +490,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
               {"Output", outputDeckJson},
               {"Force_BC", bcDeckJson["Force_BC"]},
               {"Displacement_BC", bcDeckJson["Displacement_BC"]},
+              {"IC", bcDeckJson["IC"]},
               {"Particle", pDeckJson["Particle"]},
               {"Mesh", pDeckJson["Mesh"]},
               {"Material", pDeckJson["Material"]},
@@ -512,35 +526,11 @@ int main(int argc, char *argv[]) {
   fs::path out_dir = cwd / "out";
   fs::path inp_dir = cwd / "inp";
 
-  if (input.cmdOptionExists("-outputDir")) {
-    fs::path p = input.getCmdOption("-outputDir");
-    out_dir = p.is_absolute() ? std::move(p) : cwd / p;
-  }
-  if (input.cmdOptionExists("-inputDir")) {
-    fs::path p = input.getCmdOption("-inputDir");
-    inp_dir = p.is_absolute() ? std::move(p) : cwd / p;
-  } else if (input.cmdOptionExists("-outputDir")) {
-    inp_dir = out_dir.parent_path() / "inp";
-  }
-
   fs::create_directories(out_dir);
-  fs::create_directories(inp_dir);
 
   const std::string output_path_for_deck = directoryPathWithTrailingSep(out_dir);
 
-  util::io::print(std::format("Output directory (VTU, log.txt): {}\n", fs::absolute(out_dir).string()));
-  util::io::print(std::format("Input directory (input.json, meshes): {}\n", fs::absolute(inp_dir).string()));
-
   auto inputJson = buildInputJson(output_path_for_deck, inp_dir, argc, argv);
-
-  const fs::path input_json_path = inp_dir / "input.json";
-  {
-    std::ofstream os(input_json_path);
-    if (!os)
-      throw std::runtime_error("Failed to open " + input_json_path.string() + " for writing.");
-    os << inputJson.dump(2);
-  }
-  util::io::print(std::format("Wrote deck to {}\n", fs::absolute(input_json_path).string()));
 
   auto deck = std::make_shared<inp::Input>(inputJson);
 

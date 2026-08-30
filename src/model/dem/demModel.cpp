@@ -269,16 +269,16 @@ void model::DEMModel::init() {
 
 void model::DEMModel::integrate() {
 
+  // apply initial condition
+  if (d_n == 0)
+    applyInitialCondition();
+
   // perform output at the beginning
   if (d_n == 0 && d_outputDeck_p->d_performOut) {
     log(std::format("{}: Output step = {}, time = {:.6f} \n", d_name, d_n, d_time),
         2);
     output();
   }
-
-  // apply initial condition
-  if (d_n == 0)
-    applyInitialCondition();
 
   // apply loading
   computeExternalDisplacementBC();
