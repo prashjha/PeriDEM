@@ -38,7 +38,7 @@ public:
 
   void log(const std::string &str, int priority = 0, bool check_condition = true, int override_priority = -1, bool screen_out = false);
 
-  virtual void run(std::shared_ptr<inp::Input> & deck);
+  void run(std::shared_ptr<inp::Input> & deck);
 
   void restart(std::shared_ptr<inp::Input> & deck);
 
@@ -46,7 +46,7 @@ public:
 
   void close();
 
-  virtual void integrate();
+  void integrate();
 
   void integrateStep();
 

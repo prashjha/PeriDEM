@@ -8,7 +8,9 @@
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_BINARY_DIR}")
 
-add_executable(TwoParticle_Demo main.cpp)
+add_executable(TwoParticle_Demo main.cpp appPostprocess.cpp)
+
+target_include_directories(TwoParticle_Demo PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(TwoParticle_Demo PUBLIC Inp PeriDEMModel)
 
