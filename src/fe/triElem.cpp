@@ -54,68 +54,6 @@ fe::TriElem::getDerShapes(const util::Point &p,
   return ders;
 }
 
-std::vector<fe::QuadData>
-fe::TriElem::getQuadDatas(const std::vector<util::Point> &nodes) {
-
-  // copy quad data associated to reference element
-  auto qds = d_quads;
-
-  // modify data
-  for (auto &qd : qds) {
-
-    // get Jacobian and determinant
-    qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
-
-    // transform quad weight
-    qd.d_w *= qd.d_detJ;
-
-    // map point to triangle
-    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
-        qd.d_shapes[2] * nodes[2].d_x;
-    qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
-        qd.d_shapes[2] * nodes[2].d_y;
-
-    // derivatives of shape function
-    std::vector<std::vector<double>> ders;
-
-    for (size_t i=0; i<3; i++) {
-      // partial N_i/ partial x
-      auto d1 = (qd.d_derShapes[i][0] * qd.d_J[1][1] - qd.d_derShapes[i][1] *
-          qd.d_J[0][1]) / qd.d_detJ;
-      // partial N_i/ partial y
-      auto d2 = (-qd.d_derShapes[i][0] * qd.d_J[1][0] + qd.d_derShapes[i][1] *
-          qd.d_J[0][0]) / qd.d_detJ;
-
-      ders.push_back(std::vector<double>{d1, d2});
-    }
-    qd.d_derShapes = ders;
-  }
-
-  return qds;
-}
-
-std::vector<fe::QuadData>
-fe::TriElem::getQuadPoints(const std::vector<util::Point> &nodes) {
-
-  // copy quad data associated to reference element
-  auto qds = d_quads;
-
-  // modify data
-  for (auto &qd : qds) {
-
-    // transform quad weight
-    qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
-
-    // map point to triangle
-    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1].d_x +
-        qd.d_shapes[2] * nodes[2].d_x;
-    qd.d_p.d_y = qd.d_shapes[0] * nodes[0].d_y + qd.d_shapes[1] * nodes[1].d_y +
-        qd.d_shapes[2] * nodes[2].d_y;
-  }
-
-  return qds;
-}
-
 std::vector<double> fe::TriElem::getShapes(const util::Point &p) {
 
   // N1 = 1 - xi - eta, N2 = xi, N3 = eta

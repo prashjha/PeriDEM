@@ -108,7 +108,7 @@ public:
    * @brief Get number of quadrature points in the data
    * @return N Number of quadrature points
    */
-  size_t getNumQuadPoints() { return d_numQuadPts; }
+  size_t getNumQuadPoints() { return d_quads.size(); }
 
   /*!
    * @brief Returns the size of element (length in 1-d, area in 2-d, volume
@@ -150,43 +150,18 @@ public:
                const std::vector<util::Point> &nodes);
 
   /*!
-   * @brief Get vector of quadrature data
-   *
-   * Given element vertices, this method returns the list of quadrature point
-   * and associated quantities. Here, order of quadrature
-   * approximation and element type are set in the constructor. List of data
-   * for each quad point:
-   * - quad point
-   * - quad weight
-   * - shape function evaluated at quad point
-   * - derivative of shape function evaluated at quad point
-   * - Jacobian matrix
-   * - determinant of the Jacobian
-   *
-   * @param nodes Vector of vertices of an element
-   * @return vector Vector of QuadData
+   * @brief Get quadrature data mapped to the physical element
+   * (N, dN/dx, x, w, J). Shared isoparametric map; types only fill
+   * reference N, dN/dξ, and w.
    */
-  virtual std::vector<fe::QuadData>
-  getQuadDatas(const std::vector<util::Point> &nodes) = 0;
+  std::vector<fe::QuadData>
+  getQuadDatas(const std::vector<util::Point> &nodes);
 
   /*!
-   * @brief Get vector of quadrature data
-   *
-   * Given element vertices, this method returns the list of quadrature point
-   * and essential quantities at quadrature points. Here, order of quadrature
-   * approximation and element type are set in the constructor. List of data
-   * for each quad point:
-   * - quad point
-   * - quad weight
-   * - shape function evaluated at quad point
-   *
-   * This function is a lite version of fe::BaseElem::getQuadDatas.
-   *
-   * @param nodes Vector of vertices of an element
-   * @return vector Vector of QuadData
+   * @brief Same as getQuadDatas without transforming dN/dξ to dN/dx
    */
-  virtual std::vector<fe::QuadData>
-  getQuadPoints(const std::vector<util::Point> &nodes) = 0;
+  std::vector<fe::QuadData>
+  getQuadPoints(const std::vector<util::Point> &nodes);
 
 protected:
   /*!
@@ -241,9 +216,6 @@ protected:
 
   /*! @brief Order of quadrature point integration approximation */
   size_t d_quadOrder;
-
-  /*! @brief Number of quadrature points for order d_quadOrder */
-  size_t d_numQuadPts;
 
   /*! @brief Element type */
   size_t d_elemType;

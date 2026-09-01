@@ -117,10 +117,23 @@ add_test(NAME Test_PeriDEM_twop_circ
 set_tests_properties(Test_PeriDEM_twop_circ PROPERTIES LABELS "PeriDEM;Examples")
 
 add_test(NAME Test_PeriDEM_twop_circ_inbuilt
-  COMMAND Test_PeriDEM_twop_circ_inbuilt
+  COMMAND Test_PeriDEM_twop_circ_inbuilt -nThreads 4
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_twop_circ_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
+
+# Same binary; long enough that the falling circle contacts (Damage_Z > 0).
+# ~60 s at 4 threads on this machine (36000 steps, t=0.012).
+add_test(NAME Test_PeriDEM_twop_circ_inbuilt_contact
+  COMMAND Test_PeriDEM_twop_circ_inbuilt
+    -nThreads 4 -finalTime 0.012 -numSteps 36000
+    -requireContact -outputDir contact_out
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_twop_circ_inbuilt_contact PROPERTIES
+  LABELS "PeriDEM;Examples"
+  TIMEOUT 180
+)
 
 add_test(NAME Test_PeriDEM_twop_general_inbuilt
   COMMAND Test_PeriDEM_twop_general_inbuilt

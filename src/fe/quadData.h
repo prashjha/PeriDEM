@@ -37,15 +37,11 @@ struct QuadData {
   std::vector<double> d_shapes;
 
   /*!
-   * @brief Value of derivative of shape functions at quad point p.
+   * @brief Derivatives of shape functions at the quad point.
    *
-   * Size will be the number of vertices the element has. E.g. for triangle
-   * element shapes will have three entries.
-   *
-   * x-derivative of ith shape function is d_derShapes[i][0]
-   *
-   * y-derivative of ith shape function is d_derShapes[i][1]
-   *
+   * On the reference element this is dN/dξ. After getQuadDatas it is
+   * physical dN/dx. Size is number of nodes; d_derShapes[i][j] is
+   * derivative of N_i in coordinate j.
    */
   std::vector<std::vector<double>> d_derShapes;
 

@@ -46,53 +46,6 @@ fe::LineElem::getDerShapes(const util::Point &p,
   return ders_ref;
 }
 
-std::vector<fe::QuadData>
-fe::LineElem::getQuadDatas(const std::vector<util::Point> &nodes) {
-
-  // copy quad data associated to reference element
-  auto qds = d_quads;
-
-  // modify data
-  for (auto &qd : qds) {
-
-    // get Jacobian and determinant
-    qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
-
-    // transform quad weight
-    qd.d_w *= qd.d_detJ;
-
-    // map point to line
-    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1]
-        .d_x;
-
-    // modify derivative of shape function
-    for (size_t i=0; i<2; i++)
-      qd.d_derShapes[i][0] = qd.d_derShapes[i][0] / qd.d_detJ;
-  }
-
-  return qds;
-}
-
-std::vector<fe::QuadData>
-fe::LineElem::getQuadPoints(const std::vector<util::Point> &nodes) {
-
-  // copy quad data associated to reference element
-  auto qds = d_quads;
-
-  // modify data
-  for (auto &qd : qds) {
-
-    // transform quad weight
-    qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
-
-    // map point to line
-    qd.d_p.d_x = qd.d_shapes[0] * nodes[0].d_x + qd.d_shapes[1] * nodes[1]
-        .d_x;
-  }
-
-  return qds;
-}
-
 std::vector<double> fe::LineElem::getShapes(const util::Point &p) {
 
   // N1 = (1 - xi)/2
@@ -140,15 +93,15 @@ fe::LineElem::mapPointToRefElem(const util::Point &p,
 double fe::LineElem::getJacobian(const util::Point &p,
                                 const std::vector<util::Point> &nodes,
                                 std::vector<std::vector<double>> *J) {
+  // Reference line is [-1, 1], dN/dξ = ±1/2, so J = dx/dξ = L/2.
+  const double Jxi = 0.5 * (nodes[1].d_x - nodes[0].d_x);
 
   if (J != nullptr) {
     J->resize(1);
-    (*J)[0] = std::vector<double>{nodes[1].d_x - nodes[0].d_x};
-
-    return (*J)[0][0];
+    (*J)[0] = std::vector<double>{Jxi};
   }
 
-  return (nodes[1].d_x - nodes[0].d_x);
+  return Jxi;
 }
 
 void fe::LineElem::init() {

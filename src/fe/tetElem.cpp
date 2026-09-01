@@ -66,7 +66,7 @@ void checkPoint(const std::vector<double> &p, const std::vector<util::Point> &no
 } // anonymous namespace
 
 fe::TetElem::TetElem(size_t order)
-    : fe::BaseElem(order, util::vtk_type_triangle) {
+    : fe::BaseElem(order, util::vtk_type_tetra) {
 
   if (d_quadOrder > 3) {
     std::cout << "Error: For linear tet element, we only support upto 3 quad "
@@ -114,70 +114,6 @@ std::vector<std::vector<double>> fe::TetElem::getDerShapes(
 
   return ders;
 }
-
-std::vector<fe::QuadData> fe::TetElem::getQuadDatas(
-    const std::vector<util::Point> &nodes) {
-
-  // copy quad data associated to reference element
-  auto qds = d_quads;
-
-  // modify data
-  for (auto &qd : qds) {
-
-    // get Jacobian and determinant
-    qd.d_detJ = getJacobian(qd.d_p, nodes, &(qd.d_J));
-
-    // transform quad weight
-    qd.d_w *= qd.d_detJ;
-
-    // map point to triangle
-    qd.d_p = util::Point();
-    for (size_t i=0; i<4; i++) {
-      qd.d_p.d_x += qd.d_shapes[i] * nodes[i].d_x;
-      qd.d_p.d_y += qd.d_shapes[i] * nodes[i].d_y;
-      qd.d_p.d_z += qd.d_shapes[i] * nodes[i].d_z;
-    }
-
-    // get inverse of Jacobian
-    auto J_inv = util::inv(qd.d_J);
-
-    // to hold derivatives
-    std::vector<std::vector<double>> ders(qd.d_derShapes.size(),
-                                          std::vector<double>(3, 0.));
-
-    // grad N_i = J_inv * grad N_i^ref
-    for (size_t i = 0; i < 4; i++)
-      ders[i] = util::dot(J_inv, qd.d_derShapes[i]);
-
-    qd.d_derShapes = ders;
-  }
-
-  return qds;
-}
-
-std::vector<fe::QuadData> fe::TetElem::getQuadPoints(
-    const std::vector<util::Point> &nodes) {
-  // copy quad data associated to reference element
-  auto qds = d_quads;
-
-  // modify data
-  for (auto &qd : qds) {
-
-    // transform quad weight
-    qd.d_w *= getJacobian(qd.d_p, nodes, nullptr);
-
-    // map point to triangle
-    qd.d_p = util::Point();
-    for (size_t i=0; i<4; i++) {
-      qd.d_p.d_x += qd.d_shapes[i] * nodes[i].d_x;
-      qd.d_p.d_y += qd.d_shapes[i] * nodes[i].d_y;
-      qd.d_p.d_z += qd.d_shapes[i] * nodes[i].d_z;
-    }
-  }
-
-  return qds;
-}
-
 std::vector<double> fe::TetElem::getShapes(const util::Point &p) {
   // N1 = 1 - xi - eta - zeta, N2 = xi, N3 = eta, N4 = zeta
   return std::vector<double>{1. - p.d_x - p.d_y - p.d_z, p.d_x, p.d_y, p.d_z};

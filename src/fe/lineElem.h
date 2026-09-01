@@ -109,69 +109,6 @@ public:
   getDerShapes(const util::Point &p,
                const std::vector<util::Point> &nodes) override;
 
-  /*!
-   * @brief Get vector of quadrature data
-   *
-   * Given element vertices, this method returns the list of quadrature point
-   * and essential quantities at quadrature points. Here, order of quadrature
-   * approximation is set in the constructor. List of data
-   * for each quad point:
-   * - quad point
-   * - quad weight
-   * - shape function evaluated at quad point
-   * - derivative of shape function evaluated at quad point
-   * - Jacobian matrix
-   * - determinant of the Jacobian
-   *
-   * Let \f$ T \f$ is the given line with vertices \f$ v^1, v^2 \f$ and let
-   * \f$ T^0 \f$ is the reference line.
-   *
-   * 1. To compute quadrature point, we first compute the quadrature points
-   * on reference line \f$ T^0 \f$, and then we use the map \f$ \Phi: T^0 \to
-   * T\f$ to map the points on reference line to the current line \f$ T \f$.
-   *
-   * 2. To compute the quadrature weight, we compute the quadrature weight
-   * associated to the quadrature point in reference line \f$ T^0 \f$.
-   * Suppose \f$ w^0_q \f$ is the quadrature weight associated to quadrature
-   * point \f$ \xi_q \in T^0 \f$, then the quadrature point \f$ w_q \f$
-   * associated to the mapped point \f$ x(\xi_q) \in T \f$ is given by
-   * \f[ w_q = w^0_q * J \f]
-   * where \f$ J \f$ is the Jacobian of map \f$ \Phi \f$.
-   *
-   * 3. We compute shape functions \f$ N_1, N_2\f$ associated to \f$ T \f$ at
-   * quadrature point \f$ x(\xi_q) \f$ using formula
-   * \f[ N_i(x(\xi_q)) = N^0_i(\xi_q). \f]
-   *
-   * 5. To compute the derivative of shape functions \f$ \frac{\partial
-   * N_1}{\partial x}, \frac{\partial N_2}{\partial x}\f$ associated to \f$ T
-   * \f$, we use the relation between derivatives of shape function in \f$ T
-   * \f$ and \f$ T^0 \f$ described in fe::LineElem::getDerShapes.
-   *
-   * @param nodes Vector of vertices of an element
-   * @return vector Vector of QuadData
-   */
-  std::vector<fe::QuadData>
-  getQuadDatas(const std::vector<util::Point> &nodes) override;
-
-  /*!
-   * @brief Get vector of quadrature data
-   *
-   * Given element vertices, this method returns the list of quadrature point
-   * and essential quantities at quadrature points. Here, order of quadrature
-   * approximation is set in the constructor. List of data
-   * for each quad point:
-   * - quad point
-   * - quad weight
-   * - shape function evaluated at quad point
-   *
-   * This function is a lite version of fe::LineElem::getQuadDatas.
-   *
-   * @param nodes Vector of vertices of an element
-   * @return vector Vector of QuadData
-   */
-  std::vector<fe::QuadData>
-  getQuadPoints(const std::vector<util::Point> &nodes) override;
-
 private:
   /*!
    * @brief Returns the values of shape function at point p on reference element

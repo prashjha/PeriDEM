@@ -10,12 +10,16 @@
 
 #include "testFeLib.h"
 #include "fe/elemIncludes.h"
+#include "fe/bMatrix.h"
 #include "util/point.h"
+#include "util/matrix.h"
 #include "util/feElementDefs.h"
 #include "util/vecMethods.h"
 #include "nsearch/nsearch.h"
 #include <csv/csv.h>
 #include <algorithm>
+#include <cmath>
+#include <cstdlib>
 #include <fstream>
 #include <string>
 
@@ -23,6 +27,35 @@ namespace {
 
     int debug_id = -1;
     const double tol = 1.0E-12;
+
+    util::SymMatrix3 strainFromB(const fe::B &B,
+                                 const std::vector<util::Point> &u) {
+      std::vector<double> uflat(B.nDof());
+      const int dim = B.dim();
+      for (size_t a = 0; a < u.size(); a++) {
+        uflat[dim * static_cast<int>(a)] = u[a][0];
+        if (dim > 1)
+          uflat[dim * static_cast<int>(a) + 1] = u[a][1];
+        if (dim > 2)
+          uflat[dim * static_cast<int>(a) + 2] = u[a][2];
+      }
+      std::vector<double> e(B.nStrain(), 0.);
+      for (int i = 0; i < B.nStrain(); i++)
+        for (int j = 0; j < B.nDof(); j++)
+          e[i] += B(i, j) * uflat[j];
+      util::SymMatrix3 s;
+      s(0, 0) = e[0];
+      if (dim > 1) {
+        s(1, 1) = e[1];
+        s(0, 1) = (dim == 2) ? e[2] : e[5];
+      }
+      if (dim > 2) {
+        s(2, 2) = e[2];
+        s(1, 2) = e[3];
+        s(0, 2) = e[4];
+      }
+      return s;
+    }
 
     void readNodes(const std::string &filename,
                           std::vector<util::Point> &nodes) {
@@ -762,4 +795,113 @@ void test::testTetElem(size_t n, std::string filepath) {
   //  else
   //    std::cout << "TEST 2 : FAIL. ";
   std::cout << "\n";
+}
+
+void test::testPatchTri() {
+  const double ptol = 1.0e-5;
+  fe::TriElem tri(1);
+  const std::vector<util::Point> nodes = {
+      util::Point(0., 0., 0.), util::Point(1., 0., 0.),
+      util::Point(0., 1., 0.)};
+  const std::vector<util::Point> u = {
+      util::Point(0., 0., 0.), util::Point(2., 0., 0.),
+      util::Point(0., 3., 0.)};
+  auto qds = tri.getQuadDatas(nodes);
+  size_t nfail = 0;
+  for (const auto &qd : qds) {
+    auto e = strainFromB(fe::B(qd.d_derShapes, 2), u);
+    if (std::abs(e(0, 0) - 2.) > ptol || std::abs(e(1, 1) - 3.) > ptol ||
+        std::abs(e(0, 1)) > ptol)
+      nfail++;
+  }
+  std::cout << "**********************************\n";
+  std::cout << "Patch test (triangle, linear u)\n";
+  std::cout << "**********************************\n";
+  if (nfail) {
+    std::cout << "PATCH TRI : FAIL.\n";
+    exit(EXIT_FAILURE);
+  }
+  std::cout << "PATCH TRI : PASS.\n";
+}
+
+void test::testPatchQuad() {
+  const double ptol = 1.0e-5;
+  fe::QuadElem quad(1);
+  const std::vector<util::Point> nodes = {
+      util::Point(0., 0., 0.), util::Point(1., 0., 0.),
+      util::Point(1., 1., 0.), util::Point(0., 1., 0.)};
+  const std::vector<util::Point> u = {
+      util::Point(0., 0., 0.), util::Point(2., 0., 0.),
+      util::Point(2., 3., 0.), util::Point(0., 3., 0.)};
+  auto qds = quad.getQuadDatas(nodes);
+  size_t nfail = 0;
+  for (const auto &qd : qds) {
+    auto e = strainFromB(fe::B(qd.d_derShapes, 2), u);
+    if (std::abs(e(0, 0) - 2.) > ptol || std::abs(e(1, 1) - 3.) > ptol ||
+        std::abs(e(0, 1)) > ptol)
+      nfail++;
+  }
+  std::cout << "**********************************\n";
+  std::cout << "Patch test (quad, linear u)\n";
+  std::cout << "**********************************\n";
+  if (nfail) {
+    std::cout << "PATCH QUAD : FAIL.\n";
+    exit(EXIT_FAILURE);
+  }
+  std::cout << "PATCH QUAD : PASS.\n";
+}
+
+void test::testPatchTet() {
+  const double ptol = 1.0e-5;
+  fe::TetElem tet(1);
+  const std::vector<util::Point> nodes = {
+      util::Point(0., 0., 0.), util::Point(1., 0., 0.),
+      util::Point(0., 1., 0.), util::Point(0., 0., 1.)};
+  const std::vector<util::Point> u = {
+      util::Point(0., 0., 0.), util::Point(2., 0., 0.),
+      util::Point(0., 3., 0.), util::Point(0., 0., 4.)};
+  auto qds = tet.getQuadDatas(nodes);
+  size_t nfail = 0;
+  for (const auto &qd : qds) {
+    auto e = strainFromB(fe::B(qd.d_derShapes, 3), u);
+    if (std::abs(e(0, 0) - 2.) > ptol || std::abs(e(1, 1) - 3.) > ptol ||
+        std::abs(e(2, 2) - 4.) > ptol || std::abs(e(0, 1)) > ptol ||
+        std::abs(e(0, 2)) > ptol || std::abs(e(1, 2)) > ptol)
+      nfail++;
+  }
+  std::cout << "**********************************\n";
+  std::cout << "Patch test (tet, linear u)\n";
+  std::cout << "**********************************\n";
+  if (nfail) {
+    std::cout << "PATCH TET : FAIL.\n";
+    exit(EXIT_FAILURE);
+  }
+  std::cout << "PATCH TET : PASS.\n";
+}
+
+void test::testPatchTriDistorted() {
+  const double ptol = 1.0e-5;
+  fe::TriElem tri(1);
+  const std::vector<util::Point> nodes = {
+      util::Point(0., 0., 0.), util::Point(1.3, 0.2, 0.),
+      util::Point(0.15, 1.1, 0.)};
+  const std::vector<util::Point> u = {
+      util::Point(0., 0., 0.), util::Point(2.6, 0.6, 0.),
+      util::Point(0.3, 3.3, 0.)};
+  auto qds = tri.getQuadDatas(nodes);
+  size_t nfail = 0;
+  for (const auto &qd : qds) {
+    auto e = strainFromB(fe::B(qd.d_derShapes, 2), u);
+    if (std::abs(e(0, 0) - 2.) > ptol || std::abs(e(1, 1) - 3.) > ptol ||
+        std::abs(e(0, 1)) > ptol)
+      nfail++;
+  }
+  std::cout << "**********************************\n";
+  std::cout << "Patch test (distorted triangle, linear u)\n";
+  std::cout << "**********************************\n";
+  if (nfail) {
+    std::cout << "PATCH TRI DISTORTED : FAIL.\n";
+    exit(EXIT_FAILURE);
+  }
+  std::cout << "PATCH TRI DISTORTED : PASS.\n";
 }

@@ -36,6 +36,11 @@ int main(int argc, char *argv[]) {
   // read input file
   std::string filepath = input.getCmdOption("-i");
 
+  test::testPatchTri();
+  test::testPatchQuad();
+  test::testPatchTet();
+  test::testPatchTriDistorted();
+
   //
   // test quadrature method for triangle
   //

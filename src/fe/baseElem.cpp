@@ -9,12 +9,12 @@
  */
 
 #include "baseElem.h"
-#include "util/feElementDefs.h"    // global definition of elements
-#include <iostream>                // for std::cerr
+#include "map.h"
+#include <cstdlib>
+#include <iostream>
 
 fe::BaseElem::BaseElem(size_t order, size_t element_type)
-    : d_quadOrder(order), d_elemType(element_type),
-      d_numQuadPts(util::vtk_map_element_to_num_nodes[element_type]){};
+    : d_quadOrder(order), d_elemType(element_type){};
 
 std::vector<double>
 fe::BaseElem::getShapes(const util::Point &p,
@@ -49,4 +49,18 @@ void fe::BaseElem::init() {
   std::cerr << "Error: init() of BaseElem must be implemented in inheriting "
                "class.\n";
   exit(1);
+}
+
+std::vector<fe::QuadData>
+fe::BaseElem::getQuadDatas(const std::vector<util::Point> &nodes) {
+  auto qds = d_quads;
+  mapToPhysical(qds, nodes, true);
+  return qds;
+}
+
+std::vector<fe::QuadData>
+fe::BaseElem::getQuadPoints(const std::vector<util::Point> &nodes) {
+  auto qds = d_quads;
+  mapToPhysical(qds, nodes, false);
+  return qds;
 }

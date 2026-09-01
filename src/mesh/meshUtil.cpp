@@ -11,14 +11,51 @@
 #include "meshUtil.h"
 #include "mesh.h"
 #include "fe/elemIncludes.h"
+#include "fe/bMatrix.h"
 #include "util/feElementDefs.h"
 #include "util/parallelUtil.h"
 #include "util/function.h"
 
 #include <format>
+#include <memory>
 
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
+#include <cstdlib>
+#include <iostream>
+
+namespace {
+
+util::SymMatrix3 strainFromB(const fe::B &B,
+                             const std::vector<util::Point> &u) {
+  std::vector<double> uflat(B.nDof());
+  const int dim = B.dim();
+  for (size_t a = 0; a < u.size(); a++) {
+    uflat[dim * static_cast<int>(a)] = u[a][0];
+    if (dim > 1)
+      uflat[dim * static_cast<int>(a) + 1] = u[a][1];
+    if (dim > 2)
+      uflat[dim * static_cast<int>(a) + 2] = u[a][2];
+  }
+  std::vector<double> e(B.nStrain(), 0.);
+  for (int i = 0; i < B.nStrain(); i++)
+    for (int j = 0; j < B.nDof(); j++)
+      e[i] += B(i, j) * uflat[j];
+  util::SymMatrix3 s;
+  s(0, 0) = e[0];
+  if (dim > 1) {
+    s(1, 1) = e[1];
+    s(0, 1) = (dim == 2) ? e[2] : e[5];
+  }
+  if (dim > 2) {
+    s(2, 2) = e[2];
+    s(1, 2) = e[3];
+    s(0, 2) = e[4];
+  }
+  return s;
+}
+
+} // namespace
 
 namespace mesh {
 
@@ -196,21 +233,7 @@ void getCurrentQuadPoints(const mesh::Mesh *mesh_p,
            "Number of elements i nnodal data can not be smaller than number of "
                                                    "nodes.\n");
 
-  // get Quadrature
-  fe::BaseElem *elem;
-  if (mesh_p->getElementType() == util::vtk_type_line)
-    elem = new fe::LineElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_triangle)
-    elem = new fe::TriElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_quad)
-    elem = new fe::QuadElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_tetra)
-    elem = new fe::TetElem(quadOrder);
-  else {
-    std::cerr << std::format("Error: Can not compute strain/stress as the element "
-                 "type = {} is not yet supported in this routine.\n", mesh_p->getElementType());
-    exit(EXIT_FAILURE);
-  }
+  auto elem = fe::elem(mesh_p->getElementType(), quadOrder);
 
   // get total number of quadrature points by getting the number of quad
   // points in one element times the number of elements
@@ -223,27 +246,20 @@ void getCurrentQuadPoints(const mesh::Mesh *mesh_p,
 
 
   // compute current position of quad points
+  auto *elem_p = elem.get();
   tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
   taskflow.for_each_index(
         (std::size_t) 0, num_elems, (std::size_t) 1,
-        [elem, mesh_p, xRef, u, iNodeStart, iQuadStart, &xQuadCur]
+        [elem_p, mesh_p, xRef, u, iNodeStart, iQuadStart, &xQuadCur]
         (std::size_t e) {
 
-          // get ids of nodes of element and reference coordinate of nodes
           auto id_nds = mesh_p->getElementConnectivity(e);
-          auto e_nds_start = iNodeStart + mesh_p->d_eNumVertex * e;
-          auto e_nds_end = e_nds_start + mesh_p->d_eNumVertex;
-
-          //assert( (e_nds_end <= xRef.size()) && "e_nds_end bigger than size of xRef\n" );
-
-          //std::vector<util::Point> nds(xRef.begin() + e_nds_start,
-          //                             xRef.begin() + e_nds_end);
           std::vector<util::Point> nds;
           for (const auto &i : id_nds)
             nds.push_back(xRef[i + iNodeStart]);
 
-          auto qds = elem->getQuadDatas(nds);
+          auto qds = elem_p->getQuadDatas(nds);
 
           auto qd_point_current = util::Point();
 
@@ -254,13 +270,10 @@ void getCurrentQuadPoints(const mesh::Mesh *mesh_p,
               qd_point_current += u[i_global_id] * qds[q].d_shapes[i];
             }
 
-            // location of this quad points current position in the vector
-            // is e * getNumQuadPoints() + q, where e is the index of
-            // current element we are processing
-            auto q_global_id = iQuadStart + e * elem->getNumQuadPoints() + q;
+            auto q_global_id = iQuadStart + e * elem_p->getNumQuadPoints() + q;
             xQuadCur[q_global_id] = qd_point_current;
           }
-        } // loop over elements
+        }
   ); // for_each
 
   executor.run(taskflow).get();
@@ -296,21 +309,7 @@ void getStrainStress(const mesh::Mesh *mesh_p,
          "Number of elements i nodal data can not be smaller than number of "
          "nodes.\n");
 
-  // get Quadrature
-  fe::BaseElem *elem;
-  if (mesh_p->getElementType() == util::vtk_type_line)
-    elem = new fe::LineElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_triangle)
-    elem = new fe::TriElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_quad)
-    elem = new fe::QuadElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_tetra)
-    elem = new fe::TetElem(quadOrder);
-  else {
-    std::cerr << "Error: Can not compute strain/stress as the element "
-                 "type is not yet supported in this routine.\n";
-    exit(EXIT_FAILURE);
-  }
+  auto elem = fe::elem(mesh_p->getElementType(), quadOrder);
 
   // get total number of quadrature points by getting the number of quad
   // points in one element times the number of elements
@@ -330,62 +329,34 @@ void getStrainStress(const mesh::Mesh *mesh_p,
             "total number of quadrature points.\n");
 
   // compute current position of quad points
+  auto *elem_p = elem.get();
+  const auto dim = mesh_p->getDimension();
   tf::Executor executor(util::parallel::getNThreads());
   tf::Taskflow taskflow;
   taskflow.for_each_index(
           (std::size_t) 0, num_elems, (std::size_t) 1,
-          [elem, mesh_p, xRef, u, iNodeStart, iStrainStart,
-           isPlaneStrain, nu, lambda, mu, computeStress,
+          [elem_p, mesh_p, xRef, u, iNodeStart, iStrainStart,
+           isPlaneStrain, nu, lambda, mu, computeStress, dim,
            &strain, &stress]
                   (std::size_t e) {
 
-              auto ssn = util::SymMatrix3();
-              auto sss = util::SymMatrix3();
-
-              // get ids of nodes of element and reference coordinate of nodes
               auto id_nds = mesh_p->getElementConnectivity(e);
-              auto e_nds_start = iNodeStart + mesh_p->d_eNumVertex * e;
-              auto e_nds_end = e_nds_start + mesh_p->d_eNumVertex;
-              //std::vector<util::Point> nds(xRef.begin() + e_nds_start,
-              //                             xRef.begin() + e_nds_end);
               std::vector<util::Point> nds;
-              for (const auto &i : id_nds)
+              std::vector<util::Point> u_el;
+              for (const auto &i : id_nds) {
                 nds.push_back(xRef[i + iNodeStart]);
+                u_el.push_back(u[i + iNodeStart]);
+              }
 
-              auto qds = elem->getQuadDatas(nds);
+              auto qds = elem_p->getQuadDatas(nds);
 
               for (size_t q=0; q<qds.size(); q++) {
-                ssn = util::SymMatrix3();
-                sss = util::SymMatrix3();
+                auto ssn = strainFromB(fe::B(qds[q].d_derShapes, dim), u_el);
+                auto sss = util::SymMatrix3();
 
-                // compute strain
-                for (size_t i = 0; i < id_nds.size(); i++) {
-                  auto i_global_id = iNodeStart + id_nds[i];
-                  auto ui = u[i_global_id];
-
-                  ssn(0, 0) += ui[0] + qds[q].d_derShapes[i][0];
-                  if (mesh_p->getDimension() > 1) {
-                    ssn(1, 1) += ui[1] + qds[q].d_derShapes[i][1];
-                    // xy
-                    ssn(0, 1) += 0.5 * ui[0] * qds[q].d_derShapes[i][1] +
-                                 0.5 * ui[1] * qds[q].d_derShapes[i][0];
-                  }
-                  if (mesh_p->getDimension() > 2) {
-                    ssn(2, 2) += ui[2] + qds[q].d_derShapes[i][2];
-
-                    // yz
-                    ssn(1, 2) += 0.5 * ui[1] * qds[q].d_derShapes[i][2] +
-                                 0.5 * ui[2] * qds[q].d_derShapes[i][1];
-                    // xz
-                    ssn(0, 2) += 0.5 * ui[0] * qds[q].d_derShapes[i][2] +
-                                 0.5 * ui[2] * qds[q].d_derShapes[i][0];
-                  }
-                }
-
-                if (mesh_p->getDimension() == 2 && isPlaneStrain)
+                if (dim == 2 && isPlaneStrain)
                   ssn(2, 2) = -nu * (ssn(0, 0) + ssn(1, 1)) / (1. - nu);
 
-                // compute stress
                 if (computeStress) {
                   auto trace_ssn = ssn(0, 0) + ssn(1, 1) + ssn(2, 2);
                   sss(0, 0) = lambda * trace_ssn + 2 * mu * ssn(0, 0);
@@ -397,20 +368,17 @@ void getStrainStress(const mesh::Mesh *mesh_p,
 
                   sss(2, 2) = lambda * trace_ssn + 2 * mu * ssn(2, 2);
 
-                  if (mesh_p->getDimension() == 2 && !isPlaneStrain)
+                  if (dim == 2 && !isPlaneStrain)
                     sss(2, 2) = nu * (sss(0, 0) + sss(1, 1));
                 }
 
-                // location of this quad points in the vector
-                // is e * getNumQuadPoints() + q, where e is the index of
-                // current element we are processing
-                auto q_global_id = iStrainStart + e * elem->getNumQuadPoints() + q;
+                auto q_global_id = iStrainStart + e * elem_p->getNumQuadPoints() + q;
                 strain[q_global_id] = ssn;
                 if (computeStress)
                   stress[q_global_id] = sss;
               }
-          } // loop over elements
-  ); // for_each
+          }
+  );
 
   executor.run(taskflow).get();
 }
@@ -442,21 +410,7 @@ void getMaxShearStressAndLoc(const mesh::Mesh *mesh_p,
          "Number of elements i nnodal data can not be smaller than number of "
          "nodes.\n");
 
-  // get Quadrature
-  fe::BaseElem *elem;
-  if (mesh_p->getElementType() == util::vtk_type_line)
-    elem = new fe::LineElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_triangle)
-    elem = new fe::TriElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_quad)
-    elem = new fe::QuadElem(quadOrder);
-  else if (mesh_p->getElementType() == util::vtk_type_tetra)
-    elem = new fe::TetElem(quadOrder);
-  else {
-    std::cerr << "Error: Can not compute strain/stress as the element "
-                 "type is not yet supported in this routine.\n";
-    exit(EXIT_FAILURE);
-  }
+  auto elem = fe::elem(mesh_p->getElementType(), quadOrder);
 
   // get total number of quadrature points by getting the number of quad
   // points in one element times the number of elements

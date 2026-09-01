@@ -22,19 +22,7 @@
 namespace {
 
 size_t numQuadPoints(size_t elemType, size_t quadOrder) {
-  if (elemType == util::vtk_type_line)
-    return fe::LineElem(quadOrder).getNumQuadPoints();
-  if (elemType == util::vtk_type_triangle)
-    return fe::TriElem(quadOrder).getNumQuadPoints();
-  if (elemType == util::vtk_type_quad)
-    return fe::QuadElem(quadOrder).getNumQuadPoints();
-  if (elemType == util::vtk_type_tetra)
-    return fe::TetElem(quadOrder).getNumQuadPoints();
-
-  std::cerr << std::format("Error: Can not compute strain/stress as the element "
-                           "type = {} is not yet supported in this routine.\n",
-                           elemType);
-  exit(EXIT_FAILURE);
+  return fe::elem(elemType, quadOrder)->getNumQuadPoints();
 }
 
 } // namespace

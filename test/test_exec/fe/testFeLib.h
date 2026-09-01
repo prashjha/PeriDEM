@@ -175,6 +175,11 @@ void testTetElem(size_t n, std::string filepath);
  */
 void testTriElemTime(size_t n, size_t N);
 
+void testPatchTri();
+void testPatchQuad();
+void testPatchTet();
+void testPatchTriDistorted();
+
 /** @}*/
 
 /*!

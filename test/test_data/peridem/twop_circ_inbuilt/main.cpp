@@ -24,6 +24,9 @@
  *                    if -outputDir points at .../out; otherwise use -inputDir.
  * -inputDir <path>   optional; defaults to cwd/inp, or <parent of outputDir>/inp when
  *                    -outputDir is used.
+ * -finalTime <t>     integration end time (default 0.002; example_twop_circ_contact uses 0.012).
+ * -numSteps <n>      number of steps (default 6000; example uses 36000). dt = finalTime/numSteps.
+ * -requireContact    fail if max Damage_Z is 0 (particles never damaged / no contact).
  */
 
 #include "inp/deckIncludes.h"
@@ -31,7 +34,9 @@
 #include "util/function.h"
 #include "material/materialUtil.h"
 #include "periDEMModel.h"
+#include <algorithm>
 #include <cmath>
+#include <cstdlib>
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -52,7 +57,8 @@ std::string directoryPathWithTrailingSep(const std::filesystem::path &dir) {
 
 json buildInputJson(const std::string &output_path_for_deck,
                     const std::filesystem::path &mesh_file_1,
-                    const std::filesystem::path &mesh_file_2) {
+                    const std::filesystem::path &mesh_file_2,
+                    double final_time, size_t num_steps) {
 
   const std::vector<double> center = {0.0, 0.0, 0.0};
   const double R1 = 0.001;
@@ -86,8 +92,6 @@ json buildInputJson(const std::string &output_path_for_deck,
   std::vector<double> p1_center = center;
   std::vector<double> p2_center = center;
 
-  const double final_time = 0.002;
-  const size_t num_steps = 6000;
   const size_t dt_out_n = num_steps / 10;
   auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps,
                                                         "finite_difference", "central_difference",
@@ -205,6 +209,19 @@ int main(int argc, char *argv[]) {
   util::parallel::initNThreads(nThreads);
   util::io::print(std::format("Number of threads = {}\n", util::parallel::getNThreads()));
 
+#ifndef TWOP_CONTACT_EXAMPLE
+  double final_time = 0.002;
+  size_t num_steps = 6000;
+#else
+  double final_time = 0.012;
+  size_t num_steps = 36000;
+#endif
+  if (input.cmdOptionExists("-finalTime"))
+    final_time = std::stod(input.getCmdOption("-finalTime"));
+  if (input.cmdOptionExists("-numSteps"))
+    num_steps = std::stoul(input.getCmdOption("-numSteps"));
+  util::io::print(std::format("final_time = {}, num_steps = {}\n", final_time, num_steps));
+
   namespace fs = std::filesystem;
   const fs::path cwd = fs::current_path();
 
@@ -233,7 +250,8 @@ int main(int argc, char *argv[]) {
   util::io::print(std::format("Output directory (VTU, log.txt): {}\n", fs::absolute(out_dir).string()));
   util::io::print(std::format("Input directory (input.json, meshes): {}\n", fs::absolute(inp_dir).string()));
 
-  auto inputJson = buildInputJson(output_path_for_deck, mesh1, mesh2);
+  auto inputJson = buildInputJson(output_path_for_deck, mesh1, mesh2,
+                                  final_time, num_steps);
 
   const fs::path input_json_path = inp_dir / "input.json";
   {
@@ -248,6 +266,16 @@ int main(int argc, char *argv[]) {
 
   PeriDEMModel dem(deck);
   dem.run(deck);
+
+  if (input.cmdOptionExists("-requireContact")) {
+    const float zmax =
+        dem.d_Z.empty() ? 0.f : *std::max_element(dem.d_Z.begin(), dem.d_Z.end());
+    util::io::print(std::format("requireContact: max Damage_Z = {}\n", zmax));
+    if (zmax <= 0.f) {
+      util::io::print("requireContact: no damage; particles did not contact.\n");
+      return EXIT_FAILURE;
+    }
+  }
 
   return EXIT_SUCCESS;
 }

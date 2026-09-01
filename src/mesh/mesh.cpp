@@ -18,7 +18,9 @@
 #include "geom/geomUtilFunctions.h"
 #include "util/parallelUtil.h"
 #include <cstdint>
+#include <cstdlib>
 #include <iostream>
+#include <memory>
 #include <stdexcept>
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
@@ -326,14 +328,8 @@ bool Mesh::readElementData(const std::string &filename) {
 
 void Mesh::computeVol() {
 
-  // initialize quadrature data
-  fe::BaseElem *quads;
-  if (d_eType == util::vtk_type_triangle)
-    quads = new fe::TriElem(2);
-  else if (d_eType == util::vtk_type_quad)
-    quads = new fe::QuadElem(2);
-  else if (d_eType == util::vtk_type_tetra)
-    quads = new fe::TetElem(2);
+  auto quads = fe::elem(d_eType, 2);
+  auto *quads_p = quads.get();
 
   // check if we have valid element-node connectivity data for nodal volume
   // calculations
@@ -362,7 +358,7 @@ void Mesh::computeVol() {
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(
-    (std::size_t) 0, this->d_numNodes, (std::size_t) 1, [this, quads](std::size_t i) {
+    (std::size_t) 0, this->d_numNodes, (std::size_t) 1, [this, quads_p](std::size_t i) {
       double v = 0.0;
 
       for (auto e : this->d_nec[i]) {
@@ -386,12 +382,12 @@ void Mesh::computeVol() {
           e_nodes.emplace_back(this->d_nodes[k]);
 
         // get volume of element
-        double vol = quads->elemSize(e_nodes);
+        double vol = quads_p->elemSize(e_nodes);
         double factor = 1.;
         if (vol < 0.)
           factor = -1.;
 
-        std::vector<fe::QuadData> qds = quads->getQuadDatas(e_nodes);
+        std::vector<fe::QuadData> qds = quads_p->getQuadDatas(e_nodes);
 
         // compute V_e and add it to volume
         for (auto qd : qds)

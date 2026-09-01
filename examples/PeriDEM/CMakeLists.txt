@@ -5,3 +5,4 @@
 
 add_subdirectory(compression_large_set_inbuilt)
 add_subdirectory(compression_test)
+add_subdirectory(twop_circ_contact)
