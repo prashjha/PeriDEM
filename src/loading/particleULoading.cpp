@@ -14,8 +14,6 @@
 #include "util/function.h"
 #include "geom/geomUtilFunctions.h"
 #include "util/transformationFunctions.h"
-#include <taskflow/taskflow/taskflow.hpp>
-#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 loading::ParticleULoading::ParticleULoading(
     std::vector<inp::BCBaseDeck> &bc_data) {
@@ -69,13 +67,7 @@ void loading::ParticleULoading::apply(const double &time,
     // get bounding box (quite possibly be generic)
     auto reg_box = bc.d_regionGeomData.d_geom_p == nullptr ? std::pair<util::Point, util::Point>(util::Point(), util::Point()) : bc.d_regionGeomData.d_geom_p->box();
 
-    // for (size_t i = 0; i < particle->getNumNodes(); i++) {
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
-
-    taskflow.for_each_index(
-            (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1,
-            [time, &particle, bc, reg_box, this] (std::size_t i) {
+    for (size_t i = 0; i < particle->getNumNodes(); i++) {
 
                 const auto x = particle->getXRefLocal(i);
 
@@ -156,9 +148,6 @@ void loading::ParticleULoading::apply(const double &time,
                     particle->setXLocal(i, d-1, u_i[d-1] + xref);
                   }
                 } // if compute displacement
-            }
-    ); // for_each
-
-    executor.run(taskflow).get();
+    }
   } // loop over bc sets
 }

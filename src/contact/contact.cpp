@@ -24,6 +24,7 @@
 #include <cmath>
 #include <format>
 #include <memory>
+#include <vector>
 
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
@@ -59,6 +60,18 @@ void contact::Contact::setup(data::ModelData &data) {
 
   auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
 
+  // Paper κ_eff and the original DEMModel setup: pair bulk modulus from the
+  // two contact groups' materials. JSON Contact.K is optional (usually absent).
+  std::vector<double> bulk(contactDeck.d_data.size(), -1.);
+  for (const auto *p : data.d_particlesListTypeAll) {
+    if (p->getMaterial() == nullptr)
+      continue;
+    const auto cid = p->getGroupId("contact_id");
+    if (cid >= bulk.size())
+      continue;
+    bulk[cid] = p->getMaterial()->computeMaterialProperties(data.dimension()).d_K;
+  }
+
   for (size_t i = 0; i < contactDeck.d_data.size(); i++) {
     for (size_t j = 0; j < contactDeck.d_data.size(); j++) {
 
@@ -70,6 +83,9 @@ void contact::Contact::setup(data::ModelData &data) {
       if (data.d_maxContactR < deck->d_contactR)
         data.d_maxContactR = deck->d_contactR;
 
+      if (bulk[i] > 0. && bulk[j] > 0.)
+        deck->d_K = util::equivalentMass(bulk[i], bulk[j]);
+
       // Kn
       deck->d_Kn *= deck->d_KnFactor;
 
@@ -79,7 +95,7 @@ void contact::Contact::setup(data::ModelData &data) {
           deck->d_betanFactor *
           (-2. * log_e * std::sqrt(1. / (M_PI * M_PI + log_e * log_e)));
 
-      util::io::log(2, std::format("  contact_radius = {:.6f}, hmin = {:.6f}, Kn = {:5.3e}, "
+      util::io::log(1, std::format("  contact_radius = {:.6f}, hmin = {:.6f}, Kn = {:5.3e}, "
                       "Vmax = {:5.3e}, "
                       "betan = {:7.5f}, mu = {:.4f}, kappa = {:5.3e}\n",
                       deck->d_contactR, data.d_hMin, deck->d_Kn, deck->d_vMax,
@@ -175,9 +191,13 @@ bool contact::Contact::updateSearchParameters(data::ModelData &data) {
   // also multiply by a safety factor
   double safety_factor = data.d_particleDeck_p->d_pNeighDeck.d_sFactor > 5 ? data.d_particleDeck_p->d_pNeighDeck.d_sFactor : 10;
   auto max_search_r_from_contact_R = data.d_particleDeck_p->d_pNeighDeck.d_sFactor * data.d_maxContactR;
+  if (!std::isfinite(data.d_maxVelocity) || data.d_maxVelocity < 0.)
+    data.d_maxVelocity = 0.;
   auto max_search_r = data.d_maxVelocity * data.d_currentDt
                       * data.d_particleDeck_p->d_pNeighDeck.d_neighUpdateInterval
                       * safety_factor;
+  if (!std::isfinite(max_search_r) || max_search_r < 0.)
+    max_search_r = 0.;
 
 
   if (util::isGreater(max_search_r, max_search_r_from_contact_R )) {
@@ -257,49 +277,52 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
   if (data.d_neighC.size() != data.d_x.size())
     data.d_neighC.resize(data.d_x.size());
 
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
+  {
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
 
-  taskflow.for_each_index((std::size_t) 0, data.d_x.size(), (std::size_t) 1,
-                          [&data](std::size_t i) {
+    taskflow.for_each_index((std::size_t) 0, data.d_x.size(), (std::size_t) 1,
+                            [&data](std::size_t i) {
 
-    const auto &pi = data.d_ptId[i];
-    const auto &pi_particle = data.d_particlesListTypeAll[pi];
+      if (data.d_contNeighSearchRadius <= 0. ||
+          !std::isfinite(data.d_contNeighSearchRadius))
+        return;
 
-    // search?
-    bool perform_search_based_on_particle = true;
-    if (pi_particle->isWall()) // wall
-      perform_search_based_on_particle = false;
+      const auto &pi = data.d_ptId[i];
+      const auto &pi_particle = data.d_particlesListTypeAll[pi];
 
-    if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
-      perform_search_based_on_particle = false;
+      // Walls still search: contact reaction on the plate/cup needs neighC on
+      // wall nodes. Skip only when forces are not computed on this body.
+      bool perform_search_based_on_particle = true;
+      if (pi_particle->d_allDofsConstrained or !pi_particle->d_computeForce)
+        perform_search_based_on_particle = false;
 
-    if (perform_search_based_on_particle) {
+      if (perform_search_based_on_particle) {
 
-      std::vector<size_t> neighs;
-      std::vector<double> sqr_dist;
+        std::vector<size_t> neighs;
+        std::vector<double> sqr_dist;
 
-      data.d_neighC[i].clear();
+        data.d_neighC[i].clear();
 
-      auto n = data.d_nsearch_p->radiusSearchExcludeTag(
-              data.d_x[i],
-              data.d_contNeighSearchRadius,
-              neighs,
-              sqr_dist,
-              data.d_ptId[i],
-              data.d_ptId);
+        auto n = data.d_nsearch_p->radiusSearchExcludeTag(
+                data.d_x[i],
+                data.d_contNeighSearchRadius,
+                neighs,
+                sqr_dist,
+                data.d_ptId[i],
+                data.d_ptId);
 
-      if (n > 0) {
-        for (auto neigh: neighs) {
-          if (neigh != i)
-            data.d_neighC[i].push_back(neigh);
+        if (n > 0) {
+          for (auto neigh: neighs) {
+            if (neigh != i)
+              data.d_neighC[i].push_back(neigh);
+          }
         }
       }
-    }
-}
-  ); // for_each
+    }); // for_each
 
-  executor.run(taskflow).get();
+    executor.run(taskflow).get();
+  }
 
 
   // handle particle-wall neighborlist (based on the data.d_neighC that we already computed)

@@ -17,7 +17,7 @@
 util::Point contact::PairForce::force(const Pair &p) {
   const auto yji = p.yj - p.yi;
   const auto Rji = yji.length();
-  if (!util::isLess(Rji, p.deck.d_contactR))
+  if (!(Rji > 0.) || !util::isLess(Rji, p.deck.d_contactR))
     return {};
 
   const auto vji = p.vj - p.vi;

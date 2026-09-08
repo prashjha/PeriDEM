@@ -40,6 +40,7 @@ public:
         model.output();
     }
 
+    model.setCurrentDt(model.timeStep());
     model.applyDisplacementBC();
     model.computeForces();
 

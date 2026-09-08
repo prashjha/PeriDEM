@@ -78,7 +78,9 @@ namespace inp {
         return;
 
       d_testName = j.value("Test_Name", "");
-      if (d_testName == "Compressive_Test") {
+      const bool compressive =
+          d_testName == "Compressive_Test" || d_testName == "compressive_test";
+      if (compressive) {
         if (j.find("Compressive_Test") == j.end())
           throw std::runtime_error("Compressive test requires Compressive_Test section");
 

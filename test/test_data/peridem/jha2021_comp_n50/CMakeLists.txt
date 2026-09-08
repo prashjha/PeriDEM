@@ -6,7 +6,7 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-set(EXEC_NAME Test_PeriDEM_twop_circ_inbuilt)
+set(EXEC_NAME Test_PeriDEM_jha2021_comp_n50)
 
 add_executable(${EXEC_NAME} main.cpp)
 
@@ -22,7 +22,7 @@ target_include_directories(${EXEC_NAME} PUBLIC
 )
 
 target_compile_definitions(${EXEC_NAME} PRIVATE
-    JHA2021_MESH_DIR="${CMAKE_SOURCE_DIR}/test/test_data/peridem/jha2021_table2"
+    JHA2021_COMP_MESH_DIR="${CMAKE_SOURCE_DIR}/test/test_data/peridem/jha2021_comp_n50"
 )
 
 set_target_properties(${EXEC_NAME} PROPERTIES

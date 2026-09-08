@@ -123,7 +123,7 @@ std::string postprocess::Postprocess::compressive(data::ModelData &data) {
       data.d_ppFile << "t, delta, force \n";
     }
 
-    data.d_ppFile << std::format("%4.6e, %4.6e, %4.6e\n", data.d_time, wall_penetration,
+    data.d_ppFile << std::format("{:.6e}, {:.6e}, {:.6e}\n", data.d_time, wall_penetration,
             tot_reaction_force);
   }
 

@@ -102,8 +102,17 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
       gmsh::option::setNumber("Mesh.MeshSizeMax", h);
     }
     const int genDim = gmshMeshGenerateDim(modelDeck);
-    if (genDim == 2)
-      gmsh::option::setNumber("Mesh.Algorithm", 5); // 2D Delaunay (default 6 = Frontal-Delaunay breaks some geo polygons)
+    if (genDim == 2) {
+      // Frontal-Delaunay (6) is Gmsh's 2D default and, with MeshSizeMin=Max=h,
+      // reproduces the v0.1.0 circle disk (hmin ≈ 0.142 mm for h = R/5).
+      // Delaunay (5) on the same circle is ~15% finer in min nodal spacing and
+      // was only needed for GEO-kernel polygons (frontal can fail on those).
+      const std::string &n = geomObj->d_name;
+      const bool geo_polygon =
+          n == "square" || n == "rectangle" || n == "triangle" || n == "hexagon" ||
+          n == "drum2d" || n == "open_rect_channel_2d";
+      gmsh::option::setNumber("Mesh.Algorithm", geo_polygon ? 5 : 6);
+    }
     gmsh::model::mesh::generate(genDim);
   } catch (...) {
     gmsh::finalize();

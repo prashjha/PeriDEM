@@ -28,6 +28,7 @@ add_subdirectory(test_data/peridem/twop_circ)
 add_subdirectory(test_data/peridem/twop_circ_inbuilt)
 add_subdirectory(test_data/peridem/twop_general_inbuilt)
 add_subdirectory(test_data/peridem/compression_large_set_inbuilt)
+add_subdirectory(test_data/peridem/jha2021_comp_n50)
 
 # ---------------------------------------------------------------------------
 # CI / environment
@@ -135,6 +136,36 @@ set_tests_properties(Test_PeriDEM_twop_circ_inbuilt_contact PROPERTIES
   TIMEOUT 180
 )
 
+# Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),
+# Δt=0.2 μs, T=0.04 s. Unique inp/out dirs so ctest -j does not clobber decks.
+# ~7 min each at 4 threads (200000 steps).
+foreach(jha_n RANGE 1 5)
+  add_test(NAME Test_PeriDEM_twop_jha2021_table2_${jha_n}
+    COMMAND Test_PeriDEM_twop_circ_inbuilt
+      -nThreads 4 -jha2021Table2Test ${jha_n}
+      -outputDir jha2021_t${jha_n}_out -inputDir jha2021_t${jha_n}_inp
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+  )
+  set_tests_properties(Test_PeriDEM_twop_jha2021_table2_${jha_n} PROPERTIES
+    LABELS "PeriDEM;Literature"
+    TIMEOUT 720
+  )
+endforeach()
+
+# Same Table 2 energy (0.6 mm gap + leftover v_y) on in-process Gmsh (lc = R/5).
+foreach(jha_n RANGE 1 2)
+  add_test(NAME Test_PeriDEM_twop_jha2021_inbuilt_${jha_n}
+    COMMAND Test_PeriDEM_twop_circ_inbuilt
+      -nThreads 4 -jha2021Table2Test ${jha_n} -inbuiltMesh
+      -outputDir jha2021_inbuilt_t${jha_n}_out -inputDir jha2021_inbuilt_t${jha_n}_inp
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+  )
+  set_tests_properties(Test_PeriDEM_twop_jha2021_inbuilt_${jha_n} PROPERTIES
+    LABELS "PeriDEM;Literature"
+    TIMEOUT 720
+  )
+endforeach()
+
 add_test(NAME Test_PeriDEM_twop_general_inbuilt
   COMMAND Test_PeriDEM_twop_general_inbuilt
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_general_inbuilt>
@@ -146,6 +177,17 @@ add_test(NAME Test_PeriDEM_compression_large_set_inbuilt
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_compression_large_set_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_compression_large_set_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
+
+# Short contacting pack (12 circles). Default Δt=0.2 μs, T=0.004 s, require grain–grain contact.
+add_test(NAME Test_PeriDEM_jha2021_comp_n50_smoke
+  COMMAND Test_PeriDEM_jha2021_comp_n50 -nThreads 4
+    -outputDir jha2021_comp_n50_smoke_out -inputDir jha2021_comp_n50_smoke_inp
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_jha2021_comp_n50>
+)
+set_tests_properties(Test_PeriDEM_jha2021_comp_n50_smoke PROPERTIES
+  LABELS "PeriDEM;Literature"
+  TIMEOUT 300
+)
 
 # Main PeriDEM app: on-disk input.json + meshes (built as ${CMAKE_BINARY_DIR}/bin/PeriDEM)
 add_test(NAME test_peridem_compression_large_set

@@ -64,6 +64,10 @@ void pd::computeForces(data::ModelData &data) {
             const auto &xj = data.d_xRef[j];
             const auto &uj = data.d_u[j];
             double rji = (xj - xi).length();
+            if (!(rji > 0.)) {
+              k += 1;
+              continue;
+            }
             // double rji = std::sqrt(data.d_neighPdSqdDist[i][k]);
             double change_length = (xj - xi + uj - ui).length() - rji;
 
@@ -139,6 +143,10 @@ void pd::computeForces(data::ModelData &data) {
           const auto &uj = data.d_u[j];
           auto volj = data.d_vol[j];
           double rji = (xj - xi).length();
+          if (!(rji > 0.)) {
+            k++;
+            continue;
+          }
           double Sji = pi->d_material_p->getS(xj - xi, uj - ui);
 
           if (!fs) {
@@ -183,6 +191,10 @@ void pd::computeForces(data::ModelData &data) {
             // add normal contact force
             auto yji = xj + uj - (xi + ui);
             auto Rji = yji.length();
+            if (!(Rji > 0.)) {
+              k++;
+              continue;
+            }
             scalar_f = pi->d_Kn * volj * (Rji - pi->d_Rc) / Rji;
             if (scalar_f > 0.)
               scalar_f = 0.;

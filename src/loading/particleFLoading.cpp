@@ -12,9 +12,6 @@
 #include "particleLoadingUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
-#include "util/parallelUtil.h"
-#include <taskflow/taskflow/taskflow.hpp>
-#include <taskflow/taskflow/algorithm/for_each.hpp>
 
 namespace {
 
@@ -49,13 +46,7 @@ void loading::ParticleFLoading::apply(const double &time,
     // get bounding box (quite possibly be generic)
     auto reg_box = bc.d_regionGeomData.d_geom_p == nullptr ? std::pair<util::Point, util::Point>(util::Point(), util::Point()) : bc.d_regionGeomData.d_geom_p->box();
 
-    // for (size_t i = 0; i < particle->getNumNodes(); i++) {
-    tf::Executor executor(util::parallel::getNThreads());
-    tf::Taskflow taskflow;
-
-    taskflow.for_each_index(
-            (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1,
-            [time, &particle, bc, reg_box, this](std::size_t i) {
+    for (size_t i = 0; i < particle->getNumNodes(); i++) {
 
                 const auto x = particle->getXRefLocal(i);
                 double fmax = 1.0;
@@ -118,9 +109,6 @@ void loading::ParticleFLoading::apply(const double &time,
                   // add force
                   particle->addFLocal(i, force_i);
                 } // if compute force
-            }
-    ); // for_each
-
-    executor.run(taskflow).get();
+    }
   } // loop over bc sets
 }

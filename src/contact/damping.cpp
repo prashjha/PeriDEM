@@ -16,18 +16,17 @@
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/point.h"
-#include "util/parallelUtil.h"
 #include "inp/input.h"
 
 #include <cmath>
 #include <format>
 
-#include <taskflow/taskflow/taskflow.hpp>
-#include <taskflow/taskflow/algorithm/for_each.hpp>
-
 void contact::Damping::apply(data::ModelData &data) {
   util::io::log(3, "    Computing normal damping force \n");
   for (auto &pi : data.d_particlesListTypeParticle) {
+
+    if (!pi->d_computeForce)
+      continue;
 
     auto pi_id = pi->getId();
 
@@ -45,6 +44,9 @@ void contact::Damping::apply(data::ModelData &data) {
         auto dist_xcji = xc_ji.length();
 
         const auto &contact = data.d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
+
+        if (!contact.d_dampingOn)
+          continue;
 
         if (util::isLess(dist_xcji, Rj + Ri + 1.01 * contact.d_contactR)) {
 
@@ -104,6 +106,9 @@ void contact::Damping::apply(data::ModelData &data) {
       const auto &contact
               = data.d_particleDeck_p->d_contactDeck.getContact(pi->getGroupId("contact_id"), pj->getGroupId("contact_id"));
 
+      if (!contact.d_dampingOn)
+        continue;
+
       auto beta_n = contact.d_betan *
                     std::sqrt(contact.d_K * contact.d_contactR * meq);
 
@@ -120,17 +125,7 @@ void contact::Damping::apply(data::ModelData &data) {
       force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
     }
 
-    {
-      tf::Executor executor(util::parallel::getNThreads());
-      tf::Taskflow taskflow;
-
-      taskflow.for_each_index((std::size_t) 0, pi->getNumNodes(), (std::size_t) 1,
-                              [&data, pi, force_i](std::size_t i) {
-                                  data.d_f[pi->getNodeId(i)] += force_i;
-                              }
-      );
-
-      executor.run(taskflow).get();
-    }
+    for (size_t i = 0; i < pi->getNumNodes(); i++)
+      data.d_f[pi->getNodeId(i)] += force_i;
   }
 }

@@ -254,7 +254,11 @@ void PeriDEMModel::init() {
     const auto &pi = getParticleFromAllList(ptId);
     if (pi->d_computeForce) {
       d_fContCompNodes.push_back(i);
-      d_fPdCompNodes.push_back(i);
+      // Walls keep contact (and reaction) but not peridynamic force. Treating a
+      // container as a PD body on a thin/boolean mesh makes Damage_Z explode
+      // and the neighbor search then allocates until the process is OOM-killed.
+      if (!pi->isWall())
+        d_fPdCompNodes.push_back(i);
     }
   }
 
@@ -299,16 +303,19 @@ void PeriDEMModel::computeForces() {
 
   // reset force
   auto t1 = steady_clock::now();
-  tf::Executor executor(util::parallel::getNThreads());
-  tf::Taskflow taskflow;
+  float force_reset_time = 0;
+  {
+    tf::Executor executor(util::parallel::getNThreads());
+    tf::Taskflow taskflow;
 
-  taskflow.for_each_index(
-    (std::size_t) 0, d_x.size(), (std::size_t) 1,
-      [this](std::size_t i) { this->d_f[i] = util::Point(); }
-  ); // for_each
+    taskflow.for_each_index(
+      (std::size_t) 0, d_x.size(), (std::size_t) 1,
+        [this](std::size_t i) { this->d_f[i] = util::Point(); }
+    ); // for_each
 
-  executor.run(taskflow).get();
-  auto force_reset_time = util::methods::timeDiff(t1, steady_clock::now());
+    executor.run(taskflow).get();
+    force_reset_time = util::methods::timeDiff(t1, steady_clock::now());
+  }
 
   // compute peridynamic forces
   t1 = steady_clock::now();

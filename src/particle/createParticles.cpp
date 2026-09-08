@@ -121,13 +121,18 @@ void particle::createParticlesFromFile(data::ModelData &data) {
     auto p_transform =
         geom::ParticleTransform(t, axis, angle, scale, rotationPivot);
 
+    const bool is_wall = p_data.value("is_wall", false);
+
     auto p = new particle::BaseParticle(
-        data.d_particlesListTypeAll.size(), false, ref_p->getDimension(),
+        data.d_particlesListTypeAll.size(), is_wall, ref_p->getDimension(),
         p_group, false, ref_p->getNumNodes(), 0., model_ptr, ref_p, p_geom,
         p_transform, ref_p->getMeshP(),
         data.d_particleDeck_p->d_pMaterialVec[p_group["mat_id"]], true);
 
-    data.d_particlesListTypeParticle.push_back(p);
+    if (is_wall)
+      data.d_particlesListTypeWall.push_back(p);
+    else
+      data.d_particlesListTypeParticle.push_back(p);
     data.d_particlesListTypeAll.push_back(p);
   }
 }
