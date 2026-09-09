@@ -204,6 +204,23 @@ set_tests_properties(Test_PeriDEM_jha2021_comp_n50_mpi_particle PROPERTIES
   TIMEOUT 180
 )
 
+# T11a: larger pack (N=96) under particle-MPI — stepping-stone toward §4.4 (~502).
+# Short horizon exercises MPI at paper-adjacent N; contact assert stays on n50_smoke
+# (plate needs ~0.003 s to close the 1.15 Rc gap; full contact at N=96 is offline).
+add_test(NAME Test_PeriDEM_jha2021_comp_n96_mpi_scale
+  COMMAND mpirun -n 2 --quiet
+    $<TARGET_FILE:Test_PeriDEM_jha2021_comp_n50>
+    -nThreads 1 -nCols 12 -nRows 8
+    -numSteps 800 -finalTime 1.6e-4 -noRequireContact
+    -outputDir jha2021_comp_n96_mpi_scale_out
+    -inputDir jha2021_comp_n96_mpi_scale_inp
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_jha2021_comp_n50>
+)
+set_tests_properties(Test_PeriDEM_jha2021_comp_n96_mpi_scale PROPERTIES
+  LABELS "PeriDEM;MPI;Literature"
+  TIMEOUT 300
+)
+
 # Main PeriDEM app: on-disk input.json + meshes (built as ${CMAKE_BINARY_DIR}/bin/PeriDEM)
 add_test(NAME test_peridem_compression_large_set
   COMMAND ${CMAKE_BINARY_DIR}/bin/PeriDEM -i input.json
