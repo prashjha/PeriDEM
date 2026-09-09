@@ -163,13 +163,23 @@ void rebuildGhostPlan(data::ModelData &data) {
 
   data.d_mpiGhostNeedFrom.assign(static_cast<size_t>(size), {});
   size_t n_ghost = 0;
-  for (size_t g = 0; g < n_grains; ++g) {
+  auto add_ghost = [&](size_t g) {
     auto *pj = grains[g];
     if (particle::isLocallyOwned(*pj))
-      continue;
+      return;
     const int own = pj->d_mpiOwner;
     if (own < 0 || own == rank)
-      continue;
+      return;
+    auto &vec = data.d_mpiGhostNeedFrom[static_cast<size_t>(own)];
+    const int gid = static_cast<int>(g);
+    if (std::find(vec.begin(), vec.end(), gid) != vec.end())
+      return;
+    vec.push_back(gid);
+    data.d_mpiIncludeInContactCloud[pj->getId()] = 1;
+    ++n_ghost;
+  };
+
+  for (size_t g = 0; g < n_grains; ++g) {
     bool near = false;
     for (size_t i = 0; i < n_grains && !near; ++i) {
       if (!particle::isLocallyOwned(*grains[i]))
@@ -178,11 +188,21 @@ void rebuildGhostPlan(data::ModelData &data) {
       if (centers[i].dist(centers[g]) < lim)
         near = true;
     }
-    if (near) {
-      data.d_mpiGhostNeedFrom[static_cast<size_t>(own)].push_back(
-          static_cast<int>(g));
-      data.d_mpiIncludeInContactCloud[pj->getId()] = 1;
-      ++n_ghost;
+    if (near)
+      add_ghost(g);
+  }
+
+  // Wall contact is assembled on ranks that own wall nodes (rank 0 for
+  // particle-MPI). Ghost any grain near a wall so plate/cup searches see them.
+  for (auto *w : data.d_particlesListTypeWall) {
+    if (!w)
+      continue;
+    const auto wc = w->getXCenter();
+    const double wr = w->d_geom_p->boundingRadius();
+    for (size_t g = 0; g < n_grains; ++g) {
+      const double lim = wr + radii[g] + cutoff;
+      if (wc.dist(centers[g]) < lim)
+        add_ghost(g);
     }
   }
 

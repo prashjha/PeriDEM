@@ -447,6 +447,13 @@ void contact::Contact::computeForces(data::ModelData &data) {
                               const auto &ptIdi = data.getPtId(i);
                               auto &pi = data.getParticleFromAllList(ptIdi);
 
+                              // Particle-MPI: do not search from walls — grain
+                              // owners deposit Newton-III forces onto walls.
+                              // Avoids double-counting with wall-origin search.
+                              if (pi->isWall() && util::parallel::isMpiEnabled() &&
+                                  !data.d_pdDofMpi)
+                                return;
+
                               const auto &yi = data.d_x[i];
                               const auto &vi = data.d_v[i];
                               const std::vector<size_t> &neighs = data.d_neighC[i];
@@ -477,7 +484,19 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                        pi->getDensity(), pj->getDensity(),
                                        data.d_currentDt,
                                        pi->isWall(), pj->isWall()};
-                                force_i += pair->force(p);
+                                const util::Point fij = pair->force(p);
+                                force_i += fij;
+                                // Particle-MPI: deposit wall reaction as if the
+                                // wall had searched this grain (PairForce uses
+                                // neighbor volume, so scale by voli/volj).
+                                if (!pi->isWall() && pj->isWall() &&
+                                    util::parallel::isMpiEnabled() &&
+                                    !data.d_pdDofMpi) {
+                                  const double volj = data.d_vol[j_id];
+                                  const double scale =
+                                      (volj > 0.) ? (data.d_vol[i] / volj) : 0.;
+                                  data.d_f[j_id] -= scale * fij;
+                                }
                               }
 
                               data.d_f[i] += force_i;
