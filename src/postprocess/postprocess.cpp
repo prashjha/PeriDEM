@@ -12,6 +12,7 @@
 
 #include "data/modelData.h"
 #include "util/io.h"
+#include "util/parallelUtil.h"
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/vecMethods.h"
@@ -19,6 +20,7 @@
 
 #include <cstdlib>
 #include <format>
+#include <mpi.h>
 
 void postprocess::Postprocess::close(data::ModelData &data) {
 
@@ -103,28 +105,33 @@ std::string postprocess::Postprocess::compressive(data::ModelData &data) {
   auto dx = wall->getXLocal(0) - wall->getXRefLocal(0);
   double wall_penetration = dx[f_dir];
 
-  // get the total reaction force on wall along the direction of loading
+  // Local wall reaction; under particle-MPI each rank only sees contact from
+  // owned grains, so sum across ranks before recording.
   double tot_reaction_force = 0.;
   for (size_t i = 0; i < wall->getNumNodes(); i++) {
     tot_reaction_force += wall->getFLocal(i)[f_dir] * wall->getVolLocal(i);
   }
+  if (util::parallel::mpiSize() > 1) {
+    double reduced = 0.;
+    MPI_Allreduce(&tot_reaction_force, &reduced, 1, MPI_DOUBLE, MPI_SUM,
+                  util::parallel::mpiComm());
+    tot_reaction_force = reduced;
+  }
 
-  // open file and write
-  bool use_static_file = true;
-  if (use_static_file) {
+  // Rank 0 only: avoid interleaved multi-rank appends to the same CSV.
+  if (util::parallel::mpiRank() == 0) {
     if (!data.d_ppFile.is_open()) {
-
-      std::string tag_pp_file = data.d_outputDeck_p->d_tagPPFile.empty() ? "0" : data.d_outputDeck_p->d_tagPPFile;
+      std::string tag_pp_file = data.d_outputDeck_p->d_tagPPFile.empty()
+                                    ? "0"
+                                    : data.d_outputDeck_p->d_tagPPFile;
       std::string filename = data.d_outputDeck_p->d_path + "pp_" +
                              data.d_testDeck_p->d_testName + "_" +
                              tag_pp_file + ".csv";
       data.d_ppFile.open(filename.c_str(), std::ofstream::out | std::ofstream::app);
-
       data.d_ppFile << "t, delta, force \n";
     }
-
-    data.d_ppFile << std::format("{:.6e}, {:.6e}, {:.6e}\n", data.d_time, wall_penetration,
-            tot_reaction_force);
+    data.d_ppFile << std::format("{:.6e}, {:.6e}, {:.6e}\n", data.d_time,
+                                 wall_penetration, tot_reaction_force);
   }
 
   data.setKeyData("wall_penetration", wall_penetration);

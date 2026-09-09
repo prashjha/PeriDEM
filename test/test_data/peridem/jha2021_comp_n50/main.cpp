@@ -28,6 +28,8 @@
 #include "util/function.h"
 #include "util/io.h"
 #include "util/parallelUtil.h"
+
+#include <mpi.h>
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
@@ -448,23 +450,40 @@ int main(int argc, char *argv[]) {
   dem.setPostprocess(std::move(probe));
   dem.run(deck);
 
+  // Under particle-MPI, ranks only refresh ghost centers; far grains stay stale.
+  // Reduce contact probe metrics so requireContact is rank-consistent.
+  int max_pairs = probe_p->maxPairs();
+  double min_gap = probe_p->minGap();
+  double gap0 = probe_p->gap0();
+  if (util::parallel::mpiSize() > 1) {
+    int max_pairs_g = 0;
+    double min_gap_g = 0., gap0_g = 0.;
+    MPI_Allreduce(&max_pairs, &max_pairs_g, 1, MPI_INT, MPI_MAX,
+                  util::parallel::mpiComm());
+    MPI_Allreduce(&min_gap, &min_gap_g, 1, MPI_DOUBLE, MPI_MIN,
+                  util::parallel::mpiComm());
+    MPI_Allreduce(&gap0, &gap0_g, 1, MPI_DOUBLE, MPI_MAX,
+                  util::parallel::mpiComm());
+    max_pairs = max_pairs_g;
+    min_gap = min_gap_g;
+    gap0 = gap0_g;
+  }
+
   const float zmax =
       dem.d_Z.empty() ? 0.f : *std::max_element(dem.d_Z.begin(), dem.d_Z.end());
   util::io::print(std::format(
       "grain contact: gap0={}, min_gap={} (t={}), Rc={}, pairs_in_Rc={}, max Damage_Z={}\n",
-      probe_p->gap0(), probe_p->minGap(), probe_p->tMin(), probe_p->Rc(),
-      probe_p->maxPairs(), zmax));
+      gap0, min_gap, probe_p->tMin(), probe_p->Rc(), max_pairs, zmax));
 
   const bool require_contact = !input.cmdOptionExists("-noRequireContact");
   if (require_contact) {
-    const bool grains_touched =
-        probe_p->maxPairs() > 0 && probe_p->minGap() < probe_p->gap0() - 1.0e-8;
+    const bool grains_touched = max_pairs > 0 && min_gap < gap0 - 1.0e-8;
     if (!grains_touched) {
       util::io::print("requireContact: no grain–grain pair entered the contact radius.\n");
       util::parallel::finalizeMpi();
       return EXIT_FAILURE;
     }
-    if (!(probe_p->gap0() > probe_p->Rc())) {
+    if (!(gap0 > probe_p->Rc())) {
       util::io::print("requireContact: grains already in Rc at t=0; packing is too tight.\n");
       util::parallel::finalizeMpi();
       return EXIT_FAILURE;
@@ -472,12 +491,21 @@ int main(int argc, char *argv[]) {
   }
 
   if (input.cmdOptionExists("-assertForce")) {
-    const fs::path csv = out_dir / "pp_compressive_test_0.csv";
-    const double fmax = maxAbsForceFromCsv(csv);
-    util::io::print(std::format("assertForce: max |plate reaction| = {} from {}\n", fmax,
-                                csv.string()));
-    if (fmax <= 0.) {
-      util::io::print("assertForce: plate reaction is zero.\n");
+    // Rank 0 owns the reaction CSV; broadcast pass/fail.
+    int force_ok = 1;
+    if (util::parallel::mpiRank() == 0) {
+      const fs::path csv = out_dir / "pp_compressive_test_0.csv";
+      const double fmax = maxAbsForceFromCsv(csv);
+      util::io::print(std::format("assertForce: max |plate reaction| = {} from {}\n", fmax,
+                                  csv.string()));
+      if (fmax <= 0.) {
+        util::io::print("assertForce: plate reaction is zero.\n");
+        force_ok = 0;
+      }
+    }
+    if (util::parallel::mpiSize() > 1)
+      MPI_Bcast(&force_ok, 1, MPI_INT, 0, util::parallel::mpiComm());
+    if (!force_ok) {
       util::parallel::finalizeMpi();
       return EXIT_FAILURE;
     }
