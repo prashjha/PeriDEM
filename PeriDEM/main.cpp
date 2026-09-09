@@ -83,4 +83,7 @@ int main(int argc, char *argv[]) {
   std::cout << "Total simulation time (s) = " 
             << util::methods::timeDiff(begin, end, "seconds") 
             << std::endl;
+
+  util::parallel::finalizeMpi();
+  return 0;
 }

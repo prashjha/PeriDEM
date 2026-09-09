@@ -70,6 +70,17 @@ namespace inp {
      * */
     std::string d_particleSimType;
 
+    /*!
+     * @brief MPI domain-decomposition strategy (independent of Particle_Sim_Type).
+     *
+     * Allowed: `auto` (default), `none`, `particle`, `dof`.
+     * - auto: Multi_Particle → particle; Single_Particle → dof
+     * - none: no domain split (use one MPI rank)
+     * - particle: spatial grain ownership
+     * - dof: Metis nodal partition
+     */
+    std::string d_mpiStrategy;
+
     /*! @brief Dimension */
     size_t d_dim;
 
@@ -91,7 +102,7 @@ namespace inp {
     ModelDeck(const json &j = json({}))
         : d_dim(0), d_isRestartActive(false), d_populateElementNodeConnectivity(false),
           d_tFinal(0.), d_dt(0.), d_Nt(0),
-          d_particleSimType(""), d_seed(0), d_quadOrder(1) {
+          d_particleSimType(""), d_mpiStrategy("auto"), d_seed(0), d_quadOrder(1) {
 
       readFromJson(j);
     };
@@ -108,7 +119,8 @@ namespace inp {
           d_timeDiscretization(timeDiscretization),
           d_populateElementNodeConnectivity(populateElementNodeConnectivity),
           d_tFinal(tFinal), d_dt(0.), d_Nt(Nt),
-          d_particleSimType(particleSimType), d_seed(seed), d_quadOrder(quadOrder) {
+          d_particleSimType(particleSimType), d_mpiStrategy("auto"),
+          d_seed(seed), d_quadOrder(quadOrder) {
 
       if (d_timeDiscretization == "central_difference" or d_timeDiscretization == "velocity_verlet")
         d_simType = "explicit";
@@ -141,6 +153,7 @@ namespace inp {
           {"Populate_ElementNodeConnectivity", populateElementNodeConnectivity},
           {"Quad_Approximation_Order",         quadOrder},
           {"Particle_Sim_Type",                particleSimType},
+          {"MPI_Strategy",                     "auto"},
           {"Seed",                             seed}
       };
     }
@@ -162,7 +175,14 @@ namespace inp {
       d_populateElementNodeConnectivity = j.value("Populate_ElementNodeConnectivity", true);
       d_quadOrder = j.value("Quad_Approximation_Order", size_t(2));
       d_particleSimType = j.value("Particle_Sim_Type", "Multi_Particle");
+      d_mpiStrategy = j.value("MPI_Strategy", "auto");
       d_seed = j.value("Seed", 0);
+
+      if (d_mpiStrategy != "auto" && d_mpiStrategy != "none" &&
+          d_mpiStrategy != "particle" && d_mpiStrategy != "dof") {
+        std::cerr << "Error: Model.MPI_Strategy must be auto|none|particle|dof.\n";
+        exit(1);
+      }
 
       if (std::abs(d_tFinal) < 1.0E-10 or d_Nt <= 0) {
         std::cerr << "Error: Check Final_Time and Time_Steps data.\n";
@@ -193,6 +213,7 @@ namespace inp {
       oss << tabS << "Time discretization type = " << d_timeDiscretization
           << std::endl;
       oss << tabS << "Particle simulation type = " << d_particleSimType << std::endl;
+      oss << tabS << "MPI strategy = " << d_mpiStrategy << std::endl;
       oss << tabS << "Dimension = " << d_dim << std::endl;
       oss << tabS << "Final time = " << d_tFinal << std::endl;
       oss << tabS << "Time step size = " << d_dt << std::endl;

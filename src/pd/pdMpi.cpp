@@ -12,6 +12,7 @@
 
 #include "data/modelData.h"
 #include "mesh/meshPartitioning.h"
+#include "particle/particleMpi.h"
 #include "util/io.h"
 #include "util/parallelUtil.h"
 #include "util/point.h"
@@ -216,7 +217,8 @@ void pd::setupDofPartition(data::ModelData &data) {
 
   if (!util::parallel::isMpiEnabled())
     return;
-  if (data.d_input_p && data.d_input_p->isMultiParticle())
+  const std::string strategy = particle::resolvedMpiStrategy(data);
+  if (strategy != "dof")
     return;
   const int size = util::parallel::mpiSize();
   if (size <= 1)
@@ -256,6 +258,7 @@ void pd::exchangeGhostDisplacement(data::ModelData &data) {
   using clock = std::chrono::steady_clock;
   const auto t0 = clock::now();
   exchangePoints(data, data.d_u);
+  exchangePoints(data, data.d_v);
   // Keep current configuration consistent for any x-based reads.
   for (int r = 0; r < util::parallel::mpiSize(); ++r) {
     for (int id : data.d_pdGhostNeedFrom[static_cast<size_t>(r)]) {

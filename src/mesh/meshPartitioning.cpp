@@ -32,9 +32,10 @@ void mesh::metisGraphPartition(std::string partitionMethod,
   auto nParts = idx_t(nPartitions);
 
   // create adjacency data based on nodeNeighs
-  std::vector<idx_t> xadj(nvtxs, 0);
+  // METIS needs xadj of length nvtxs+1 (CSR row pointers).
+  std::vector<idx_t> xadj(static_cast<size_t>(nvtxs) + 1, 0);
   std::vector<idx_t> adjncy;
-  for (size_t i=0; i<nvtxs; i++) {
+  for (size_t i=0; i<static_cast<size_t>(nvtxs); i++) {
     adjncy.insert(adjncy.end(), nodeNeighs[i].begin(), nodeNeighs[i].end());
     xadj[i+1] = xadj[i] + idx_t(nodeNeighs[i].size());
   }

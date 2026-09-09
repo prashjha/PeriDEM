@@ -59,6 +59,14 @@ PeriDEMModel::PeriDEMModel(std::shared_ptr<inp::Input> & deck, std::string model
 
   d_name = std::move(modelName);
 
+  // Ensure output directory exists (Path from input; relative to cwd).
+  {
+    namespace fs = std::filesystem;
+    fs::path out(d_outputDeck_p->d_path);
+    if (!out.empty())
+      fs::create_directories(out);
+  }
+
   // initialize logger
   util::io::initLogger(d_outputDeck_p->d_debug,
                        d_outputDeck_p->d_path + "log.txt");
@@ -259,9 +267,14 @@ void PeriDEMModel::init() {
   for (size_t i = 0; i < d_x.size(); i++) {
     const auto &ptId = d_ptId[i];
     const auto &pi = getParticleFromAllList(ptId);
-    const bool node_owned =
-        d_pdDofMpi ? (static_cast<int>(d_pdNodePartition[i]) == mpi_rank)
-                   : particle::isLocallyOwned(*pi);
+    bool node_owned = false;
+    if (d_pdDofMpi)
+      node_owned = (static_cast<int>(d_pdNodePartition[i]) == mpi_rank);
+    else if (pi->isWall())
+      // Walls are replicated; assemble wall contact/reaction on rank 0 only.
+      node_owned = (mpi_rank == 0);
+    else
+      node_owned = particle::isLocallyOwned(*pi);
     if (pi->d_computeForce && node_owned) {
       d_fContCompNodes.push_back(i);
       // Walls keep contact (and reaction) but not peridynamic force. Treating a
@@ -468,16 +481,27 @@ void PeriDEMModel::computeExternalForces() {
     tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
-    taskflow.for_each_index((std::size_t) 0, d_x.size(), (std::size_t)1, [this, gravity](std::size_t i) {
-          this->d_f[i] += this->getDensity(i) * gravity;
-      } // loop over particles
-    ); // for_each
+    // Only owned force nodes (walls on rank 0 for particle-MPI; Metis owners
+    // for DOF-MPI). Applying gravity on every rank then Allreducing reaction
+    // would multiply wall weight by mpiSize.
+    const auto &nodes = d_fContCompNodes;
+    taskflow.for_each_index((std::size_t) 0, nodes.size(), (std::size_t)1,
+                            [this, gravity, &nodes](std::size_t II) {
+                              const size_t i = nodes[II];
+                              this->d_f[i] += this->getDensity(i) * gravity;
+                            });
 
     executor.run(taskflow).get();
   }
 
-  for (auto &p : d_particlesListTypeAll)
-    d_fLoading_p->apply(d_time, p); // applied in parallel
+  for (auto &p : d_particlesListTypeAll) {
+    if (p->isWall()) {
+      if (util::parallel::mpiRank() == 0)
+        d_fLoading_p->apply(d_time, p);
+    } else if (particle::isLocallyOwned(*p)) {
+      d_fLoading_p->apply(d_time, p);
+    }
+  }
 }
 
 void PeriDEMModel::applyDisplacementBC() {

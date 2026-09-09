@@ -278,13 +278,14 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
       data.d_mpiIncludeInContactCloud.size() == data.d_particlesListTypeAll.size();
 
   // Optional pruned cloud: owned + ghost + wall nodes only (MPI particle-parallel).
+  // DOF-MPI keeps the full cloud (node owners span many grains).
   std::vector<util::Point> local_cloud;
   std::vector<size_t> local_to_global;
   std::vector<size_t> local_pt_id;
   std::unique_ptr<nsearch::NFlannSearchKd<3>> local_tree;
 
   double pt_cloud_update_time = 0.;
-  if (mpi_prune) {
+  if (mpi_prune && !data.d_pdDofMpi) {
     local_cloud.reserve(data.d_x.size() / static_cast<size_t>(std::max(
                             1, util::parallel::mpiSize())) +
                         1024);
@@ -307,8 +308,9 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
   data.appendKeyData("tree_compute_time", pt_cloud_update_time);
   data.appendKeyData("avg_tree_update_time", pt_cloud_update_time/data.d_infoN);
   data.setKeyData("contact_cloud_node_count",
-                  static_cast<double>(mpi_prune ? local_cloud.size()
-                                                : data.d_x.size()));
+                  static_cast<double>((mpi_prune && !data.d_pdDofMpi)
+                                          ? local_cloud.size()
+                                          : data.d_x.size()));
 
   if (data.d_neighC.size() != data.d_x.size())
     data.d_neighC.resize(data.d_x.size());
@@ -320,8 +322,9 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
     // Only query owned grain + wall nodes (d_fContCompNodes). Remote grains
     // stay in the search cloud as neighbors but are not search origins.
     const auto &query_nodes = data.d_fContCompNodes;
+    const bool use_local = mpi_prune && !data.d_pdDofMpi;
     taskflow.for_each_index((std::size_t) 0, query_nodes.size(), (std::size_t) 1,
-                            [&data, &query_nodes, mpi_prune, &local_to_global,
+                            [&data, &query_nodes, use_local, &local_to_global,
                              &local_pt_id, &local_tree](std::size_t II) {
       const size_t i = query_nodes[II];
 
@@ -346,7 +349,7 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
         data.d_neighC[i].clear();
 
         size_t n = 0;
-        if (mpi_prune) {
+        if (use_local) {
           n = local_tree->radiusSearchExcludeTag(
               data.d_x[i], data.d_contNeighSearchRadius, neighs, sqr_dist,
               data.d_ptId[i], local_pt_id);

@@ -11,6 +11,8 @@
 #ifndef PARTICLE_PARTICLE_MPI_H
 #define PARTICLE_PARTICLE_MPI_H
 
+#include <string>
+
 namespace data {
 class ModelData;
 }
@@ -23,9 +25,12 @@ class BaseParticle;
  * Walls are replicated on every rank. With one MPI rank, everything is local. */
 bool isLocallyOwned(const BaseParticle &p);
 
+/*! @brief Resolved MPI strategy: none|particle|dof (auto expanded). */
+std::string resolvedMpiStrategy(const data::ModelData &data);
+
 /*!
  * @brief Assign grain owners by spatial 2D brick decomposition of centers.
- * Walls get owner -1 (all ranks).
+ * Walls get owner -1 (all ranks). Honors Model.MPI_Strategy.
  */
 void assignMpiOwners(data::ModelData &data);
 

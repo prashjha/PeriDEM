@@ -12,6 +12,7 @@
 
 #include "baseParticle.h"
 #include "data/modelData.h"
+#include "inp/input.h"
 #include "util/io.h"
 #include "util/parallelUtil.h"
 #include "util/point.h"
@@ -30,6 +31,20 @@ bool particle::isLocallyOwned(const BaseParticle &p) {
   if (p.isWall())
     return true;
   return p.d_mpiOwner == util::parallel::mpiRank();
+}
+
+std::string particle::resolvedMpiStrategy(const data::ModelData &data) {
+  std::string s = "auto";
+  if (data.d_input_p && data.d_input_p->d_modelDeck_p)
+    s = data.d_input_p->d_modelDeck_p->d_mpiStrategy;
+  if (s.empty())
+    s = "auto";
+  if (s == "auto") {
+    if (data.d_input_p && data.d_input_p->isMultiParticle())
+      return "particle";
+    return "dof";
+  }
+  return s;
 }
 
 namespace {
@@ -279,15 +294,26 @@ void particle::assignMpiOwners(data::ModelData &data) {
   const int size = util::parallel::mpiSize();
   const int rank = util::parallel::mpiRank();
   const auto &grains = data.d_particlesListTypeParticle;
+  const std::string strategy = resolvedMpiStrategy(data);
 
   for (auto *p : data.d_particlesListTypeAll) {
     if (p->isWall())
       p->d_mpiOwner = -1;
   }
 
-  if (size <= 1 || grains.empty()) {
+  // Particle ownership only for the particle strategy (or auto→particle).
+  // none/dof: every grain owned by rank 0 so particle-MPI is inactive; DOF
+  // mode uses nodal owners for force/integration instead.
+  const bool use_particle_partition =
+      strategy == "particle" && size > 1 && !grains.empty();
+
+  if (!use_particle_partition) {
     for (auto *p : grains)
       p->d_mpiOwner = 0;
+    if (util::parallel::isMpiEnabled() && rank == 0)
+      util::io::print(std::format(
+          "MPI strategy={}: grain ownership inactive (all grains → rank 0)\n",
+          strategy));
   } else {
     double xmin = std::numeric_limits<double>::max();
     double xmax = -std::numeric_limits<double>::max();

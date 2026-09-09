@@ -24,6 +24,10 @@
 
 void contact::Damping::apply(data::ModelData &data) {
   util::io::log(3, "    Computing normal damping force \n");
+  // Under DOF-MPI only rank 0 applies COM damping (avoids N-rank duplication
+  // when grain ownership is inactive).
+  if (data.d_pdDofMpi && util::parallel::mpiRank() != 0)
+    return;
   for (auto &pi : data.d_particlesListTypeParticle) {
 
     if (!pi->d_computeForce)
