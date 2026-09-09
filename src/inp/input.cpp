@@ -22,4 +22,8 @@ inp::Input::Input(const json &j) {
 
   // particle deck
   d_particleDeck_p = std::make_shared<inp::ParticleDeck>(j, d_modelDeck_p->d_particleSimType);
+
+  // Enable restart when a restart file is provided (Restart.File).
+  if (!d_restartDeck_p->d_file.empty())
+    d_modelDeck_p->d_isRestartActive = true;
 };
