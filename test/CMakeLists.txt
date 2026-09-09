@@ -204,6 +204,21 @@ set_tests_properties(Test_PeriDEM_jha2021_comp_n50_mpi_particle PROPERTIES
   TIMEOUT 180
 )
 
+# Artificial particle-MPI parallel VTU/PVTU/PVD layout (not physics identity).
+configure_file(
+  ${CMAKE_SOURCE_DIR}/test/test_data/peridem/jha2021_comp_n50/run_mpi_output_art_particle.sh
+  ${CMAKE_BINARY_DIR}/test/test_data/peridem/jha2021_comp_n50/run_mpi_output_art_particle.sh
+  COPYONLY
+)
+add_test(NAME Test_PeriDEM_mpi_output_art_particle
+  COMMAND ${BASH_PROGRAM} ./run_mpi_output_art_particle.sh
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_jha2021_comp_n50>
+)
+set_tests_properties(Test_PeriDEM_mpi_output_art_particle PROPERTIES
+  LABELS "PeriDEM;MPI"
+  TIMEOUT 180
+)
+
 # T11a: larger pack (N=96) under particle-MPI — stepping-stone toward §4.4 (~502).
 # Short horizon exercises MPI at paper-adjacent N; contact assert stays on n50_smoke
 # (plate needs ~0.003 s to close the 1.15 Rc gap; full contact at N=96 is offline).
@@ -262,6 +277,16 @@ if(${Enable_Apps})
     WORKING_DIRECTORY ${Apps_Path}/peridynamics
   )
   set_tests_properties(test_apps_peridynamics_dof_mpi PROPERTIES
+    LABELS "PeriDEM;MPI;Apps"
+    TIMEOUT 180
+  )
+
+  # Artificial DOF-MPI parallel VTU/PVTU/PVD layout (not physics identity).
+  add_test(NAME test_apps_peridynamics_mpi_output_art_dof
+    COMMAND ${BASH_PROGRAM} ./run_mpi_output_art_dof.sh
+    WORKING_DIRECTORY ${Apps_Path}/peridynamics
+  )
+  set_tests_properties(test_apps_peridynamics_mpi_output_art_dof PROPERTIES
     LABELS "PeriDEM;MPI;Apps"
     TIMEOUT 180
   )

@@ -12,6 +12,7 @@
 
 #include "data/modelData.h"
 #include "util/io.h"
+#include "util/parallelUtil.h"
 #include "particle/baseParticle.h"
 #include "rw/vtkParticleWriter.h"
 #include "rw/pvdCollectionWriter.h"
@@ -20,10 +21,13 @@
 #include "util/vecMethods.h"
 #include "inp/input.h"
 
+#include <mpi.h>
+
 #include <filesystem>
 #include <format>
 #include <fstream>
 #include <sstream>
+#include <vector>
 
 void rw::writeOutput(data::ModelData &data) {
 
@@ -77,27 +81,50 @@ void rw::writeOutput(data::ModelData &data) {
   } // end of debug
 
   size_t dt_out = data.d_outputDeck_p->d_dtOutCriteria;
-  std::string out_filename = data.d_outputDeck_p->d_path + "output_";
-  if (data.d_outputDeck_p->d_tagPPFile.empty())
-    out_filename = out_filename + std::to_string(data.d_n / dt_out);
-  else
-    out_filename = out_filename + data.d_outputDeck_p->d_tagPPFile + "_" + std::to_string(data.d_n / dt_out);
+  const size_t frame = data.d_n / dt_out;
+  const std::string tag =
+      data.d_outputDeck_p->d_tagPPFile.empty()
+          ? std::to_string(frame)
+          : data.d_outputDeck_p->d_tagPPFile + "_" + std::to_string(frame);
+  const std::string path = data.d_outputDeck_p->d_path;
+  const int mpi_size = util::parallel::mpiSize();
+  const int mpi_rank = util::parallel::mpiRank();
+  const bool parallel_pieces = mpi_size > 1;
 
-  auto writer = rw::writer::VtkParticleWriter(out_filename);
-  if (data.d_outputDeck_p->d_performFEOut)
-    writer.appendMesh(&data, data.d_outputDeck_p->d_outTags);
-  else
-    writer.appendNodes(&data, data.d_outputDeck_p->d_outTags);
+  // Per-rank piece (or single file). No solution gather for I/O.
+  std::string piece_stem = path + "output_" + tag;
+  if (parallel_pieces)
+    piece_stem += "_r" + std::to_string(mpi_rank);
 
-  writer.addTimeStep(data.d_time);
-  writer.close();
+  {
+    auto writer = rw::writer::VtkParticleWriter(piece_stem);
+    writer.appendMeshParallelPiece(&data, data.d_outputDeck_p->d_outTags);
+    writer.addTimeStep(data.d_time);
+    writer.close();
+  }
 
-  if (data.d_outputDeck_p->d_outFormat == "vtu" && data.d_outputDeck_p->d_pvdCollection) {
-    const std::filesystem::path stem(out_filename);
-    data.d_pvdParticleEntries.push_back(
-        {data.d_time, stem.filename().string() + ".vtu"});
-    rw::writePvdCollectionFile(data.d_outputDeck_p->d_path + "output.pvd",
-                               data.d_pvdParticleEntries);
+  if (data.d_outputDeck_p->d_outFormat == "vtu" &&
+      data.d_outputDeck_p->d_pvdCollection) {
+    if (parallel_pieces) {
+      // Ensure all piece files are on disk before rank 0 writes the .pvtu.
+      MPI_Barrier(util::parallel::mpiComm());
+      if (mpi_rank == 0) {
+        std::vector<std::string> pieces;
+        pieces.reserve(static_cast<size_t>(mpi_size));
+        for (int r = 0; r < mpi_size; ++r)
+          pieces.push_back("output_" + tag + "_r" + std::to_string(r) + ".vtu");
+        const std::string pvtu_name = "output_" + tag + ".pvtu";
+        rw::writePvtuCollectionFile(path + pvtu_name, pieces);
+        data.d_pvdParticleEntries.push_back({data.d_time, pvtu_name});
+        rw::writePvdCollectionFile(path + "output.pvd",
+                                   data.d_pvdParticleEntries);
+      }
+    } else {
+      data.d_pvdParticleEntries.push_back(
+          {data.d_time, "output_" + tag + ".vtu"});
+      rw::writePvdCollectionFile(path + "output.pvd",
+                                 data.d_pvdParticleEntries);
+    }
   }
 
   if (util::methods::isTagInList("Strain_Stress", data.d_outputDeck_p->d_outTags)) {
@@ -135,37 +162,31 @@ void rw::writeOutput(data::ModelData &data) {
       } // for loop over particles
     } // compute strain/stress block
 
-    out_filename = data.d_outputDeck_p->d_path + "output_strain_";
-    if (data.d_outputDeck_p->d_tagPPFile.empty())
-      out_filename = out_filename + std::to_string(data.d_n / dt_out);
-    else
-      out_filename = out_filename + data.d_outputDeck_p->d_tagPPFile + "_" + std::to_string(data.d_n / dt_out);
+    // Strain field is global; only rank 0 writes (legacy path). Prefer primary
+    // particle VTU/PVTU for parallel visualization.
+    if (mpi_rank == 0) {
+      std::string out_filename = path + "output_strain_" + tag;
+      auto writer1 = rw::writer::VtkParticleWriter(out_filename);
+      writer1.appendStrainStress(&data);
+      writer1.addTimeStep(data.d_time);
+      writer1.close();
 
-    auto writer1 = rw::writer::VtkParticleWriter(out_filename);
-    writer1.appendStrainStress(&data);
-    writer1.addTimeStep(data.d_time);
-    writer1.close();
-
-    if (data.d_outputDeck_p->d_outFormat == "vtu" && data.d_outputDeck_p->d_pvdCollection) {
-      const std::filesystem::path stem(out_filename);
-      data.d_pvdStrainEntries.push_back(
-          {data.d_time, stem.filename().string() + ".vtu"});
-      rw::writePvdCollectionFile(data.d_outputDeck_p->d_path + "output_strain.pvd",
-                                 data.d_pvdStrainEntries);
+      if (data.d_outputDeck_p->d_outFormat == "vtu" &&
+          data.d_outputDeck_p->d_pvdCollection) {
+        data.d_pvdStrainEntries.push_back(
+            {data.d_time, "output_strain_" + tag + ".vtu"});
+        rw::writePvdCollectionFile(path + "output_strain.pvd",
+                                   data.d_pvdStrainEntries);
+      }
     }
   }
 
-  // output particle locations to csv file
+  // output particle locations to csv file (rank 0)
   if (util::methods::isTagInList("Particle_Locations",
-                                 data.d_outputDeck_p->d_outTags)) {
+                                 data.d_outputDeck_p->d_outTags) &&
+      mpi_rank == 0) {
 
-    out_filename = data.d_outputDeck_p->d_path + "particle_locations_";
-    if (data.d_outputDeck_p->d_tagPPFile.empty())
-      out_filename = out_filename + std::to_string(data.d_n / dt_out) + ".csv";
-    else
-      out_filename = out_filename + data.d_outputDeck_p->d_tagPPFile
-                      + "_" + std::to_string(data.d_n / dt_out) + ".csv";
-
+    std::string out_filename = path + "particle_locations_" + tag + ".csv";
     std::ofstream oss(out_filename);
     oss << "i, x, y, z, r\n";
     for (const auto &p : data.d_particlesListTypeAll) {

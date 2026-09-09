@@ -24,3 +24,8 @@ configure_file(
   ${EXECUTABLE_OUTPUT_PATH}/run_mpi_dof_compare.sh
   COPYONLY
 )
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/run_mpi_output_art_dof.sh
+  ${EXECUTABLE_OUTPUT_PATH}/run_mpi_output_art_dof.sh
+  COPYONLY
+)

@@ -24,8 +24,13 @@
 #include <cstdint>
 #include "data/modelData.h"
 #include "particle/baseParticle.h"
+#include "particle/particleMpi.h"
+#include "util/parallelUtil.h"
 
 #include "util/vecMethods.h"
+#include <algorithm>
+#include <unordered_map>
+#include <unordered_set>
 #include <vector>
 
 rw::writer::VtkParticleWriter::VtkParticleWriter(const std::string &filename,
@@ -342,6 +347,193 @@ void rw::writer::VtkParticleWriter::appendMesh(
     }
   }
 
+  d_grid_p->SetCells(cellTypeArray, cells);
+}
+
+namespace {
+
+void appendPointArraysForNodes(vtkUnstructuredGrid *grid,
+                               const data::ModelData *model,
+                               const std::vector<size_t> &gids,
+                               const std::vector<std::string> &tags) {
+  double value[3] = {0., 0., 0.};
+  auto add_vec3 = [&](const char *name, const std::vector<util::Point> &field) {
+    auto array = vtkSmartPointer<vtkDoubleArray>::New();
+    array->SetNumberOfComponents(3);
+    array->SetName(name);
+    array->SetComponentName(0, "x");
+    array->SetComponentName(1, "y");
+    array->SetComponentName(2, "z");
+    for (size_t g : gids) {
+      const auto &ui = field[g];
+      value[0] = ui.d_x;
+      value[1] = ui.d_y;
+      value[2] = ui.d_z;
+      array->InsertNextTuple(value);
+    }
+    grid->GetPointData()->AddArray(array);
+  };
+  auto add_scalar = [&](const char *name, auto getter) {
+    auto array = vtkSmartPointer<vtkDoubleArray>::New();
+    array->SetNumberOfComponents(1);
+    array->SetName(name);
+    for (size_t g : gids) {
+      value[0] = static_cast<double>(getter(g));
+      array->InsertNextTuple(value);
+    }
+    grid->GetPointData()->AddArray(array);
+  };
+
+  if (util::methods::isTagInList("Displacement", tags))
+    add_vec3("Displacement", model->d_u);
+  if (util::methods::isTagInList("Velocity", tags))
+    add_vec3("Velocity", model->d_v);
+  if (util::methods::isTagInList("Force_Density", tags))
+    add_vec3("Force_Density", model->d_f);
+  if (util::methods::isTagInList("Force", tags)) {
+    auto array = vtkSmartPointer<vtkDoubleArray>::New();
+    array->SetNumberOfComponents(3);
+    array->SetName("Force");
+    array->SetComponentName(0, "x");
+    array->SetComponentName(1, "y");
+    array->SetComponentName(2, "z");
+    for (size_t g : gids) {
+      const auto &fi = model->d_f[g];
+      const double vol = model->d_vol[g];
+      value[0] = fi.d_x * vol;
+      value[1] = fi.d_y * vol;
+      value[2] = fi.d_z * vol;
+      array->InsertNextTuple(value);
+    }
+    grid->GetPointData()->AddArray(array);
+  }
+  if (util::methods::isTagInList("Damage_Z", tags) && !model->d_Z.empty())
+    add_scalar("Damage_Z", [&](size_t g) { return model->d_Z[g]; });
+  if (util::methods::isTagInList("Particle_ID", tags))
+    add_scalar("Particle_ID", [&](size_t g) {
+      return static_cast<double>(
+          model->getParticleFromAllList(model->d_ptId[g])->getId());
+    });
+}
+
+} // namespace
+
+void rw::writer::VtkParticleWriter::appendMeshParallelPiece(
+    const data::ModelData *model, const std::vector<std::string> &tags) {
+
+  if (model->d_x.empty())
+    return;
+
+  const int mpi_size = util::parallel::mpiSize();
+  const int mpi_rank = util::parallel::mpiRank();
+  if (mpi_size <= 1) {
+    appendMesh(model, tags);
+    return;
+  }
+
+  std::unordered_set<size_t> node_set;
+  struct LocalElem {
+    size_t type{};
+    std::vector<size_t> gids;
+  };
+  std::vector<LocalElem> elems;
+
+  if (model->d_pdDofMpi &&
+      model->d_pdNodePartition.size() == model->d_x.size()) {
+    // Cell owner = min node-owner among vertices; piece includes all nodes of
+    // those cells (may include halo nodes for connectivity).
+    for (const auto &p : model->d_particlesListTypeAll) {
+      const auto &mesh = p->getMeshP();
+      const size_t element_type = mesh->getElementType();
+      for (size_t e = 0; e < mesh->getNumElements(); ++e) {
+        auto conn = mesh->getElementConnectivity(e);
+        size_t cell_owner = model->d_pdNodePartition[conn[0] + p->d_globStart];
+        for (size_t n = 1; n < conn.size(); ++n)
+          cell_owner = std::min(
+              cell_owner,
+              model->d_pdNodePartition[conn[n] + p->d_globStart]);
+        if (static_cast<int>(cell_owner) != mpi_rank)
+          continue;
+        LocalElem le;
+        le.type = element_type;
+        le.gids.reserve(conn.size());
+        for (size_t n : conn) {
+          const size_t g = n + p->d_globStart;
+          le.gids.push_back(g);
+          node_set.insert(g);
+        }
+        elems.push_back(std::move(le));
+      }
+    }
+  } else {
+    // Particle-MPI: whole owned grains; walls only on rank 0.
+    for (const auto &p : model->d_particlesListTypeAll) {
+      if (p->isWall()) {
+        if (mpi_rank != 0)
+          continue;
+      } else if (!particle::isLocallyOwned(*p)) {
+        continue;
+      }
+      for (size_t i = 0; i < p->getNumNodes(); ++i)
+        node_set.insert(p->d_globStart + i);
+      const auto &mesh = p->getMeshP();
+      const size_t element_type = mesh->getElementType();
+      for (size_t e = 0; e < mesh->getNumElements(); ++e) {
+        auto conn = mesh->getElementConnectivity(e);
+        LocalElem le;
+        le.type = element_type;
+        for (size_t n : conn)
+          le.gids.push_back(n + p->d_globStart);
+        elems.push_back(std::move(le));
+      }
+    }
+  }
+
+  if (node_set.empty()) {
+    // Empty piece still valid for PVTU.
+    d_grid_p = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    auto points = vtkSmartPointer<vtkPoints>::New();
+    d_grid_p->SetPoints(points);
+    return;
+  }
+
+  std::vector<size_t> gids(node_set.begin(), node_set.end());
+  std::sort(gids.begin(), gids.end());
+  std::unordered_map<size_t, vtkIdType> g2l;
+  g2l.reserve(gids.size());
+  auto points = vtkSmartPointer<vtkPoints>::New();
+  for (size_t i = 0; i < gids.size(); ++i) {
+    const auto &x = model->d_x[gids[i]];
+    points->InsertNextPoint(x.d_x, x.d_y, x.d_z);
+    g2l[gids[i]] = static_cast<vtkIdType>(i);
+  }
+
+  d_grid_p = vtkSmartPointer<vtkUnstructuredGrid>::New();
+  d_grid_p->SetPoints(points);
+  appendPointArraysForNodes(d_grid_p, model, gids, tags);
+
+  if (elems.empty())
+    return;
+
+  size_t num_vertex = 0;
+  for (const auto &le : elems)
+    num_vertex = std::max(num_vertex, le.gids.size());
+
+  auto cells = vtkSmartPointer<vtkCellArray>::New();
+  cells->AllocateEstimate(static_cast<vtkIdType>(elems.size()),
+                          static_cast<vtkIdType>(num_vertex));
+  auto cellTypeArray = vtkSmartPointer<vtkUnsignedCharArray>::New();
+  cellTypeArray->SetNumberOfValues(static_cast<vtkIdType>(elems.size()));
+
+  vtkIdType ids[8];
+  for (size_t ei = 0; ei < elems.size(); ++ei) {
+    const auto &le = elems[ei];
+    for (size_t n = 0; n < le.gids.size(); ++n)
+      ids[n] = g2l.at(le.gids[n]);
+    cells->InsertNextCell(static_cast<int>(le.gids.size()), ids);
+    cellTypeArray->SetValue(static_cast<vtkIdType>(ei),
+                            static_cast<unsigned char>(le.type));
+  }
   d_grid_p->SetCells(cellTypeArray, cells);
 }
 

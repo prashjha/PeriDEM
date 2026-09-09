@@ -11,7 +11,7 @@ list(FILTER SOURCES EXCLUDE REGEX "particleOutput\\.cpp$")
 
 add_library(RW ${SOURCES})
 
-target_link_libraries(RW PUBLIC Util ${VTK_LIBRARIES})
+target_link_libraries(RW PUBLIC Util Particle ${VTK_LIBRARIES})
 
 target_include_directories(RW
   PUBLIC

@@ -34,4 +34,28 @@ void writePvdCollectionFile(
   os << "</VTKFile>\n";
 }
 
+void writePvtuCollectionFile(
+    const std::string &pvtu_path,
+    const std::vector<std::string> &piece_vtu_relative_paths) {
+
+  std::ofstream os(pvtu_path);
+  if (!os)
+    throw std::runtime_error("writePvtuCollectionFile: could not open " +
+                             pvtu_path);
+
+  os << "<?xml version=\"1.0\"?>\n";
+  os << "<VTKFile type=\"PUnstructuredGrid\" version=\"0.1\" "
+        "byte_order=\"LittleEndian\">\n";
+  os << "  <PUnstructuredGrid GhostLevel=\"0\">\n";
+  // PointData / CellData omitted: ParaView reads arrays from pieces.
+  os << "    <PPoints>\n";
+  os << "      <PDataArray type=\"Float32\" NumberOfComponents=\"3\"/>\n";
+  os << "    </PPoints>\n";
+  for (const auto &piece : piece_vtu_relative_paths) {
+    os << "    <Piece Source=\"" << piece << "\"/>\n";
+  }
+  os << "  </PUnstructuredGrid>\n";
+  os << "</VTKFile>\n";
+}
+
 } // namespace rw

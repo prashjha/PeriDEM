@@ -62,6 +62,16 @@ public:
              const std::vector<std::string> &tags);
 
   /*!
+   * @brief Write only this rank's mesh piece for parallel VTU output.
+   *
+   * Particle-MPI: owned grains (+ walls on rank 0). DOF-MPI: cells owned by
+   * lowest node-owner among the element, including any extra nodes needed for
+   * those cells. Serial / single rank: same as appendMesh.
+   */
+  void appendMeshParallelPiece(const data::ModelData *model,
+                               const std::vector<std::string> &tags);
+
+  /*!
    * @brief Prepares contact data that is set of nodes in contact and
    * line-element connecting two contacting nodes
    * @param model ModelData class object

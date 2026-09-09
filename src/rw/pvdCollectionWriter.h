@@ -27,6 +27,17 @@ void writePvdCollectionFile(
     const std::string &pvd_path,
     const std::vector<std::pair<double, std::string>> &time_and_vtu_relative_path);
 
+/*!
+ * @brief Write a ParaView parallel VTU (.pvtu) that lists per-rank .vtu pieces.
+ *
+ * Each string in @p piece_vtu_relative_paths is a path relative to the .pvtu
+ * (typically `output_N_r0.vtu`, …). Open the .pvtu (or a .pvd that points at
+ * .pvtu files) in ParaView for the full mesh across ranks.
+ */
+void writePvtuCollectionFile(
+    const std::string &pvtu_path,
+    const std::vector<std::string> &piece_vtu_relative_paths);
+
 } // namespace rw
 
 #endif
