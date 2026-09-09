@@ -14,6 +14,8 @@
 #include "data/modelData.h"
 #include "util/io.h"
 #include "particle/baseParticle.h"
+#include "particle/particleMpi.h"
+#include "nsearch/nsearch.h"
 #include "util/function.h"
 #include "util/matrix.h"
 #include "util/vecMethods.h"
@@ -22,6 +24,7 @@
 #include "inp/input.h"
 
 #include <cmath>
+#include <chrono>
 #include <format>
 #include <memory>
 #include <vector>
@@ -269,10 +272,43 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
   // update contact neighborlist
 
   // update the point cloud (make sure that data.d_x is updated along with displacement)
-  auto pt_cloud_update_time = data.d_nsearch_p->setInputCloud();
+  using steady_clock = std::chrono::steady_clock;
+  const bool mpi_prune =
+      util::parallel::isMpiEnabled() &&
+      data.d_mpiIncludeInContactCloud.size() == data.d_particlesListTypeAll.size();
+
+  // Optional pruned cloud: owned + ghost + wall nodes only (MPI particle-parallel).
+  std::vector<util::Point> local_cloud;
+  std::vector<size_t> local_to_global;
+  std::vector<size_t> local_pt_id;
+  std::unique_ptr<nsearch::NFlannSearchKd<3>> local_tree;
+
+  double pt_cloud_update_time = 0.;
+  if (mpi_prune) {
+    local_cloud.reserve(data.d_x.size() / static_cast<size_t>(std::max(
+                            1, util::parallel::mpiSize())) +
+                        1024);
+    for (auto *p : data.d_particlesListTypeAll) {
+      if (!data.d_mpiIncludeInContactCloud[p->getId()])
+        continue;
+      for (size_t i = 0; i < p->getNumNodes(); ++i) {
+        const size_t g = p->getNodeId(i);
+        local_to_global.push_back(g);
+        local_pt_id.push_back(p->getId());
+        local_cloud.push_back(data.d_x[g]);
+      }
+    }
+    local_tree = std::make_unique<nsearch::NFlannSearchKd<3>>(local_cloud, 0);
+    pt_cloud_update_time = local_tree->setInputCloud();
+  } else {
+    pt_cloud_update_time = data.d_nsearch_p->setInputCloud();
+  }
   data.setKeyData("pt_cloud_update_time", pt_cloud_update_time);
   data.appendKeyData("tree_compute_time", pt_cloud_update_time);
   data.appendKeyData("avg_tree_update_time", pt_cloud_update_time/data.d_infoN);
+  data.setKeyData("contact_cloud_node_count",
+                  static_cast<double>(mpi_prune ? local_cloud.size()
+                                                : data.d_x.size()));
 
   if (data.d_neighC.size() != data.d_x.size())
     data.d_neighC.resize(data.d_x.size());
@@ -281,8 +317,13 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
     tf::Executor executor(util::parallel::getNThreads());
     tf::Taskflow taskflow;
 
-    taskflow.for_each_index((std::size_t) 0, data.d_x.size(), (std::size_t) 1,
-                            [&data](std::size_t i) {
+    // Only query owned grain + wall nodes (d_fContCompNodes). Remote grains
+    // stay in the search cloud as neighbors but are not search origins.
+    const auto &query_nodes = data.d_fContCompNodes;
+    taskflow.for_each_index((std::size_t) 0, query_nodes.size(), (std::size_t) 1,
+                            [&data, &query_nodes, mpi_prune, &local_to_global,
+                             &local_pt_id, &local_tree](std::size_t II) {
+      const size_t i = query_nodes[II];
 
       if (data.d_contNeighSearchRadius <= 0. ||
           !std::isfinite(data.d_contNeighSearchRadius))
@@ -304,13 +345,18 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
 
         data.d_neighC[i].clear();
 
-        auto n = data.d_nsearch_p->radiusSearchExcludeTag(
-                data.d_x[i],
-                data.d_contNeighSearchRadius,
-                neighs,
-                sqr_dist,
-                data.d_ptId[i],
-                data.d_ptId);
+        size_t n = 0;
+        if (mpi_prune) {
+          n = local_tree->radiusSearchExcludeTag(
+              data.d_x[i], data.d_contNeighSearchRadius, neighs, sqr_dist,
+              data.d_ptId[i], local_pt_id);
+          for (auto &li : neighs)
+            li = local_to_global[li];
+        } else {
+          n = data.d_nsearch_p->radiusSearchExcludeTag(
+              data.d_x[i], data.d_contNeighSearchRadius, neighs, sqr_dist,
+              data.d_ptId[i], data.d_ptId);
+        }
 
         if (n > 0) {
           for (auto neigh: neighs) {
@@ -331,6 +377,8 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
   data.d_neighWallNodesCondensed.resize(data.d_particlesListTypeAll.size());
 
   for (auto &pi : data.d_particlesListTypeParticle) {
+    if (!particle::isLocallyOwned(*pi))
+      continue;
 
     data.d_neighWallNodes[pi->getId()].resize(pi->getNumNodes());
     data.d_neighWallNodesDistance[pi->getId()].resize(pi->getNumNodes());

@@ -899,6 +899,12 @@ public:
   /*! @brief Specify if we compute force */
   bool d_computeForce;
 
+  /*!
+   * @brief MPI owner rank for this grain (-1 = wall / all ranks).
+   * Used by particle-parallel (T09); ignored when not using MPI.
+   */
+  int d_mpiOwner;
+
   /*! @brief horizon */
   double d_horizon;
 

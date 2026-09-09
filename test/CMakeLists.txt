@@ -189,6 +189,21 @@ set_tests_properties(Test_PeriDEM_jha2021_comp_n50_smoke PROPERTIES
   TIMEOUT 300
 )
 
+# T09: 1-rank vs 2-rank particle owners on a short 12-grain run (metrics match).
+configure_file(
+  ${CMAKE_SOURCE_DIR}/test/test_data/peridem/jha2021_comp_n50/run_mpi_particle_compare.sh
+  ${CMAKE_BINARY_DIR}/test/test_data/peridem/jha2021_comp_n50/run_mpi_particle_compare.sh
+  COPYONLY
+)
+add_test(NAME Test_PeriDEM_jha2021_comp_n50_mpi_particle
+  COMMAND ${BASH_PROGRAM} ./run_mpi_particle_compare.sh
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_jha2021_comp_n50>
+)
+set_tests_properties(Test_PeriDEM_jha2021_comp_n50_mpi_particle PROPERTIES
+  LABELS "PeriDEM;MPI"
+  TIMEOUT 180
+)
+
 # Main PeriDEM app: on-disk input.json + meshes (built as ${CMAKE_BINARY_DIR}/bin/PeriDEM)
 add_test(NAME test_peridem_compression_large_set
   COMMAND ${CMAKE_BINARY_DIR}/bin/PeriDEM -i input.json

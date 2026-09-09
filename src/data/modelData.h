@@ -71,6 +71,8 @@ public:
         d_contNeighUpdateInterval(0),
         d_contNeighTimestepCounter(0),
         d_contNeighSearchRadius(0.),
+        d_mpiGhostPlanValid(false),
+        d_mpiGhostStepsSinceRebuild(0),
         d_uLoading_p(nullptr), d_fLoading_p(nullptr),
         d_fracture_p(nullptr), d_nsearch_p(nullptr)  {}
 
@@ -652,6 +654,25 @@ public:
 
   /*! @brief Neighborlist contact search radius (multiple of d_maxContactR). This variable will be updated during simulation based on maximum velocity */
   double d_contNeighSearchRadius;
+
+  /*!
+   * @brief Per entry in d_particlesListTypeAll: include nodes in the MPI
+   * contact search cloud (owned grains, walls, and distance-limited ghosts).
+   * Empty / all-true when not using multi-rank particle parallel.
+   */
+  std::vector<char> d_mpiIncludeInContactCloud;
+
+  /*! @brief Cached ghost grain ids requested from each MPI rank (skin rebuild). */
+  std::vector<std::vector<int>> d_mpiGhostNeedFrom;
+
+  /*! @brief Cached grain ids this rank must send to each MPI rank. */
+  std::vector<std::vector<int>> d_mpiGhostServeTo;
+
+  /*! @brief True once a ghost communication plan has been built. */
+  bool d_mpiGhostPlanValid;
+
+  /*! @brief Force steps since last ghost-plan rebuild. */
+  size_t d_mpiGhostStepsSinceRebuild;
 
   /*! @brief Pointer to reference particle */
   std::vector<std::shared_ptr<particle::RefParticle>> d_referenceParticles;

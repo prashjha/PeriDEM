@@ -68,13 +68,20 @@ public:
         "  {:22s} = {:8.2f} \n"
         "  {:22s} = {:8.2f} \n"
         "  {:22s} = {:8.2f} \n"
-        "  {:22s} = {:8.2f} \n",
+        "  {:22s} = {:8.2f} \n"
+        "  {:22s} = {:8.2f} \n"
+        "  {:22s} = {:8.2f} \n"
+        "  {:22s} = {:8.0f} \n",
         model.d_name,
         "Time integration", model.getKeyData("integrate_compute_time") * 1.e-6,
         "Peridynamics force", model.getKeyData("pd_compute_time") * 1.e-6,
         "Contact force", model.getKeyData("contact_compute_time") * 1.e-6,
         "Search tree update", model.getKeyData("tree_compute_time") * 1.e-6,
-        "External force", model.getKeyData("extf_compute_time") * 1.e-6));
+        "External force", model.getKeyData("extf_compute_time") * 1.e-6,
+        "MPI ghost exchange", model.getKeyData("mpi_exchange_time") * 1.e-6,
+        "Contact neigh update",
+        model.getKeyData("contact_neigh_update_time") * 1.e-6,
+        "MPI ghost grains", model.getKeyData("mpi_ghost_grain_count")));
   }
 
   template <typename Model>

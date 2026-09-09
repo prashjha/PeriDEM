@@ -27,6 +27,7 @@
 #include "postprocess/postprocess.h"
 #include "util/function.h"
 #include "util/io.h"
+#include "util/parallelUtil.h"
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
@@ -73,17 +74,17 @@ std::vector<PackedParticle> generateCircularGrid(int ncols, int nrows, double x_
   return particles;
 }
 
-// 4×3 = 12 grains: enough pairs to exercise multi-particle contact, small cup.
-constexpr int kNcols = 4;
-constexpr int kNrows = 3;
-constexpr int kNgrains = kNcols * kNrows;
-
+// Default 4×3 = 12 grains; override with -nCols / -nRows for scaling studies.
 json buildInputJson(const std::string &output_path_for_deck,
                     const std::filesystem::path &mesh_cir,
                     const std::filesystem::path &mesh_fixed,
                     const std::filesystem::path &mesh_moving, double final_time,
                     size_t num_steps, bool file_mesh, bool write_meshes,
-                    size_t search_interval) {
+                    size_t search_interval, int ncols, int nrows) {
+
+  if (ncols < 1 || nrows < 1)
+    throw std::runtime_error("jha2021_comp: ncols and nrows must be >= 1");
+  const int ngrains = ncols * nrows;
 
   const std::vector<double> center = {0.0, 0.0, 0.0};
   const double R = 0.001;
@@ -99,9 +100,9 @@ json buildInputJson(const std::string &output_path_for_deck,
   constexpr double wall_vy = -0.06;
 
   const double Lin = 2.0 * particle_padding + 2.0 * R +
-                     static_cast<double>(kNcols - 1) * (2.0 * R + particle_padding);
+                     static_cast<double>(ncols - 1) * (2.0 * R + particle_padding);
   const double Win = 2.0 * particle_padding + 2.0 * R +
-                     static_cast<double>(kNrows - 1) * (2.0 * R + particle_padding);
+                     static_cast<double>(nrows - 1) * (2.0 * R + particle_padding);
 
   const double wall_t = rwp - wpd;
   const std::vector<double> mw_rect = {center[0] - wpd, Win, center[2],
@@ -119,8 +120,8 @@ json buildInputJson(const std::string &output_path_for_deck,
   pGeomVec[2].d_geomParams = mw_rect;
 
   std::vector<PackedParticle> packed =
-      generateCircularGrid(kNcols, kNrows, 0.0, 0.0, R, particle_padding);
-  if (static_cast<int>(packed.size()) != kNgrains)
+      generateCircularGrid(ncols, nrows, 0.0, 0.0, R, particle_padding);
+  if (static_cast<int>(packed.size()) != ngrains)
     throw std::runtime_error("jha2021_comp: grid count mismatch");
 
   const double poisson = 0.25;
@@ -135,9 +136,9 @@ json buildInputJson(const std::string &output_path_for_deck,
   const double c_wave = std::sqrt(E / rho);
   const double dt_cfl = h_est / c_wave;
   util::io::print(std::format(
-      "jha2021_comp: N={}, gap={:.6e} (1.15 Rc_est), wpd={:.6e}, "
+      "jha2021_comp: N={} ({}x{}), gap={:.6e} (1.15 Rc_est), wpd={:.6e}, "
       "dt={:.6e} s, h/c={:.6e} s, dt/(h/c)={:.3f}\n",
-      kNgrains, particle_padding, wpd, dt, dt_cfl, dt / dt_cfl));
+      ngrains, ncols, nrows, particle_padding, wpd, dt, dt_cfl, dt / dt_cfl));
 
   const size_t num_outputs = 4;
   const size_t dt_out_n = std::max<size_t>(1, num_steps / num_outputs);
@@ -376,6 +377,12 @@ int main(int argc, char *argv[]) {
   size_t search_interval = 40;
   if (input.cmdOptionExists("-searchInterval"))
     search_interval = std::stoul(input.getCmdOption("-searchInterval"));
+  int ncols = 4;
+  int nrows = 3;
+  if (input.cmdOptionExists("-nCols"))
+    ncols = std::stoi(input.getCmdOption("-nCols"));
+  if (input.cmdOptionExists("-nRows"))
+    nrows = std::stoi(input.getCmdOption("-nRows"));
 
   namespace fs = std::filesystem;
   const fs::path cwd = fs::current_path();
@@ -419,7 +426,7 @@ int main(int argc, char *argv[]) {
   const std::string output_path_for_deck = directoryPathWithTrailingSep(out_dir);
   auto inputJson = buildInputJson(output_path_for_deck, mesh_cir, mesh_fixed, mesh_moving,
                                   final_time, num_steps, file_mesh, write_meshes,
-                                  search_interval);
+                                  search_interval, ncols, nrows);
 
   {
     std::ofstream os(inp_dir / "input.json");
@@ -431,7 +438,7 @@ int main(int argc, char *argv[]) {
     const double mesh_size = R / 5.0;
     const double pad = 1.15 * 0.95 * 0.7 * mesh_size;
     writeLocations(inp_dir / "particle_locations.csv",
-                   generateCircularGrid(kNcols, kNrows, 0.0, 0.0, R, pad));
+                   generateCircularGrid(ncols, nrows, 0.0, 0.0, R, pad));
   }
 
   auto deck = std::make_shared<inp::Input>(inputJson);
@@ -454,10 +461,12 @@ int main(int argc, char *argv[]) {
         probe_p->maxPairs() > 0 && probe_p->minGap() < probe_p->gap0() - 1.0e-8;
     if (!grains_touched) {
       util::io::print("requireContact: no grain–grain pair entered the contact radius.\n");
+      util::parallel::finalizeMpi();
       return EXIT_FAILURE;
     }
     if (!(probe_p->gap0() > probe_p->Rc())) {
       util::io::print("requireContact: grains already in Rc at t=0; packing is too tight.\n");
+      util::parallel::finalizeMpi();
       return EXIT_FAILURE;
     }
   }
@@ -469,9 +478,30 @@ int main(int argc, char *argv[]) {
                                 csv.string()));
     if (fmax <= 0.) {
       util::io::print("assertForce: plate reaction is zero.\n");
+      util::parallel::finalizeMpi();
       return EXIT_FAILURE;
     }
   }
 
+  // Metric for serial vs MPI particle-parallel checks (rank 0).
+  {
+    double max_u = 0.;
+    for (const auto &u : dem.d_u)
+      max_u = std::max(max_u, u.length());
+    double com0x = 0., com0y = 0.;
+    if (!dem.d_particlesListTypeParticle.empty()) {
+      const auto c = dem.d_particlesListTypeParticle[0]->getXCenter();
+      com0x = c.d_x;
+      com0y = c.d_y;
+    }
+    if (util::parallel::mpiRank() == 0) {
+      std::ofstream os(out_dir / "mpi_metric.txt");
+      os << std::format("{:.12e} {:.12e} {:.12e}\n", max_u, com0x, com0y);
+      util::io::print(std::format("mpi_metric: max|u|={:.12e} grain0_com=({:.12e},{:.12e})\n",
+                                  max_u, com0x, com0y));
+    }
+  }
+
+  util::parallel::finalizeMpi();
   return EXIT_SUCCESS;
 }

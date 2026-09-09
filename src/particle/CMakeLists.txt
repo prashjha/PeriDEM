@@ -11,7 +11,7 @@ list(FILTER SOURCES EXCLUDE REGEX "createParticles\\.cpp$")
 
 add_library(Particle ${SOURCES})
 
-target_link_libraries(Particle PUBLIC Mesh Material Fracture)
+target_link_libraries(Particle PUBLIC Mesh Material Fracture Util)
 
 target_include_directories(Particle
   PUBLIC

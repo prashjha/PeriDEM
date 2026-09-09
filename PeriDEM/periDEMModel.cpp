@@ -40,6 +40,7 @@
 #include "loading/particleIC.h"
 #include "util/io.h"
 #include "particle/createParticles.h"
+#include "particle/particleMpi.h"
 
 #include <cmath>
 #include <cstdio>
@@ -161,6 +162,7 @@ void PeriDEMModel::init() {
   // create particles
   log(d_name + ": Creating particles.\n");
   particle::createParticles(*this);
+  particle::assignMpiOwners(*this);
 
   log(d_name + ": Creating maximum velocity data for particles.\n");
   d_maxVelocityParticlesListTypeAll
@@ -252,7 +254,7 @@ void PeriDEMModel::init() {
   for (size_t i = 0; i < d_x.size(); i++) {
     const auto &ptId = d_ptId[i];
     const auto &pi = getParticleFromAllList(ptId);
-    if (pi->d_computeForce) {
+    if (pi->d_computeForce && particle::isLocallyOwned(*pi)) {
       d_fContCompNodes.push_back(i);
       // Walls keep contact (and reaction) but not peridynamic force. Treating a
       // container as a PD body on a thin/boolean mesh makes Damage_Z explode
@@ -300,6 +302,14 @@ void PeriDEMModel::computeForces() {
   bool dbg_condition = d_n % d_infoN == 0;
 
   log("  Compute forces \n", 2, dbg_condition, 3);
+
+  // Refresh ghost grain kinematics from owners before contact / damping.
+  {
+    const auto t_ex0 = steady_clock::now();
+    particle::exchangeGhostKinematics(*this);
+    appendKeyData("mpi_exchange_wall_time",
+                  util::methods::timeDiff(t_ex0, steady_clock::now()));
+  }
 
   // reset force
   auto t1 = steady_clock::now();

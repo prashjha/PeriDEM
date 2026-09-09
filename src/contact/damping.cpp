@@ -13,6 +13,7 @@
 #include "data/modelData.h"
 #include "util/io.h"
 #include "particle/baseParticle.h"
+#include "particle/particleMpi.h"
 #include "util/function.h"
 #include "util/vecMethods.h"
 #include "util/point.h"
@@ -26,6 +27,8 @@ void contact::Damping::apply(data::ModelData &data) {
   for (auto &pi : data.d_particlesListTypeParticle) {
 
     if (!pi->d_computeForce)
+      continue;
+    if (!particle::isLocallyOwned(*pi))
       continue;
 
     auto pi_id = pi->getId();

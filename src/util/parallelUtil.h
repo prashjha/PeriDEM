@@ -55,6 +55,9 @@ namespace util {
          */
         void initMpi(int argc = 0, char *argv[] = nullptr);
 
+        /*! @brief Call MPI_Finalize if this process initialized MPI. */
+        void finalizeMpi();
+
         /*! @brief Initializes MpiStatus struct */
         void initMpiStatus();
 

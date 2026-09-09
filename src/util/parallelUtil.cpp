@@ -30,6 +30,17 @@ void util::parallel::initMpi(int argc, char *argv[]) {
   initMpiStatus();
 }
 
+void util::parallel::finalizeMpi() {
+  int initialized = 0;
+  MPI_Initialized(&initialized);
+  if (!initialized)
+    return;
+  int finalized = 0;
+  MPI_Finalized(&finalized);
+  if (!finalized)
+    MPI_Finalize();
+}
+
 util::parallel::MpiStatus::MpiStatus()  {
   d_comm = MPI_COMM_WORLD;
   MPI_Comm_size(d_comm, &d_mpiSize);
