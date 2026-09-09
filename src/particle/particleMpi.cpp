@@ -321,11 +321,13 @@ void particle::assignMpiOwners(data::ModelData &data) {
       p->d_mpiOwner = -1;
   }
 
-  // Particle ownership only for the particle strategy (or auto→particle).
-  // none/dof: every grain owned by rank 0 so particle-MPI is inactive; DOF
-  // mode uses nodal owners for force/integration instead.
+  // Particle ownership for particle strategy, and for Multi_Particle DOF
+  // (cross-grain Metis splits contact kinematics; keep each grain on one rank).
   const bool use_particle_partition =
-      strategy == "particle" && size > 1 && !grains.empty();
+      (strategy == "particle" ||
+       (strategy == "dof" && data.d_input_p &&
+        data.d_input_p->isMultiParticle())) &&
+      size > 1 && !grains.empty();
 
   if (!use_particle_partition) {
     for (auto *p : grains)

@@ -36,7 +36,8 @@ void writePvdCollectionFile(
 
 void writePvtuCollectionFile(
     const std::string &pvtu_path,
-    const std::vector<std::string> &piece_vtu_relative_paths) {
+    const std::vector<std::string> &piece_vtu_relative_paths,
+    const std::vector<PvtuPointArray> &point_arrays) {
 
   std::ofstream os(pvtu_path);
   if (!os)
@@ -47,10 +48,20 @@ void writePvtuCollectionFile(
   os << "<VTKFile type=\"PUnstructuredGrid\" version=\"0.1\" "
         "byte_order=\"LittleEndian\">\n";
   os << "  <PUnstructuredGrid GhostLevel=\"0\">\n";
-  // PointData / CellData omitted: ParaView reads arrays from pieces.
   os << "    <PPoints>\n";
   os << "      <PDataArray type=\"Float32\" NumberOfComponents=\"3\"/>\n";
   os << "    </PPoints>\n";
+  if (!point_arrays.empty()) {
+    os << "    <PPointData>\n";
+    for (const auto &a : point_arrays) {
+      os << "      <PDataArray type=\"" << a.type << "\" Name=\"" << a.name
+         << "\"";
+      if (a.number_of_components > 1)
+        os << " NumberOfComponents=\"" << a.number_of_components << "\"";
+      os << "/>\n";
+    }
+    os << "    </PPointData>\n";
+  }
   for (const auto &piece : piece_vtu_relative_paths) {
     os << "    <Piece Source=\"" << piece << "\"/>\n";
   }

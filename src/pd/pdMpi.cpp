@@ -11,7 +11,9 @@
 #include "pdMpi.h"
 
 #include "data/modelData.h"
+#include "inp/input.h"
 #include "mesh/meshPartitioning.h"
+#include "particle/baseParticle.h"
 #include "particle/particleMpi.h"
 #include "util/io.h"
 #include "util/parallelUtil.h"
@@ -104,6 +106,25 @@ void buildGhostPlan(data::ModelData &data) {
   for (const auto &v : data.d_pdGhostNeedFrom)
     n_ghost += v.size();
   data.setKeyData("pd_mpi_ghost_nodes", static_cast<double>(n_ghost));
+}
+
+/*! Gather owned nodal Point fields to every rank (unique Metis owners).
+ * Needed for Multi_Particle DOF where contact reaches outside the PD halo. */
+void syncAllOwnedPoints(data::ModelData &data, std::vector<util::Point> &field) {
+  const int rank = util::parallel::mpiRank();
+  const size_t n = field.size();
+  std::vector<double> buf(3 * n, 0.);
+  for (size_t i = 0; i < n; ++i) {
+    if (static_cast<int>(data.d_pdNodePartition[i]) != rank)
+      continue;
+    buf[3 * i + 0] = field[i].d_x;
+    buf[3 * i + 1] = field[i].d_y;
+    buf[3 * i + 2] = field[i].d_z;
+  }
+  MPI_Allreduce(MPI_IN_PLACE, buf.data(), static_cast<int>(3 * n), MPI_DOUBLE,
+                MPI_SUM, util::parallel::mpiComm());
+  for (size_t i = 0; i < n; ++i)
+    field[i] = util::Point(buf[3 * i], buf[3 * i + 1], buf[3 * i + 2]);
 }
 
 void exchangePoints(data::ModelData &data, std::vector<util::Point> &field) {
@@ -220,6 +241,16 @@ void pd::setupDofPartition(data::ModelData &data) {
   const std::string strategy = particle::resolvedMpiStrategy(data);
   if (strategy != "dof")
     return;
+  // Multi_Particle + contact: nodal Metis across grains breaks contact. Grain
+  // ownership (particle-MPI) is the supported parallel mode; treat dof as
+  // grain-aligned particle-MPI for this sim type.
+  if (data.d_input_p && data.d_input_p->isMultiParticle()) {
+    if (util::parallel::mpiRank() == 0)
+      util::io::print(
+          "PD DOF-MPI: Multi_Particle uses grain-aligned particle-MPI "
+          "(nodal Metis disabled with contact)\n");
+    return;
+  }
   const int size = util::parallel::mpiSize();
   if (size <= 1)
     return;
@@ -257,13 +288,22 @@ void pd::exchangeGhostDisplacement(data::ModelData &data) {
     return;
   using clock = std::chrono::steady_clock;
   const auto t0 = clock::now();
-  exchangePoints(data, data.d_u);
-  exchangePoints(data, data.d_v);
-  // Keep current configuration consistent for any x-based reads.
-  for (int r = 0; r < util::parallel::mpiSize(); ++r) {
-    for (int id : data.d_pdGhostNeedFrom[static_cast<size_t>(r)]) {
-      const size_t i = static_cast<size_t>(id);
+
+  // Contact couples nodes outside the PD Metis halo. For Multi_Particle,
+  // sync full owned u/v so every rank sees consistent kinematics for contact.
+  if (data.d_input_p && data.d_input_p->isMultiParticle()) {
+    syncAllOwnedPoints(data, data.d_u);
+    syncAllOwnedPoints(data, data.d_v);
+    for (size_t i = 0; i < data.d_x.size(); ++i)
       data.d_x[i] = data.d_xRef[i] + data.d_u[i];
+  } else {
+    exchangePoints(data, data.d_u);
+    exchangePoints(data, data.d_v);
+    for (int r = 0; r < util::parallel::mpiSize(); ++r) {
+      for (int id : data.d_pdGhostNeedFrom[static_cast<size_t>(r)]) {
+        const size_t i = static_cast<size_t>(id);
+        data.d_x[i] = data.d_xRef[i] + data.d_u[i];
+      }
     }
   }
   data.appendKeyData("pd_mpi_disp_exchange_time",
@@ -277,7 +317,22 @@ void pd::exchangeGhostTheta(data::ModelData &data) {
     return;
   using clock = std::chrono::steady_clock;
   const auto t0 = clock::now();
-  exchangeDoubles(data, data.d_thetaX);
+  if (data.d_input_p && data.d_input_p->isMultiParticle()) {
+    // Same rationale as displacement: contact/PD neighbors may lie outside
+    // the Metis PD halo on Multi_Particle runs.
+    const int rank = util::parallel::mpiRank();
+    const size_t n = data.d_thetaX.size();
+    std::vector<double> buf(n, 0.);
+    for (size_t i = 0; i < n; ++i) {
+      if (static_cast<int>(data.d_pdNodePartition[i]) == rank)
+        buf[i] = data.d_thetaX[i];
+    }
+    MPI_Allreduce(MPI_IN_PLACE, buf.data(), static_cast<int>(n), MPI_DOUBLE,
+                  MPI_SUM, util::parallel::mpiComm());
+    data.d_thetaX.swap(buf);
+  } else {
+    exchangeDoubles(data, data.d_thetaX);
+  }
   data.appendKeyData("pd_mpi_theta_exchange_time",
                      util::methods::timeDiff(t0, clock::now()));
 }

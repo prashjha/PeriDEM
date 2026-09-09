@@ -432,7 +432,11 @@ void contact::Contact::computeForces(data::ModelData &data) {
 
   auto *pair = d_pairForce.get();
 
-  tf::Executor executor(util::parallel::getNThreads());
+  // Wall force deposits from many grain nodes touch the same wall dof.
+  // Keep this loop single-threaded under MPI to avoid races on d_f[wall].
+  const unsigned n_workers =
+      (util::parallel::isMpiEnabled() ? 1u : util::parallel::getNThreads());
+  tf::Executor executor(n_workers);
   tf::Taskflow taskflow;
 
   taskflow.for_each_index((std::size_t) 0,
@@ -447,11 +451,11 @@ void contact::Contact::computeForces(data::ModelData &data) {
                               const auto &ptIdi = data.getPtId(i);
                               auto &pi = data.getParticleFromAllList(ptIdi);
 
-                              // Particle-MPI: do not search from walls — grain
-                              // owners deposit Newton-III forces onto walls.
-                              // Avoids double-counting with wall-origin search.
-                              if (pi->isWall() && util::parallel::isMpiEnabled() &&
-                                  !data.d_pdDofMpi)
+                              // Under MPI, do not search from walls — grain
+                              // nodes deposit Newton-III / volume-scaled forces
+                              // onto walls (avoids incomplete wall clouds and
+                              // double-counting).
+                              if (pi->isWall() && util::parallel::isMpiEnabled())
                                 return;
 
                               const auto &yi = data.d_x[i];
@@ -486,12 +490,10 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                        pi->isWall(), pj->isWall()};
                                 const util::Point fij = pair->force(p);
                                 force_i += fij;
-                                // Particle-MPI: deposit wall reaction as if the
-                                // wall had searched this grain (PairForce uses
-                                // neighbor volume, so scale by voli/volj).
-                                if (!pi->isWall() && pj->isWall() &&
-                                    util::parallel::isMpiEnabled() &&
-                                    !data.d_pdDofMpi) {
+                                // Deposit wall reaction as if the wall had
+                                // searched this grain (PairForce uses neighbor
+                                // volume → scale by voli/volj).
+                                if (!pi->isWall() && pj->isWall()) {
                                   const double volj = data.d_vol[j_id];
                                   const double scale =
                                       (volj > 0.) ? (data.d_vol[i] / volj) : 0.;

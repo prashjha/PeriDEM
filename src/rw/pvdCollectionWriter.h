@@ -17,6 +17,13 @@
 
 namespace rw {
 
+/*! Metadata for one point-centered array in a .pvtu header (PPointData). */
+struct PvtuPointArray {
+  std::string name;
+  std::string type = "Float64"; //!< VTK XML type, e.g. Float64
+  int number_of_components = 1;
+};
+
 /*!
  * @brief Write a ParaView VTK collection (.pvd) that lists VTU files with timesteps.
  *
@@ -31,12 +38,13 @@ void writePvdCollectionFile(
  * @brief Write a ParaView parallel VTU (.pvtu) that lists per-rank .vtu pieces.
  *
  * Each string in @p piece_vtu_relative_paths is a path relative to the .pvtu
- * (typically `output_N_r0.vtu`, …). Open the .pvtu (or a .pvd that points at
- * .pvtu files) in ParaView for the full mesh across ranks.
+ * (typically `output_N_r0.vtu`, …). @p point_arrays must list every PointData
+ * array present in the pieces; ParaView will not expose fields omitted here.
  */
 void writePvtuCollectionFile(
     const std::string &pvtu_path,
-    const std::vector<std::string> &piece_vtu_relative_paths);
+    const std::vector<std::string> &piece_vtu_relative_paths,
+    const std::vector<PvtuPointArray> &point_arrays = {});
 
 } // namespace rw
 

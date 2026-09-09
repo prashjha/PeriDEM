@@ -113,8 +113,27 @@ void rw::writeOutput(data::ModelData &data) {
         pieces.reserve(static_cast<size_t>(mpi_size));
         for (int r = 0; r < mpi_size; ++r)
           pieces.push_back("output_" + tag + "_r" + std::to_string(r) + ".vtu");
+        // Must match appendPointArraysForNodes: ParaView only lists arrays
+        // declared in PPointData of the .pvtu (not discovered from pieces).
+        const auto &tags = data.d_outputDeck_p->d_outTags;
+        std::vector<rw::PvtuPointArray> point_arrays;
+        auto add_arr = [&](const char *name, int ncomp) {
+          point_arrays.push_back({name, "Float64", ncomp});
+        };
+        if (util::methods::isTagInList("Displacement", tags))
+          add_arr("Displacement", 3);
+        if (util::methods::isTagInList("Velocity", tags))
+          add_arr("Velocity", 3);
+        if (util::methods::isTagInList("Force_Density", tags))
+          add_arr("Force_Density", 3);
+        if (util::methods::isTagInList("Force", tags))
+          add_arr("Force", 3);
+        if (util::methods::isTagInList("Damage_Z", tags) && !data.d_Z.empty())
+          add_arr("Damage_Z", 1);
+        if (util::methods::isTagInList("Particle_ID", tags))
+          add_arr("Particle_ID", 1);
         const std::string pvtu_name = "output_" + tag + ".pvtu";
-        rw::writePvtuCollectionFile(path + pvtu_name, pieces);
+        rw::writePvtuCollectionFile(path + pvtu_name, pieces, point_arrays);
         data.d_pvdParticleEntries.push_back({data.d_time, pvtu_name});
         rw::writePvdCollectionFile(path + "output.pvd",
                                    data.d_pvdParticleEntries);
