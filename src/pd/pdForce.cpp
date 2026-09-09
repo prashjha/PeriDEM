@@ -9,6 +9,7 @@
  */
 
 #include "pdForce.h"
+#include "pdMpi.h"
 
 #include "data/modelData.h"
 #include "util/io.h"
@@ -102,6 +103,9 @@ void pd::computeForces(data::ModelData &data) {
     ); // for_each
 
     executor.run(taskflow).get();
+
+    // Ghost nodes need owner dilatations before the force pass.
+    pd::exchangeGhostTheta(data);
   }
 
   // compute the internal forces

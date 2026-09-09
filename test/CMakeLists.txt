@@ -235,7 +235,17 @@ if(${Enable_Apps})
   )
 
   add_test(NAME test_apps_peridynamics
-    COMMAND ${Apps_Path}/peridynamics/Peridynamics -i ./example/input_0.yaml -nThreads 2
+    COMMAND ${Apps_Path}/peridynamics/Peridynamics -i ./example/input_0.json -nThreads 2
     WORKING_DIRECTORY ${Apps_Path}/peridynamics
+  )
+
+  # T10: serial vs 2-rank nodal DOF-MPI on Single_Particle PD (input_0, short).
+  add_test(NAME test_apps_peridynamics_dof_mpi
+    COMMAND ${BASH_PROGRAM} ./run_mpi_dof_compare.sh
+    WORKING_DIRECTORY ${Apps_Path}/peridynamics
+  )
+  set_tests_properties(test_apps_peridynamics_dof_mpi PROPERTIES
+    LABELS "PeriDEM;MPI;Apps"
+    TIMEOUT 180
   )
 endif()

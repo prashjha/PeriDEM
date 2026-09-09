@@ -41,6 +41,7 @@
 #include "util/io.h"
 #include "particle/createParticles.h"
 #include "particle/particleMpi.h"
+#include "pd/pdMpi.h"
 
 #include <cmath>
 #include <cstdio>
@@ -246,15 +247,22 @@ void PeriDEMModel::init() {
     if (!p->d_computeForce)
       log(std::format("{}: Force OFF in Particle i = {}. \n", d_name, p->getId()));
 
+  // Single-particle DOF-MPI: Metis node owners + PD ghost plan (T10).
+  pd::setupDofPartition(*this);
+
   log(d_name + ": Creating list of nodes on which force is to be computed.\n");
   // TODO for now we simply look at particle/wall and check if we compute
   //  force on any of its node. Later, one can have control on individual
   //  nodes of particle/wall and remove from d_fCompNodes if no force is to
   //  be computed on them
+  const int mpi_rank = util::parallel::mpiRank();
   for (size_t i = 0; i < d_x.size(); i++) {
     const auto &ptId = d_ptId[i];
     const auto &pi = getParticleFromAllList(ptId);
-    if (pi->d_computeForce && particle::isLocallyOwned(*pi)) {
+    const bool node_owned =
+        d_pdDofMpi ? (static_cast<int>(d_pdNodePartition[i]) == mpi_rank)
+                   : particle::isLocallyOwned(*pi);
+    if (pi->d_computeForce && node_owned) {
       d_fContCompNodes.push_back(i);
       // Walls keep contact (and reaction) but not peridynamic force. Treating a
       // container as a PD body on a thin/boolean mesh makes Damage_Z explode
@@ -310,6 +318,9 @@ void PeriDEMModel::computeForces() {
     appendKeyData("mpi_exchange_wall_time",
                   util::methods::timeDiff(t_ex0, steady_clock::now()));
   }
+
+  // Nodal DOF halo for PD neighbor reads (Single_Particle MPI).
+  pd::exchangeGhostDisplacement(*this);
 
   // reset force
   auto t1 = steady_clock::now();

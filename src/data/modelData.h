@@ -73,6 +73,7 @@ public:
         d_contNeighSearchRadius(0.),
         d_mpiGhostPlanValid(false),
         d_mpiGhostStepsSinceRebuild(0),
+        d_pdDofMpi(false),
         d_uLoading_p(nullptr), d_fLoading_p(nullptr),
         d_fracture_p(nullptr), d_nsearch_p(nullptr)  {}
 
@@ -673,6 +674,18 @@ public:
 
   /*! @brief Force steps since last ghost-plan rebuild. */
   size_t d_mpiGhostStepsSinceRebuild;
+
+  /*! @brief Nodal DOF-MPI active (Single_Particle + mpiSize > 1). */
+  bool d_pdDofMpi;
+
+  /*! @brief Owner rank for each node when d_pdDofMpi is true. */
+  std::vector<size_t> d_pdNodePartition;
+
+  /*! @brief Ghost node ids requested from each rank (PD DOF halo). */
+  std::vector<std::vector<int>> d_pdGhostNeedFrom;
+
+  /*! @brief Local node ids this rank must send to each rank. */
+  std::vector<std::vector<int>> d_pdGhostServeTo;
 
   /*! @brief Pointer to reference particle */
   std::vector<std::shared_ptr<particle::RefParticle>> d_referenceParticles;

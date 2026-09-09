@@ -10,7 +10,7 @@ AUX_SOURCE_DIRECTORY(./ SOURCES)
 
 add_library(Pd OBJECT ${SOURCES})
 
-target_link_libraries(Pd PUBLIC Util Particle Material Fracture Threads::Threads Data)
+target_link_libraries(Pd PUBLIC Util Particle Material Fracture Mesh Threads::Threads Data)
 
 target_include_directories(Pd
   PUBLIC

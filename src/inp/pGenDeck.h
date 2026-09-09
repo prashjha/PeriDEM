@@ -46,8 +46,8 @@ namespace inp {
      * @brief Constructor
      */
     PGenDeck(const json &j = json({}))
-      : d_genMethod("From_File"),
-        d_pGenJson({}) {
+      : d_genMethod("Use_Particle_Geometry"),
+        d_pGenJson({}), d_genWithRandomRotation(true) {
       readFromJson(j);
     };
 

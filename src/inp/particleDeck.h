@@ -139,7 +139,7 @@ struct ParticleDeck {
     } else if (d_particleSimType == "Single_Particle") {
       d_pGeomVec.resize(1);
       auto js = j.find("Set_1") == j.end()? j : j.at("Set_1");
-      if (js.find("Type") != j.end()) {
+      if (js.find("Type") != js.end()) {
         geom::readGeometry(js, d_pGeomVec[0]);
         geom::createGeomObject(d_pGeomVec[0]);
       }

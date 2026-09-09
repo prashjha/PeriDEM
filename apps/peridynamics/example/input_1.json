@@ -1,0 +1,139 @@
+{
+  "Model": {
+    "Dimension": 2,
+    "Discretization_Type": {
+      "Spatial": "finite_difference",
+      "Time": "central_difference"
+    },
+    "Final_Time": 0.01,
+    "Time_Steps": 20000,
+    "Particle_Sim_Type": "Single_Particle"
+  },
+  "Zone": {
+    "Zones": 1
+  },
+  "Particle": {
+    "Sets": 1,
+    "Set_1": {
+      "Type": "rectangle",
+      "Parameters": [
+        0,
+        0,
+        0,
+        0.01,
+        0.01,
+        0
+      ]
+    }
+  },
+  "Mesh": {
+    "Sets": 1,
+    "Set_1": {
+      "CreateMesh": {
+        "Flag": true,
+        "Info": "uniform"
+      },
+      "Mesh_Size": 0.0001
+    }
+  },
+  "Material": {
+    "Sets": 1,
+    "Set_1": {
+      "Type": "PDState",
+      "Horizon": 0.00032,
+      "Density": 1200.0,
+      "Compute_From_Classical": true,
+      "K": 216000.0,
+      "G": 129600.0,
+      "Gc": 500.0,
+      "Influence_Function": {
+        "Type": 1
+      }
+    }
+  },
+  "Displacement_BC": {
+    "Sets": 2,
+    "Set_1": {
+      "Region": {
+        "Geometry": {
+          "Type": "rectangle",
+          "Parameters": [
+            0,
+            0,
+            0,
+            0.002,
+            0.002,
+            0
+          ]
+        }
+      },
+      "Direction": [
+        1,
+        2
+      ],
+      "Time_Function": {
+        "Type": "constant",
+        "Parameters": [
+          0.0
+        ]
+      },
+      "Spatial_Function": {
+        "Type": "constant"
+      },
+      "Zero_Displacement": true
+    },
+    "Set_2": {
+      "Region": {
+        "Geometry": {
+          "Type": "rectangle",
+          "Parameters": [
+            0.008,
+            0.008,
+            0.01,
+            0.01,
+            0
+          ]
+        }
+      },
+      "Direction": [
+        1,
+        2
+      ],
+      "Time_Function": {
+        "Type": "linear",
+        "Parameters": [
+          0.01
+        ]
+      },
+      "Spatial_Function": {
+        "Type": "constant"
+      }
+    }
+  },
+  "Output": {
+    "Path": "./example/",
+    "Tags": [
+      "Displacement",
+      "Velocity",
+      "Force",
+      "Force_Density",
+      "Damage_Z",
+      "Damage",
+      "Nodal_Volume",
+      "Zone_ID",
+      "Particle_ID",
+      "Fixity",
+      "Force_Fixity",
+      "Theta"
+    ],
+    "Output_Interval": 2000,
+    "Compress_Type": "zlib",
+    "Perform_FE_Out": true,
+    "Perform_Out": true,
+    "Debug": 3,
+    "Tag_PP": "1"
+  },
+  "Test": {
+    "Test_Name": "test_peridynamics"
+  }
+}

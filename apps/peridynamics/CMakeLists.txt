@@ -18,3 +18,9 @@ endif()
 
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/example/
         DESTINATION ${EXECUTABLE_OUTPUT_PATH}/example/)
+
+configure_file(
+  ${CMAKE_CURRENT_SOURCE_DIR}/run_mpi_dof_compare.sh
+  ${EXECUTABLE_OUTPUT_PATH}/run_mpi_dof_compare.sh
+  COPYONLY
+)
