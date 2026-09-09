@@ -384,9 +384,17 @@ void particle::exchangeGhostKinematics(data::ModelData &data) {
   const auto t0 = clock::now();
 
   const size_t interval = ghostRebuildInterval(data);
-  const bool need_rebuild =
-      !data.d_mpiGhostPlanValid ||
-      data.d_mpiGhostStepsSinceRebuild >= interval;
+  int local_need =
+      (!data.d_mpiGhostPlanValid ||
+       data.d_mpiGhostStepsSinceRebuild >= interval)
+          ? 1
+          : 0;
+  // All ranks must take the same branch: rebuild uses Allgather, exchange uses
+  // Alltoall — disagreeing on rebuild deadlocks (seen past ~50% with contact).
+  int global_need = local_need;
+  MPI_Allreduce(MPI_IN_PLACE, &global_need, 1, MPI_INT, MPI_MAX,
+                util::parallel::mpiComm());
+  const bool need_rebuild = global_need != 0;
 
   auto t_rebuild0 = t0;
   auto t_rebuild1 = t0;
