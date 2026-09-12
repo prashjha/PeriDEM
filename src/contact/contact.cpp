@@ -10,6 +10,7 @@
 
 #include "contact.h"
 #include "damping.h"
+#include "policy.h"
 
 #include "data/modelData.h"
 #include "util/io.h"
@@ -64,8 +65,18 @@ void contact::Contact::setup(data::ModelData &data) {
 
   auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
 
-  // Paper κ_eff and the original DEMModel setup: pair bulk modulus from the
-  // two contact groups' materials. JSON Contact.K is optional (usually absent).
+  // Select pair / damping implementations from deck (defaults = current laws).
+  setPairForce(makePairForce(contactDeck.d_pairLaw));
+  setDamping(makeDamping(contactDeck.d_dampingLaw));
+  util::io::log(1, std::format(
+      "  Pair_Law = {}, Damping_Law = {}, Friction_Law = {}\n"
+      "  Bond_Break = {}, Self_Contact = {}, Wall_Contact = {}\n",
+      contactDeck.d_pairLaw, contactDeck.d_dampingLaw, contactDeck.d_frictionLaw,
+      data.d_modelDeck_p->d_bondBreak, data.d_modelDeck_p->d_selfContact,
+      data.d_modelDeck_p->d_wallContact));
+
+  // Pair bulk modulus from the two contact groups' materials.
+  // JSON Contact.K is optional (usually absent).
   std::vector<double> bulk(contactDeck.d_data.size(), -1.);
   for (const auto *p : data.d_particlesListTypeAll) {
     if (p->getMaterial() == nullptr)

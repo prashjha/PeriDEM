@@ -30,10 +30,21 @@ struct ContactDeck {
    */
   std::vector<std::vector<ContactPairDeck>> d_data;
 
+  /*! @brief Pair normal-force law name (default `volume_j`). */
+  std::string d_pairLaw;
+
+  /*! @brief Contact damping law name (default `com_and_node`). */
+  std::string d_dampingLaw;
+
+  /*! @brief Friction law name (default `coulomb_simple`). */
+  std::string d_frictionLaw;
+
   /*!
    * @brief Constructor
    */
-  ContactDeck(const json &j = json({})) {
+  ContactDeck(const json &j = json({}))
+      : d_pairLaw("volume_j"), d_dampingLaw("com_and_node"),
+        d_frictionLaw("coulomb_simple") {
     readFromJson(j);
   };
 
@@ -64,7 +75,10 @@ struct ContactDeck {
     if (nSets == 0)
       return json({});
 
-    auto j = json({{"Sets", nSets}});
+    auto j = json({{"Sets", nSets},
+                   {"Pair_Law", "volume_j"},
+                   {"Damping_Law", "com_and_node"},
+                   {"Friction_Law", "coulomb_simple"}});
 
     for (size_t i = 0; i < nSets; i++) {
       for (size_t k=i; k<nSets; k++) {
@@ -82,6 +96,23 @@ struct ContactDeck {
   void readFromJson(const json &j) {
     if (j.empty())
       return;
+
+    d_pairLaw = j.value("Pair_Law", "volume_j");
+    d_dampingLaw = j.value("Damping_Law", "com_and_node");
+    d_frictionLaw = j.value("Friction_Law", "coulomb_simple");
+
+    if (d_pairLaw != "volume_j") {
+      throw std::runtime_error(
+          "Contact.Pair_Law must be volume_j.");
+    }
+    if (d_dampingLaw != "com_and_node") {
+      throw std::runtime_error(
+          "Contact.Damping_Law must be com_and_node.");
+    }
+    if (d_frictionLaw != "coulomb_simple") {
+      throw std::runtime_error(
+          "Contact.Friction_Law must be coulomb_simple.");
+    }
 
     auto nSets = j.value("Sets", size_t(0));
     d_data.resize(nSets);
@@ -135,6 +166,9 @@ struct ContactDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- ContactDeck --------" << std::endl << std::endl;
+    oss << tabS << "Pair law = " << d_pairLaw << std::endl;
+    oss << tabS << "Damping law = " << d_dampingLaw << std::endl;
+    oss << tabS << "Friction law = " << d_frictionLaw << std::endl;
     for (size_t i =0; i<d_data.size(); i++) {
       for (size_t j = 0; j < d_data.size(); j++) {
         oss << tabS << "ContactPairData id = (" << i << "," << j << ") info:"

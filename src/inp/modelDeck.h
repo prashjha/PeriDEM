@@ -81,6 +81,21 @@ namespace inp {
      */
     std::string d_mpiStrategy;
 
+    /*!
+     * @brief Bond failure criterion: `tension` (default) or `absolute_stretch`.
+     */
+    std::string d_bondBreak;
+
+    /*!
+     * @brief Intra-body self-contact law name (default `broken_bond_kn`).
+     */
+    std::string d_selfContact;
+
+    /*!
+     * @brief Wall contact representation: `meshed` (default) or `analytical_plane`.
+     */
+    std::string d_wallContact;
+
     /*! @brief Dimension */
     size_t d_dim;
 
@@ -102,7 +117,9 @@ namespace inp {
     ModelDeck(const json &j = json({}))
         : d_dim(0), d_isRestartActive(false), d_populateElementNodeConnectivity(false),
           d_tFinal(0.), d_dt(0.), d_Nt(0),
-          d_particleSimType(""), d_mpiStrategy("auto"), d_seed(0), d_quadOrder(1) {
+          d_particleSimType(""), d_mpiStrategy("auto"),
+          d_bondBreak("tension"), d_selfContact("broken_bond_kn"),
+          d_wallContact("meshed"), d_seed(0), d_quadOrder(1) {
 
       readFromJson(j);
     };
@@ -120,7 +137,8 @@ namespace inp {
           d_populateElementNodeConnectivity(populateElementNodeConnectivity),
           d_tFinal(tFinal), d_dt(0.), d_Nt(Nt),
           d_particleSimType(particleSimType), d_mpiStrategy("auto"),
-          d_seed(seed), d_quadOrder(quadOrder) {
+          d_bondBreak("tension"), d_selfContact("broken_bond_kn"),
+          d_wallContact("meshed"), d_seed(seed), d_quadOrder(quadOrder) {
 
       if (d_timeDiscretization == "central_difference" or d_timeDiscretization == "velocity_verlet")
         d_simType = "explicit";
@@ -154,6 +172,9 @@ namespace inp {
           {"Quad_Approximation_Order",         quadOrder},
           {"Particle_Sim_Type",                particleSimType},
           {"MPI_Strategy",                     "auto"},
+          {"Bond_Break",                       "tension"},
+          {"Self_Contact",                     "broken_bond_kn"},
+          {"Wall_Contact",                     "meshed"},
           {"Seed",                             seed}
       };
     }
@@ -176,11 +197,26 @@ namespace inp {
       d_quadOrder = j.value("Quad_Approximation_Order", size_t(2));
       d_particleSimType = j.value("Particle_Sim_Type", "Multi_Particle");
       d_mpiStrategy = j.value("MPI_Strategy", "auto");
+      d_bondBreak = j.value("Bond_Break", "tension");
+      d_selfContact = j.value("Self_Contact", "broken_bond_kn");
+      d_wallContact = j.value("Wall_Contact", "meshed");
       d_seed = j.value("Seed", 0);
 
       if (d_mpiStrategy != "auto" && d_mpiStrategy != "none" &&
           d_mpiStrategy != "particle" && d_mpiStrategy != "dof") {
         std::cerr << "Error: Model.MPI_Strategy must be auto|none|particle|dof.\n";
+        exit(1);
+      }
+      if (d_bondBreak != "tension" && d_bondBreak != "absolute_stretch") {
+        std::cerr << "Error: Model.Bond_Break must be tension|absolute_stretch.\n";
+        exit(1);
+      }
+      if (d_selfContact != "broken_bond_kn") {
+        std::cerr << "Error: Model.Self_Contact must be broken_bond_kn.\n";
+        exit(1);
+      }
+      if (d_wallContact != "meshed") {
+        std::cerr << "Error: Model.Wall_Contact must be meshed.\n";
         exit(1);
       }
 
@@ -214,6 +250,9 @@ namespace inp {
           << std::endl;
       oss << tabS << "Particle simulation type = " << d_particleSimType << std::endl;
       oss << tabS << "MPI strategy = " << d_mpiStrategy << std::endl;
+      oss << tabS << "Bond break = " << d_bondBreak << std::endl;
+      oss << tabS << "Self contact = " << d_selfContact << std::endl;
+      oss << tabS << "Wall contact = " << d_wallContact << std::endl;
       oss << tabS << "Dimension = " << d_dim << std::endl;
       oss << tabS << "Final time = " << d_tFinal << std::endl;
       oss << tabS << "Time step size = " << d_dt << std::endl;
