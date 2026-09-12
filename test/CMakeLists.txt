@@ -215,6 +215,16 @@ set_tests_properties(Test_PeriDEM_wall_analytical_plane PROPERTIES
   TIMEOUT 300
 )
 
+# Same geometry; alternate Self_Contact, Bond_Break, Friction_Law, Damping_Law.
+add_test(NAME Test_PeriDEM_policy_combo_inbuilt
+  COMMAND Test_PeriDEM_wall_analytical_inbuilt -nThreads 4 -policyCombo
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_wall_analytical_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_policy_combo_inbuilt PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 300
+)
+
 # Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),
 # Δt=0.2 μs, T=0.04 s. Unique inp/out dirs so ctest -j does not clobber decks.
 # ~7 min each at 4 threads (200000 steps).

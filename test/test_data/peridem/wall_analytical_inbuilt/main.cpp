@@ -45,12 +45,17 @@ json buildInputJson(const std::string &output_path,
                     const std::filesystem::path &mesh_cir,
                     const std::filesystem::path &mesh_wall, double R,
                     double mesh_size, double horizon, double Rc_factor,
-                    double Kn, double final_time, size_t num_steps) {
+                    double Kn, double final_time, size_t num_steps,
+                    bool policy_combo = false) {
   auto model = inp::ModelDeck::getExampleJson(2, final_time, num_steps,
                                               "finite_difference",
                                               "central_difference", true, 2,
                                               "Multi_Particle", 0);
   model["Wall_Contact"] = "analytical_plane";
+  if (policy_combo) {
+    model["Self_Contact"] = "reference_gap";
+    model["Bond_Break"] = "absolute_stretch";
+  }
 
   auto output = inp::OutputDeck::getExampleJson(
       "vtu", output_path,
@@ -111,8 +116,8 @@ json buildInputJson(const std::string &output_path,
   contact["Set_1_1"] = contact_base;
   contact["Set_1_2"] = contact_base;
   contact["Set_2_2"] = contact_base;
-  contact["Damping_Law"] = "off";
-  contact["Friction_Law"] = "coulomb_simple";
+  contact["Damping_Law"] = policy_combo ? "node" : "off";
+  contact["Friction_Law"] = policy_combo ? "stick_slip" : "coulomb_simple";
 
   // Bottom of grain near the floor (y=0): slight overlap into Rc after setup.
   const double cy = R + 0.25 * mesh_size;
@@ -239,10 +244,11 @@ int main(int argc, char *argv[]) {
   const double final_time = 5.0e-4;
   const size_t num_steps = 5000;
 
+  const bool policy_combo = input.cmdOptionExists("-policyCombo");
   auto input_json =
       buildInputJson(directoryPathWithTrailingSep(out_dir), inp_dir / "mesh_cir.msh",
                      inp_dir / "mesh_wall.msh", R, mesh_size, horizon, Rc_factor, Kn,
-                     final_time, num_steps);
+                     final_time, num_steps, policy_combo);
   {
     std::ofstream os(inp_dir / "input.json");
     os << input_json.dump(2);
@@ -254,6 +260,20 @@ int main(int argc, char *argv[]) {
 
   if (dem.d_modelDeck_p->d_wallContact != "analytical_plane")
     throw std::runtime_error("analytical wall: Wall_Contact not analytical_plane");
+  if (policy_combo) {
+    if (dem.d_modelDeck_p->d_selfContact != "reference_gap")
+      throw std::runtime_error("alternate deck: Self_Contact is not reference_gap");
+    if (dem.d_modelDeck_p->d_bondBreak != "absolute_stretch")
+      throw std::runtime_error("alternate deck: Bond_Break is not absolute_stretch");
+    if (dem.d_particleDeck_p->d_contactDeck.d_frictionLaw != "stick_slip")
+      throw std::runtime_error("alternate deck: Friction_Law is not stick_slip");
+    if (dem.d_particleDeck_p->d_contactDeck.d_dampingLaw != "node")
+      throw std::runtime_error("alternate deck: Damping_Law is not node");
+    if (!dem.d_contact_p || !dem.d_contact_p->d_pairForce ||
+        dem.d_contact_p->d_useNodeDamping != true)
+      throw std::runtime_error("alternate deck: node damping not active on contact");
+    util::io::print("alternate deck fields applied\n");
+  }
   if (!dem.d_contact_p || !dem.d_contact_p->d_wallContact ||
       !dem.d_contact_p->d_wallContact->skipsMeshedGrainWall())
     throw std::runtime_error("analytical wall: must skip meshed grain-wall");
