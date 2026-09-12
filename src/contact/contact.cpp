@@ -443,6 +443,8 @@ void contact::Contact::computeForces(data::ModelData &data) {
   util::io::log(3, "    Computing normal contact force \n");
 
   auto *pair = d_pairForce.get();
+  const auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
+  const bool volume_product = (contactDeck.d_pairLaw == "volume_product");
 
   // Diagnostics across contact assembly (max over active pairs this step).
   std::atomic<double> max_pen{0.};
@@ -461,12 +463,14 @@ void contact::Contact::computeForces(data::ModelData &data) {
   taskflow.for_each_index((std::size_t) 0,
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
-                          [&data, pair, &max_pen, &max_fij, &min_rji, &n_active,
+                          [&data, pair, volume_product, &max_pen, &max_fij,
+                           &min_rji, &n_active,
                            &max_neigh](std::size_t II) {
 
                               auto i = data.d_fContCompNodes[II];
 
                               util::Point force_i = util::Point();
+                              util::Point damp_i = util::Point();
 
                               const auto &ptIdi = data.getPtId(i);
                               auto &pi = data.getParticleFromAllList(ptIdi);
@@ -480,6 +484,8 @@ void contact::Contact::computeForces(data::ModelData &data) {
 
                               const auto &yi = data.d_x[i];
                               const auto &vi = data.d_v[i];
+                              const double voli = data.d_vol[i];
+                              const double hi = pi->getMeshSize();
                               const std::vector<size_t> &neighs = data.d_neighC[i];
                               {
                                 size_t nn = neighs.size();
@@ -528,17 +534,22 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                   n_active.fetch_add(1, std::memory_order_relaxed);
                                 }
 
+                                // Partial Vj near contact radius (not fully inside).
+                                const double volj = correctedContactVolume(
+                                    data.d_vol[j_id], Rji, contact.d_contactR, hi);
+
                                 Pair p{contact,
                                        yi, data.d_x[j_id],
                                        vi, data.d_v[j_id],
                                        i, j_id,
                                        ptIdi, ptIdj,
-                                       data.d_vol[i], data.d_vol[j_id],
+                                       voli, volj,
                                        pi->getDensity(), pj->getDensity(),
                                        data.d_currentDt,
                                        pi->isWall(), pj->isWall()};
-                                const util::Point fij = pair->force(p);
-                                const double fij_mag = fij.length();
+                                const util::Point fs = pair->springForce(p);
+                                const util::Point fd = pair->nodeDampingForce(p);
+                                const double fij_mag = (fs + fd).length();
                                 if (fij_mag > 0.) {
                                   double prev_f =
                                       max_fij.load(std::memory_order_relaxed);
@@ -548,21 +559,32 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                              std::memory_order_relaxed)) {
                                   }
                                 }
-                                force_i += fij;
+                                force_i += fs;
+                                damp_i += fd;
                                 // Under MPI, walls do not search (see above), so
                                 // deposit Newton-III onto the wall here. Serial
                                 // still searches from walls — depositing as well
                                 // would double-count and can blow up at contact.
                                 if (!pi->isWall() && pj->isWall() &&
                                     util::parallel::isMpiEnabled()) {
-                                  const double volj = data.d_vol[j_id];
-                                  const double scale =
-                                      (volj > 0.) ? (data.d_vol[i] / volj) : 0.;
-                                  data.d_f[j_id] -= scale * fij;
+                                  if (volume_product) {
+                                    // Spring density will be ×voli after the loop.
+                                    data.d_f[j_id] -= voli * fs;
+                                  } else {
+                                    const double volj_raw = data.d_vol[j_id];
+                                    const double scale =
+                                        (volj_raw > 0.) ? (voli / volj_raw) : 0.;
+                                    data.d_f[j_id] -= scale * fs;
+                                  }
                                 }
                               }
 
-                              data.d_f[i] += force_i;
+                              // volume_product: Fr ∝ Vi Vj with Vi after the j-loop.
+                              // Node damping stays a density term (not × Vi).
+                              if (volume_product)
+                                force_i *= voli;
+
+                              data.d_f[i] += force_i + damp_i;
                           }
   );
 

@@ -6,12 +6,6 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-add_subdirectory(util)
-add_subdirectory(fe)
-add_subdirectory(particle)
-add_subdirectory(nsearch)
-add_subdirectory(contact)
-add_subdirectory(peridem)
-add_subdirectory(parallelcomp)
-add_subdirectory(meshpartitioning)
-add_subdirectory(mesh_gen)
+add_executable(TestContact main.cpp)
+
+target_link_libraries(TestContact PUBLIC Contact Util Inp)

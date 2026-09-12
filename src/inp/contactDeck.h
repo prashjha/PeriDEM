@@ -101,9 +101,9 @@ struct ContactDeck {
     d_dampingLaw = j.value("Damping_Law", "com_and_node");
     d_frictionLaw = j.value("Friction_Law", "coulomb_simple");
 
-    if (d_pairLaw != "volume_j") {
+    if (d_pairLaw != "volume_j" && d_pairLaw != "volume_product") {
       throw std::runtime_error(
-          "Contact.Pair_Law must be volume_j.");
+          "Contact.Pair_Law must be volume_j|volume_product.");
     }
     if (d_dampingLaw != "com_and_node") {
       throw std::runtime_error(

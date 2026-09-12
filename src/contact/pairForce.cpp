@@ -16,7 +16,22 @@
 
 #include <cmath>
 
-util::Point contact::PairForce::force(const Pair &p) {
+double contact::correctedContactVolume(double volj, double Rji, double Rc,
+                                       double h) {
+  if (!(volj > 0.) || !(Rc > 0.) || !(h > 0.) || !(Rji > 0.))
+    return volj;
+
+  const double check_up = Rc + 0.5 * h;
+  const double check_low = Rc - 0.5 * h;
+  if (util::isGreater(Rji, check_low)) {
+    volj *= (check_up - Rji) / h;
+    if (volj < 0.)
+      volj = 0.;
+  }
+  return volj;
+}
+
+util::Point contact::PairForce::springForce(const Pair &p) {
   const auto yji = p.yj - p.yi;
   const auto Rji = yji.length();
   if (!(Rji > 0.) || !util::isLess(Rji, p.deck.d_contactR))
@@ -38,19 +53,32 @@ util::Point contact::PairForce::force(const Pair &p) {
   util::Point f = scalar_f * en;
   if (p.deck.d_frictionOn)
     f += p.deck.d_mu * scalar_f * et;
-
-  // Node-level damping (Jha 2021 Eq. 22). Original demModel had this behind
-  // node_lvl_damp=false and relied on COM damping only; stiff node contact
-  // then rings into the grain (T11). Apply when Damping_On.
-  if (p.deck.d_dampingOn && util::isLess(vn_mag, 0.) && p.voli > 0. &&
-      p.deck.d_K > 0. && p.deck.d_contactR > 0.) {
-    const double meq =
-        util::equivalentMass(p.rhoi * p.voli, p.rhoj * p.volj);
-    const double beta_n =
-        p.deck.d_betan *
-        std::sqrt(p.deck.d_K * p.deck.d_contactR * meq);
-    f += (beta_n * vn_mag / p.voli) * en;
-  }
-
   return f;
+}
+
+util::Point contact::PairForce::nodeDampingForce(const Pair &p) {
+  const auto yji = p.yj - p.yi;
+  const auto Rji = yji.length();
+  if (!(Rji > 0.) || !util::isLess(Rji, p.deck.d_contactR))
+    return {};
+
+  if (!p.deck.d_dampingOn || !(p.voli > 0.) || !(p.deck.d_K > 0.) ||
+      !(p.deck.d_contactR > 0.))
+    return {};
+
+  const auto vji = p.vj - p.vi;
+  auto en = yji / Rji;
+  auto vn_mag = vji * en;
+  if (!util::isLess(vn_mag, 0.))
+    return {};
+
+  const double meq =
+      util::equivalentMass(p.rhoi * p.voli, p.rhoj * p.volj);
+  const double beta_n =
+      p.deck.d_betan * std::sqrt(p.deck.d_K * p.deck.d_contactR * meq);
+  return (beta_n * vn_mag / p.voli) * en;
+}
+
+util::Point contact::PairForce::force(const Pair &p) {
+  return springForce(p) + nodeDampingForce(p);
 }

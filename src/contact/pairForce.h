@@ -38,18 +38,38 @@ struct Pair {
 };
 
 /*!
+ * Partial volume of neighbor j near the contact radius (same idea as the
+ * horizon correction in the PD force loop). Full volume when R is well inside
+ * Rc - h/2; linearly tapers to zero by Rc + h/2.
+ */
+double correctedContactVolume(double volj, double Rji, double Rc, double h);
+
+/*!
  * Node-node contact law (same role as material::Material for PD bonds).
  *
- * Contact walks neighbors and calls force(). Subclass this to change the
- * relation; put extra parameters and history on the subclass. Do not copy
- * the neighbor loop.
+ * Spring uses neighbor volume Vj (optionally corrected by assembly). For
+ * Pair_Law volume_product, Contact multiplies the spring sum by Vi after the
+ * neighbor loop. Node damping stays a density term and is not scaled by Vi.
  */
 class PairForce {
 public:
   virtual ~PairForce() = default;
 
+  /*! Spring + friction contribution (∝ volj). */
+  virtual util::Point springForce(const Pair &p);
+
+  /*! Node-level normal damping (density form). */
+  virtual util::Point nodeDampingForce(const Pair &p);
+
+  /*! Default: spring + node damping (used by tests / simple callers). */
   virtual util::Point force(const Pair &p);
 };
+
+/*!
+ * Marker law for Contact.Pair_Law = volume_product. Spring kernel matches
+ * volume_j (∝ Vj); assembly applies × Vi after the neighbor loop.
+ */
+class VolumeProductPairForce : public PairForce {};
 
 } // namespace contact
 

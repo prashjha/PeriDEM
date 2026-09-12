@@ -17,10 +17,12 @@ namespace contact {
 std::unique_ptr<PairForce> makePairForce(const std::string &name) {
   if (name == "volume_j")
     return std::make_unique<PairForce>();
+  if (name == "volume_product")
+    return std::make_unique<VolumeProductPairForce>();
 
   throw std::runtime_error(
       "Unknown Contact.Pair_Law '" + name +
-      "'. Supported: volume_j.");
+      "'. Supported: volume_j, volume_product.");
 }
 
 std::unique_ptr<Damping> makeDamping(const std::string &name) {
