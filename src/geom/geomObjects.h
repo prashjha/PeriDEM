@@ -38,7 +38,9 @@ namespace geom {
     {"cuboid", 3},
     {"cylinder", 3},
     {"open_rect_channel_2d", 2},
-    {"open_cuboid_channel_3d", 3}
+    {"open_cuboid_channel_3d", 3},
+    {"plane", 3},
+    {"line", 1}
   };
 
   /*! @brief Returns list of acceptable geometries for PeriDEM simulation */
@@ -98,6 +100,21 @@ void addNode(const size_t &i) {
 }
 };
 
+
+  /*!
+   * @brief Result of a wall-contact query against a geom (analytical walls).
+   *
+   * @p signed_gap is positive on the free-space side of the wall surface,
+   * negative when the query point has penetrated into the wall material.
+   * @p outward_n is the unit normal pointing into free space (repulsion
+   * direction for a contacting grain).
+   */
+  struct WallContactHit {
+    bool active = false;
+    double signed_gap = 0.;
+    util::Point outward_n;
+    util::Point closest;
+  };
 
   /*!
    * @brief Defines abstract geometrical domain
@@ -320,6 +337,17 @@ public:
                          const util::Point *rotationPoint = nullptr) {
       // Base implementation does nothing
     }
+
+    /*!
+     * @brief Closest-point / signed-gap query for analytical wall contact.
+     * Default: unsupported (returns false, clears @p hit).
+     */
+    virtual bool wallContactQuery(const util::Point &x,
+                                  WallContactHit &hit) const {
+      (void)x;
+      hit = WallContactHit();
+      return false;
+    }
   };
 
   /*!
@@ -390,6 +418,102 @@ public:
      * @copydoc GeomObject::print() const
      */
     void print() const override { print(0, 0); };
+  };
+
+  /*!
+   * @brief Infinite plane: free space is the half-space in the normal direction.
+   *
+   * Factory params: nx,ny,nz, px,py,pz (unit/non-unit normal + point on plane).
+   */
+  class Plane : public GeomObject {
+  public:
+    util::Point d_n; //!< outward (free-space) normal, stored unit-length when possible
+    util::Point d_p; //!< a point on the plane
+
+    Plane()
+      : GeomObject("plane", ""),
+        d_n(util::Point(0., 1., 0.)),
+        d_p(util::Point()) {}
+
+    Plane(util::Point n, util::Point p, std::string description = "")
+      : GeomObject("plane", std::move(description)), d_n(n), d_p(p) {
+      const double ln = d_n.length();
+      if (ln > 1.e-16)
+        d_n = d_n / ln;
+    }
+
+    Plane(const Plane &other)
+      : GeomObject(other.d_name, other.d_description),
+        d_n(other.d_n),
+        d_p(other.d_p) {
+      d_tags = other.d_tags;
+    }
+
+    Plane &operator=(const Plane &other) {
+      if (this != &other) {
+        d_tags = other.d_tags;
+        d_n = other.d_n;
+        d_p = other.d_p;
+      }
+      return *this;
+    }
+
+    void transform(const util::Point &translation, const double &scale,
+                   const double &angle, const util::Point &axis,
+                   const util::Point *rotationPoint) override {
+      (void)scale;
+      const util::Point pivot =
+          (rotationPoint != nullptr) ? *rotationPoint : d_p;
+      d_p = mapSimilarity(d_p, pivot, translation, 1., angle, axis, rotationPoint);
+      d_n = util::rotate(d_n, angle, axis);
+      const double ln = d_n.length();
+      if (ln > 1.e-16)
+        d_n = d_n / ln;
+    }
+
+    double volume() const override { return 0.; }
+    util::Point center() const override { return d_p; }
+    std::pair<util::Point, util::Point> box() const override {
+      return {d_p, d_p};
+    }
+    std::pair<util::Point, util::Point> box(const double &tol) const override {
+      return {d_p - util::Point(tol, tol, tol), d_p + util::Point(tol, tol, tol)};
+    }
+    double inscribedRadius() const override { return 0.; }
+    double boundingRadius() const override { return 0.; }
+
+    bool isInside(const util::Point &x) const override {
+      return (x - d_p) * d_n < 0.;
+    }
+    bool isOutside(const util::Point &x) const override {
+      return !isInside(x);
+    }
+    bool isNear(const util::Point &x, const double &tol) const override {
+      return std::abs((x - d_p) * d_n) <= tol;
+    }
+    bool isNearBoundary(const util::Point &x, const double &tol,
+                        const bool & /*within*/) const override {
+      return isNear(x, tol);
+    }
+    bool doesIntersect(const util::Point &x) const override {
+      return isNear(x, 1.e-12);
+    }
+
+    bool wallContactQuery(const util::Point &x,
+                          WallContactHit &hit) const override;
+
+    std::string printStr(int nt, int lvl) const override {
+      auto tabS = util::io::getTabS(nt);
+      std::ostringstream oss;
+      oss << tabS << "------- Plane --------\n\n";
+      oss << tabS << "Normal = " << d_n.printStr(0, lvl) << "\n";
+      oss << tabS << "Point  = " << d_p.printStr(0, lvl) << "\n";
+      return oss.str();
+    }
+    void print(int nt, int lvl) const override {
+      std::cout << printStr(nt, lvl);
+    }
+    void print() const override { print(0, 0); }
   };
 
   /*!
@@ -500,6 +624,13 @@ public:
       }
       d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
+
+    /*!
+     * Finite segment wall in 2D: free space is to the left of directed
+     * vertex0 → vertex1 (outward normal = rotate tangent 90° CCW).
+     */
+    bool wallContactQuery(const util::Point &x,
+                          WallContactHit &hit) const override;
 
     /*!
      * @copydoc GeomObject::volume() const
@@ -1221,6 +1352,10 @@ public:
       }
       d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
     }
+
+    /*! Axis-aligned / vertex box surface (outward from filled rectangle). */
+    bool wallContactQuery(const util::Point &x,
+                          WallContactHit &hit) const override;
 
     /*!
      * @copydoc GeomObject::volume() const

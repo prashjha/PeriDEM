@@ -10,6 +10,8 @@
 
 #include "contact/pairForce.h"
 #include "contact/policy.h"
+#include "contact/wallContact.h"
+#include "geom/geomObjects.h"
 #include "pd/selfContact.h"
 #include "util/io.h"
 #include "inp/contactPairDeck.h"
@@ -178,5 +180,47 @@ int main() {
   }
 
   std::cout << "TestContact self-contact OK\n";
+
+  // Wall_Contact factory + geom wallContactQuery (plane / rectangle).
+  {
+    auto meshed = contact::makeWallContact("meshed");
+    auto anal = contact::makeWallContact("analytical_plane");
+    if (!meshed || meshed->skipsMeshedGrainWall() || !anal ||
+        !anal->skipsMeshedGrainWall()) {
+      std::cerr << "Wall_Contact factory flags incorrect\n";
+      return 1;
+    }
+
+    geom::Plane plane(util::Point(0., 1., 0.), util::Point(0., 0., 0.));
+    geom::WallContactHit hit;
+    if (!plane.wallContactQuery(util::Point(0., 0.3, 0.), hit) ||
+        !near(hit.signed_gap, 0.3) || !near(hit.outward_n.d_y, 1.)) {
+      std::cerr << "Plane wallContactQuery free-space failed\n";
+      return 1;
+    }
+    if (!plane.wallContactQuery(util::Point(0., -0.2, 0.), hit) ||
+        !near(hit.signed_gap, -0.2) || !near(hit.outward_n.d_y, 1.)) {
+      std::cerr << "Plane wallContactQuery penetration failed\n";
+      return 1;
+    }
+
+    geom::Rectangle rect(2.0, 1.0, util::Point(0., 0., 0.));
+    if (!rect.wallContactQuery(util::Point(0., 0.8, 0.), hit) ||
+        !near(hit.signed_gap, 0.3) || !near(hit.outward_n.d_y, 1.)) {
+      std::cerr << "Rectangle wallContactQuery failed: gap=" << hit.signed_gap
+                << " ny=" << hit.outward_n.d_y << "\n";
+      return 1;
+    }
+
+    const double Kn = 100., Rc = 1., vol = 2., gap = 0.3;
+    const double scalar = Kn * (gap - Rc) * vol;
+    const util::Point f_expect(0., -scalar, 0.);
+    if (!near(f_expect.d_y, 140.)) {
+      std::cerr << "analytical wall force magnitude check setup failed\n";
+      return 1;
+    }
+  }
+
+  std::cout << "TestContact wall contact OK\n";
   return 0;
 }

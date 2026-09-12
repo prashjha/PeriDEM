@@ -11,6 +11,7 @@
 #include "contact.h"
 #include "damping.h"
 #include "policy.h"
+#include "wallContact.h"
 
 #include "data/modelData.h"
 #include "util/io.h"
@@ -36,7 +37,8 @@
 
 contact::Contact::Contact()
     : d_pairForce(std::make_unique<PairForce>()),
-      d_damping(std::make_unique<Damping>()) {}
+      d_damping(std::make_unique<Damping>()),
+      d_wallContact(std::make_unique<MeshedWallContact>()) {}
 
 void contact::Contact::setup(data::ModelData &data) {
 
@@ -65,10 +67,11 @@ void contact::Contact::setup(data::ModelData &data) {
 
   auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
 
-  // Select pair / damping implementations from deck (defaults = current laws).
+  // Select pair / damping / wall implementations from deck (defaults = current).
   setPairForce(makePairForce(contactDeck.d_pairLaw, contactDeck.d_frictionLaw));
   setDamping(makeDamping(contactDeck.d_dampingLaw));
   d_useNodeDamping = usesNodeDamping(contactDeck.d_dampingLaw);
+  setWallContact(makeWallContact(data.d_modelDeck_p->d_wallContact));
   util::io::log(1, std::format(
       "  Pair_Law = {}, Damping_Law = {}, Friction_Law = {}\n"
       "  Bond_Break = {}, Self_Contact = {}, Wall_Contact = {}\n",
@@ -447,6 +450,8 @@ void contact::Contact::computeForces(data::ModelData &data) {
   const auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
   const bool volume_product = (contactDeck.d_pairLaw == "volume_product");
   const bool use_node_damping = d_useNodeDamping;
+  const bool skip_meshed_wall =
+      (d_wallContact && d_wallContact->skipsMeshedGrainWall());
   pair->beginStep();
 
   // Diagnostics across contact assembly (max over active pairs this step).
@@ -467,6 +472,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
                           [&data, pair, volume_product, use_node_damping,
+                           skip_meshed_wall,
                            &max_pen, &max_fij, &min_rji, &n_active,
                            &max_neigh](std::size_t II) {
 
@@ -509,6 +515,12 @@ void contact::Contact::computeForces(data::ModelData &data) {
 
                                 auto &pj = data.getParticleFromAllList(ptIdj);
                                 if (pi->isWall() and pj->isWall())
+                                  continue;
+
+                                // Analytical walls: skip meshed grain–wall pairs
+                                // (handled by WallContact::apply).
+                                if (skip_meshed_wall &&
+                                    (pi->isWall() || pj->isWall()))
                                   continue;
 
                                 const auto &contact =
@@ -595,6 +607,9 @@ void contact::Contact::computeForces(data::ModelData &data) {
 
   executor.run(taskflow).get();
   pair->endStep();
+
+  if (d_wallContact)
+    d_wallContact->apply(data, pair, use_node_damping, volume_product);
 
   // Log contact diagnostics near plate onset / whenever pairs go deep.
   const bool periodic = (data.d_infoN > 0 && data.d_n % data.d_infoN == 0);

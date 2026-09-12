@@ -217,8 +217,9 @@ namespace inp {
                      "broken_bond_kn|reference_gap.\n";
         exit(1);
       }
-      if (d_wallContact != "meshed") {
-        std::cerr << "Error: Model.Wall_Contact must be meshed.\n";
+      if (d_wallContact != "meshed" && d_wallContact != "analytical_plane") {
+        std::cerr << "Error: Model.Wall_Contact must be "
+                     "meshed|analytical_plane.\n";
         exit(1);
       }
 

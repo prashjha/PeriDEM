@@ -37,9 +37,74 @@ namespace {
 };
 
 //
+// Plane
+//
+namespace geom {
+    bool Plane::wallContactQuery(const util::Point &x,
+                                 WallContactHit &hit) const {
+      hit = WallContactHit();
+      const double ln = d_n.length();
+      if (!(ln > 1.e-16))
+        return false;
+      const util::Point n = d_n / ln;
+      const double gap = (x - d_p) * n;
+      hit.active = true;
+      hit.signed_gap = gap;
+      hit.outward_n = n;
+      hit.closest = x - gap * n;
+      return true;
+    }
+} // Plane
+
+//
 // Line
 //
 namespace geom {
+
+    bool Line::wallContactQuery(const util::Point &x,
+                                WallContactHit &hit) const {
+      hit = WallContactHit();
+      if (d_vertices.size() < 2)
+        return false;
+      const util::Point &a = d_vertices[0];
+      const util::Point &b = d_vertices[1];
+      const util::Point t = b - a;
+      const double t2 = t.lengthSq();
+      if (!(t2 > 1.e-24))
+        return false;
+
+      // Outward = left of directed segment in xy (CCW rotate).
+      util::Point n(-t.d_y, t.d_x, 0.);
+      const double nl = n.length();
+      if (!(nl > 1.e-16))
+        return false;
+      n = n / nl;
+
+      double s = ((x - a) * t) / t2;
+      if (s < 0.)
+        s = 0.;
+      else if (s > 1.)
+        s = 1.;
+      hit.closest = a + s * t;
+      const util::Point dx = x - hit.closest;
+      if (s > 1.e-12 && s < 1. - 1.e-12) {
+        hit.signed_gap = dx * n;
+        hit.outward_n = n;
+      } else {
+        const double dist = dx.length();
+        if (!(dist > 1.e-16)) {
+          hit.signed_gap = 0.;
+          hit.outward_n = n;
+        } else {
+          hit.outward_n = dx / dist;
+          hit.signed_gap = (hit.outward_n * n >= 0.) ? dist : -dist;
+          if (hit.outward_n * n < 0.)
+            hit.outward_n = n;
+        }
+      }
+      hit.active = true;
+      return true;
+    }
 
     double Line::volume() const {
       return d_L;
@@ -483,6 +548,76 @@ namespace geom {
 // Rectangle
 //
 namespace geom {
+    bool Rectangle::wallContactQuery(const util::Point &x,
+                                     WallContactHit &hit) const {
+      hit = WallContactHit();
+      // Axis-aligned SDF from current bounding box (walls are typically AA).
+      const auto bb = box();
+      const double x0 = bb.first.d_x;
+      const double y0 = bb.first.d_y;
+      const double x1 = bb.second.d_x;
+      const double y1 = bb.second.d_y;
+      if (!(x1 > x0) || !(y1 > y0))
+        return false;
+
+      const double dx = std::max(x0 - x.d_x, x.d_x - x1);
+      const double dy = std::max(y0 - x.d_y, x.d_y - y1);
+      const bool outside = dx > 0. || dy > 0.;
+
+      if (outside) {
+        // Closest point on AABB, gap = exterior distance.
+        util::Point c = x;
+        if (x.d_x < x0)
+          c.d_x = x0;
+        else if (x.d_x > x1)
+          c.d_x = x1;
+        if (x.d_y < y0)
+          c.d_y = y0;
+        else if (x.d_y > y1)
+          c.d_y = y1;
+        c.d_z = x.d_z;
+        const util::Point d = x - c;
+        const double dist = d.length();
+        if (!(dist > 1.e-16)) {
+          // On a face: pick dominant exterior axis.
+          if (dx >= dy) {
+            hit.outward_n = util::Point(x.d_x < x0 ? -1. : 1., 0., 0.);
+          } else {
+            hit.outward_n = util::Point(0., x.d_y < y0 ? -1. : 1., 0.);
+          }
+          hit.signed_gap = 0.;
+          hit.closest = c;
+        } else {
+          hit.outward_n = d / dist;
+          hit.signed_gap = dist;
+          hit.closest = c;
+        }
+      } else {
+        // Inside: negative distance to nearest face.
+        const double dl = x.d_x - x0;
+        const double dr = x1 - x.d_x;
+        const double db = x.d_y - y0;
+        const double dt = y1 - x.d_y;
+        const double m = std::min(std::min(dl, dr), std::min(db, dt));
+        hit.signed_gap = -m;
+        if (m == dl) {
+          hit.outward_n = util::Point(-1., 0., 0.);
+          hit.closest = util::Point(x0, x.d_y, x.d_z);
+        } else if (m == dr) {
+          hit.outward_n = util::Point(1., 0., 0.);
+          hit.closest = util::Point(x1, x.d_y, x.d_z);
+        } else if (m == db) {
+          hit.outward_n = util::Point(0., -1., 0.);
+          hit.closest = util::Point(x.d_x, y0, x.d_z);
+        } else {
+          hit.outward_n = util::Point(0., 1., 0.);
+          hit.closest = util::Point(x.d_x, y1, x.d_z);
+        }
+      }
+      hit.active = true;
+      return true;
+    }
+
     double Rectangle::volume() const {
       return d_Lx * d_Ly;
     }

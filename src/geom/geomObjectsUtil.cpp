@@ -45,6 +45,8 @@ namespace geom {
 
       if (geom_type == "line")
         return {1, 4, 6};
+      else if (geom_type == "plane")
+        return {6};
       else if (geom_type == "triangle")
         return {1, 4, 7};
       else if (geom_type == "square")
@@ -663,6 +665,14 @@ namespace geom {
           } // if params.size() == n
         } // loop over n
       } // Line
+      else if (geom_type == "plane") {
+        if (params.size() == 6) {
+          obj = std::make_shared<geom::Plane>(
+              util::Point(params[0], params[1], params[2]),
+              util::Point(params[3], params[4], params[5]));
+          return;
+        }
+      }
       else if (geom_type == "triangle") {
 
         num_params_needed = {1, 4, 7};
@@ -1169,6 +1179,8 @@ namespace geom {
                                           double s) {
       if (geom_type == "circle")
         return {s, c.d_x, c.d_y, c.d_z};
+      if (geom_type == "plane")
+        return {0., 1., 0., c.d_x, c.d_y, c.d_z};
       if (geom_type == "square")
         return {c.d_x - s, c.d_y - s, c.d_z, c.d_x + s, c.d_y + s, c.d_z};
       if (geom_type == "rectangle")
@@ -1327,6 +1339,8 @@ namespace geom {
     const std::string &type = obj->d_name;
     if (type == "null")
       return new NullGeomObject(*dynamic_cast<const NullGeomObject *>(obj));
+    if (type == "plane")
+      return new Plane(*dynamic_cast<const Plane *>(obj));
     if (type == "line")
       return new Line(*dynamic_cast<const Line *>(obj));
     if (type == "triangle")

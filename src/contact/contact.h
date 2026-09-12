@@ -13,6 +13,7 @@
 
 #include "damping.h"
 #include "pairForce.h"
+#include "wallContact.h"
 
 #include <memory>
 
@@ -36,9 +37,13 @@ public:
 
   void setPairForce(std::unique_ptr<PairForce> p) { d_pairForce = std::move(p); }
   void setDamping(std::unique_ptr<Damping> d) { d_damping = std::move(d); }
+  void setWallContact(std::unique_ptr<WallContact> w) {
+    d_wallContact = std::move(w);
+  }
 
   std::unique_ptr<PairForce> d_pairForce;
   std::unique_ptr<Damping> d_damping;
+  std::unique_ptr<WallContact> d_wallContact;
   /*! @brief Apply node-level damping inside the pair assembly loop. */
   bool d_useNodeDamping = true;
 };
