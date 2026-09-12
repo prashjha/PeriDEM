@@ -11,7 +11,6 @@
 #include "pdForce.h"
 #include "selfContact.h"
 
-#include <cstdlib>
 #include <memory>
 #include <string>
 #include "pdMpi.h"
@@ -26,21 +25,6 @@
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
 
-namespace pd {
-/*!
- * Default: break only in tension (s > sc). Legacy |s| > sc also breaks in
- * compression and can hand a deeply penetrated pair to self-contact.
- * Set PERIDEM_ABS_STRETCH_BREAK=1 to restore the legacy |s| criterion.
- */
-bool absStretchBreak() {
-  static const bool flag = [] {
-    const char *e = std::getenv("PERIDEM_ABS_STRETCH_BREAK");
-    return e != nullptr && std::string(e) == "1";
-  }();
-  return flag;
-}
-} // namespace pd
-
 void pd::computeForces(data::ModelData &data) {
 
 
@@ -50,6 +34,8 @@ void pd::computeForces(data::ModelData &data) {
   const bool is_state = data.d_particlesListTypeAll[0]->getMaterial()->isStateActive();
   const auto selfContact =
       pd::makeSelfContact(data.d_modelDeck_p->d_selfContact);
+  const bool abs_stretch_break =
+      (data.d_modelDeck_p->d_bondBreak == "absolute_stretch");
 
   // compute state-based helper quantities
   if (is_state) {
@@ -58,7 +44,8 @@ void pd::computeForces(data::ModelData &data) {
     tf::Taskflow taskflow;
 
     taskflow.for_each_index(
-      (std::size_t) 0, data.d_fPdCompNodes.size(), (std::size_t) 1, [&data](std::size_t II) {
+      (std::size_t) 0, data.d_fPdCompNodes.size(), (std::size_t) 1,
+      [&data, abs_stretch_break](std::size_t II) {
         auto i = data.d_fPdCompNodes[II];
 
         const auto rho = data.getDensity(i);
@@ -100,11 +87,9 @@ void pd::computeForces(data::ModelData &data) {
 
             // get fracture state, modify, and set
             auto fs = data.d_fracture_p->getBondState(i, k);
-            // Default: break when s >= sc (tension only). Legacy |s|>sc also
-            // breaks in compression and can hand a deeply penetrated pair to
-            // self-contact.
+            // Model.Bond_Break: tension (s > sc) or absolute_stretch (|s| > sc).
             if (!fs) {
-              const bool broke = pd::absStretchBreak()
+              const bool broke = abs_stretch_break
                                      ? util::isGreater(std::abs(s), sc + 1.0e-10)
                                      : util::isGreater(s, sc + 1.0e-10);
               if (broke)
