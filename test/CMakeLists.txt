@@ -29,6 +29,7 @@ add_subdirectory(test_data/peridem/twop_circ_inbuilt)
 add_subdirectory(test_data/peridem/twop_general_inbuilt)
 add_subdirectory(test_data/peridem/compression_large_set_inbuilt)
 add_subdirectory(test_data/peridem/self_contact_mode1_inbuilt)
+add_subdirectory(test_data/peridem/wall_analytical_inbuilt)
 add_subdirectory(test_data/peridem/jha2021_comp_n50)
 
 # ---------------------------------------------------------------------------
@@ -200,6 +201,16 @@ add_test(NAME Test_PeriDEM_self_contact_mode1
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_self_contact_mode1_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_self_contact_mode1 PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 300
+)
+
+# Grain vs analytical_plane wall: force vs formula, no deep penetration.
+add_test(NAME Test_PeriDEM_wall_analytical_plane
+  COMMAND Test_PeriDEM_wall_analytical_inbuilt -nThreads 4
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_wall_analytical_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_wall_analytical_plane PROPERTIES
   LABELS "PeriDEM;Physics"
   TIMEOUT 300
 )
