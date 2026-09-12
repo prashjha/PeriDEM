@@ -9,6 +9,9 @@
  */
 
 #include "pdForce.h"
+
+#include <cstdlib>
+#include <string>
 #include "pdMpi.h"
 
 #include "data/modelData.h"
@@ -20,6 +23,22 @@
 
 #include <taskflow/taskflow/taskflow.hpp>
 #include <taskflow/taskflow/algorithm/for_each.hpp>
+
+namespace pd {
+/*!
+ * Jha et al. JMPS 2021 Eq. (11): h(s)=1 iff s < s0 (tension-only break).
+ * Legacy PeriDEM used |s| > sc (also breaks in compression). That hands a
+ * deeply penetrated pair to the broken-bond Kn contact branch and detonates.
+ * Set PERIDEM_ABS_STRETCH_BREAK=1 to restore the legacy |s| criterion.
+ */
+bool absStretchBreak() {
+  static const bool flag = [] {
+    const char *e = std::getenv("PERIDEM_ABS_STRETCH_BREAK");
+    return e != nullptr && std::string(e) == "1";
+  }();
+  return flag;
+}
+} // namespace pd
 
 void pd::computeForces(data::ModelData &data) {
 
@@ -78,8 +97,15 @@ void pd::computeForces(data::ModelData &data) {
 
             // get fracture state, modify, and set
             auto fs = data.d_fracture_p->getBondState(i, k);
-            if (!fs && util::isGreater(std::abs(s), sc + 1.0e-10))
-              fs = true;
+            // Paper: break when s >= sc (tension only). Legacy |s|>sc also
+            // breaks in compression and can detonate via broken-bond contact.
+            if (!fs) {
+              const bool broke = pd::absStretchBreak()
+                                     ? util::isGreater(std::abs(s), sc + 1.0e-10)
+                                     : util::isGreater(s, sc + 1.0e-10);
+              if (broke)
+                fs = true;
+            }
             data.d_fracture_p->setBondState(i, k, fs);
 
             if (!fs) {
@@ -192,16 +218,24 @@ void pd::computeForces(data::ModelData &data) {
             } // if bond-based
           }   // if bond not broken
           else {
-            // add normal contact force
+            // Broken-bond contact (intra-grain). Cap penetration so a bond
+            // that somehow breaks while already deep inside Rc cannot inject
+            // a discontinuous Kn*(R-Rc) kick (T11 C2).
             auto yji = xj + uj - (xi + ui);
             auto Rji = yji.length();
             if (!(Rji > 0.)) {
               k++;
               continue;
             }
-            scalar_f = pi->d_Kn * volj * (Rji - pi->d_Rc) / Rji;
-            if (scalar_f > 0.)
-              scalar_f = 0.;
+            double gap = Rji - pi->d_Rc;
+            if (gap > 0.)
+              gap = 0.;
+            else {
+              const double gap_cap = -0.25 * pi->d_Rc;
+              if (gap < gap_cap)
+                gap = gap_cap;
+            }
+            scalar_f = pi->d_Kn * volj * gap / Rji;
             force_i += scalar_f * yji;
           } // if bond is broken
 
