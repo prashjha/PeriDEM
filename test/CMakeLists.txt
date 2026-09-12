@@ -30,6 +30,7 @@ add_subdirectory(test_data/peridem/twop_general_inbuilt)
 add_subdirectory(test_data/peridem/compression_large_set_inbuilt)
 add_subdirectory(test_data/peridem/self_contact_mode1_inbuilt)
 add_subdirectory(test_data/peridem/wall_analytical_inbuilt)
+add_subdirectory(test_data/peridem/notched_impact_inbuilt)
 add_subdirectory(test_data/peridem/jha2021_comp_n50)
 
 # ---------------------------------------------------------------------------
@@ -223,6 +224,16 @@ add_test(NAME Test_PeriDEM_policy_combo_inbuilt
 set_tests_properties(Test_PeriDEM_policy_combo_inbuilt PROPERTIES
   LABELS "PeriDEM;Physics"
   TIMEOUT 300
+)
+
+# Notched plate + impactor: prenotch bonds, tip damage outward/down, no blow-up.
+add_test(NAME Test_PeriDEM_notched_impact
+  COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 4
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_notched_impact_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_notched_impact PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 900
 )
 
 # Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),

@@ -55,7 +55,17 @@ Run: `ctest --test-dir build/linux -R 'Test_PeriDEM_twop_jha2021_(table2|inbuilt
 
 ## Bhattacharya and Lipton, SISC 2023
 
-Grain shape and topology vs bulk response in PeriDEM. No CR table. Next: pick a two-grain or small-pack figure and a numeric bulk-stress or damage metric.
+Notched-plate impact (paper §6.2, Kalthoff-style).
+`Test_PeriDEM_notched_impact` (`test/test_data/peridem/notched_impact_inbuilt/`).
+
+Geometry is a 1/5 outline of the classic plate (40 mm × 20 mm, twin top
+notches, rectangular impactor at 32 m/s). Policies: `PMBBond`,
+`Bond_Break=absolute_stretch`, `Self_Contact=reference_gap`, damping/friction off.
+Prenotch bonds are removed after `init`; the driver calls `integrate()` (not
+`run()`, which would re-`init` and wipe the prenotch).
+
+CI asserts: prenotch + new broken bonds, tip damage centroids outward/down, no
+blow-up. Soft polymer-scale moduli keep the coarse mesh stable.
 
 ## Bhattacharya, Damircheli, Lipton, 2025 (arXiv:2506.05362)
 
