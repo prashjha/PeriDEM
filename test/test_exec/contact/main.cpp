@@ -82,6 +82,46 @@ int main() {
     std::cerr << "after-loop Vi*Vj product failed: " << assembled.d_x << "\n";
     return 1;
   }
+  // volume_product assembly must differ from volume_j when Vi ≠ 1.
+  if (!(std::abs(assembled.d_x) > std::abs(fj.d_x) + 1.)) {
+    std::cerr << "volume_product assembly should exceed volume_j spring\n";
+    return 1;
+  }
+
+  // Node damping fires only when Damping_On; law flags gate COM vs node.
+  {
+    inp::ContactPairDeck dd(/*contactR*/ 1.0, /*computeContactR*/ false,
+                            /*dampingOn*/ true, /*frictionOn*/ false,
+                            /*Kn*/ 100.0);
+    dd.d_K = 1.e6;
+    dd.d_betan = 0.2;
+    contact::Pair pd{dd,
+                     util::Point(0., 0., 0.),
+                     util::Point(0.5, 0., 0.),
+                     util::Point(1., 0., 0.),
+                     util::Point(0., 0., 0.), // approaching
+                     0,
+                     1,
+                     0,
+                     1,
+                     2.0,
+                     3.0,
+                     1.0,
+                     1.0,
+                     1.e-6,
+                     false,
+                     false};
+    const auto fd = law_j->nodeDampingForce(pd);
+    if (!(fd.length() > 0.)) {
+      std::cerr << "node damping should be nonzero for approaching pair\n";
+      return 1;
+    }
+    if (contact::usesNodeDamping("off") || !contact::usesNodeDamping("node") ||
+        !contact::usesNodeDamping("com_and_node")) {
+      std::cerr << "Damping_Law node flags incorrect\n";
+      return 1;
+    }
+  }
 
   // Stick-slip: tangential spring capped by mu * |Fn|.
   {
@@ -212,15 +252,59 @@ int main() {
       return 1;
     }
 
-    const double Kn = 100., Rc = 1., vol = 2., gap = 0.3;
-    const double scalar = Kn * (gap - Rc) * vol;
-    const util::Point f_expect(0., -scalar, 0.);
-    if (!near(f_expect.d_y, 140.)) {
-      std::cerr << "analytical wall force magnitude check setup failed\n";
+    // Analytical wall spring density matches Kn*(gap-Rc)*voli * outward.
+    const double Kn = 100., Rc = 1., vol = 2.;
+    plane.wallContactQuery(util::Point(0., 0.3, 0.), hit);
+    const double gap = hit.signed_gap;
+    auto scalar = Kn * (gap - Rc) * vol;
+    if (scalar > 0.)
+      scalar = 0.;
+    const util::Point f = scalar * (-1. * hit.outward_n);
+    if (!near(f.d_y, 140.) || !near(f.d_x, 0.)) {
+      std::cerr << "analytical wall force failed: f=(" << f.d_x << ","
+                << f.d_y << ")\n";
       return 1;
     }
   }
 
   std::cout << "TestContact wall contact OK\n";
+
+  // coulomb_simple vs stick_slip differ in tangential response.
+  {
+    inp::ContactPairDeck fd(/*contactR*/ 1.0, /*computeContactR*/ false,
+                            /*dampingOn*/ false, /*frictionOn*/ true,
+                            /*Kn*/ 100.0, /*eps*/ 1., /*mu*/ 0.2);
+    contact::Pair q{fd,
+                    util::Point(0., 0., 0.),
+                    util::Point(0.5, 0., 0.),
+                    util::Point(0., 0., 0.),
+                    util::Point(0., 5., 0.),
+                    0,
+                    1,
+                    0,
+                    1,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.e-3,
+                    false,
+                    false};
+    auto cs = contact::makePairForce("volume_j", "coulomb_simple");
+    auto ss = contact::makePairForce("volume_j", "stick_slip");
+    const auto f_cs = cs->springForce(q);
+    ss->beginStep();
+    util::Point f_ss;
+    for (int k = 0; k < 5; ++k)
+      f_ss = ss->springForce(q);
+    ss->endStep();
+    // coulomb_simple: instantaneous mu*|Fn| along et; stick_slip builds spring.
+    if (near(f_cs.d_y, f_ss.d_y, 1.e-6) && near(f_cs.d_x, f_ss.d_x, 1.e-6)) {
+      std::cerr << "coulomb_simple and stick_slip should differ in Ft\n";
+      return 1;
+    }
+  }
+
+  std::cout << "TestContact friction laws differ OK\n";
   return 0;
 }

@@ -141,6 +141,32 @@ set_tests_properties(Test_PeriDEM_twop_circ_inbuilt_contact PROPERTIES
   TIMEOUT 180
 )
 
+# Same Table-2 kinematics (test 2); Damping_Law off vs com_and_node against
+# the corresponding Table-2 coefficient-of-restitution rows.
+add_test(NAME Test_PeriDEM_damping_law_off
+  COMMAND Test_PeriDEM_twop_circ_inbuilt
+    -nThreads 4 -jha2021Table2Test 2 -dampingLaw off
+    -assertCR 0.997 -crTol 0.05
+    -outputDir damp_off_out -inputDir damp_off_inp
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_damping_law_off PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 720
+)
+
+add_test(NAME Test_PeriDEM_damping_law_com_and_node
+  COMMAND Test_PeriDEM_twop_circ_inbuilt
+    -nThreads 4 -jha2021Table2Test 2 -dampingLaw com_and_node
+    -assertCR 0.946 -crTol 0.05
+    -outputDir damp_com_out -inputDir damp_com_inp
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_damping_law_com_and_node PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 720
+)
+
 # Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),
 # Δt=0.2 μs, T=0.04 s. Unique inp/out dirs so ctest -j does not clobber decks.
 # ~7 min each at 4 threads (200000 steps).
