@@ -13,6 +13,9 @@
 
 #include "util/point.h"
 #include <cstddef>
+#include <cstdint>
+#include <mutex>
+#include <unordered_map>
 
 namespace inp {
 struct ContactPairDeck;
@@ -50,10 +53,15 @@ double correctedContactVolume(double volj, double Rji, double Rc, double h);
  * Spring uses neighbor volume Vj (optionally corrected by assembly). For
  * Pair_Law volume_product, Contact multiplies the spring sum by Vi after the
  * neighbor loop. Node damping stays a density term and is not scaled by Vi.
+ *
+ * Default friction is coulomb_simple (mu * |Fn| along tangential velocity).
  */
 class PairForce {
 public:
   virtual ~PairForce() = default;
+
+  virtual void beginStep() {}
+  virtual void endStep() {}
 
   /*! Spring + friction contribution (∝ volj). */
   virtual util::Point springForce(const Pair &p);
@@ -70,6 +78,30 @@ public:
  * volume_j (∝ Vj); assembly applies × Vi after the neighbor loop.
  */
 class VolumeProductPairForce : public PairForce {};
+
+/*!
+ * Stick-slip tangential friction: incremental tangential spring with stiffness
+ * Kn, capped by mu * |Fn|. History is per directed pair (i,j).
+ */
+class StickSlipPairForce : public PairForce {
+public:
+  void beginStep() override;
+  void endStep() override;
+  util::Point springForce(const Pair &p) override;
+
+private:
+  struct Hist {
+    util::Point delta_t;
+    std::size_t stamp = 0;
+  };
+  static std::uint64_t key(std::size_t i, std::size_t j) {
+    return (static_cast<std::uint64_t>(i) << 32) ^
+           static_cast<std::uint64_t>(j);
+  }
+  std::unordered_map<std::uint64_t, Hist> d_hist;
+  std::size_t d_stamp = 0;
+  std::mutex d_mutex;
+};
 
 } // namespace contact
 

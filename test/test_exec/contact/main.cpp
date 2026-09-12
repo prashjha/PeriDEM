@@ -62,8 +62,8 @@ int main() {
                   false,
                   false};
 
-  auto law_j = contact::makePairForce("volume_j");
-  auto law_p = contact::makePairForce("volume_product");
+  auto law_j = contact::makePairForce("volume_j", "coulomb_simple");
+  auto law_p = contact::makePairForce("volume_product", "coulomb_simple");
 
   // Both pair kernels use Vj only; volume_product applies Vi after the loop.
   const auto fj = law_j->springForce(p);
@@ -80,6 +80,49 @@ int main() {
     return 1;
   }
 
-  std::cout << "TestContact volume_product OK\n";
+  // Stick-slip: tangential spring capped by mu * |Fn|.
+  {
+    inp::ContactPairDeck fd(/*contactR*/ 1.0, /*computeContactR*/ false,
+                            /*dampingOn*/ false, /*frictionOn*/ true,
+                            /*Kn*/ 100.0, /*eps*/ 1., /*mu*/ 0.2);
+    contact::Pair q{fd,
+                    util::Point(0., 0., 0.),
+                    util::Point(0.5, 0., 0.),
+                    util::Point(0., 0., 0.),
+                    util::Point(0., 10., 0.), // large tangential approach
+                    0,
+                    1,
+                    0,
+                    1,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.0,
+                    1.e-3,
+                    false,
+                    false};
+    auto ss = contact::makePairForce("volume_j", "stick_slip");
+    ss->beginStep();
+    // Accumulate enough tangential slip to exceed the Coulomb limit.
+    util::Point fss;
+    for (int k = 0; k < 20; ++k)
+      fss = ss->springForce(q);
+    ss->endStep();
+
+    const double fn = 100.0 * (1.0 - 0.5) * 1.0;
+    const double ft_max = 0.2 * fn;
+    const double ft = std::abs(fss.d_y);
+    if (ft > ft_max + 1.e-9) {
+      std::cerr << "stick-slip exceeded Coulomb cap: ft=" << ft
+                << " ft_max=" << ft_max << "\n";
+      return 1;
+    }
+    if (ft < 0.5 * ft_max) {
+      std::cerr << "stick-slip did not mobilize friction: ft=" << ft << "\n";
+      return 1;
+    }
+  }
+
+  std::cout << "TestContact volume_product / stick_slip OK\n";
   return 0;
 }

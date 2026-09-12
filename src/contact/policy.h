@@ -19,8 +19,9 @@
 
 namespace contact {
 
-/*! @brief Build the pair-force implementation named by the contact deck. */
-std::unique_ptr<PairForce> makePairForce(const std::string &name);
+/*! @brief Build pair-force + friction law from contact deck names. */
+std::unique_ptr<PairForce> makePairForce(const std::string &pair_law,
+                                         const std::string &friction_law);
 
 /*! @brief Build the damping implementation named by the contact deck. */
 std::unique_ptr<Damping> makeDamping(const std::string &name);

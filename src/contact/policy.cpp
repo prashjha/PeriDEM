@@ -14,15 +14,26 @@
 
 namespace contact {
 
-std::unique_ptr<PairForce> makePairForce(const std::string &name) {
-  if (name == "volume_j")
-    return std::make_unique<PairForce>();
-  if (name == "volume_product")
-    return std::make_unique<VolumeProductPairForce>();
+std::unique_ptr<PairForce> makePairForce(const std::string &pair_law,
+                                         const std::string &friction_law) {
+  if (pair_law != "volume_j" && pair_law != "volume_product") {
+    throw std::runtime_error(
+        "Unknown Contact.Pair_Law '" + pair_law +
+        "'. Supported: volume_j, volume_product.");
+  }
+  if (friction_law != "coulomb_simple" && friction_law != "stick_slip") {
+    throw std::runtime_error(
+        "Unknown Contact.Friction_Law '" + friction_law +
+        "'. Supported: coulomb_simple, stick_slip.");
+  }
 
-  throw std::runtime_error(
-      "Unknown Contact.Pair_Law '" + name +
-      "'. Supported: volume_j, volume_product.");
+  // Stick-slip owns the spring+friction kernel; volume_product is applied in
+  // Contact assembly (× Vi after the neighbor loop).
+  if (friction_law == "stick_slip")
+    return std::make_unique<StickSlipPairForce>();
+  if (pair_law == "volume_product")
+    return std::make_unique<VolumeProductPairForce>();
+  return std::make_unique<PairForce>();
 }
 
 std::unique_ptr<Damping> makeDamping(const std::string &name) {

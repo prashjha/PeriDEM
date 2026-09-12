@@ -66,7 +66,7 @@ void contact::Contact::setup(data::ModelData &data) {
   auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
 
   // Select pair / damping implementations from deck (defaults = current laws).
-  setPairForce(makePairForce(contactDeck.d_pairLaw));
+  setPairForce(makePairForce(contactDeck.d_pairLaw, contactDeck.d_frictionLaw));
   setDamping(makeDamping(contactDeck.d_dampingLaw));
   util::io::log(1, std::format(
       "  Pair_Law = {}, Damping_Law = {}, Friction_Law = {}\n"
@@ -445,6 +445,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
   auto *pair = d_pairForce.get();
   const auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
   const bool volume_product = (contactDeck.d_pairLaw == "volume_product");
+  pair->beginStep();
 
   // Diagnostics across contact assembly (max over active pairs this step).
   std::atomic<double> max_pen{0.};
@@ -589,6 +590,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
   );
 
   executor.run(taskflow).get();
+  pair->endStep();
 
   // Log contact diagnostics near plate onset / whenever pairs go deep.
   const bool periodic = (data.d_infoN > 0 && data.d_n % data.d_infoN == 0);

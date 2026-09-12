@@ -82,3 +82,64 @@ util::Point contact::PairForce::nodeDampingForce(const Pair &p) {
 util::Point contact::PairForce::force(const Pair &p) {
   return springForce(p) + nodeDampingForce(p);
 }
+
+void contact::StickSlipPairForce::beginStep() { ++d_stamp; }
+
+void contact::StickSlipPairForce::endStep() {
+  std::lock_guard<std::mutex> lock(d_mutex);
+  for (auto it = d_hist.begin(); it != d_hist.end();) {
+    if (it->second.stamp != d_stamp)
+      it = d_hist.erase(it);
+    else
+      ++it;
+  }
+}
+
+util::Point contact::StickSlipPairForce::springForce(const Pair &p) {
+  const auto yji = p.yj - p.yi;
+  const auto Rji = yji.length();
+  if (!(Rji > 0.) || !util::isLess(Rji, p.deck.d_contactR))
+    return {};
+
+  auto en = yji / Rji;
+  auto scalar_f = p.deck.d_Kn * (Rji - p.deck.d_contactR) * p.volj;
+  if (scalar_f > 0.)
+    scalar_f = 0.;
+
+  util::Point f = scalar_f * en;
+  if (!p.deck.d_frictionOn)
+    return f;
+
+  const double fn_mag = -scalar_f; // scalar_f <= 0 in contact
+  if (!(fn_mag > 0.) || !(p.dt > 0.))
+    return f;
+
+  const auto vji = p.vj - p.vi;
+  auto vt = vji - (vji * en) * en;
+
+  util::Point ft_trial;
+  {
+    std::lock_guard<std::mutex> lock(d_mutex);
+    auto &hist = d_hist[key(p.i, p.j)];
+    hist.stamp = d_stamp;
+    hist.delta_t += vt * p.dt;
+    // Keep tangential history in the current tangent plane.
+    hist.delta_t -= (hist.delta_t * en) * en;
+
+    // Tangential stiffness taken equal to normal Kn (density form × volj).
+    const double Kt = p.deck.d_Kn;
+    const double kt_vol = Kt * p.volj;
+    ft_trial = hist.delta_t * (-kt_vol);
+    const double ft_mag = ft_trial.length();
+    const double ft_max = p.deck.d_mu * fn_mag;
+
+    if (util::isGreater(ft_mag, ft_max) && ft_mag > 0.) {
+      ft_trial *= (ft_max / ft_mag);
+      if (kt_vol > 0.)
+        hist.delta_t = ft_trial * (-1.0 / kt_vol);
+    }
+  }
+
+  f += ft_trial;
+  return f;
+}

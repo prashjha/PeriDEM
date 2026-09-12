@@ -109,9 +109,9 @@ struct ContactDeck {
       throw std::runtime_error(
           "Contact.Damping_Law must be com_and_node.");
     }
-    if (d_frictionLaw != "coulomb_simple") {
+    if (d_frictionLaw != "coulomb_simple" && d_frictionLaw != "stick_slip") {
       throw std::runtime_error(
-          "Contact.Friction_Law must be coulomb_simple.");
+          "Contact.Friction_Law must be coulomb_simple|stick_slip.");
     }
 
     auto nSets = j.value("Sets", size_t(0));
