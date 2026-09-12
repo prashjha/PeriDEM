@@ -9,8 +9,10 @@
  */
 
 #include "pdForce.h"
+#include "selfContact.h"
 
 #include <cstdlib>
+#include <memory>
 #include <string>
 #include "pdMpi.h"
 
@@ -26,9 +28,8 @@
 
 namespace pd {
 /*!
- * Jha et al. JMPS 2021 Eq. (11): h(s)=1 iff s < s0 (tension-only break).
- * Legacy PeriDEM used |s| > sc (also breaks in compression). That hands a
- * deeply penetrated pair to the broken-bond Kn contact branch and detonates.
+ * Default: break only in tension (s > sc). Legacy |s| > sc also breaks in
+ * compression and can hand a deeply penetrated pair to self-contact.
  * Set PERIDEM_ABS_STRETCH_BREAK=1 to restore the legacy |s| criterion.
  */
 bool absStretchBreak() {
@@ -47,6 +48,8 @@ void pd::computeForces(data::ModelData &data) {
 
   const auto dim = data.d_modelDeck_p->d_dim;
   const bool is_state = data.d_particlesListTypeAll[0]->getMaterial()->isStateActive();
+  const auto selfContact =
+      pd::makeSelfContact(data.d_modelDeck_p->d_selfContact);
 
   // compute state-based helper quantities
   if (is_state) {
@@ -97,8 +100,9 @@ void pd::computeForces(data::ModelData &data) {
 
             // get fracture state, modify, and set
             auto fs = data.d_fracture_p->getBondState(i, k);
-            // Paper: break when s >= sc (tension only). Legacy |s|>sc also
-            // breaks in compression and can detonate via broken-bond contact.
+            // Default: break when s >= sc (tension only). Legacy |s|>sc also
+            // breaks in compression and can hand a deeply penetrated pair to
+            // self-contact.
             if (!fs) {
               const bool broke = pd::absStretchBreak()
                                      ? util::isGreater(std::abs(s), sc + 1.0e-10)
@@ -139,7 +143,8 @@ void pd::computeForces(data::ModelData &data) {
   tf::Taskflow taskflow;
 
   taskflow.for_each_index(
-    (std::size_t) 0, data.d_fPdCompNodes.size(), (std::size_t) 1, [&data](std::size_t II) {
+    (std::size_t) 0, data.d_fPdCompNodes.size(), (std::size_t) 1,
+    [&data, selfContact = selfContact.get()](std::size_t II) {
       auto i = data.d_fPdCompNodes[II];
 
       // local variable to hold force
@@ -218,25 +223,8 @@ void pd::computeForces(data::ModelData &data) {
             } // if bond-based
           }   // if bond not broken
           else {
-            // Broken-bond contact (intra-grain). Cap penetration so a bond
-            // that somehow breaks while already deep inside Rc cannot inject
-            // a discontinuous Kn*(R-Rc) kick (T11 C2).
-            auto yji = xj + uj - (xi + ui);
-            auto Rji = yji.length();
-            if (!(Rji > 0.)) {
-              k++;
-              continue;
-            }
-            double gap = Rji - pi->d_Rc;
-            if (gap > 0.)
-              gap = 0.;
-            else {
-              const double gap_cap = -0.25 * pi->d_Rc;
-              if (gap < gap_cap)
-                gap = gap_cap;
-            }
-            scalar_f = pi->d_Kn * volj * gap / Rji;
-            force_i += scalar_f * yji;
+            const auto yji = xj + uj - (xi + ui);
+            force_i += selfContact->force(yji, volj, pi->d_Kn, pi->d_Rc);
           } // if bond is broken
 
           // calculate damage
