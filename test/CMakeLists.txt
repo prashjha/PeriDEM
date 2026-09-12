@@ -167,6 +167,32 @@ set_tests_properties(Test_PeriDEM_damping_law_com_and_node PROPERTIES
   TIMEOUT 720
 )
 
+# Mild oblique impact; particle 0 is xy-fixed so friction is checked by the
+# free particle's |vx| after contact (ratio min_vx/ic_vx < 0.95).
+add_test(NAME Test_PeriDEM_friction_coulomb_simple
+  COMMAND Test_PeriDEM_twop_circ_inbuilt
+    -nThreads 4 -jha2021Table2Test 2 -enableFriction -mu 0.5 -icVx 0.02
+    -frictionLaw coulomb_simple -assertLateralVx 0.95
+    -outputDir fric_cs_out -inputDir fric_cs_inp
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_friction_coulomb_simple PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 720
+)
+
+add_test(NAME Test_PeriDEM_friction_stick_slip
+  COMMAND Test_PeriDEM_twop_circ_inbuilt
+    -nThreads 4 -jha2021Table2Test 2 -enableFriction -mu 0.5 -icVx 0.02
+    -frictionLaw stick_slip -assertLateralVx 0.95
+    -outputDir fric_ss_out -inputDir fric_ss_inp
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_friction_stick_slip PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 720
+)
+
 # Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),
 # Δt=0.2 μs, T=0.04 s. Unique inp/out dirs so ctest -j does not clobber decks.
 # ~7 min each at 4 threads (200000 steps).

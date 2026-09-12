@@ -92,7 +92,10 @@ json buildInputJson(const std::string &output_path_for_deck,
                     double beta_n_factor,
                     const std::string &pair_law = "volume_j",
                     const std::string &damping_law = "com_and_node",
-                    const std::string &friction_law = "coulomb_simple") {
+                    const std::string &friction_law = "coulomb_simple",
+                    bool friction_on = false,
+                    double friction_mu = -1.,
+                    double ic_vx = 0.) {
 
   const std::vector<double> center = {0.0, 0.0, 0.0};
   const double R1 = 0.001;
@@ -151,6 +154,7 @@ json buildInputJson(const std::string &output_path_for_deck,
     if (fallen > 0.)
       ic_vel[1] = -std::sqrt(2.0 * std::abs(-10.0) * fallen);
   }
+  ic_vel[0] = ic_vx;
   bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("IC", false, geom::GeomData(),
       {1}, {}, "", {}, "", {},
       {}, false, "Constant_Velocity", ic_vel);
@@ -198,9 +202,11 @@ json buildInputJson(const std::string &output_path_for_deck,
   // v0.1.0 circ_damp: Friction_On: false leaves μ = 0 (coeff is not read).
   // Nonzero μ with the flag off still applies a tangential force in PairForce
   // and walks the falling particle sideways (Table 2 test 4).
-  const double mu = two_particle_test ? 0. : friction_coeff;
+  const double mu =
+      (friction_mu >= 0.) ? friction_mu
+                          : (two_particle_test ? 0. : friction_coeff);
   json contact_base = inp::ContactPairDeck::getExampleJson(
-      R_contact_factor, true, damping_on, false, Kn_11, eps_n, mu,
+      R_contact_factor, true, damping_on, friction_on, Kn_11, eps_n, mu,
       1.0, beta_n_factor, 1.0, 0.0, K1);
 
   pContactJson["Set_1_1"] = contact_base;
@@ -315,6 +321,43 @@ private:
   std::vector<std::pair<double, double>> d_samples;
 };
 
+/*! Free particle (index 1) lateral speed + contact flag for friction checks.
+ *  Particle 0 is typically displacement-fixed, so it cannot show COM vx. */
+class LateralProbe : public postprocess::Postprocess {
+public:
+  explicit LateralProbe(double ic_abs_vx) : d_icAbsVx(std::abs(ic_abs_vx)) {}
+
+  void checkStop(data::ModelData &data) override {
+    postprocess::Postprocess::checkStop(data);
+    if (data.d_particlesListTypeAll.size() < 2)
+      return;
+    const auto *p0 = data.d_particlesListTypeAll[0];
+    const auto *p1 = data.d_particlesListTypeAll[1];
+    const double gap = p0->getXCenter().dist(p1->getXCenter()) -
+                       p0->d_geom_p->boundingRadius() -
+                       p1->d_geom_p->boundingRadius();
+    if (gap < 0.5 * 0.001)
+      d_contacted = true;
+    const double vx = std::abs(p1->getVCenter().d_x);
+    if (vx > d_maxAbsVx)
+      d_maxAbsVx = vx;
+    if (d_contacted && vx < d_minAbsVxAfterContact)
+      d_minAbsVxAfterContact = vx;
+  }
+  bool contacted() const { return d_contacted; }
+  double maxAbsVx() const { return d_maxAbsVx; }
+  double minAbsVxAfterContact() const {
+    return d_contacted ? d_minAbsVxAfterContact : d_maxAbsVx;
+  }
+  double icAbsVx() const { return d_icAbsVx; }
+
+private:
+  double d_icAbsVx = 0.;
+  double d_maxAbsVx = 0.;
+  double d_minAbsVxAfterContact = 1.0e300;
+  bool d_contacted = false;
+};
+
 int main(int argc, char *argv[]) {
 
   util::parallel::initMpi(argc, argv);
@@ -353,6 +396,11 @@ int main(int argc, char *argv[]) {
   std::string pair_law = "volume_j";
   std::string damping_law = "com_and_node";
   std::string friction_law = "coulomb_simple";
+  bool friction_on = false;
+  double friction_mu = -1.;
+  double ic_vx = 0.;
+  bool assert_lat = false;
+  double lat_min = 0.;
   int jha_test = 0;
   if (input.cmdOptionExists("-jha2021Table2Test"))
     jha_test = std::stoi(input.getCmdOption("-jha2021Table2Test"));
@@ -396,6 +444,17 @@ int main(int argc, char *argv[]) {
     damping_law = input.getCmdOption("-dampingLaw");
   if (input.cmdOptionExists("-frictionLaw"))
     friction_law = input.getCmdOption("-frictionLaw");
+  if (input.cmdOptionExists("-enableFriction"))
+    friction_on = true;
+  if (input.cmdOptionExists("-mu"))
+    friction_mu = std::stod(input.getCmdOption("-mu"));
+  if (input.cmdOptionExists("-icVx"))
+    ic_vx = std::stod(input.getCmdOption("-icVx"));
+  if (input.cmdOptionExists("-assertLateralVx")) {
+    assert_lat = true;
+    lat_min = std::stod(input.getCmdOption("-assertLateralVx"));
+    assert_cr = false; // skip CR gate from table2 defaults for this lateral check
+  }
   if (input.cmdOptionExists("-assertCR")) {
     assert_cr = true;
     cr_ref = std::stod(input.getCmdOption("-assertCR"));
@@ -453,7 +512,8 @@ int main(int argc, char *argv[]) {
                                   num_steps, zero_ic, mesh_size_in, horizon_in,
                                   damping_on, eps_n, jha_test > 0, file_mesh,
                                   beta_n_factor, pair_law, damping_law,
-                                  friction_law);
+                                  friction_law, friction_on, friction_mu,
+                                  ic_vx);
 
   const fs::path input_json_path = inp_dir / "input.json";
   {
@@ -477,9 +537,14 @@ int main(int argc, char *argv[]) {
 
   PeriDEMModel dem(deck);
   RestitutionProbe *probe = nullptr;
+  LateralProbe *lat_probe = nullptr;
   if (assert_cr) {
     auto p = std::make_unique<RestitutionProbe>(0.001);
     probe = p.get();
+    dem.setPostprocess(std::move(p));
+  } else if (assert_lat) {
+    auto p = std::make_unique<LateralProbe>(ic_vx);
+    lat_probe = p.get();
     dem.setPostprocess(std::move(p));
   }
   dem.run(deck);
@@ -517,6 +582,27 @@ int main(int argc, char *argv[]) {
     }
     if (!probe->contacted() || std::abs(cr - cr_ref) > cr_tol) {
       util::io::print("assertCR: coefficient of restitution out of range.\n");
+      return EXIT_FAILURE;
+    }
+  }
+
+  if (assert_lat) {
+    const double vmin = lat_probe->minAbsVxAfterContact();
+    const double vmax = lat_probe->maxAbsVx();
+    const double ic = lat_probe->icAbsVx();
+    util::io::print(std::format(
+        "assertLateralVx: contacted={}, max|vx|={}, min|vx|_after_contact={}, "
+        "ic|vx|={}, slow_factor_max={}\n",
+        lat_probe->contacted(), vmax, vmin, ic, lat_min));
+    if (!lat_probe->contacted()) {
+      util::io::print("assertLateralVx: particles never contacted.\n");
+      return EXIT_FAILURE;
+    }
+    // lat_min is the maximum allowed ratio min_vx/ic_vx after contact (e.g. 0.95).
+    if (!(ic > 0.) || !(vmin < lat_min * ic)) {
+      util::io::print(
+          "assertLateralVx: friction did not slow lateral speed enough "
+          "(or kinematics missed).\n");
       return EXIT_FAILURE;
     }
   }
