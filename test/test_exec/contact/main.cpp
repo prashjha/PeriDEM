@@ -192,7 +192,8 @@ int main() {
 
   std::cout << "TestContact damping laws OK\n";
 
-  // Self-contact: broken_bond_kn uses Rc; reference_gap uses r0.
+  // Reference-aware self-contact formula vs broken_bond_kn (natural R = Rc).
+  // Force: Kn * volj * capped_gap / R * yji, gap = R - natural_R, cap = -0.25*natural_R.
   {
     auto bb = pd::makeSelfContact("broken_bond_kn");
     auto rg = pd::makeSelfContact("reference_gap");

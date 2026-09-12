@@ -28,6 +28,7 @@ add_subdirectory(test_data/peridem/twop_circ)
 add_subdirectory(test_data/peridem/twop_circ_inbuilt)
 add_subdirectory(test_data/peridem/twop_general_inbuilt)
 add_subdirectory(test_data/peridem/compression_large_set_inbuilt)
+add_subdirectory(test_data/peridem/self_contact_mode1_inbuilt)
 add_subdirectory(test_data/peridem/jha2021_comp_n50)
 
 # ---------------------------------------------------------------------------
@@ -191,6 +192,16 @@ add_test(NAME Test_PeriDEM_friction_stick_slip
 set_tests_properties(Test_PeriDEM_friction_stick_slip PROPERTIES
   LABELS "PeriDEM;Physics"
   TIMEOUT 720
+)
+
+# Mode-I open/close across a through precrack; Self_Contact laws differ.
+add_test(NAME Test_PeriDEM_self_contact_mode1
+  COMMAND Test_PeriDEM_self_contact_mode1_inbuilt -nThreads 4
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_self_contact_mode1_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_self_contact_mode1 PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 300
 )
 
 # Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),
