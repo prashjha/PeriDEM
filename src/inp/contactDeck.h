@@ -105,9 +105,10 @@ struct ContactDeck {
       throw std::runtime_error(
           "Contact.Pair_Law must be volume_j|volume_product.");
     }
-    if (d_dampingLaw != "com_and_node") {
+    if (d_dampingLaw != "com_and_node" && d_dampingLaw != "com" &&
+        d_dampingLaw != "node" && d_dampingLaw != "off") {
       throw std::runtime_error(
-          "Contact.Damping_Law must be com_and_node.");
+          "Contact.Damping_Law must be com_and_node|com|node|off.");
     }
     if (d_frictionLaw != "coulomb_simple" && d_frictionLaw != "stick_slip") {
       throw std::runtime_error(

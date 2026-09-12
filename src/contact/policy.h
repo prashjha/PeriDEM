@@ -23,8 +23,14 @@ namespace contact {
 std::unique_ptr<PairForce> makePairForce(const std::string &pair_law,
                                          const std::string &friction_law);
 
-/*! @brief Build the damping implementation named by the contact deck. */
+/*! @brief Build COM damping object, or nullptr when the law has no COM term. */
 std::unique_ptr<Damping> makeDamping(const std::string &name);
+
+/*! @brief True for com / com_and_node. */
+bool usesComDamping(const std::string &damping_law);
+
+/*! @brief True for node / com_and_node. */
+bool usesNodeDamping(const std::string &damping_law);
 
 } // namespace contact
 

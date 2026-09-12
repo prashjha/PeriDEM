@@ -37,12 +37,22 @@ std::unique_ptr<PairForce> makePairForce(const std::string &pair_law,
 }
 
 std::unique_ptr<Damping> makeDamping(const std::string &name) {
-  if (name == "com_and_node")
+  if (name == "com_and_node" || name == "com")
     return std::make_unique<Damping>();
+  if (name == "node" || name == "off")
+    return nullptr;
 
   throw std::runtime_error(
       "Unknown Contact.Damping_Law '" + name +
-      "'. Supported: com_and_node.");
+      "'. Supported: com_and_node, com, node, off.");
+}
+
+bool usesComDamping(const std::string &damping_law) {
+  return damping_law == "com" || damping_law == "com_and_node";
+}
+
+bool usesNodeDamping(const std::string &damping_law) {
+  return damping_law == "node" || damping_law == "com_and_node";
 }
 
 } // namespace contact

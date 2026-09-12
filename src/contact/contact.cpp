@@ -68,6 +68,7 @@ void contact::Contact::setup(data::ModelData &data) {
   // Select pair / damping implementations from deck (defaults = current laws).
   setPairForce(makePairForce(contactDeck.d_pairLaw, contactDeck.d_frictionLaw));
   setDamping(makeDamping(contactDeck.d_dampingLaw));
+  d_useNodeDamping = usesNodeDamping(contactDeck.d_dampingLaw);
   util::io::log(1, std::format(
       "  Pair_Law = {}, Damping_Law = {}, Friction_Law = {}\n"
       "  Bond_Break = {}, Self_Contact = {}, Wall_Contact = {}\n",
@@ -445,6 +446,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
   auto *pair = d_pairForce.get();
   const auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
   const bool volume_product = (contactDeck.d_pairLaw == "volume_product");
+  const bool use_node_damping = d_useNodeDamping;
   pair->beginStep();
 
   // Diagnostics across contact assembly (max over active pairs this step).
@@ -464,8 +466,8 @@ void contact::Contact::computeForces(data::ModelData &data) {
   taskflow.for_each_index((std::size_t) 0,
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
-                          [&data, pair, volume_product, &max_pen, &max_fij,
-                           &min_rji, &n_active,
+                          [&data, pair, volume_product, use_node_damping,
+                           &max_pen, &max_fij, &min_rji, &n_active,
                            &max_neigh](std::size_t II) {
 
                               auto i = data.d_fContCompNodes[II];
@@ -549,7 +551,9 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                        data.d_currentDt,
                                        pi->isWall(), pj->isWall()};
                                 const util::Point fs = pair->springForce(p);
-                                const util::Point fd = pair->nodeDampingForce(p);
+                                util::Point fd;
+                                if (use_node_damping)
+                                  fd = pair->nodeDampingForce(p);
                                 const double fij_mag = (fs + fd).length();
                                 if (fij_mag > 0.) {
                                   double prev_f =

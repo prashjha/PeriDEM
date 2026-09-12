@@ -39,6 +39,8 @@ public:
 
   std::unique_ptr<PairForce> d_pairForce;
   std::unique_ptr<Damping> d_damping;
+  /*! @brief Apply node-level damping inside the pair assembly loop. */
+  bool d_useNodeDamping = true;
 };
 
 } // namespace contact

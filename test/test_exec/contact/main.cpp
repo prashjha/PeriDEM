@@ -124,5 +124,29 @@ int main() {
   }
 
   std::cout << "TestContact volume_product / stick_slip OK\n";
+
+  // Damping_Law selection: COM object vs node-damping flag.
+  {
+    if (contact::makeDamping("off") != nullptr ||
+        contact::makeDamping("node") != nullptr) {
+      std::cerr << "off/node should not create COM damping\n";
+      return 1;
+    }
+    if (contact::makeDamping("com") == nullptr ||
+        contact::makeDamping("com_and_node") == nullptr) {
+      std::cerr << "com/com_and_node should create COM damping\n";
+      return 1;
+    }
+    if (!contact::usesNodeDamping("com_and_node") ||
+        !contact::usesNodeDamping("node") ||
+        contact::usesNodeDamping("com") || contact::usesNodeDamping("off") ||
+        !contact::usesComDamping("com") ||
+        contact::usesComDamping("node")) {
+      std::cerr << "damping law flags incorrect\n";
+      return 1;
+    }
+  }
+
+  std::cout << "TestContact damping laws OK\n";
   return 0;
 }
