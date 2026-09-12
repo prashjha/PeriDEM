@@ -65,26 +65,19 @@ int main() {
                   false,
                   false};
 
-  auto law_j = contact::makePairForce("volume_j", "coulomb_simple");
-  auto law_p = contact::makePairForce("volume_product", "coulomb_simple");
+  auto law_j = contact::makePairForce("coulomb_simple");
 
-  // Both pair kernels use Vj only; volume_product applies Vi after the loop.
+  // Force density spring ∝ Kn*(R-Rc)*Vj (partial volume applied by assembly).
   const auto fj = law_j->springForce(p);
-  const auto fp = law_p->springForce(p);
-  if (!near(fj.d_x, fp.d_x) || !near(fj.d_x, -150.)) {
-    std::cerr << "spring kernels should match and equal Kn*(R-Rc)*Vj: fj.x="
-              << fj.d_x << " fp.x=" << fp.d_x << "\n";
+  if (!near(fj.d_x, -150.)) {
+    std::cerr << "spring should equal Kn*(R-Rc)*Vj: fj.x=" << fj.d_x << "\n";
     return 1;
   }
 
-  const auto assembled = p.voli * fj; // after-loop × Vi
-  if (!near(assembled.d_x, -300.)) {
-    std::cerr << "after-loop Vi*Vj product failed: " << assembled.d_x << "\n";
-    return 1;
-  }
-  // volume_product assembly must differ from volume_j when Vi ≠ 1.
-  if (!(std::abs(assembled.d_x) > std::abs(fj.d_x) + 1.)) {
-    std::cerr << "volume_product assembly should exceed volume_j spring\n";
+  // Nodal force would be fj*Vi; density-form integrator uses fj directly.
+  const auto nodal = p.voli * fj;
+  if (!near(nodal.d_x, -300.)) {
+    std::cerr << "nodal force Vi*fj failed: " << nodal.d_x << "\n";
     return 1;
   }
 
@@ -144,7 +137,7 @@ int main() {
                     1.e-3,
                     false,
                     false};
-    auto ss = contact::makePairForce("volume_j", "stick_slip");
+    auto ss = contact::makePairForce("stick_slip");
     ss->beginStep();
     // Accumulate enough tangential slip to exceed the Coulomb limit.
     util::Point fss;
@@ -166,7 +159,7 @@ int main() {
     }
   }
 
-  std::cout << "TestContact volume_product / stick_slip OK\n";
+  std::cout << "TestContact spring / stick_slip OK\n";
 
   // Damping_Law selection: COM object vs node-damping flag.
   {
@@ -291,8 +284,8 @@ int main() {
                     1.e-3,
                     false,
                     false};
-    auto cs = contact::makePairForce("volume_j", "coulomb_simple");
-    auto ss = contact::makePairForce("volume_j", "stick_slip");
+    auto cs = contact::makePairForce("coulomb_simple");
+    auto ss = contact::makePairForce("stick_slip");
     const auto f_cs = cs->springForce(q);
     ss->beginStep();
     util::Point f_ss;

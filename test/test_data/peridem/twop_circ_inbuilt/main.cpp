@@ -90,7 +90,6 @@ json buildInputJson(const std::string &output_path_for_deck,
                     double mesh_size_in, double horizon_in, bool damping_on,
                     double eps_n, bool two_particle_test, bool file_mesh,
                     double beta_n_factor,
-                    const std::string &pair_law = "volume_j",
                     const std::string &damping_law = "com_and_node",
                     const std::string &friction_law = "coulomb_simple",
                     bool friction_on = false,
@@ -218,7 +217,6 @@ json buildInputJson(const std::string &output_path_for_deck,
   pContactJson["Set_2_2"] = contact_base;
   pContactJson["Set_2_2"]["Kn"] = Kn_22;
   pContactJson["Set_2_2"]["K"] = K2;
-  pContactJson["Pair_Law"] = pair_law;
   pContactJson["Damping_Law"] = damping_law;
   pContactJson["Friction_Law"] = friction_law;
   pDeckJson["Contact"] = pContactJson;
@@ -393,7 +391,6 @@ int main(int argc, char *argv[]) {
   bool damping_on = false;
   double eps_n = 0.9;
   double beta_n_factor = 100.0;
-  std::string pair_law = "volume_j";
   std::string damping_law = "com_and_node";
   std::string friction_law = "coulomb_simple";
   bool friction_on = false;
@@ -438,8 +435,6 @@ int main(int argc, char *argv[]) {
   }
   if (input.cmdOptionExists("-betaNFactor"))
     beta_n_factor = std::stod(input.getCmdOption("-betaNFactor"));
-  if (input.cmdOptionExists("-pairLaw"))
-    pair_law = input.getCmdOption("-pairLaw");
   if (input.cmdOptionExists("-dampingLaw"))
     damping_law = input.getCmdOption("-dampingLaw");
   if (input.cmdOptionExists("-frictionLaw"))
@@ -463,8 +458,8 @@ int main(int argc, char *argv[]) {
     cr_tol = std::stod(input.getCmdOption("-crTol"));
   util::io::print(std::format(
       "final_time = {}, num_steps = {}, zero_ic = {}, eps_n = {}, C_bar = {}, "
-      "damping = {}, Pair_Law = {}, Damping_Law = {}, Friction_Law = {}\n",
-      final_time, num_steps, zero_ic, eps_n, beta_n_factor, damping_on, pair_law,
+      "damping = {}, Damping_Law = {}, Friction_Law = {}\n",
+      final_time, num_steps, zero_ic, eps_n, beta_n_factor, damping_on,
       damping_law, friction_law));
 
   namespace fs = std::filesystem;
@@ -511,7 +506,7 @@ int main(int argc, char *argv[]) {
   auto inputJson = buildInputJson(output_path_for_deck, mesh1, mesh2, final_time,
                                   num_steps, zero_ic, mesh_size_in, horizon_in,
                                   damping_on, eps_n, jha_test > 0, file_mesh,
-                                  beta_n_factor, pair_law, damping_law,
+                                  beta_n_factor, damping_law,
                                   friction_law, friction_on, friction_mu,
                                   ic_vx);
 

@@ -68,14 +68,14 @@ void contact::Contact::setup(data::ModelData &data) {
   auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
 
   // Select pair / damping / wall implementations from deck (defaults = current).
-  setPairForce(makePairForce(contactDeck.d_pairLaw, contactDeck.d_frictionLaw));
+  setPairForce(makePairForce(contactDeck.d_frictionLaw));
   setDamping(makeDamping(contactDeck.d_dampingLaw));
   d_useNodeDamping = usesNodeDamping(contactDeck.d_dampingLaw);
   setWallContact(makeWallContact(data.d_modelDeck_p->d_wallContact));
   util::io::log(1, std::format(
-      "  Pair_Law = {}, Damping_Law = {}, Friction_Law = {}\n"
+      "  Damping_Law = {}, Friction_Law = {}\n"
       "  Bond_Break = {}, Self_Contact = {}, Wall_Contact = {}\n",
-      contactDeck.d_pairLaw, contactDeck.d_dampingLaw, contactDeck.d_frictionLaw,
+      contactDeck.d_dampingLaw, contactDeck.d_frictionLaw,
       data.d_modelDeck_p->d_bondBreak, data.d_modelDeck_p->d_selfContact,
       data.d_modelDeck_p->d_wallContact));
 
@@ -447,8 +447,6 @@ void contact::Contact::computeForces(data::ModelData &data) {
   util::io::log(3, "    Computing normal contact force \n");
 
   auto *pair = d_pairForce.get();
-  const auto &contactDeck = data.d_particleDeck_p->d_contactDeck;
-  const bool volume_product = (contactDeck.d_pairLaw == "volume_product");
   const bool use_node_damping = d_useNodeDamping;
   const bool skip_meshed_wall =
       (d_wallContact && d_wallContact->skipsMeshedGrainWall());
@@ -471,7 +469,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
   taskflow.for_each_index((std::size_t) 0,
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
-                          [&data, pair, volume_product, use_node_damping,
+                          [&data, pair, use_node_damping,
                            skip_meshed_wall,
                            &max_pen, &max_fij, &min_rji, &n_active,
                            &max_neigh](std::size_t II) {
@@ -584,22 +582,15 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                 // would double-count and can blow up at contact.
                                 if (!pi->isWall() && pj->isWall() &&
                                     util::parallel::isMpiEnabled()) {
-                                  if (volume_product) {
-                                    // Spring density will be ×voli after the loop.
-                                    data.d_f[j_id] -= voli * fs;
-                                  } else {
-                                    const double volj_raw = data.d_vol[j_id];
-                                    const double scale =
-                                        (volj_raw > 0.) ? (voli / volj_raw) : 0.;
-                                    data.d_f[j_id] -= scale * fs;
-                                  }
+                                  // fs is force density on i (∝ Ṽj). Deposit
+                                  // Newton-III onto the wall in density form
+                                  // using grain/wall volume ratio.
+                                  const double volj_raw = data.d_vol[j_id];
+                                  const double scale =
+                                      (volj_raw > 0.) ? (voli / volj_raw) : 0.;
+                                  data.d_f[j_id] -= scale * fs;
                                 }
                               }
-
-                              // volume_product: Fr ∝ Vi Vj with Vi after the j-loop.
-                              // Node damping stays a density term (not × Vi).
-                              if (volume_product)
-                                force_i *= voli;
 
                               data.d_f[i] += force_i + damp_i;
                           }
@@ -609,7 +600,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
   pair->endStep();
 
   if (d_wallContact)
-    d_wallContact->apply(data, pair, use_node_damping, volume_product);
+    d_wallContact->apply(data, pair, use_node_damping);
 
   // Log contact diagnostics near plate onset / whenever pairs go deep.
   const bool periodic = (data.d_infoN > 0 && data.d_n % data.d_infoN == 0);

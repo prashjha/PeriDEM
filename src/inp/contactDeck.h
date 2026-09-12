@@ -30,9 +30,6 @@ struct ContactDeck {
    */
   std::vector<std::vector<ContactPairDeck>> d_data;
 
-  /*! @brief Pair normal-force law name (default `volume_j`). */
-  std::string d_pairLaw;
-
   /*! @brief Contact damping law name (default `com_and_node`). */
   std::string d_dampingLaw;
 
@@ -43,8 +40,7 @@ struct ContactDeck {
    * @brief Constructor
    */
   ContactDeck(const json &j = json({}))
-      : d_pairLaw("volume_j"), d_dampingLaw("com_and_node"),
-        d_frictionLaw("coulomb_simple") {
+      : d_dampingLaw("com_and_node"), d_frictionLaw("coulomb_simple") {
     readFromJson(j);
   };
 
@@ -76,7 +72,6 @@ struct ContactDeck {
       return json({});
 
     auto j = json({{"Sets", nSets},
-                   {"Pair_Law", "volume_j"},
                    {"Damping_Law", "com_and_node"},
                    {"Friction_Law", "coulomb_simple"}});
 
@@ -97,14 +92,9 @@ struct ContactDeck {
     if (j.empty())
       return;
 
-    d_pairLaw = j.value("Pair_Law", "volume_j");
     d_dampingLaw = j.value("Damping_Law", "com_and_node");
     d_frictionLaw = j.value("Friction_Law", "coulomb_simple");
 
-    if (d_pairLaw != "volume_j" && d_pairLaw != "volume_product") {
-      throw std::runtime_error(
-          "Contact.Pair_Law must be volume_j|volume_product.");
-    }
     if (d_dampingLaw != "com_and_node" && d_dampingLaw != "com" &&
         d_dampingLaw != "node" && d_dampingLaw != "off") {
       throw std::runtime_error(
@@ -167,7 +157,6 @@ struct ContactDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- ContactDeck --------" << std::endl << std::endl;
-    oss << tabS << "Pair law = " << d_pairLaw << std::endl;
     oss << tabS << "Damping law = " << d_dampingLaw << std::endl;
     oss << tabS << "Friction law = " << d_frictionLaw << std::endl;
     for (size_t i =0; i<d_data.size(); i++) {

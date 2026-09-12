@@ -34,7 +34,7 @@ public:
   virtual ~WallContact() = default;
 
   virtual void apply(data::ModelData &data, PairForce *pair,
-                     bool use_node_damping, bool volume_product) const = 0;
+                     bool use_node_damping) const = 0;
 
   /*! True when meshed grain–wall pairs must be skipped in Contact::computeForces. */
   virtual bool skipsMeshedGrainWall() const { return false; }
@@ -42,14 +42,14 @@ public:
 
 class MeshedWallContact : public WallContact {
 public:
-  void apply(data::ModelData &data, PairForce *pair, bool use_node_damping,
-             bool volume_product) const override;
+  void apply(data::ModelData &data, PairForce *pair, bool use_node_damping)
+      const override;
 };
 
 class AnalyticalPlaneWallContact : public WallContact {
 public:
-  void apply(data::ModelData &data, PairForce *pair, bool use_node_damping,
-             bool volume_product) const override;
+  void apply(data::ModelData &data, PairForce *pair, bool use_node_damping)
+      const override;
   bool skipsMeshedGrainWall() const override { return true; }
 };
 

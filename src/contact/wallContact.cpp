@@ -24,12 +24,10 @@
 
 namespace contact {
 
-void MeshedWallContact::apply(data::ModelData &, PairForce *, bool,
-                              bool) const {}
+void MeshedWallContact::apply(data::ModelData &, PairForce *, bool) const {}
 
 void AnalyticalPlaneWallContact::apply(data::ModelData &data, PairForce *,
-                                       bool use_node_damping,
-                                       bool /*volume_product*/) const {
+                                       bool use_node_damping) const {
   if (data.d_particlesListTypeWall.empty())
     return;
 

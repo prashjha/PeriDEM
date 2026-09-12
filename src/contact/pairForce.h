@@ -50,11 +50,9 @@ double correctedContactVolume(double volj, double Rji, double Rc, double h);
 /*!
  * Node-node contact law (same role as material::Material for PD bonds).
  *
- * Spring uses neighbor volume Vj (optionally corrected by assembly). For
- * Pair_Law volume_product, Contact multiplies the spring sum by Vi after the
- * neighbor loop. Node damping stays a density term and is not scaled by Vi.
- *
- * Default friction is coulomb_simple (mu * |Fn| along tangential velocity).
+ * Spring force density uses neighbor volume Vj (optionally partial-volume
+ * corrected by assembly). Default friction is coulomb_simple
+ * (mu * |Fn| along tangential velocity).
  */
 class PairForce {
 public:
@@ -63,7 +61,7 @@ public:
   virtual void beginStep() {}
   virtual void endStep() {}
 
-  /*! Spring + friction contribution (∝ volj). */
+  /*! Spring + friction contribution (force density ∝ volj). */
   virtual util::Point springForce(const Pair &p);
 
   /*! Node-level normal damping (density form). */
@@ -72,12 +70,6 @@ public:
   /*! Default: spring + node damping (used by tests / simple callers). */
   virtual util::Point force(const Pair &p);
 };
-
-/*!
- * Marker law for Contact.Pair_Law = volume_product. Spring kernel matches
- * volume_j (∝ Vj); assembly applies × Vi after the neighbor loop.
- */
-class VolumeProductPairForce : public PairForce {};
 
 /*!
  * Stick-slip tangential friction: incremental tangential spring with stiffness
