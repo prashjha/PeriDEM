@@ -277,7 +277,8 @@ void rw::writer::VtkWriter::addTimeStep(const double &timestep) {
 void rw::writer::VtkWriter::close() {
   d_writer_p->SetInputData(d_grid_p);
   d_writer_p->SetDataModeToAppended();
-  d_writer_p->EncodeAppendedDataOn();
+  // Raw appended binary — VTK 9.1 rejects base64 EncodeAppendedDataOn().
+  d_writer_p->EncodeAppendedDataOff();
   if (d_compressType == "zlib")
     d_writer_p->SetCompressorTypeToZLib();
   else

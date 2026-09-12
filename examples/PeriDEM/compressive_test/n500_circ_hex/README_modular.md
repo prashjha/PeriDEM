@@ -17,3 +17,13 @@ mpirun -n 4 --quiet $BIN -i input_short.json -nThreads 1   # T=0.003, reaction s
 mpirun -n 4 --quiet $BIN -i input_paper.json -nThreads 1   # full paper (long)
 ```
 Reaction CSV: `*/pp_compressive_test_0.csv` (compare to `assets/compressive_test_reaction_force_n500.jpg`).
+
+
+## Restart / continue from short state
+- IC VTU: `modular/restart/restart_t0p003.vtu` (ASCII, t=0.003 / step 30000)
+- Deck: `modular/input_continue.json` (`Restart.File` + paper `Final_Time=0.06`)
+```bash
+cd examples/PeriDEM/compressive_test/n500_circ_hex/modular
+mpirun -n 16 --quiet $BIN -i input_continue.json -nThreads 1
+```
+Outputs go to `continue_out/` (gitignored / delete after runs).

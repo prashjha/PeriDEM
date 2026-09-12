@@ -23,6 +23,7 @@
 #include "util/parallelUtil.h"
 #include "inp/input.h"
 
+#include <atomic>
 #include <cmath>
 #include <chrono>
 #include <format>
@@ -432,6 +433,13 @@ void contact::Contact::computeForces(data::ModelData &data) {
 
   auto *pair = d_pairForce.get();
 
+  // Diagnostics across contact assembly (max over active pairs this step).
+  std::atomic<double> max_pen{0.};
+  std::atomic<double> max_fij{0.};
+  std::atomic<double> min_rji{1.e300};
+  std::atomic<size_t> n_active{0};
+  std::atomic<size_t> max_neigh{0};
+
   // Wall force deposits from many grain nodes touch the same wall dof.
   // Keep this loop single-threaded under MPI to avoid races on d_f[wall].
   const unsigned n_workers =
@@ -442,7 +450,8 @@ void contact::Contact::computeForces(data::ModelData &data) {
   taskflow.for_each_index((std::size_t) 0,
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
-                          [&data, pair](std::size_t II) {
+                          [&data, pair, &max_pen, &max_fij, &min_rji, &n_active,
+                           &max_neigh](std::size_t II) {
 
                               auto i = data.d_fContCompNodes[II];
 
@@ -461,6 +470,14 @@ void contact::Contact::computeForces(data::ModelData &data) {
                               const auto &yi = data.d_x[i];
                               const auto &vi = data.d_v[i];
                               const std::vector<size_t> &neighs = data.d_neighC[i];
+                              {
+                                size_t nn = neighs.size();
+                                size_t prev = max_neigh.load(std::memory_order_relaxed);
+                                while (nn > prev &&
+                                       !max_neigh.compare_exchange_weak(
+                                           prev, nn, std::memory_order_relaxed)) {
+                                }
+                              }
 
                               for (const auto &j_id: neighs) {
                                 if (j_id == i)
@@ -479,6 +496,27 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                         pi->getGroupId("contact_id"),
                                         pj->getGroupId("contact_id"));
 
+                                const auto yji = data.d_x[j_id] - yi;
+                                const double Rji = yji.length();
+                                if (Rji > 0. && util::isLess(Rji, contact.d_contactR)) {
+                                  const double pen = contact.d_contactR - Rji;
+                                  double prev_pen =
+                                      max_pen.load(std::memory_order_relaxed);
+                                  while (pen > prev_pen &&
+                                         !max_pen.compare_exchange_weak(
+                                             prev_pen, pen,
+                                             std::memory_order_relaxed)) {
+                                  }
+                                  double prev_r =
+                                      min_rji.load(std::memory_order_relaxed);
+                                  while (Rji < prev_r &&
+                                         !min_rji.compare_exchange_weak(
+                                             prev_r, Rji,
+                                             std::memory_order_relaxed)) {
+                                  }
+                                  n_active.fetch_add(1, std::memory_order_relaxed);
+                                }
+
                                 Pair p{contact,
                                        yi, data.d_x[j_id],
                                        vi, data.d_v[j_id],
@@ -489,11 +527,23 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                        data.d_currentDt,
                                        pi->isWall(), pj->isWall()};
                                 const util::Point fij = pair->force(p);
+                                const double fij_mag = fij.length();
+                                if (fij_mag > 0.) {
+                                  double prev_f =
+                                      max_fij.load(std::memory_order_relaxed);
+                                  while (fij_mag > prev_f &&
+                                         !max_fij.compare_exchange_weak(
+                                             prev_f, fij_mag,
+                                             std::memory_order_relaxed)) {
+                                  }
+                                }
                                 force_i += fij;
-                                // Deposit wall reaction as if the wall had
-                                // searched this grain (PairForce uses neighbor
-                                // volume → scale by voli/volj).
-                                if (!pi->isWall() && pj->isWall()) {
+                                // Under MPI, walls do not search (see above), so
+                                // deposit Newton-III onto the wall here. Serial
+                                // still searches from walls — depositing as well
+                                // would double-count and can blow up at contact.
+                                if (!pi->isWall() && pj->isWall() &&
+                                    util::parallel::isMpiEnabled()) {
                                   const double volj = data.d_vol[j_id];
                                   const double scale =
                                       (volj > 0.) ? (data.d_vol[i] / volj) : 0.;
@@ -506,6 +556,22 @@ void contact::Contact::computeForces(data::ModelData &data) {
   );
 
   executor.run(taskflow).get();
+
+  // Log contact diagnostics near plate onset / whenever pairs go deep.
+  const bool periodic = (data.d_infoN > 0 && data.d_n % data.d_infoN == 0);
+  const bool deep = max_pen.load() > 0.25 * (data.d_hMin > 0. ? data.d_hMin : 1.);
+  const bool hot = max_fij.load() > 1.e2;
+  if (periodic || deep || hot) {
+    const double mr = min_rji.load();
+    // Always emit (bypass debug-level gate); also mirror to stdout.
+    util::io::log(
+        1,
+        std::format("  CONTACT_DIAG n={} t={:.6e} n_active={} max_neigh={} "
+                    "max_pen={:.6e} min_Rji={:.6e} max_|fij|={:.6e}\n",
+                    data.d_n, data.d_time, n_active.load(), max_neigh.load(),
+                    max_pen.load(), (mr < 1.e300 ? mr : -1.), max_fij.load()),
+        false, -1, true);
+  }
 
   if (d_damping)
     d_damping->apply(data);

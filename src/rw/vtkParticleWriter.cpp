@@ -548,12 +548,11 @@ void rw::writer::VtkParticleWriter::addTimeStep(const double &timestep) {
 
 void rw::writer::VtkParticleWriter::close() {
   d_writer_p->SetInputData(d_grid_p);
-  d_writer_p->SetDataModeToAppended();
-  d_writer_p->EncodeAppendedDataOn();
-  if (d_compressType == "zlib")
-    d_writer_p->SetCompressorTypeToZLib();
-  else
-    d_writer_p->SetCompressor(0);
+  // VTK 9.1 (linked by PeriDEM) cannot parse AppendedData VTUs from this
+  // writer as Restart.File (base64 → "junk after document element"; raw →
+  // "invalid token"). Ascii matches working restart files and reloads cleanly.
+  d_writer_p->SetDataModeToAscii();
+  d_writer_p->SetCompressor(0);
   d_writer_p->Write();
 }
 

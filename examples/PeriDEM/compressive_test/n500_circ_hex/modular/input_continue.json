@@ -5252,7 +5252,7 @@
     }
   },
   "Restart": {
-    "File": "/DataDisck/A/Dropbox_bckup/Dropbox/Work/Simulations/peridem_works/PeriDEM_mac/examples/PeriDEM/compressive_test/n500_circ_hex/modular/short_out/restart_t0p003",
+    "File": "restart/restart_t0p003",
     "Step": 30000,
     "Change_Reference_Free_Dofs": false
   }
