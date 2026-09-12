@@ -10,6 +10,7 @@
 
 #include "contact/pairForce.h"
 #include "contact/policy.h"
+#include "pd/selfContact.h"
 #include "util/io.h"
 #include "inp/contactPairDeck.h"
 
@@ -148,5 +149,34 @@ int main() {
   }
 
   std::cout << "TestContact damping laws OK\n";
+
+  // Self-contact: broken_bond_kn uses Rc; reference_gap uses r0.
+  {
+    auto bb = pd::makeSelfContact("broken_bond_kn");
+    auto rg = pd::makeSelfContact("reference_gap");
+    const util::Point yji(0.4, 0., 0.); // R = 0.4
+    const double volj = 1.0;
+    const double Kn = 10.0;
+    const double Rc = 1.0;
+    const double r0 = 0.5;
+    const auto f_bb = bb->force(yji, volj, Kn, Rc, r0);
+    const auto f_rg = rg->force(yji, volj, Kn, Rc, r0);
+    if (!near(f_bb.d_x, -2.5)) {
+      std::cerr << "broken_bond_kn unexpected: " << f_bb.d_x << "\n";
+      return 1;
+    }
+    if (!near(f_rg.d_x, -1.0)) {
+      std::cerr << "reference_gap unexpected: " << f_rg.d_x << "\n";
+      return 1;
+    }
+    // No force when stretched beyond r0 for reference_gap.
+    const auto f_rg2 = rg->force(util::Point(0.8, 0., 0.), volj, Kn, Rc, r0);
+    if (!near(f_rg2.d_x, 0.) || !near(f_rg2.length(), 0.)) {
+      std::cerr << "reference_gap should be zero when R > r0\n";
+      return 1;
+    }
+  }
+
+  std::cout << "TestContact self-contact OK\n";
   return 0;
 }

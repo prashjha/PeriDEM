@@ -8,4 +8,4 @@
 
 add_executable(TestContact main.cpp)
 
-target_link_libraries(TestContact PUBLIC Contact Util Inp)
+target_link_libraries(TestContact PUBLIC PeriDEMModel)

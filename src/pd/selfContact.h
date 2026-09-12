@@ -28,17 +28,29 @@ public:
    * @param yji Current relative position xj+uj - (xi+ui)
    * @param volj Neighbor nodal volume
    * @param Kn Contact stiffness
-   * @param Rc Contact radius for this particle
+   * @param Rc Contact radius for this particle (used by broken_bond_kn)
+   * @param r0 Reference distance |xj - xi| (used by reference_gap)
    */
   virtual util::Point force(const util::Point &yji, double volj, double Kn,
-                            double Rc) const = 0;
+                            double Rc, double r0) const = 0;
 };
 
-/*! @brief Default: Kn * volj * capped_gap / R along yji. */
+/*! @brief Default: Kn * volj * capped_gap / R along yji with gap = R - Rc. */
 class BrokenBondKnSelfContact : public SelfContact {
 public:
-  util::Point force(const util::Point &yji, double volj, double Kn,
-                    double Rc) const override;
+  util::Point force(const util::Point &yji, double volj, double Kn, double Rc,
+                    double r0) const override;
+};
+
+/*!
+ * Repulsive only when current distance is shorter than the reference
+ * distance r0 (compressed relative to the undeformed pair). Cap like the
+ * default law.
+ */
+class ReferenceGapSelfContact : public SelfContact {
+public:
+  util::Point force(const util::Point &yji, double volj, double Kn, double Rc,
+                    double r0) const override;
 };
 
 /*! @brief Build self-contact law named by Model.Self_Contact. */

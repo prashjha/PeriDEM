@@ -209,7 +209,8 @@ void pd::computeForces(data::ModelData &data) {
           }   // if bond not broken
           else {
             const auto yji = xj + uj - (xi + ui);
-            force_i += selfContact->force(yji, volj, pi->d_Kn, pi->d_Rc);
+            force_i +=
+                selfContact->force(yji, volj, pi->d_Kn, pi->d_Rc, rji);
           } // if bond is broken
 
           // calculate damage

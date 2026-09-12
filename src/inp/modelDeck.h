@@ -211,8 +211,10 @@ namespace inp {
         std::cerr << "Error: Model.Bond_Break must be tension|absolute_stretch.\n";
         exit(1);
       }
-      if (d_selfContact != "broken_bond_kn") {
-        std::cerr << "Error: Model.Self_Contact must be broken_bond_kn.\n";
+      if (d_selfContact != "broken_bond_kn" &&
+          d_selfContact != "reference_gap") {
+        std::cerr << "Error: Model.Self_Contact must be "
+                     "broken_bond_kn|reference_gap.\n";
         exit(1);
       }
       if (d_wallContact != "meshed") {
