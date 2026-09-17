@@ -738,8 +738,9 @@ public:
                                 s * r,
                             getInfFn(r) * d_c * s);
 
-    // check if fracture state of the bond need to be updated
-    if (!fs && util::isGreater(std::abs(s), d_s0 + 1.0e-10))
+    // Fracture: literature PMB is tension-only (s > s0). Absolute stretch is
+    // applied in pdForce when Model.Bond_Break = absolute_stretch.
+    if (!fs && util::isGreater(s, d_s0 + 1.0e-10))
       fs = true;
 
     // if bond is not fractured, return energy and force from nonlinear
@@ -846,27 +847,33 @@ public:
   inp::MatData computeMaterialProperties(const size_t &dim) const override {
 
     auto data = inp::MatData();
+    data.d_nu = 0.25; // bond-based PMB (Trask / Emmrich)
 
-    // set Poisson's ratio to 1/4
-    data.d_nu = 0.25;
-
-    // compute peridynamic parameters
+    const double h = d_horizon;
+    // Invert assuming J≡1 in the stored c (caller already divided by J_scale).
     if (dim == 2) {
-      data.d_lambda = d_c * (M_PI * std::pow(d_horizon, 3.0)) / 24.0;
-      data.d_E = data.toELambda(data.d_lambda, data.d_nu);
-      data.d_Gc = d_s0 * d_s0 * (9.0 * data.d_E * d_horizon) / (5.0 * M_PI);
+      // c = 72 κ / (5 π δ³)  ⇒  κ = 5 π δ³ c / 72
+      data.d_K = 5.0 * M_PI * std::pow(h, 3.0) * d_c / 72.0;
+      data.d_E = data.toE(data.d_K, data.d_nu);
+      data.d_G = data.toGE(data.d_E, data.d_nu);
+      const double dens =
+          (6.0 * data.d_G / M_PI +
+           16.0 * (data.d_K - 2.0 * data.d_G) / (9.0 * M_PI * M_PI)) *
+          h;
+      data.d_Gc = d_s0 * d_s0 * dens;
     } else if (dim == 3) {
-      data.d_lambda = d_c * (M_PI * std::pow(d_horizon, 3.0)) / 24.0;
-      data.d_E = data.toELambda(data.d_lambda, data.d_nu);
-      data.d_Gc = d_s0 * d_s0 * (9.0 * data.d_E * d_horizon) / (5.0 * M_PI);
+      data.d_K = d_c * (M_PI * std::pow(h, 4.0)) / 18.0;
+      data.d_E = data.toE(data.d_K, data.d_nu);
+      data.d_G = data.toGE(data.d_E, data.d_nu);
+      const double dens =
+          (3.0 * data.d_G +
+           std::pow(3.0 / 4.0, 4) * (data.d_K - 5.0 * data.d_G / 3.0)) *
+          h;
+      data.d_Gc = d_s0 * d_s0 * dens;
     }
-    data.d_mu = data.d_lambda;
-    data.d_G = data.d_lambda;
-    data.d_K =
-        data.toK(data.d_E, data.d_nu);
-    data.d_KIc = data.toKIc(
-        data.d_Gc, data.d_nu, data.d_E);
-
+    data.d_lambda = data.toLambdaE(data.d_E, data.d_nu);
+    data.d_mu = data.d_G;
+    data.d_KIc = data.toKIc(data.d_Gc, data.d_nu, data.d_E);
     return data;
   };
 
@@ -921,51 +928,43 @@ private:
     // Need following elastic and fracture properties
     // 1. E or K
     // 2. Gc or KIc
-    // For bond-based, Poisson's ratio is fixed to 1/4
+    // Bond-based Poisson ratio is locked by dimension / plane-strain flag
+    // (Silling & Askari 2005; Madenci & Oterkus 2014; Ha & Bobaru 2010).
     //
     if (util::isLess(deck.d_matData.d_E, 0.) &&
         util::isLess(deck.d_matData.d_K, 0.)) {
       std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
-                   " to compute the RNP bond-based peridynamic parameters.\n";
+                   " to compute the PMB bond-based peridynamic parameters.\n";
       exit(1);
     }
     if (util::isGreater(deck.d_matData.d_E, 0.) &&
         util::isGreater(deck.d_matData.d_K, 0.)) {
       std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
                    "provided.\n";
-      std::cout << "Warning: To compute the RNP bond-based peridynamic "
-                   "parameters, we only require one of those.\n";
-      std::cout
-          << "Warning: Selecting Young's modulus to compute parameters.\n";
+      std::cout << "Warning: Selecting Young's modulus E for PMB calibration.\n";
     }
 
     if (util::isLess(deck.d_matData.d_Gc, 0.) &&
         util::isLess(deck.d_matData.d_KIc, 0.)) {
       std::cerr << "Error: Require either critical energy release rate Gc or "
-                   "critical stress intensity factor KIc to compute the RNP "
+                   "critical stress intensity factor KIc to compute the PMB "
                    "bond-based peridynamic parameters.\n";
       exit(1);
     } else if (util::isGreater(deck.d_matData.d_Gc, 0.) &&
                util::isGreater(deck.d_matData.d_KIc, 0.)) {
-      std::cout << "Warning: Both critical energy release rate Gc and critical "
-                   "stress intensity factor KIc are provided.\n";
-      std::cout << "Warning: To compute the RNP bond-based peridynamic "
-                   "parameters, we only require one of those.\n";
-      std::cout << "Warning: Selecting critical energy release rate Gc to "
-                   "compute parameters.\n";
+      std::cout << "Warning: Both Gc and KIc provided; selecting Gc.\n";
     }
 
-    // set Poisson's ratio to 1/4
+    // Bond-based PMB locks ν=1/4 (Silling–Askari / Emmrich / Trask).
     deck.d_matData.d_nu = 0.25;
 
-    // compute E if not provided or K if not provided
+    // Prefer E; else recover E from K with locked ν.
+    if (deck.d_matData.d_E < 0. && deck.d_matData.d_K > 0.)
+      deck.d_matData.d_E =
+          deck.d_matData.toE(deck.d_matData.d_K, deck.d_matData.d_nu);
     if (deck.d_matData.d_E > 0.)
       deck.d_matData.d_K =
           deck.d_matData.toK(deck.d_matData.d_E, deck.d_matData.d_nu);
-
-    if (deck.d_matData.d_K > 0. && deck.d_matData.d_E < 0.)
-      deck.d_matData.d_E =
-          deck.d_matData.toE(deck.d_matData.d_K, deck.d_matData.d_nu);
 
     if (deck.d_matData.d_Gc > 0.)
       deck.d_matData.d_KIc = deck.d_matData.toKIc(
@@ -975,26 +974,56 @@ private:
       deck.d_matData.d_Gc = deck.d_matData.toGc(
           deck.d_matData.d_KIc, deck.d_matData.d_nu, deck.d_matData.d_E);
 
-    // compute lame parameter
     deck.d_matData.d_lambda =
         deck.d_matData.toLambdaE(deck.d_matData.d_E, deck.d_matData.d_nu);
     deck.d_matData.d_G =
         deck.d_matData.toGE(deck.d_matData.d_E, deck.d_matData.d_nu);
     deck.d_matData.d_mu = deck.d_matData.d_G;
 
-    // compute peridynamic parameters
-    if (dim == 2) {
-      // Ha, Bobaru 2010 "Studies of dynamic crack propagation and crack branching
-      // with peridynamics"
-      d_c = 24.0 * deck.d_matData.d_E / (M_PI * std::pow(d_horizon, 3.0) *
-                      (1. - deck.d_matData.d_nu));
-      d_s0 = std::sqrt(5.0 * M_PI * deck.d_matData.d_Gc /
-                       (9.0 * deck.d_matData.d_E * d_horizon));
-    } else if (dim == 3) {
-      d_c = 24.0 * deck.d_matData.d_lambda / (M_PI * std::pow(d_horizon, 3.0));
-      d_s0 = std::sqrt(5.0 * M_PI * deck.d_matData.d_Gc /
-                       (9.0 * deck.d_matData.d_E * d_horizon));
+    // Micromodulus c and critical stretch s0.
+    // Force: f = J(r/δ) * c * s. Literature c assumes J≡1 (Trask/Emmrich).
+    // ConstInfluenceFn default a0=dim+1 → scale c /= a0 (or set Parameters=[1]).
+    const double Gc = deck.d_matData.d_Gc;
+    const double h = d_horizon;
+    const double kappa = deck.d_matData.d_K;
+    const double mu = deck.d_matData.d_G;
+
+    double J_scale = 1.0;
+    if (deck.d_influenceFnType == 0) {
+      J_scale = deck.d_influenceFnParams.empty() ? double(dim + 1)
+                                                 : deck.d_influenceFnParams[0];
+    } else if (deck.d_influenceFnType == 1 || deck.d_influenceFnType == 2) {
+      J_scale = getMoment(0);
+      std::cout << "Warning: PMB non-constant influence: scaling c by M0="
+                << J_scale
+                << ". For Trask/Silling match use Influence Type 0, "
+                   "Parameters=[1].\n";
     }
+    if (!(J_scale > 0.)) {
+      std::cerr << "Error: PMB influence scale must be > 0.\n";
+      exit(1);
+    }
+
+    if (dim == 2) {
+      // Trask 2019 / Emmrich: c = 72κ/(5πδ³), s0 = Madenci 2D density
+      d_c = 72.0 * kappa / (5.0 * M_PI * std::pow(h, 3.0));
+      const double dens =
+          (6.0 * mu / M_PI +
+           16.0 * (kappa - 2.0 * mu) / (9.0 * M_PI * M_PI)) *
+          h;
+      d_s0 = std::sqrt(Gc / dens);
+    } else if (dim == 3) {
+      // Trask / Silling–Askari: c = 18κ/(πδ⁴), s0 = Madenci 3D density
+      d_c = 18.0 * kappa / (M_PI * std::pow(h, 4.0));
+      const double dens =
+          (3.0 * mu + std::pow(3.0 / 4.0, 4) * (kappa - 5.0 * mu / 3.0)) * h;
+      d_s0 = std::sqrt(Gc / dens);
+    } else {
+      std::cerr << "Error: PMB computeParameters: unsupported dim=" << dim
+                << "\n";
+      exit(1);
+    }
+    d_c /= J_scale;
   };
 
 private:
@@ -1190,21 +1219,25 @@ public:
 
     auto data = inp::MatData();
 
-    // set Poisson's ratio to 1/4
-    data.d_nu = 0.25;
+    if (dim == 2 && !is_plane_strain)
+      data.d_nu = 1.0 / 3.0;
+    else
+      data.d_nu = 0.25;
 
-    // compute peridynamic parameters
-    if (dim == 2) {
-      data.d_lambda = d_c * (M_PI * std::pow(d_horizon, 3.0)) / 24.0;
-      data.d_E = data.toELambda(data.d_lambda, data.d_nu);
+    const double h = d_horizon;
+    if (dim == 2 && !is_plane_strain) {
+      data.d_E = d_c * (M_PI * std::pow(h, 3.0)) / 9.0;
+    } else if (dim == 2 && is_plane_strain) {
+      data.d_E = d_c * (5.0 * M_PI * std::pow(h, 3.0)) / 48.0;
     } else if (dim == 3) {
-      data.d_lambda = d_c * (M_PI * std::pow(d_horizon, 3.0)) / 24.0;
-      data.d_E = data.toELambda(data.d_lambda, data.d_nu);
+      data.d_K = d_c * (M_PI * std::pow(h, 4.0)) / 18.0;
+      data.d_E = data.toE(data.d_K, data.d_nu);
     }
-    data.d_mu = data.d_lambda;
-    data.d_G = data.d_lambda;
-    data.d_K =
-        data.toK(data.d_E, data.d_nu);
+    if (dim == 2)
+      data.d_K = data.toK(data.d_E, data.d_nu);
+    data.d_lambda = data.toLambdaE(data.d_E, data.d_nu);
+    data.d_mu = data.toGE(data.d_E, data.d_nu);
+    data.d_G = data.d_mu;
 
     return data;
   };
@@ -1255,54 +1288,51 @@ private:
    * @param dim Dimension of the domain
    */
   void computeParameters(inp::MaterialDeck &deck, const size_t &dim) {
-    //
-    // Need following elastic and fracture properties
-    // 1. E or K
-    // For bond-based, Poisson's ratio is fixed to 1/4
-    //
+    // Elastic-only bond-based micromodulus (same δ powers as PMB).
     if (util::isLess(deck.d_matData.d_E, 0.) &&
         util::isLess(deck.d_matData.d_K, 0.)) {
       std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
-                   " to compute the RNP bond-based peridynamic parameters.\n";
+                   " to compute the PdElastic parameters.\n";
       exit(1);
     }
     if (util::isGreater(deck.d_matData.d_E, 0.) &&
         util::isGreater(deck.d_matData.d_K, 0.)) {
-      std::cout << "Warning: Both Young's modulus E and Bulk modulus K are "
-                   "provided.\n";
-      std::cout << "Warning: To compute the RNP bond-based peridynamic "
-                   "parameters, we only require one of those.\n";
-      std::cout
-          << "Warning: Selecting Young's modulus to compute parameters.\n";
+      std::cout << "Warning: Both E and K provided; selecting E for PdElastic.\n";
     }
 
-    // set Poisson's ratio to 1/4
+    // Emmrich / Trask micromodulus (J≡1). Scale if ConstInfluence a0≠1.
     deck.d_matData.d_nu = 0.25;
-
-    // compute E if not provided or K if not provided
+    if (deck.d_matData.d_E < 0. && deck.d_matData.d_K > 0.)
+      deck.d_matData.d_E =
+          deck.d_matData.toE(deck.d_matData.d_K, deck.d_matData.d_nu);
     if (deck.d_matData.d_E > 0.)
       deck.d_matData.d_K =
           deck.d_matData.toK(deck.d_matData.d_E, deck.d_matData.d_nu);
-
-    if (deck.d_matData.d_K > 0. && deck.d_matData.d_E < 0.)
-      deck.d_matData.d_E =
-          deck.d_matData.toE(deck.d_matData.d_K, deck.d_matData.d_nu);
-
-    // compute lame parameter
     deck.d_matData.d_lambda =
         deck.d_matData.toLambdaE(deck.d_matData.d_E, deck.d_matData.d_nu);
     deck.d_matData.d_G =
         deck.d_matData.toGE(deck.d_matData.d_E, deck.d_matData.d_nu);
     deck.d_matData.d_mu = deck.d_matData.d_G;
 
-    // compute peridynamic parameters
-    if (dim == 2) {
-      d_c = 24.0 * deck.d_matData.d_lambda / (M_PI * std::pow(d_horizon, 3.0));
-    } else if (dim == 3) {
-      // TODO
-      //  For PdElastic and PmbMaterial, implement correct formula in 3-d
-      d_c = 24.0 * deck.d_matData.d_lambda / (M_PI * std::pow(d_horizon, 3.0));
+    double J_scale = 1.0;
+    if (deck.d_influenceFnType == 0)
+      J_scale = deck.d_influenceFnParams.empty() ? double(dim + 1)
+                                                 : deck.d_influenceFnParams[0];
+    else if (deck.d_influenceFnType == 1 || deck.d_influenceFnType == 2)
+      J_scale = std::max(getMoment(0), 1.0e-30);
+
+    const double h = d_horizon;
+    const double kappa = deck.d_matData.d_K;
+    if (dim == 2)
+      d_c = 72.0 * kappa / (5.0 * M_PI * std::pow(h, 3.0));
+    else if (dim == 3)
+      d_c = 18.0 * kappa / (M_PI * std::pow(h, 4.0));
+    else {
+      std::cerr << "Error: PdElastic computeParameters: unsupported dim=" << dim
+                << "\n";
+      exit(1);
     }
+    d_c /= J_scale;
   };
 
 private:
@@ -1517,10 +1547,18 @@ public:
     data.d_lambda = data.toLambdaE(data.d_E, data.d_nu);
     data.d_mu = d_G;
 
-    // get Gc
-    double d =
-        (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) * d_horizon;
-    data.d_Gc = d_s0 * d_s0 * d;
+    // get Gc from s0 (inverse of computeParameters)
+    double dens = 0.;
+    if (dim == 2) {
+      // Madenci & Oterkus OSB 2D (plane stress form used as default)
+      dens = (6.0 * d_G / M_PI +
+              16.0 * (d_K - 2.0 * d_G) / (9.0 * M_PI * M_PI)) *
+             d_horizon;
+    } else {
+      dens = (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) *
+             d_horizon;
+    }
+    data.d_Gc = d_s0 * d_s0 * dens;
 
     // KIc
     data.d_KIc = data.toKIc(
@@ -1694,9 +1732,22 @@ private:
     d_K = deck.d_matData.d_K;
     d_G = deck.d_matData.d_G;
 
-    double d =
-        (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) * d_horizon;
-    d_s0 = std::sqrt(deck.d_matData.d_Gc / d);
+    // Critical stretch: OSB energy release (Madenci & Oterkus).
+    // Density factor scales as δ¹ in both 2D and 3D, but coefficients differ.
+    double dens = 0.;
+    if (dim == 2) {
+      dens = (6.0 * d_G / M_PI +
+              16.0 * (d_K - 2.0 * d_G) / (9.0 * M_PI * M_PI)) *
+             d_horizon;
+    } else if (dim == 3) {
+      dens = (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) *
+             d_horizon;
+    } else {
+      std::cerr << "Error: PdState computeParameters: unsupported dim=" << dim
+                << "\n";
+      exit(1);
+    }
+    d_s0 = std::sqrt(deck.d_matData.d_Gc / dens);
   };
 
 private:

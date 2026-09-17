@@ -259,6 +259,40 @@ void rw::writer::VtkParticleWriter::appendNodes(
     d_grid_p->GetPointData()->AddArray(array);
   } // damage_Z
 
+  // handle damage function phi = 1 - (intact bond volume)/(horizon volume)
+  // (Silling 2000/2003, Trask, Bhattacharya "fraction of broken bonds")
+  if (util::methods::isTagInList("Damage", tags) && !model->d_phi.empty()) {
+
+    auto array = vtkSmartPointer<vtkDoubleArray>::New();
+    array->SetNumberOfComponents(1);
+    array->SetName("Damage");
+
+    for (const auto &n : model->d_phi) {
+      p_tag[0] = double(n);
+      array->InsertNextTuple(p_tag);
+    }
+
+    // write
+    d_grid_p->GetPointData()->AddArray(array);
+  } // damage phi
+
+  // handle broken-bond count fraction (Bhattacharya & Lipton damage)
+  if (util::methods::isTagInList("Damage_Bond", tags) &&
+      !model->d_phiBond.empty()) {
+
+    auto array = vtkSmartPointer<vtkDoubleArray>::New();
+    array->SetNumberOfComponents(1);
+    array->SetName("Damage_Bond");
+
+    for (const auto &n : model->d_phiBond) {
+      p_tag[0] = double(n);
+      array->InsertNextTuple(p_tag);
+    }
+
+    // write
+    d_grid_p->GetPointData()->AddArray(array);
+  } // damage bond fraction
+
   // handle theta
   if (util::methods::isTagInList("Theta", tags)) {
 
@@ -409,6 +443,10 @@ void appendPointArraysForNodes(vtkUnstructuredGrid *grid,
   }
   if (util::methods::isTagInList("Damage_Z", tags) && !model->d_Z.empty())
     add_scalar("Damage_Z", [&](size_t g) { return model->d_Z[g]; });
+  if (util::methods::isTagInList("Damage", tags) && !model->d_phi.empty())
+    add_scalar("Damage", [&](size_t g) { return model->d_phi[g]; });
+  if (util::methods::isTagInList("Damage_Bond", tags) && !model->d_phiBond.empty())
+    add_scalar("Damage_Bond", [&](size_t g) { return model->d_phiBond[g]; });
   if (util::methods::isTagInList("Particle_ID", tags))
     add_scalar("Particle_ID", [&](size_t g) {
       return static_cast<double>(

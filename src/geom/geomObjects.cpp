@@ -250,7 +250,8 @@ namespace geom {
 //
 namespace geom {
     double Triangle::volume() const {
-      return d_r * d_r * (1. + std::sin(M_PI / 3));
+      // 2D area of the stored triangle (works for equilateral and vertex-defined).
+      return std::abs(geom::triangleArea(d_vertices[0], d_vertices[1], d_vertices[2]));
     }
 
     util::Point Triangle::center() const {
@@ -265,10 +266,15 @@ namespace geom {
     std::pair<util::Point, util::Point> Triangle::box(const
                                                                       double &tol) const {
 
-      // find lower and upper coordinates
-      auto p1 = util::Point(d_x.d_x - d_r, d_x.d_y - d_r, d_x.d_z);
-      auto p2 = util::Point(d_x.d_x + d_r, d_x.d_y + d_r, d_x.d_z);
-
+      util::Point p1 = d_vertices[0], p2 = d_vertices[0];
+      for (const auto &v : d_vertices) {
+        p1.d_x = std::min(p1.d_x, v.d_x);
+        p1.d_y = std::min(p1.d_y, v.d_y);
+        p1.d_z = std::min(p1.d_z, v.d_z);
+        p2.d_x = std::max(p2.d_x, v.d_x);
+        p2.d_y = std::max(p2.d_y, v.d_y);
+        p2.d_z = std::max(p2.d_z, v.d_z);
+      }
       return {p1 - tol, p2 + tol};
     }
 
@@ -298,7 +304,7 @@ namespace geom {
       double a3 =
               std::abs(geom::triangleArea(d_vertices[0], d_vertices[1], x));
 
-      return (a1 + a2 + a3 < a);
+      return (a1 + a2 + a3 <= a * (1.0 + 1.0e-10));
     }
 
     bool Triangle::isOutside(const util::Point &x) const {

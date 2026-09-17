@@ -287,6 +287,10 @@ void PeriDEMModel::init() {
 
   // initialize remaining fields (if any)
   d_Z = std::vector<float>(d_x.size(), 0.);
+  // Damage: volume-weighted phi (Silling/Trask) and broken-bond count
+  // fraction (Bhattacharya & Lipton).
+  d_phi = std::vector<float>(d_x.size(), 0.);
+  d_phiBond = std::vector<float>(d_x.size(), 0.);
 
   t2 = steady_clock::now();
   log(std::format("{}: Total setup time (ms) = {}. \n",

@@ -30,11 +30,12 @@ mesh_gen::createParticleMesh(const inp::MeshDeck &zmeshDeck,
   }
 
   if (zmeshDeck.d_createMeshInfo == "uniform" &&
-      zgeomDeck.d_geomName == "rectangle") {
+      (zgeomDeck.d_geomName == "rectangle" || zgeomDeck.d_geomName == "cuboid" ||
+       zgeomDeck.d_geomName == "square" || zgeomDeck.d_geomName == "cube")) {
 
     if (!zgeomDeck.d_geom_p)
       throw std::runtime_error(
-          modelName + ": uniform mesh on rectangle requires particle geometry object "
+          modelName + ": uniform mesh on a box requires particle geometry object "
                       "(geom::createGeomObject on Particle.Set_i).");
 
     const size_t dim = modelDeck->d_dim;
@@ -64,6 +65,8 @@ mesh_gen::createParticleMesh(const inp::MeshDeck &zmeshDeck,
 
     mesh::Mesh temp_mesh;
     mesh::createUniformMesh(&temp_mesh, dim, box, nGrid);
+    if (!zmeshDeck.d_voidRegions.empty())
+      mesh::removeNodesInBoxes(&temp_mesh, zmeshDeck.d_voidRegions);
     return std::make_shared<mesh::Mesh>(temp_mesh);
   }
 

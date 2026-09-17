@@ -55,17 +55,27 @@ Run: `ctest --test-dir build/linux -R 'Test_PeriDEM_twop_jha2021_(table2|inbuilt
 
 ## Bhattacharya and Lipton, SISC 2023
 
-Notched-plate impact (paper §6.2, Kalthoff-style).
-`Test_PeriDEM_notched_impact` (`test/test_data/peridem/notched_impact_inbuilt/`).
+Notched-plate impact (§6.2 / Fig. 4), Kalthoff–Winkler lineage (Silling 2003, Trask 2019).
 
-Geometry is a 1/5 outline of the classic plate (40 mm × 20 mm, twin top
-notches, rectangular impactor at 32 m/s). Policies: `PMBBond`,
-`Bond_Break=absolute_stretch`, `Self_Contact=reference_gap`, damping/friction off.
-Prenotch bonds are removed after `init`; the driver calls `integrate()` (not
-`run()`, which would re-`init` and wipe the prenotch).
+CTest: `Test_PeriDEM_notched_impact` / `_smoke` — prenotch bonds, tip damage growth, no blow-up. Paper-path checks live under ValidationPeriDEM.
 
-CI asserts: prenotch + new broken bonds, tip damage centroids outward/down, no
-blow-up. Soft polymer-scale moduli keep the coarse mesh stable.
+**Locked parameters (driver default):**
+- Geometry: 200×100 mm plate; notches 50 / 1.5 / 50 mm; impactor 1.57 kg @ 32 m/s
+- Material **M1**: E=191 GPa, K=159.2 GPa, ρ=8000 (ν≈0.3)
+- **Gc = 42408 J/m²** from handbook KIc≈90 MPa√m via \(K_{Ic}^2/E\) (Silling/Trask)
+- **h ≈ 1 mm** (Silling EMU grid 200×100×9 on the mm plate); **ε = 3h** (Trask Fig. 8)
+- Δt = 2.5 ns; μ=βd=0; `PMBBond`, `Self_Contact=reference_gap`, `Bond_Break=tension`
+
+**PMB calibration (must match influence + paper):**
+- Force \(f = J\,c\,s\). Trask/Silling assume \(J\equiv 1\) → deck `Influence_Function: {Type: 0, Parameters: [1]}`.
+  (Default ConstInfluence `a0=dim+1` would require \(c\leftarrow c/a0\); code does that scale automatically.)
+- **Trask 2019 / Emmrich** (KW): \(\nu=1/4\), \(c_{2}=\frac{72\kappa}{5\pi\delta^{3}}\), \(c_{3}=\frac{18\kappa}{\pi\delta^{4}}\),
+  \(s_0\) from Madenci densities as in Trask eqs (5.2–5.3).
+- Not the plane-stress \(c=9E/(\pi\delta^{3})\) (Madenci alt.); that is a different convention.
+
+**Loading:** `-traskDisp` = Trask Dirichlet; default = Bhat N=2 impact.
+
+Bhat §6.2 omits h/ε/Gc; filled from the Silling/Trask KW chain. Bhat’s continuum model is cohesive/RNP with decreasing \(J\) — different from Trask PMB.
 
 ## Bhattacharya, Damircheli, Lipton, 2025 (arXiv:2506.05362)
 

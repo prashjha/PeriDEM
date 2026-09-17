@@ -31,6 +31,24 @@ class Mesh;
 void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<double>, std::vector<double>> box, std::vector<size_t> nGrid);
 
 /*!
+ * @brief Removes nodes lying inside any of the given axis-aligned boxes.
+ *
+ * Elements touching a removed node are dropped and the remaining connectivity
+ * is renumbered. This carves a real void (e.g. a notch slot) out of a
+ * structured grid, instead of keeping the material and breaking its bonds.
+ *
+ * After carving, nodal volumes on the new free faces are halved per axis
+ * (same rule as outer faces in @ref createUniformMesh): a node whose
+ * one-grid-step neighbour would lie inside a void box gets the ½ factor
+ * on that axis.
+ *
+ * @param mesh_p Mesh to modify in place
+ * @param boxes List of boxes, each `[xlo, ylo, zlo, xhi, yhi, zhi]`
+ */
+void removeNodesInBoxes(mesh::Mesh *mesh_p,
+                        const std::vector<std::vector<double>> &boxes);
+
+/*!
  * @brief Get current location of quadrature points of elements in the mesh.
  * This function expects mesh has element-node connectivity data.
  *

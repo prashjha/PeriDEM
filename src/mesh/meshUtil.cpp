@@ -106,10 +106,8 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
     h.push_back((box.second[i] - box.first[i])/nGrid[i]);
     if (i == 0)
       h_small = h[0];
-    else {
-      if (std::abs(h[i] - h_small) > 1.0e-14 and h_small > h[1] + 1.0e-14)
-        h_small = h[i];
-    }
+    else
+      h_small = std::min(h_small, h[i]);
   }
 
   // set smallest h as mesh size
@@ -179,7 +177,9 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
     } // loop over k
 
     // compute element-node connectivity
-    for (size_t k = 0; k <= nGrid[2]; k++) {
+    // (k < nGrid[2]: there are nGrid[2] cells through the thickness, not
+    // nGrid[2]+1. Using <= overran d_enc and corrupted the heap.)
+    for (size_t k = 0; k < nGrid[2]; k++) {
       for (size_t j = 0; j < nGrid[1]; j++) {
         for (size_t i = 0; i < nGrid[0]; i++) {
 
@@ -209,6 +209,93 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
       } // loop over j
     } // loop over k
   }
+}
+
+void removeNodesInBoxes(mesh::Mesh *mesh_p,
+                        const std::vector<std::vector<double>> &boxes) {
+  if (boxes.empty() || mesh_p->d_nodes.empty())
+    return;
+
+  auto inAnyBox = [&boxes](const util::Point &p) {
+    for (const auto &b : boxes) {
+      if (p.d_x >= b[0] && p.d_x <= b[3] && p.d_y >= b[1] && p.d_y <= b[4] &&
+          p.d_z >= b[2] && p.d_z <= b[5])
+        return true;
+    }
+    return false;
+  };
+
+  const size_t n_old = mesh_p->d_nodes.size();
+  std::vector<long> new_id(n_old, -1);
+  std::vector<util::Point> nodes;
+  std::vector<double> vol;
+  nodes.reserve(n_old);
+  vol.reserve(n_old);
+  for (size_t i = 0; i < n_old; ++i) {
+    if (inAnyBox(mesh_p->d_nodes[i]))
+      continue;
+    new_id[i] = static_cast<long>(nodes.size());
+    nodes.push_back(mesh_p->d_nodes[i]);
+    if (i < mesh_p->d_vol.size())
+      vol.push_back(mesh_p->d_vol[i]);
+  }
+
+  // Keep only elements all of whose nodes survived, renumbered.
+  std::vector<size_t> enc;
+  const size_t nv = mesh_p->d_eNumVertex;
+  if (nv > 0) {
+    enc.reserve(mesh_p->d_enc.size());
+    for (size_t e = 0; e + nv <= mesh_p->d_enc.size(); e += nv) {
+      bool keep = true;
+      for (size_t v = 0; v < nv; ++v) {
+        if (new_id[mesh_p->d_enc[e + v]] < 0) {
+          keep = false;
+          break;
+        }
+      }
+      if (!keep)
+        continue;
+      for (size_t v = 0; v < nv; ++v)
+        enc.push_back(static_cast<size_t>(new_id[mesh_p->d_enc[e + v]]));
+    }
+  }
+
+  // Nodes on faces newly opened by the void kept full cell volumes from
+  // createUniformMesh (only the outer box faces were halved). Mirror that
+  // rule: if a one-grid-step probe along ±e_i lands inside a carved box,
+  // apply the same ½ factor on that axis (corners get multiple halves).
+  const double h = mesh_p->d_h > 0. ? mesh_p->d_h : 1.0e-3;
+  auto probeInBox = [&boxes](double x, double y, double z) {
+    for (const auto &b : boxes) {
+      if (x >= b[0] && x <= b[3] && y >= b[1] && y <= b[4] && z >= b[2] &&
+          z <= b[5])
+        return true;
+    }
+    return false;
+  };
+  for (size_t i = 0; i < nodes.size(); ++i) {
+    const auto &p = nodes[i];
+    const bool hx = probeInBox(p.d_x - h, p.d_y, p.d_z) ||
+                    probeInBox(p.d_x + h, p.d_y, p.d_z);
+    const bool hy = probeInBox(p.d_x, p.d_y - h, p.d_z) ||
+                    probeInBox(p.d_x, p.d_y + h, p.d_z);
+    const bool hz = mesh_p->d_dim > 2 && (probeInBox(p.d_x, p.d_y, p.d_z - h) ||
+                                         probeInBox(p.d_x, p.d_y, p.d_z + h));
+    if (hx)
+      vol[i] *= 0.5;
+    if (hy)
+      vol[i] *= 0.5;
+    if (hz)
+      vol[i] *= 0.5;
+  }
+
+  mesh_p->d_nodes = std::move(nodes);
+  mesh_p->d_vol = std::move(vol);
+  mesh_p->d_enc = std::move(enc);
+  mesh_p->d_numNodes = mesh_p->d_nodes.size();
+  mesh_p->d_numElems = (nv > 0) ? mesh_p->d_enc.size() / nv : 0;
+  mesh_p->d_numDofs = mesh_p->d_numNodes * mesh_p->d_dim;
+  mesh_p->d_fix = std::vector<uint8_t>(mesh_p->d_nodes.size(), uint8_t(0));
 }
 
 void getCurrentQuadPoints(const mesh::Mesh *mesh_p,

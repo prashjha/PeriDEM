@@ -129,7 +129,7 @@ void pd::computeForces(data::ModelData &data) {
 
   taskflow.for_each_index(
     (std::size_t) 0, data.d_fPdCompNodes.size(), (std::size_t) 1,
-    [&data, selfContact = selfContact.get()](std::size_t II) {
+    [&data, selfContact = selfContact.get(), abs_stretch_break](std::size_t II) {
       auto i = data.d_fPdCompNodes[II];
 
       // local variable to hold force
@@ -138,6 +138,13 @@ void pd::computeForces(data::ModelData &data) {
 
       // for damage
       float Zi = 0.;
+      // Silling (2000) damage: phi = 1 - ∫ mu dV' / ∫ dV' over the horizon
+      // (reported by Silling 2003 and Trask). Bhattacharya & Lipton instead
+      // define damage as the broken-bond count fraction, kept separately.
+      double vol_all = 0.;
+      double vol_intact = 0.;
+      size_t n_bonds = 0;
+      size_t n_broken = 0;
 
       const auto rhoi = data.getDensity(i);
       const auto &ptIdi = data.getPtId(i);
@@ -193,18 +200,28 @@ void pd::computeForces(data::ModelData &data) {
             } // if state-based
             else {
 
-              // Debug
-              bool break_bonds = true;
-
-              auto ef =
-                  pi->d_material_p->getBondEF(rji, Sji, fs, break_bonds);
+              // Bond-based materials (e.g. PMB) historically broke inside
+              // getBondEF using |s|>Sc. Honor Model.Bond_Break here instead:
+              // tension (default, literature PMB) vs absolute_stretch.
+              const double Sc = pi->d_material_p->getSc(rji);
+              const bool broke = abs_stretch_break
+                                     ? util::isGreater(std::abs(Sji), Sc + 1.0e-10)
+                                     : util::isGreater(Sji, Sc + 1.0e-10);
+              if (broke)
+                fs = true;
               data.d_fracture_p->setBondState(i, k, fs);
 
-              // compute the contribution of bond force to force at i
-              scalar_f = ef.second * volj;
-
-              force_i += scalar_f * pi->d_material_p->getBondForceDirection(
-                                        xj - xi, uj - ui);
+              if (!fs) {
+                auto ef =
+                    pi->d_material_p->getBondEF(rji, Sji, fs, /*break_bonds=*/false);
+                scalar_f = ef.second * volj;
+                force_i += scalar_f * pi->d_material_p->getBondForceDirection(
+                                          xj - xi, uj - ui);
+              } else {
+                const auto yji = xj + uj - (xi + ui);
+                force_i +=
+                    selfContact->force(yji, volj, pi->d_Kn, pi->d_Rc, rji);
+              }
             } // if bond-based
           }   // if bond not broken
           else {
@@ -218,6 +235,14 @@ void pd::computeForces(data::ModelData &data) {
           if (util::isGreater(std::abs(Sji / Sc), Zi))
             Zi = std::abs(Sji / Sc);
 
+          // damage function phi (bond-state weighted by neighbor volume)
+          vol_all += data.d_vol[j];
+          n_bonds++;
+          if (!data.d_fracture_p->getBondState(i, k))
+            vol_intact += data.d_vol[j];
+          else
+            n_broken++;
+
           k++;
         } // loop over neighbors
 
@@ -228,6 +253,13 @@ void pd::computeForces(data::ModelData &data) {
       data.d_f[i] = force_i;
 
       data.d_Z[i] = Zi;
+      if (!data.d_phi.empty())
+        data.d_phi[i] =
+            (vol_all > 0.) ? static_cast<float>(1. - vol_intact / vol_all) : 0.f;
+      if (!data.d_phiBond.empty())
+        data.d_phiBond[i] =
+            (n_bonds > 0) ? static_cast<float>(double(n_broken) / double(n_bonds))
+                          : 0.f;
     }
   ); // for_each
 

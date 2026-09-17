@@ -111,6 +111,7 @@ void generateBuiltinParticleMeshGmsh(const std::shared_ptr<geom::GeomObject> &ge
       const bool geo_polygon =
           n == "square" || n == "rectangle" || n == "triangle" || n == "hexagon" ||
           n == "drum2d" || n == "open_rect_channel_2d";
+      // complex (OCC cuts) and annuli use Frontal-Delaunay (6)
       gmsh::option::setNumber("Mesh.Algorithm", geo_polygon ? 5 : 6);
     }
     gmsh::model::mesh::generate(genDim);

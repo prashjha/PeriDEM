@@ -156,7 +156,8 @@ namespace inp {
         d_computeContactR = true;
         d_contactR = j.at("Contact_Radius_Factor");
       } else {
-        if (j.find("Contact_Radius") != j.end()) throw std::runtime_error("Need Contact_Radius or Contact_Radius_Factor.");
+        if (j.find("Contact_Radius") == j.end())
+          throw std::runtime_error("Need Contact_Radius or Contact_Radius_Factor.");
 
         d_computeContactR = false;
         d_contactR = j.at("Contact_Radius");

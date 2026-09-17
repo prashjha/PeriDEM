@@ -53,6 +53,12 @@ struct MeshDeck {
   bool d_writeMeshFile;
 
   /*!
+   * @brief Axis-aligned boxes emptied from an in-built uniform grid
+   * (`CreateMesh.Void_Regions`: `[xlo,ylo,zlo,xhi,yhi,zhi]`).
+   */
+  std::vector<std::vector<double>> d_voidRegions;
+
+  /*!
    * @brief Constructor
    */
   MeshDeck(const json &j = json({})) : d_hMeshing(0.), d_createMesh(false), d_writeMeshFile(true) {
@@ -106,6 +112,17 @@ struct MeshDeck {
         d_hMeshing = cm.at("Mesh_Size").get<double>();
       else if (d_createMesh && j.find("Mesh_Size") != j.end())
         d_hMeshing = j.at("Mesh_Size").get<double>();
+
+      d_voidRegions.clear();
+      if (cm.find("Void_Regions") != cm.end()) {
+        for (const auto &r : cm.at("Void_Regions")) {
+          auto box = r.get<std::vector<double>>();
+          if (box.size() != 6)
+            throw std::runtime_error(
+                "CreateMesh.Void_Regions entries need 6 values [xlo,ylo,zlo,xhi,yhi,zhi].");
+          d_voidRegions.push_back(std::move(box));
+        }
+      }
     }
 
     if (d_createMesh && d_hMeshing <= 0.)

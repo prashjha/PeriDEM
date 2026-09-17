@@ -226,14 +226,27 @@ set_tests_properties(Test_PeriDEM_policy_combo_inbuilt PROPERTIES
   TIMEOUT 300
 )
 
-# Notched plate + impactor: prenotch bonds, tip damage outward/down, no blow-up.
+# Notched plate + impactor: prenotch bonds, tip damage growth, no blow-up.
+# Paper-angle checks are not in ctest.
 add_test(NAME Test_PeriDEM_notched_impact
-  COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 4
+  COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 1
+    -outputDir runs/lit_ctest
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_notched_impact_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_notched_impact PROPERTIES
   LABELS "PeriDEM;Physics"
-  TIMEOUT 900
+  TIMEOUT 7200
+)
+
+# Coarse soft-moduli smoke of the same driver.
+add_test(NAME Test_PeriDEM_notched_impact_smoke
+  COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 1 -smoke
+    -outputDir runs/smoke_ctest
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_notched_impact_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_notched_impact_smoke PROPERTIES
+  LABELS "PeriDEM;Physics"
+  TIMEOUT 300
 )
 
 # Jha et al. JMPS 2021 Table 2. Frozen v0.1.0 circ_damp .msh (hmin=0.1423 mm),

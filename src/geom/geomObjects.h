@@ -820,6 +820,32 @@ public:
     };
 
     /*!
+     * @brief Constructor from three vertices (arbitrary triangle, e.g. a V-notch).
+     * Params in decks: x1,y1,z1, x2,y2,z2, x3,y3,z3.
+     */
+    Triangle(util::Point v0, util::Point v1, util::Point v2,
+             std::string description = "vertices")
+      : GeomObject("triangle", description),
+        d_r(0.),
+        d_a(util::Point(1., 0., 0.)),
+        d_x(util::Point()),
+        d_vertices({v0, v1, v2}) {
+      d_x = (v0 + v1 + v2) / 3.0;
+      d_r = (v0 - d_x).length();
+      {
+        const double r1 = (v1 - d_x).length();
+        const double r2 = (v2 - d_x).length();
+        if (r1 > d_r)
+          d_r = r1;
+        if (r2 > d_r)
+          d_r = r2;
+      }
+      d_a = v0 - d_x;
+      if (d_a.length() > 0.)
+        d_a = d_a / d_a.length();
+    };
+
+    /*!
      * @brief Copy constructor
      * @param other Object to copy from
      */

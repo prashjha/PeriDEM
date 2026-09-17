@@ -21,6 +21,7 @@
 
 namespace time_int {
 
+void applyRigidBodyConstraint(data::ModelData &data);
 void updateCentralDifference(data::ModelData &data);
 void updateVerletHalfKickAndDrift(data::ModelData &data);
 void updateVerletSecondKick(data::ModelData &data);
@@ -43,6 +44,7 @@ public:
     model.setCurrentDt(model.timeStep());
     model.applyDisplacementBC();
     model.computeForces();
+    applyRigidBodyConstraint(model);
 
     while (model.currentStep() < model.numTimeSteps()) {
       model.log(std::format("{}: Time step: {}, time: {:8.6f}, steps completed = {}%\n",
@@ -93,11 +95,13 @@ public:
       model.advanceTime();
       model.applyDisplacementBC();
       model.computeForces();
+      applyRigidBodyConstraint(model);
     } else if (scheme == "velocity_verlet") {
       updateVerletHalfKickAndDrift(model);
       model.advanceTime();
       model.applyDisplacementBC();
       model.computeForces();
+      applyRigidBodyConstraint(model);
       updateVerletSecondKick(model);
     } else {
       throw std::runtime_error("Unknown time discretization: " + scheme);

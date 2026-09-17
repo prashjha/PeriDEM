@@ -48,7 +48,7 @@ namespace geom {
       else if (geom_type == "plane")
         return {6};
       else if (geom_type == "triangle")
-        return {1, 4, 7};
+        return {1, 4, 7, 9};
       else if (geom_type == "square")
         return {1, 4, 6};
       else if (geom_type == "rectangle")
@@ -675,7 +675,7 @@ namespace geom {
       }
       else if (geom_type == "triangle") {
 
-        num_params_needed = {1, 4, 7};
+        num_params_needed = {1, 4, 7, 9};
 
         for (auto n: num_params_needed) {
           if (params.size() == n) {
@@ -694,6 +694,12 @@ namespace geom {
                       util::Point(params[1],params[2],params[3]),
                       util::Point(params[4],params[5],params[6]));
 
+              return;
+            } else if (n == 9) {
+              obj = std::make_shared<geom::Triangle>(
+                      util::Point(params[0], params[1], params[2]),
+                      util::Point(params[3], params[4], params[5]),
+                      util::Point(params[6], params[7], params[8]));
               return;
             }
           } // if params.size() == n
@@ -1315,12 +1321,12 @@ namespace geom {
     geomData.d_geomName = j.at("Type");
 
     if (geomData.d_geomName == "complex") {
-      if ((j.find("Vec_type") == j.end()) or (j.find("Vec_Flag") == j.end())) {
+      if ((j.find("Vec_type") == j.end()) or (j.find("Vec_flag") == j.end())) {
         std::cerr << "Error: Geometry type and/or flag not found in json file.\n";
         exit(1);
       }
-      geomData.d_geomComplexInfo.first = j.at("Vec_type");
-      geomData.d_geomComplexInfo.second = j.at("Vec_flag");
+      geomData.d_geomComplexInfo.first = j.at("Vec_type").get<std::vector<std::string>>();
+      geomData.d_geomComplexInfo.second = j.at("Vec_flag").get<std::vector<std::string>>();
     }
 
     if (j.find("Parameters") == j.end()) {
@@ -1373,6 +1379,8 @@ namespace geom {
       return new OpenRectChannel2D(*dynamic_cast<const OpenRectChannel2D *>(obj));
     if (type == "open_cuboid_channel_3d")
       return new OpenCuboidChannel3D(*dynamic_cast<const OpenCuboidChannel3D *>(obj));
+    if (type == "complex")
+      return new ComplexGeomObject(*dynamic_cast<const ComplexGeomObject *>(obj));
 
     std::cerr << "Error: Unsupported object type '" << type << "' in createGeomDeepCopy\n";
     exit(1);

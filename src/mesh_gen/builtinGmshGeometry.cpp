@@ -206,6 +206,88 @@ void buildOccBoxFromAabb(const geom::GeomObject &g) {
   gmsh::model::occ::synchronize();
 }
 
+/** Complex 2D: first plus outer rectangle, then minus rectangle or triangle cuts
+ *  (Silling KW flat slots, or Bhat Fig. 4(a) V-notches). */
+void buildComplexRectangles2DOcc(const geom::ComplexGeomObject &c, double h) {
+  if (c.d_obj.empty() || c.d_objFlagInt.size() != c.d_obj.size())
+    throw std::runtime_error("buildComplexRectangles2DOcc: empty or mismatched flags.");
+  if (c.d_objFlagInt[0] != 1)
+    throw std::runtime_error("buildComplexRectangles2DOcc: first object must be plus.");
+
+  auto surfaceTag = [&](const geom::GeomObject &o) -> int {
+    if (o.d_name == "rectangle") {
+      const auto &r = static_cast<const geom::Rectangle &>(o);
+      const auto &lo = r.d_vertices[0];
+      const auto &hi = r.d_vertices[2];
+      return gmsh::model::occ::addRectangle(lo.d_x, lo.d_y, lo.d_z, hi.d_x - lo.d_x,
+                                            hi.d_y - lo.d_y);
+    }
+    if (o.d_name == "triangle") {
+      const auto &t = static_cast<const geom::Triangle &>(o);
+      std::vector<int> pts(3), lines(3);
+      for (int i = 0; i < 3; ++i)
+        pts[i] = gmsh::model::occ::addPoint(t.d_vertices[i].d_x, t.d_vertices[i].d_y,
+                                            t.d_vertices[i].d_z);
+      for (int i = 0; i < 3; ++i)
+        lines[i] = gmsh::model::occ::addLine(pts[i], pts[(i + 1) % 3]);
+      const int cl = gmsh::model::occ::addCurveLoop(lines);
+      return gmsh::model::occ::addPlaneSurface({cl});
+    }
+    throw std::runtime_error(
+        "buildComplexRectangles2DOcc: only rectangle/triangle parts supported (got " +
+        o.d_name + ").");
+  };
+
+  if (c.d_obj[0]->d_name != "rectangle")
+    throw std::runtime_error("buildComplexRectangles2DOcc: outer object must be a rectangle.");
+
+  int base = surfaceTag(*c.d_obj[0]);
+  gmsh::model::occ::synchronize();
+  std::vector<std::pair<int, int>> tools;
+  for (size_t i = 1; i < c.d_obj.size(); ++i) {
+    if (c.d_objFlagInt[i] != -1)
+      throw std::runtime_error("buildComplexRectangles2DOcc: only plus then minus cuts supported.");
+    tools.push_back({2, surfaceTag(*c.d_obj[i])});
+  }
+  gmsh::model::occ::synchronize();
+
+  std::vector<std::pair<int, int>> ov;
+  std::vector<std::vector<std::pair<int, int>>> ovv;
+  if (!tools.empty()) {
+    gmsh::model::occ::cut({{2, base}}, tools, ov, ovv, -1, true, true);
+    gmsh::model::occ::synchronize();
+    gmsh::model::occ::removeAllDuplicates();
+    gmsh::model::occ::synchronize();
+  } else {
+    ov = {{2, base}};
+  }
+
+  int surface_tag = -1;
+  for (const auto &pr : ov)
+    if (pr.first == 2) {
+      surface_tag = pr.second;
+      break;
+    }
+  if (surface_tag < 0) {
+    std::vector<std::pair<int, int>> ents;
+    gmsh::model::getEntities(ents, 2);
+    if (!ents.empty())
+      surface_tag = ents.back().second;
+  }
+  if (surface_tag < 0)
+    throw std::runtime_error("buildComplexRectangles2DOcc: no surface after cut.");
+
+  // Embed a point in the solid (center ligament for KW).
+  const auto bx = c.d_obj[0]->box();
+  const double cx = 0.5 * (bx.first.d_x + bx.second.d_x);
+  const double cy = 0.5 * (bx.first.d_y + bx.second.d_y);
+  const double cz = bx.first.d_z;
+  const int p = gmsh::model::occ::addPoint(cx, cy, cz, h);
+  gmsh::model::occ::synchronize();
+  gmsh::model::mesh::embed(0, {p}, 2, surface_tag);
+  gmsh::model::occ::synchronize();
+}
+
 } // namespace
 
 void buildGmshGeometryInCurrentModel(const geom::GeomObject &g, double h) {
@@ -250,6 +332,8 @@ void buildGmshGeometryInCurrentModel(const geom::GeomObject &g, double h) {
     return buildOpenRectChannel2DGeo(static_cast<const geom::OpenRectChannel2D &>(g), h);
   if (n == "open_cuboid_channel_3d")
     return buildOpenCuboidChannel3DGeo(static_cast<const geom::OpenCuboidChannel3D &>(g), h);
+  if (n == "complex")
+    return buildComplexRectangles2DOcc(static_cast<const geom::ComplexGeomObject &>(g), h);
 
   throw std::runtime_error("buildGmshGeometryInCurrentModel: no Gmsh recipe for geometry \"" + n +
                            "\".");

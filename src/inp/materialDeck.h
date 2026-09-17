@@ -368,7 +368,7 @@ struct MaterialDeck {
   static json getExampleJson(std::string materialType = "PDState", bool isPlainStrain = false,
     double horizon = -1., double horizonMeshRatio = -1., double density = 1.,
     double K = 0., double G = 0., double Gc = 0., bool computeParamsFromElastic = true,
-    size_t influenceFnType = 0) {
+    size_t influenceFnType = 0, double E = -1.) {
 
     auto j = json({});
 
@@ -383,6 +383,8 @@ struct MaterialDeck {
       j["Horizon_Mesh_Ratio"] = horizonMeshRatio;
 
     j["Compute_From_Classical"] = computeParamsFromElastic;
+    if (E > 0.)
+      j["E"] = E;
     j["K"] = K;
     j["G"] = G;
     j["Gc"] = Gc;
@@ -416,6 +418,16 @@ struct MaterialDeck {
       d_influenceFnType = j.at("Influence_Function").value("Type", 0);
       d_influenceFnParams = j.at("Influence_Function").value("Parameters", std::vector<double>());
     }
+
+    // Explicit micromodulus / critical stretch, used when Compute_From_Classical
+    // is false (e.g. to follow a specific paper's calibration convention).
+    d_bondPotentialParams =
+        j.value("Bond_Potential_Params", std::vector<double>());
+    d_statePotentialParams =
+        j.value("State_Potential_Params", std::vector<double>());
+    if (!d_computeParamsFromElastic && d_bondPotentialParams.empty())
+      throw std::runtime_error(
+          "Compute_From_Classical is false but Bond_Potential_Params is missing.");
   }
 
   /*!

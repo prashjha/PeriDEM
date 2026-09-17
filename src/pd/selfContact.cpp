@@ -46,9 +46,21 @@ util::Point BrokenBondKnSelfContact::force(const util::Point &yji, double volj,
 }
 
 util::Point ReferenceGapSelfContact::force(const util::Point &yji, double volj,
-                                           double Kn, double /*Rc*/,
+                                           double Kn, double Rc,
                                            double r0) const {
-  return cappedRepulsive(yji, volj, Kn, r0);
+  // Short-range only: act when current separation < Rc. Natural length is
+  // min(r0, Rc) when r0 is positive; otherwise Rc.
+  const double Rji = yji.length();
+  if (!(Rji > 0.) || !(Rc > 0.) || !(Rji < Rc))
+    return util::Point();
+  const double natural = (r0 > 0. && r0 < Rc) ? r0 : Rc;
+  return cappedRepulsive(yji, volj, Kn, natural);
+}
+
+util::Point NoneSelfContact::force(const util::Point & /*yji*/, double /*volj*/,
+                                   double /*Kn*/, double /*Rc*/,
+                                   double /*r0*/) const {
+  return util::Point();
 }
 
 std::unique_ptr<SelfContact> makeSelfContact(const std::string &name) {
@@ -56,10 +68,12 @@ std::unique_ptr<SelfContact> makeSelfContact(const std::string &name) {
     return std::make_unique<BrokenBondKnSelfContact>();
   if (name == "reference_gap")
     return std::make_unique<ReferenceGapSelfContact>();
+  if (name == "none")
+    return std::make_unique<NoneSelfContact>();
 
   throw std::runtime_error(
       "Unknown Model.Self_Contact '" + name +
-      "'. Supported: broken_bond_kn, reference_gap.");
+      "'. Supported: broken_bond_kn, reference_gap, none.");
 }
 
 } // namespace pd

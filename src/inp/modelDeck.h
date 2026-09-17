@@ -87,6 +87,12 @@ namespace inp {
     std::string d_bondBreak;
 
     /*!
+     * @brief Rigid translating particles: `{"Id": <id>, "Mass": <mass>}`.
+     * Nodal force densities are set to density * (net force / Mass).
+     */
+    std::vector<std::pair<size_t, double>> d_rigidParticles;
+
+    /*!
      * @brief Intra-body self-contact law name (default `broken_bond_kn`).
      */
     std::string d_selfContact;
@@ -202,6 +208,18 @@ namespace inp {
       d_wallContact = j.value("Wall_Contact", "meshed");
       d_seed = j.value("Seed", 0);
 
+      d_rigidParticles.clear();
+      if (j.find("Rigid_Particles") != j.end()) {
+        for (const auto &r : j.at("Rigid_Particles")) {
+          const double mass = r.value("Mass", -1.);
+          if (!(mass > 0.)) {
+            std::cerr << "Error: Model.Rigid_Particles entries need Mass > 0.\n";
+            exit(1);
+          }
+          d_rigidParticles.emplace_back(r.at("Id").get<size_t>(), mass);
+        }
+      }
+
       if (d_mpiStrategy != "auto" && d_mpiStrategy != "none" &&
           d_mpiStrategy != "particle" && d_mpiStrategy != "dof") {
         std::cerr << "Error: Model.MPI_Strategy must be auto|none|particle|dof.\n";
@@ -212,9 +230,9 @@ namespace inp {
         exit(1);
       }
       if (d_selfContact != "broken_bond_kn" &&
-          d_selfContact != "reference_gap") {
+          d_selfContact != "reference_gap" && d_selfContact != "none") {
         std::cerr << "Error: Model.Self_Contact must be "
-                     "broken_bond_kn|reference_gap.\n";
+                     "broken_bond_kn|reference_gap|none.\n";
         exit(1);
       }
       if (d_wallContact != "meshed" && d_wallContact != "analytical_plane") {

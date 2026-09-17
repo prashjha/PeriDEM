@@ -130,6 +130,10 @@ void rw::writeOutput(data::ModelData &data) {
           add_arr("Force", 3);
         if (util::methods::isTagInList("Damage_Z", tags) && !data.d_Z.empty())
           add_arr("Damage_Z", 1);
+        if (util::methods::isTagInList("Damage", tags) && !data.d_phi.empty())
+          add_arr("Damage", 1);
+        if (util::methods::isTagInList("Damage_Bond", tags) && !data.d_phiBond.empty())
+          add_arr("Damage_Bond", 1);
         if (util::methods::isTagInList("Particle_ID", tags))
           add_arr("Particle_ID", 1);
         const std::string pvtu_name = "output_" + tag + ".pvtu";

@@ -141,7 +141,8 @@ const std::vector<std::string> acceptable_geometries = {"circle",
                                                     "rectangle_minus_rectangle",
                                                     "cuboid_minus_cuboid",
                                                     "open_rect_channel_2d",
-                                                    "open_cuboid_channel_3d"};
+                                                    "open_cuboid_channel_3d",
+                                                    "complex"};
 
 
 

@@ -43,11 +43,17 @@ public:
 };
 
 /*!
- * Repulsive only when current distance is shorter than the reference
- * distance r0 (compressed relative to the undeformed pair). Cap like the
- * default law.
+ * Bhattacharya–Lipton 2023 §4.4: act only when current separation < Rc.
+ * Natural length is r0 if r0 < Rc, else Rc (inter-particle short-range law).
  */
 class ReferenceGapSelfContact : public SelfContact {
+public:
+  util::Point force(const util::Point &yji, double volj, double Kn, double Rc,
+                    double r0) const override;
+};
+
+/*! @brief No force on broken bonds (Trask: broken → weight 0). */
+class NoneSelfContact : public SelfContact {
 public:
   util::Point force(const util::Point &yji, double volj, double Kn, double Rc,
                     double r0) const override;
