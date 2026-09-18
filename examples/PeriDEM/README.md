@@ -13,7 +13,7 @@ cmake --build build --target example_ellipse_triangle
 | Path | Role |
 |------|------|
 | `compressive/n12/` | Small compressive pack |
-| `compressive/n500/` | Paper-scale pack + restart |
+| `compressive/n500/` | Paper N≈502 two-stage settle + compress |
 | `attrition/sim1_rotating_cylinder/` | Thick drum, GIF sim1 |
 | `attrition/sim2_thin_container/` | Thin drum, offset ω, GIF sim2 |
 | `silling_kw/` | Silling KW via notched_impact driver |

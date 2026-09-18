@@ -85,9 +85,9 @@ test_ignored_dir
 # Local coding-agent helpers (not committed)
 .agent/
 
-# n500 modular run outputs (keep inputs + restart IC)
-examples/PeriDEM/compressive_test/n500_circ_hex/modular/*_out/
-examples/PeriDEM/compressive_test/n500_circ_hex/run2/inp/output_*.vtu
+# compressive example run outputs (decks + restart IC are tracked)
+examples/PeriDEM/compressive/n500/runs/
+examples/PeriDEM/compressive/n500/*_out/
 /n96_contact_long_*/
 /inp/
 /out/
