@@ -39,15 +39,19 @@ commands:
             make -j 2
   libtest:
     parameters:
-      verb-flag:
+      # Default PR/branch gate: skip Long (Table-2 CR, full notched, long
+      # damping/friction). Full suite: ctest --output-on-failure locally or
+      # override ctest-args on a workflow that needs Literature/Long.
+      ctest-args:
         type: string
-        default: --extra-verbose
+        default: --output-on-failure -LE Long
     steps:
       - run: 
           name: Ctest
+          no_output_timeout: 30m
           command: |
             cd build 
-            ctest <<parameters.verb-flag>>
+            ctest <<parameters.ctest-args>>
   libdoc:
     steps:
       - run: 

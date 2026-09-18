@@ -2,7 +2,10 @@
 # Copyright (c) 2021 - 2024 Prashant K. Jha
 # -------------------------------------------
 # PeriDEM https://github.com/prashjha/PeriDEM
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE)
 
-add_subdirectory(compression_large_set_inbuilt)
-add_subdirectory(compression_test)
+# C++ drivers (Enable_Examples). JSON/deck demos under compressive/ use bin/PeriDEM.
 add_subdirectory(twop_circ_contact)
+add_subdirectory(ellipse_triangle)
