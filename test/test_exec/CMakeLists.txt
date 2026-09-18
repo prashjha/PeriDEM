@@ -8,10 +8,8 @@
 
 add_subdirectory(util)
 add_subdirectory(fe)
-add_subdirectory(particle)
 add_subdirectory(nsearch)
 add_subdirectory(contact)
-add_subdirectory(peridem)
 add_subdirectory(parallelcomp)
 add_subdirectory(meshpartitioning)
 add_subdirectory(mesh_gen)

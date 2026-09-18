@@ -6,7 +6,7 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-set(EXEC_NAME Test_PeriDEM_compression_large_set_inbuilt)
+set(EXEC_NAME Test_PeriDEM_compressive_mixed_inbuilt)
 
 add_executable(${EXEC_NAME} main.cpp)
 

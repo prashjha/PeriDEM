@@ -27,7 +27,7 @@ add_subdirectory(test_exec)
 add_subdirectory(test_data/peridem/twop_circ)
 add_subdirectory(test_data/peridem/twop_circ_inbuilt)
 add_subdirectory(test_data/peridem/twop_general_inbuilt)
-add_subdirectory(test_data/peridem/compression_large_set_inbuilt)
+add_subdirectory(test_data/peridem/compressive_mixed_inbuilt)
 add_subdirectory(test_data/peridem/self_contact_mode1_inbuilt)
 add_subdirectory(test_data/peridem/wall_analytical_inbuilt)
 add_subdirectory(test_data/peridem/notched_impact_inbuilt)
@@ -36,6 +36,9 @@ add_subdirectory(test_data/peridem/jha2021_comp_n50)
 # ---------------------------------------------------------------------------
 # CI / environment
 # ---------------------------------------------------------------------------
+# Label Long: multi-minute CR / literature / full notched runs. CircleCI
+# default is `ctest -LE Long` (see .circleci/config.yml). Local full suite:
+# `ctest --output-on-failure`.
 set(IS_CIRCLECI FALSE CACHE BOOL "Circle CI run")
 if($ENV{CIRCLECI})
   set(IS_CIRCLECI TRUE CACHE BOOL "Variable indicating we are running in circle-ci")
@@ -154,7 +157,7 @@ add_test(NAME Test_PeriDEM_damping_law_off
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_damping_law_off PROPERTIES
-  LABELS "PeriDEM;Physics"
+  LABELS "PeriDEM;Physics;Long"
   TIMEOUT 720
 )
 
@@ -166,7 +169,7 @@ add_test(NAME Test_PeriDEM_damping_law_com_and_node
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_damping_law_com_and_node PROPERTIES
-  LABELS "PeriDEM;Physics"
+  LABELS "PeriDEM;Physics;Long"
   TIMEOUT 720
 )
 
@@ -180,7 +183,7 @@ add_test(NAME Test_PeriDEM_friction_coulomb_simple
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_friction_coulomb_simple PROPERTIES
-  LABELS "PeriDEM;Physics"
+  LABELS "PeriDEM;Physics;Long"
   TIMEOUT 720
 )
 
@@ -192,7 +195,7 @@ add_test(NAME Test_PeriDEM_friction_stick_slip
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_friction_stick_slip PROPERTIES
-  LABELS "PeriDEM;Physics"
+  LABELS "PeriDEM;Physics;Long"
   TIMEOUT 720
 )
 
@@ -227,14 +230,14 @@ set_tests_properties(Test_PeriDEM_policy_combo_inbuilt PROPERTIES
 )
 
 # Notched plate + impactor: prenotch bonds, tip damage growth, no blow-up.
-# Paper-angle checks are not in ctest.
+# Paper-angle checks are not in ctest. Full run is Long (excluded from CircleCI).
 add_test(NAME Test_PeriDEM_notched_impact
   COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 1
     -outputDir runs/lit_ctest
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_notched_impact_inbuilt>
 )
 set_tests_properties(Test_PeriDEM_notched_impact PROPERTIES
-  LABELS "PeriDEM;Physics"
+  LABELS "PeriDEM;Physics;Long"
   TIMEOUT 7200
 )
 
@@ -260,7 +263,7 @@ foreach(jha_n RANGE 1 5)
     WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
   )
   set_tests_properties(Test_PeriDEM_twop_jha2021_table2_${jha_n} PROPERTIES
-    LABELS "PeriDEM;Literature"
+    LABELS "PeriDEM;Literature;Long"
     TIMEOUT 720
   )
 endforeach()
@@ -274,7 +277,7 @@ foreach(jha_n RANGE 1 2)
     WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
   )
   set_tests_properties(Test_PeriDEM_twop_jha2021_inbuilt_${jha_n} PROPERTIES
-    LABELS "PeriDEM;Literature"
+    LABELS "PeriDEM;Literature;Long"
     TIMEOUT 720
   )
 endforeach()
@@ -285,11 +288,11 @@ add_test(NAME Test_PeriDEM_twop_general_inbuilt
 )
 set_tests_properties(Test_PeriDEM_twop_general_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
 
-add_test(NAME Test_PeriDEM_compression_large_set_inbuilt
-  COMMAND Test_PeriDEM_compression_large_set_inbuilt -numSteps 50
-  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_compression_large_set_inbuilt>
+add_test(NAME Test_PeriDEM_compressive_mixed_inbuilt
+  COMMAND Test_PeriDEM_compressive_mixed_inbuilt -numSteps 50
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_compressive_mixed_inbuilt>
 )
-set_tests_properties(Test_PeriDEM_compression_large_set_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
+set_tests_properties(Test_PeriDEM_compressive_mixed_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
 
 # Short contacting pack (12 circles). Default Δt=0.2 μs, T=0.004 s, require grain–grain contact.
 add_test(NAME Test_PeriDEM_jha2021_comp_n50_smoke
@@ -350,11 +353,11 @@ set_tests_properties(Test_PeriDEM_jha2021_comp_n96_mpi_scale PROPERTIES
 )
 
 # Main PeriDEM app: on-disk input.json + meshes (built as ${CMAKE_BINARY_DIR}/bin/PeriDEM)
-add_test(NAME test_peridem_compression_large_set
+add_test(NAME test_peridem_compressive_mixed
   COMMAND ${CMAKE_BINARY_DIR}/bin/PeriDEM -i input.json
-  WORKING_DIRECTORY ${Test_Data_Path}/peridem/compression_large_set
+  WORKING_DIRECTORY ${Test_Data_Path}/peridem/compressive_mixed
 )
-set_tests_properties(test_peridem_compression_large_set PROPERTIES LABELS "PeriDEM;Examples")
+set_tests_properties(test_peridem_compressive_mixed PROPERTIES LABELS "PeriDEM;Examples")
 
 add_test(NAME test_twoparticle_custom
   COMMAND ${CMAKE_BINARY_DIR}/bin/TwoParticle_Custom
