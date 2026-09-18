@@ -73,9 +73,10 @@ void contact::Contact::setup(data::ModelData &data) {
   d_useNodeDamping = usesNodeDamping(contactDeck.d_dampingLaw);
   setWallContact(makeWallContact(data.d_modelDeck_p->d_wallContact));
   util::io::log(1, std::format(
-      "  Damping_Law = {}, Friction_Law = {}\n"
+      "  Damping_Law = {}, Friction_Law = {}, Correct_Volume = {}\n"
       "  Bond_Break = {}, Self_Contact = {}, Wall_Contact = {}\n",
       contactDeck.d_dampingLaw, contactDeck.d_frictionLaw,
+      contactDeck.d_correctVolume ? "true" : "false",
       data.d_modelDeck_p->d_bondBreak, data.d_modelDeck_p->d_selfContact,
       data.d_modelDeck_p->d_wallContact));
 
@@ -450,6 +451,8 @@ void contact::Contact::computeForces(data::ModelData &data) {
   const bool use_node_damping = d_useNodeDamping;
   const bool skip_meshed_wall =
       (d_wallContact && d_wallContact->skipsMeshedGrainWall());
+  const bool correct_volume =
+      data.d_particleDeck_p->d_contactDeck.d_correctVolume;
   pair->beginStep();
 
   // Diagnostics across contact assembly (max over active pairs this step).
@@ -469,7 +472,7 @@ void contact::Contact::computeForces(data::ModelData &data) {
   taskflow.for_each_index((std::size_t) 0,
                           data.d_fContCompNodes.size(),
                           (std::size_t) 1,
-                          [&data, pair, use_node_damping,
+                          [&data, pair, use_node_damping, correct_volume,
                            skip_meshed_wall,
                            &max_pen, &max_fij, &min_rji, &n_active,
                            &max_neigh](std::size_t II) {
@@ -547,9 +550,15 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                   n_active.fetch_add(1, std::memory_order_relaxed);
                                 }
 
-                                // Partial Vj near contact radius (not fully inside).
-                                const double volj = correctedContactVolume(
-                                    data.d_vol[j_id], Rji, contact.d_contactR, hi);
+                                // Partial Vj near Rc when Correct_Volume=true
+                                // (default). false → full Vj (main DEM contact).
+                                const double volj_raw = data.d_vol[j_id];
+                                const double volj =
+                                    correct_volume
+                                        ? correctedContactVolume(
+                                              volj_raw, Rji, contact.d_contactR,
+                                              hi)
+                                        : volj_raw;
 
                                 Pair p{contact,
                                        yi, data.d_x[j_id],
@@ -582,10 +591,9 @@ void contact::Contact::computeForces(data::ModelData &data) {
                                 // would double-count and can blow up at contact.
                                 if (!pi->isWall() && pj->isWall() &&
                                     util::parallel::isMpiEnabled()) {
-                                  // fs is force density on i (∝ Ṽj). Deposit
-                                  // Newton-III onto the wall in density form
-                                  // using grain/wall volume ratio.
-                                  const double volj_raw = data.d_vol[j_id];
+                                  // fs is force density on i (∝ Vj used above).
+                                  // Deposit Newton-III onto the wall in density
+                                  // form using grain/wall volume ratio.
                                   const double scale =
                                       (volj_raw > 0.) ? (voli / volj_raw) : 0.;
                                   data.d_f[j_id] -= scale * fs;

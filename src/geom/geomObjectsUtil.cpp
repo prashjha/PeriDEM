@@ -81,6 +81,8 @@ namespace geom {
         return {12};
       else if (geom_type == "circle_minus_circle")
         return {5};
+      else if (geom_type == "ellipse_minus_ellipse")
+        return {8};
       else if (geom_type == "sphere_minus_sphere")
         return {5};
       else if (geom_type == "open_rect_channel_2d")
@@ -146,6 +148,7 @@ namespace geom {
                                                  "rectangle_minus_rectangle",
                                                  "cuboid_minus_cuboid",
                                                  "circle_minus_circle",
+                                                 "ellipse_minus_ellipse",
                                                  "sphere_minus_sphere",
                                                  "open_rect_channel_2d",
                                                  "open_cuboid_channel_3d"};
@@ -532,6 +535,33 @@ namespace geom {
           exit(1);
         }
       } // circle_minus_circle
+      else if (type == "ellipse_minus_ellipse") {
+
+        if (check_passed) {
+          // a_out, b_out, a_in, b_in, theta, cx, cy, cz (concentric, same θ)
+          const double a_out = params[0];
+          const double b_out = params[1];
+          const double a_in = params[2];
+          const double b_in = params[3];
+          const double theta = params[4];
+          const util::Point c(params[5], params[6], params[7]);
+          if (a_in <= 0. || b_in <= 0. || a_out <= a_in || b_out <= b_in)
+            throw std::runtime_error(
+                    "ellipse_minus_ellipse: require 0 < a_in < a_out and 0 < b_in < b_out.");
+          auto *ein = new geom::Ellipse(a_in, b_in, theta, c);
+          auto *eout = new geom::Ellipse(a_out, b_out, theta, c);
+          obj = std::make_shared<geom::AnnulusGeomObject>(ein, eout);
+        } else {
+          std::cerr << "Error: need " << 8
+                    << " parameters for creating ellipse_minus_ellipse "
+                       "(a_out, b_out, a_in, b_in, theta, cx, cy, cz). "
+                       "Number of params provided = "
+                    << params.size()
+                    << ", params = "
+                    << util::io::printStr(params) << " \n";
+          exit(1);
+        }
+      } // ellipse_minus_ellipse
       else if (type == "sphere_minus_sphere") {
 
         if (check_passed) {
@@ -1043,6 +1073,30 @@ namespace geom {
           }
         }
       } // circle_minus_circle
+      else if (geom_type == "ellipse_minus_ellipse") {
+
+        num_params_needed = {8};
+
+        for (auto n: num_params_needed) {
+          if (params.size() == n) {
+            if (n == 8) {
+              const double a_out = params[0];
+              const double b_out = params[1];
+              const double a_in = params[2];
+              const double b_in = params[3];
+              const double theta = params[4];
+              const util::Point c(params[5], params[6], params[7]);
+              if (a_in <= 0. || b_in <= 0. || a_out <= a_in || b_out <= b_in)
+                throw std::runtime_error(
+                        "ellipse_minus_ellipse: require 0 < a_in < a_out and 0 < b_in < b_out.");
+              auto *ein = new geom::Ellipse(a_in, b_in, theta, c);
+              auto *eout = new geom::Ellipse(a_out, b_out, theta, c);
+              obj = std::make_shared<geom::AnnulusGeomObject>(ein, eout);
+              return;
+            }
+          }
+        }
+      } // ellipse_minus_ellipse
       else if (geom_type == "sphere_minus_sphere") {
 
         num_params_needed = {5};
@@ -1215,6 +1269,8 @@ namespace geom {
         return {2. * s, 1. * s, 1.5 * s, c.d_x, c.d_y, c.d_z};
       if (geom_type == "circle_minus_circle")
         return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
+      if (geom_type == "ellipse_minus_ellipse")
+        return {1.2 * s, 0.85 * s, 0.7 * s, 0.5 * s, 0.25, c.d_x, c.d_y, c.d_z};
       if (geom_type == "sphere_minus_sphere")
         return {c.d_x, c.d_y, c.d_z, s, 0.35 * s};
       if (geom_type == "rectangle_minus_rectangle") {

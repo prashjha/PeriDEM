@@ -37,10 +37,18 @@ struct ContactDeck {
   std::string d_frictionLaw;
 
   /*!
+   * @brief If true (default), DEM contact uses partial neighbor volume near
+   * the contact radius (`correctedContactVolume`). Set false to use full
+   * nodal volume (main-branch DEM contact spring).
+   */
+  bool d_correctVolume;
+
+  /*!
    * @brief Constructor
    */
   ContactDeck(const json &j = json({}))
-      : d_dampingLaw("com_and_node"), d_frictionLaw("coulomb_simple") {
+      : d_dampingLaw("com_and_node"), d_frictionLaw("coulomb_simple"),
+        d_correctVolume(true) {
     readFromJson(j);
   };
 
@@ -73,7 +81,8 @@ struct ContactDeck {
 
     auto j = json({{"Sets", nSets},
                    {"Damping_Law", "com_and_node"},
-                   {"Friction_Law", "coulomb_simple"}});
+                   {"Friction_Law", "coulomb_simple"},
+                   {"Correct_Volume", true}});
 
     for (size_t i = 0; i < nSets; i++) {
       for (size_t k=i; k<nSets; k++) {
@@ -94,6 +103,7 @@ struct ContactDeck {
 
     d_dampingLaw = j.value("Damping_Law", "com_and_node");
     d_frictionLaw = j.value("Friction_Law", "coulomb_simple");
+    d_correctVolume = j.value("Correct_Volume", true);
 
     if (d_dampingLaw != "com_and_node" && d_dampingLaw != "com" &&
         d_dampingLaw != "node" && d_dampingLaw != "off") {
@@ -159,6 +169,7 @@ struct ContactDeck {
     oss << tabS << "------- ContactDeck --------" << std::endl << std::endl;
     oss << tabS << "Damping law = " << d_dampingLaw << std::endl;
     oss << tabS << "Friction law = " << d_frictionLaw << std::endl;
+    oss << tabS << "Correct volume = " << d_correctVolume << std::endl;
     for (size_t i =0; i<d_data.size(); i++) {
       for (size_t j = 0; j < d_data.size(); j++) {
         oss << tabS << "ContactPairData id = (" << i << "," << j << ") info:"
