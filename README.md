@@ -108,11 +108,9 @@ Mix of circular, triangular, hexagonal, and drum-shaped grains in a rotating con
 
 ### Impact and fracture
 
-| <img src="./docs/assets/ellipse_triangle_impact.png" width="320"> |
-|:------------------------------------------------------------:|
-| Hollow ellipse on a tip ([setup](./examples/PeriDEM/ellipse_triangle)) |
-
-Silling KW notched plate (2D/3D scripts → notched-impact driver): [examples/PeriDEM/silling_kw](./examples/PeriDEM/silling_kw).
+| <img src="./docs/assets/silling_kw_3d.png" width="480"> |
+|:------------------------------------------------------:|
+| Silling KW 3D notched plate ([setup](./examples/PeriDEM/silling_kw), `./run_3d.sh`) |
 
 ### Single particle deformation
 
@@ -357,8 +355,8 @@ Each folder has `./run.sh` (and mesh/CSV setup scripts). Keep outputs under `run
 
 | Path | Role |
 |------|------|
-| [ellipse_triangle](./examples/PeriDEM/ellipse_triangle) | Hollow ellipse dropped on a tip (C++ example + `./run.sh`) |
-| [silling_kw](./examples/PeriDEM/silling_kw) | Silling KW 2D/3D via notched-impact driver scripts |
+| [silling_kw](./examples/PeriDEM/silling_kw) | Silling KW 3D (`./run_3d.sh`) and 2D (`./run_2d.sh`) |
+| [ellipse_triangle](./examples/PeriDEM/ellipse_triangle) | Hollow ellipse dropped on a tip |
 
 ### Single-particle Peridynamics
 

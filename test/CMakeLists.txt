@@ -17,6 +17,9 @@
 
 set(EXECUTABLE_OUTPUT_PATH "${Test_Exec_Path}")
 
+# Generated PeriDEMConfig.h lives in the build tree, not src/.
+include_directories(${PROJECT_BINARY_DIR})
+
 if(${Enable_CMAKE_Debug_Build})
   message(STATUS "Test binary directory = ${EXECUTABLE_OUTPUT_PATH}")
 endif()
