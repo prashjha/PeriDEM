@@ -9,12 +9,7 @@ if [[ ! -x "$BIN" ]]; then
   exit 1
 fi
 
-# Prefer system OpenMPI (--quiet) when available.
-export PATH="/usr/bin:${PATH:-}"
-MPI_EXTRA=()
-if mpirun --help 2>&1 | grep -q -- '--quiet'; then
-  MPI_EXTRA+=(--quiet)
-fi
+MPIEXEC="${MPIEXEC:-mpirun}"
 
 ARGS=(-nThreads 1 -bottomPatchBC -writeMpiMetric -epsN 1.0
       -finalTime 0.008 -numSteps 24000 -requireContact)
@@ -23,15 +18,15 @@ rm -rf "$HERE/mpi_cmp_none_out" "$HERE/mpi_cmp_particle_out" "$HERE/mpi_cmp_dof_
 mkdir -p "$HERE/mpi_cmp_none_out" "$HERE/mpi_cmp_particle_out" "$HERE/mpi_cmp_dof_out"
 
 echo "=== serial / none ==="
-mpirun -n 1 "${MPI_EXTRA[@]}" "$BIN" "${ARGS[@]}" -mpiStrategy none \
+"$MPIEXEC" -n 1 "$BIN" "${ARGS[@]}" -mpiStrategy none \
   -outputDir "$HERE/mpi_cmp_none_out"
 
 echo "=== particle-MPI @2 ==="
-mpirun -n 2 "${MPI_EXTRA[@]}" "$BIN" "${ARGS[@]}" -mpiStrategy particle \
+"$MPIEXEC" -n 2 "$BIN" "${ARGS[@]}" -mpiStrategy particle \
   -outputDir "$HERE/mpi_cmp_particle_out"
 
 echo "=== DOF-MPI @2 ==="
-mpirun -n 2 "${MPI_EXTRA[@]}" "$BIN" "${ARGS[@]}" -mpiStrategy dof \
+"$MPIEXEC" -n 2 "$BIN" "${ARGS[@]}" -mpiStrategy dof \
   -outputDir "$HERE/mpi_cmp_dof_out"
 
 python3 - <<PY

@@ -27,7 +27,8 @@ print("wrote", "$OUT/input.json")
 PY
 
 cd "$BIN_DIR"
-mpirun -n 4 --quiet "$BIN" -i "$OUT/input.json" -nThreads 1 -outputDir "$OUT"
+MPIEXEC="${MPIEXEC:-mpirun}"
+"$MPIEXEC" -n 4 "$BIN" -i "$OUT/input.json" -nThreads 1 -outputDir "$OUT"
 
 python3 - <<PY
 from pathlib import Path

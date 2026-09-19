@@ -30,11 +30,7 @@ if [[ "${CLEAN:-0}" == "1" ]]; then
   rm -rf "$HERE/$OUT_KEY"/output_* "$HERE/$OUT_KEY"/*.pvd 2>/dev/null || true
 fi
 echo "BIN=$BIN NP=$NP DECK=$DECK"
-# OpenMPI accepts --quiet; MPICH does not.
-MPI_EXTRA=()
-if mpirun --help 2>&1 | grep -q -- '--quiet'; then
-  MPI_EXTRA+=(--quiet)
-fi
-mpirun -n "$NP" "${MPI_EXTRA[@]}" "$BIN" -i "$DECK" -nThreads "${NTHREADS:-4}"
+MPIEXEC="${MPIEXEC:-mpirun}"
+"$MPIEXEC" -n "$NP" "$BIN" -i "$DECK" -nThreads "${NTHREADS:-4}"
 ls -1 "$HERE/$OUT_KEY"/output_*.vtu 2>/dev/null | head -3
 echo "OK: wrote under $HERE/$OUT_KEY"

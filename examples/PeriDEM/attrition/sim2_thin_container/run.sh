@@ -43,5 +43,6 @@ if [[ "${CLEAN:-0}" == "1" ]]; then
   rm -rf "$OUT/out"/output_* "$OUT/out"/*.pvd 2>/dev/null || true
 fi
 echo "BIN=$BIN NP=$NP DECK=$DECK"
-mpirun -n "$NP" --quiet "$BIN" -i "$DECK" -nThreads "${NTHREADS:-1}"
+MPIEXEC="${MPIEXEC:-mpirun}"
+"$MPIEXEC" -n "$NP" "$BIN" -i "$DECK" -nThreads "${NTHREADS:-1}"
 python3 "$HERE/check_health.py" "$OUT/out" "$DECK"

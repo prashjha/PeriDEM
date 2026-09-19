@@ -10,11 +10,7 @@ if [[ ! -x "$BIN" ]]; then
   exit 1
 fi
 
-export PATH="/usr/bin:${PATH:-}"
-MPI_EXTRA=()
-if mpirun --help 2>&1 | grep -q -- '--quiet'; then
-  MPI_EXTRA+=(--quiet)
-fi
+MPIEXEC="${MPIEXEC:-mpirun}"
 
 NCOLS="${NCOLS:-4}"
 NROWS="${NROWS:-3}"
@@ -33,15 +29,15 @@ rm -rf "$HERE/cmp_dof_out" "$HERE/cmp_dof_inp"
 
 echo "=== pack ${NCOLS}x${NROWS}  steps=$NUM_STEPS T=$FINAL_TIME ==="
 echo "=== serial / none ==="
-mpirun -n 1 "${MPI_EXTRA[@]}" "$BIN" "${ARGS[@]}" -mpiStrategy none \
+"$MPIEXEC" -n 1 "$BIN" "${ARGS[@]}" -mpiStrategy none \
   -outputDir cmp_none_out -inputDir cmp_none_inp
 
 echo "=== particle-MPI @2 ==="
-mpirun -n 2 "${MPI_EXTRA[@]}" "$BIN" "${ARGS[@]}" -mpiStrategy particle \
+"$MPIEXEC" -n 2 "$BIN" "${ARGS[@]}" -mpiStrategy particle \
   -outputDir cmp_particle_out -inputDir cmp_particle_inp
 
 echo "=== DOF-MPI @2 ==="
-mpirun -n 2 "${MPI_EXTRA[@]}" "$BIN" "${ARGS[@]}" -mpiStrategy dof \
+"$MPIEXEC" -n 2 "$BIN" "${ARGS[@]}" -mpiStrategy dof \
   -outputDir cmp_dof_out -inputDir cmp_dof_inp
 
 python3 - <<PY

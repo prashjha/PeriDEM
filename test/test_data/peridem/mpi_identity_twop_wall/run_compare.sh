@@ -10,26 +10,22 @@ if [[ ! -x "$BIN" ]]; then
   exit 1
 fi
 
-export PATH="/usr/bin:${PATH:-}"
-MPI_EXTRA=()
-if mpirun --help 2>&1 | grep -q -- '--quiet'; then
-  MPI_EXTRA+=(--quiet)
-fi
+MPIEXEC="${MPIEXEC:-mpirun}"
 
 rm -rf "$HERE/id_none_out" "$HERE/id_none_inp"
 rm -rf "$HERE/id_particle_out" "$HERE/id_particle_inp"
 rm -rf "$HERE/id_dof_out" "$HERE/id_dof_inp"
 
 echo "=== serial / none ==="
-mpirun -n 1 "${MPI_EXTRA[@]}" "$BIN" -nThreads 1 -mpiStrategy none \
+"$MPIEXEC" -n 1 "$BIN" -nThreads 1 -mpiStrategy none \
   -outputDir "$HERE/id_none_out" -inputDir "$HERE/id_none_inp"
 
 echo "=== Particle-MPI @2 ==="
-mpirun -n 2 "${MPI_EXTRA[@]}" "$BIN" -nThreads 1 -mpiStrategy particle \
+"$MPIEXEC" -n 2 "$BIN" -nThreads 1 -mpiStrategy particle \
   -outputDir "$HERE/id_particle_out" -inputDir "$HERE/id_particle_inp"
 
 echo "=== DOF-MPI @2 ==="
-mpirun -n 2 "${MPI_EXTRA[@]}" "$BIN" -nThreads 1 -mpiStrategy dof \
+"$MPIEXEC" -n 2 "$BIN" -nThreads 1 -mpiStrategy dof \
   -outputDir "$HERE/id_dof_out" -inputDir "$HERE/id_dof_inp"
 
 python3 - <<PY

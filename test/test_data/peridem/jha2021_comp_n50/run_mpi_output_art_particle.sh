@@ -8,7 +8,8 @@ OUT="$BIN_DIR/mpi_out_art_particle"
 INP="$BIN_DIR/mpi_out_art_particle_inp"
 rm -rf "$OUT" "$INP"
 
-mpirun -n 4 --quiet "$BIN" \
+MPIEXEC="${MPIEXEC:-mpirun}"
+"$MPIEXEC" -n 4 "$BIN" \
   -nThreads 1 -nCols 4 -nRows 3 \
   -numSteps 40 -finalTime 8.0e-6 -noRequireContact \
   -outputDir "$(basename "$OUT")" -inputDir "$(basename "$INP")"

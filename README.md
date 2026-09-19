@@ -308,7 +308,7 @@ Input is **JSON only** (`bin/PeriDEM -i input.json`). Mesh files (`.msh`) and pa
 ```sh
 <path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 4
 # or with MPI
-mpirun -n 4 --quiet <path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 2
+mpirun -n 4 <path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 2
 ```
 
 Most example folders provide `./run.sh` (or `run_stage1.sh` / `run_stage2.sh`) that locate `bin/PeriDEM` under `build/`. Index: [examples/README.md](./examples/README.md).

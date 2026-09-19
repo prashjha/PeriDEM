@@ -17,14 +17,14 @@ Deck is independent of MPI mode. Set `Model.MPI_Strategy`:
 ```bash
 BIN=../../../../bin/PeriDEM   # adjust
 # serial / none
-mpirun -n 1 --quiet $BIN -i input_quick_none.json -nThreads 8
+mpirun -n 1 $BIN -i input_quick_none.json -nThreads 8
 # Particle-MPI
-mpirun -n 4 --quiet $BIN -i input_quick_particle.json -nThreads 8
+mpirun -n 4 $BIN -i input_quick_particle.json -nThreads 8
 # DOF-MPI
-mpirun -n 4 --quiet $BIN -i input_quick_dof.json -nThreads 8
+mpirun -n 4 $BIN -i input_quick_dof.json -nThreads 8
 
 # longer identity run (T=0.012, 60k)
-mpirun -n 1 --quiet $BIN -i input_long.json -nThreads 8
+mpirun -n 1 $BIN -i input_long.json -nThreads 8
 ```
 
 Keep run outputs out of the source tree; copy this folder into `build/linux/examples/...` first.

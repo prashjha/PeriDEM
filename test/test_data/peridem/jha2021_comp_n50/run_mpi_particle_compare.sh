@@ -8,10 +8,12 @@ ARGS=(-nThreads 2 -numSteps 200 -finalTime 4.0e-5 -noRequireContact)
 rm -rf "$BIN_DIR/mpi_cmp_ser_out" "$BIN_DIR/mpi_cmp_ser_inp"
 rm -rf "$BIN_DIR/mpi_cmp_2_out" "$BIN_DIR/mpi_cmp_2_inp"
 
-mpirun -n 1 --quiet "$BIN" "${ARGS[@]}" \
+MPIEXEC="${MPIEXEC:-mpirun}"
+
+"$MPIEXEC" -n 1 "$BIN" "${ARGS[@]}" \
   -outputDir mpi_cmp_ser_out -inputDir mpi_cmp_ser_inp
 
-mpirun -n 2 --quiet "$BIN" "${ARGS[@]}" \
+"$MPIEXEC" -n 2 "$BIN" "${ARGS[@]}" \
   -outputDir mpi_cmp_2_out -inputDir mpi_cmp_2_inp
 
 python3 - <<'PY'

@@ -111,11 +111,11 @@ if(${INSIDE_CONTAINER} AND ${Disable_Docker_MPI_Tests})
 else()
   message(STATUS "Registering MPI tests test_parallelcomp_builtinmesh_mpi and test_parallelcomp_usermesh_mpi")
   add_test(NAME test_parallelcomp_builtinmesh_mpi
-    COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -m 4 -n 50
+    COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 1 -m 4 -n 50
     WORKING_DIRECTORY ${Test_Data_Path}/parallelcomp
   )
   add_test(NAME test_parallelcomp_usermesh_mpi
-    COMMAND mpirun -n 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -m 4 -f ../common_data/mesh.msh
+    COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2 ${EXECUTABLE_OUTPUT_PATH}/TestParallelComp -o 2 -m 4 -f ../common_data/mesh.msh
     WORKING_DIRECTORY ${Test_Data_Path}/parallelcomp
   )
 endif()
@@ -161,6 +161,7 @@ add_test(NAME Test_PeriDEM_twop_mpi_dof_multip
 set_tests_properties(Test_PeriDEM_twop_mpi_dof_multip PROPERTIES
   LABELS "PeriDEM;MPI"
   TIMEOUT 300
+  ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
 )
 
 # Quick: 2 grains + 1 fixed wall; BC + PP + wall contact; final nodal identity.
@@ -176,6 +177,7 @@ add_test(NAME Test_PeriDEM_mpi_identity_twop_wall
 set_tests_properties(Test_PeriDEM_mpi_identity_twop_wall PROPERTIES
   LABELS "PeriDEM;MPI"
   TIMEOUT 120
+  ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
 )
 
 # Same Table-2 kinematics (test 2); Damping_Law off vs com_and_node against
@@ -349,6 +351,7 @@ add_test(NAME Test_PeriDEM_jha2021_comp_n50_mpi_particle
 set_tests_properties(Test_PeriDEM_jha2021_comp_n50_mpi_particle PROPERTIES
   LABELS "PeriDEM;MPI"
   TIMEOUT 180
+  ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
 )
 
 # Multi_Particle DOF-MPI on compressive pack (12 grains default): none vs particle vs dof.
@@ -364,6 +367,7 @@ add_test(NAME Test_PeriDEM_comp_mpi_dof_multip
 set_tests_properties(Test_PeriDEM_comp_mpi_dof_multip PROPERTIES
   LABELS "PeriDEM;MPI"
   TIMEOUT 600
+  ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
 )
 
 # Artificial particle-MPI parallel VTU/PVTU/PVD layout (not physics identity).
@@ -379,13 +383,14 @@ add_test(NAME Test_PeriDEM_mpi_output_art_particle
 set_tests_properties(Test_PeriDEM_mpi_output_art_particle PROPERTIES
   LABELS "PeriDEM;MPI"
   TIMEOUT 180
+  ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
 )
 
 # T11a: larger pack (N=96) under particle-MPI — stepping-stone toward §4.4 (~502).
 # Short horizon exercises MPI at paper-adjacent N; contact assert stays on n50_quick
 # (plate needs ~0.003 s to close the 1.15 Rc gap; full contact at N=96 is offline).
 add_test(NAME Test_PeriDEM_jha2021_comp_n96_mpi_scale
-  COMMAND mpirun -n 2 --quiet
+  COMMAND ${MPIEXEC_EXECUTABLE} ${MPIEXEC_NUMPROC_FLAG} 2
     $<TARGET_FILE:Test_PeriDEM_jha2021_comp_n50>
     -nThreads 1 -nCols 12 -nRows 8
     -numSteps 800 -finalTime 1.6e-4 -noRequireContact
@@ -441,6 +446,7 @@ if(${Enable_Apps})
   set_tests_properties(test_apps_peridynamics_dof_mpi PROPERTIES
     LABELS "PeriDEM;MPI;Apps"
     TIMEOUT 180
+    ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
   )
 
   # Artificial DOF-MPI parallel VTU/PVTU/PVD layout (not physics identity).
@@ -451,5 +457,6 @@ if(${Enable_Apps})
   set_tests_properties(test_apps_peridynamics_mpi_output_art_dof PROPERTIES
     LABELS "PeriDEM;MPI;Apps"
     TIMEOUT 180
+    ENVIRONMENT "MPIEXEC=${MPIEXEC_EXECUTABLE}"
   )
 endif()

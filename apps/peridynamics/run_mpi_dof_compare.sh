@@ -8,8 +8,9 @@ ARGS=(-i ./example/input_dof_mpi.json -nThreads 1)
 rm -rf "$BIN_DIR/dof_cmp_ser_out" "$BIN_DIR/dof_cmp_2_out"
 mkdir -p "$BIN_DIR/dof_cmp_ser_out" "$BIN_DIR/dof_cmp_2_out"
 
-mpirun -n 1 --quiet "$BIN" "${ARGS[@]}" -outputDir "$BIN_DIR/dof_cmp_ser_out"
-mpirun -n 2 --quiet "$BIN" "${ARGS[@]}" -outputDir "$BIN_DIR/dof_cmp_2_out"
+MPIEXEC="${MPIEXEC:-mpirun}"
+"$MPIEXEC" -n 1 "$BIN" "${ARGS[@]}" -outputDir "$BIN_DIR/dof_cmp_ser_out"
+"$MPIEXEC" -n 2 "$BIN" "${ARGS[@]}" -outputDir "$BIN_DIR/dof_cmp_2_out"
 
 python3 - <<PY
 from pathlib import Path

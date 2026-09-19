@@ -44,4 +44,5 @@ mkdir -p ../out
 NP="${NP:-1}"
 NTHREADS="${NTHREADS:-8}"
 echo "BIN=$BIN NP=$NP NTHREADS=$NTHREADS DECK=$DECK"
-exec mpirun -n "$NP" --quiet "$BIN" -i "$DECK" -nThreads "$NTHREADS"
+MPIEXEC="${MPIEXEC:-mpirun}"
+exec "$MPIEXEC" -n "$NP" "$BIN" -i "$DECK" -nThreads "$NTHREADS"
