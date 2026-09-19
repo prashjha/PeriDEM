@@ -787,8 +787,8 @@ int main(int argc, char *argv[]) {
   // Kn·V_j·overlap, so Kn carries one power of δ per spatial dimension of the
   // node weight: 18k/(πδ⁴) with 2D weights h²·1 m, 18k/(πδ⁵) with 3D weights h³.
   // Using the 3D form in 2D makes contact 1/δ ≈ 333× too stiff.
-  const double Kn = 18.0 * util::harmonicMean(Kbulk, Kbulk) /
-                    (M_PI * std::pow(horizon, dim3 ? 5 : 4));
+  const double Kn =
+      util::normalContactStiffness(Kbulk, Kbulk, horizon, dim3 ? 5 : 4);
   const size_t num_steps = static_cast<size_t>(std::llround(final_time / dt));
 
   json input_json;

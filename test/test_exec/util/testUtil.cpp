@@ -23,5 +23,6 @@ int main(int argc, char *argv[]) {
   util::io::print(util::parallel::getMpiStatus()->printStr());
 
   test::testUtilMethods();
+  test::testContactStiffness();
   return EXIT_SUCCESS;
 }

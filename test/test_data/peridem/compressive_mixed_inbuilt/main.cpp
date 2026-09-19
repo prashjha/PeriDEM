@@ -197,7 +197,7 @@ json contactPairJson(double R_contact_factor, bool damping_on, bool friction_on,
 }
 
 double KnFromBulk(double Ka, double Kb, double horizon) {
-  return 18.0 * util::harmonicMean(Ka, Kb) / (M_PI * std::pow(horizon, 5));
+  return util::normalContactStiffness(Ka, Kb, horizon);
 }
 
 json buildInputJson(const std::string &output_path_for_deck, const std::filesystem::path &inp_dir,
