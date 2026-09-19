@@ -1,0 +1,11 @@
+<map id="geom::Cube::isOutside" name="geom::Cube::isOutside">
+<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,31,161,56"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Cube.html#a74834f52d16ef796ffbf9d583a67bc9e" title="Checks if point is inside this object." alt="" coords="209,31,356,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,41,195,41,195,46,162,46"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#aff8738a0bb2d8d9c28c3d7aeb34bc273" title="Checks if point is inside a cuboid." alt="" coords="404,31,583,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="356,41,390,41,390,46,356,46"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="631,5,731,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="582,29,616,24,617,29,583,34"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="638,55,723,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="583,52,624,57,624,63,582,57"/>
+</map>

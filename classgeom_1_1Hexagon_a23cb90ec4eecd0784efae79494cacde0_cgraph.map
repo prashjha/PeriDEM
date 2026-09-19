@@ -1,0 +1,5 @@
+<map id="geom::Hexagon::isInside" name="geom::Hexagon::isInside">
+<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,13,172,38"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#ae21b00427b9d56e491cabf75622befac" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="220,5,395,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,23,206,23,206,28,172,28"/>
+</map>

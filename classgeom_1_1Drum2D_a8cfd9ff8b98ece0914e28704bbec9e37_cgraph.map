@@ -1,0 +1,27 @@
+<map id="geom::Drum2D::isNear" name="geom::Drum2D::isNear">
+<area shape="rect" id="Node000001" title="Checks if box is within given distance of this object." alt="" coords="5,167,163,192"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#ac7a84b886a7a9258f52582991c83f84c" title="Checks if given two boxes are within given distance from each other." alt="" coords="211,130,356,155"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,164,201,155,202,160,153,169"/>
+<area shape="rect" id="Node000010" href="$classgeom_1_1Drum2D.html#a83ab4ad90e49e67ea0bfbefaf5f654d0" title="Computes the bounding box of object." alt="" coords="213,203,353,228"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="155,190,201,198,200,203,154,195"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#a8325da46ace9b07b230d79e06e4bb4bf" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="407,40,591,80"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="316,127,432,82,434,87,318,132"/>
+<area shape="rect" id="Node000004" href="$namespacegeom.html#a1616334a8e8c7e3b1175eb29de9a41a4" title="Returns center point." alt="" coords="660,19,779,44"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="291,128,333,75,366,47,403,25,467,8,533,3,596,6,652,14,651,19,596,11,533,8,468,13,405,30,369,51,337,79,295,131"/>
+<area shape="rect" id="Node000005" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="641,87,797,112"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="356,133,627,106,628,111,356,138"/>
+<area shape="rect" id="Node000007" href="$namespacegeom.html#ae84289b5640c6a2aa071770cd523e068" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="404,155,593,180"/>
+<area shape="poly" id="edge8_Node000002_Node000007" title=" " alt="" coords="356,148,391,152,390,158,356,153"/>
+<area shape="rect" id="Node000008" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="677,230,762,255"/>
+<area shape="poly" id="edge10_Node000002_Node000008" title=" " alt="" coords="338,153,358,164,374,185,381,205,388,224,405,240,437,254,470,263,539,270,606,265,662,255,663,260,606,270,539,275,469,268,435,259,403,245,384,227,376,207,369,187,354,168,335,157"/>
+<area shape="rect" id="Node000009" href="$namespacegeom.html#a5629d4efa093fda6590987a646ea1bba" title="Returns true if point is inside box." alt="" coords="419,204,579,230"/>
+<area shape="poly" id="edge11_Node000002_Node000009" title=" " alt="" coords="327,153,357,164,405,189,430,198,428,203,403,194,355,169,325,158"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="591,45,645,38,646,44,592,51"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="592,74,635,82,634,87,591,79"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="669,155,769,180"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="542,77,681,146,679,151,539,82"/>
+<area shape="poly" id="edge9_Node000007_Node000006" title=" " alt="" coords="594,165,655,165,655,170,594,170"/>
+<area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="556,202,655,179,657,184,557,207"/>
+<area shape="poly" id="edge13_Node000009_Node000008" title=" " alt="" coords="579,223,663,233,662,238,578,229"/>
+<area shape="poly" id="edge15_Node000010_Node000010" title=" " alt="" coords="251,204,244,195,247,185,261,178,283,176,310,180,322,189,318,193,308,185,283,182,262,184,251,188,249,194,255,201"/>
+</map>

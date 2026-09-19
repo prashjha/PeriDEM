@@ -1,0 +1,38 @@
+<map id="geom::AnnulusGeomObject::volume" name="geom::AnnulusGeomObject::volume">
+<area shape="rect" id="Node000001" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="1019,381,1201,421"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1AnnulusGeomObject.html#aa74ad5c8916557a83880924e85e84417" title="Computes the center of object." alt="" coords="788,381,971,421"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1005,403,971,403,971,398,1005,398"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a78141be66c7dd6acd95f2811e1740eec" title=" " alt="" coords="533,184,740,239"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="840,374,671,241,674,237,843,370"/>
+<area shape="rect" id="Node000008" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#a4a1fbd0a78be3627db811f8dfeeb626c" title=" " alt="" coords="533,337,740,392"/>
+<area shape="poly" id="edge12_Node000002_Node000008" title=" " alt="" coords="774,388,740,383,741,377,775,383"/>
+<area shape="rect" id="Node000012" href="$classgeom_1_1AnnulusGeomObject.html#a33f56bd7030f19ac1b48690b8568f801" title="Returns the string containing printable information about the object." alt="" coords="545,417,728,457"/>
+<area shape="poly" id="edge20_Node000002_Node000012" title=" " alt="" coords="775,419,729,426,728,421,774,414"/>
+<area shape="rect" id="Node000014" href="$classgeom_1_1AnnulusGeomObject.html#abad93816345e8bdc52caded0841464b2" title="Similarity about pivot &#160;(default: old center d_x), then rigid displacement &#160;= translation: ...." alt="" coords="545,481,728,521"/>
+<area shape="poly" id="edge22_Node000002_Node000014" title=" " alt="" coords="831,429,741,471,708,483,706,478,739,466,828,424"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="677,173,663,166,637,163,615,165,601,169,595,176,595,184,589,184,590,174,598,165,614,159,637,157,664,160,680,168"/>
+<area shape="rect" id="Node000004" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a2ee118fde749c4f23f4dca82e3393442" title=" " alt="" coords="267,184,485,239"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="519,214,485,214,485,209,519,209"/>
+<area shape="poly" id="edge11_Node000004_Node000004" title=" " alt="" coords="419,173,404,166,376,163,353,165,338,169,331,176,331,184,326,184,326,174,335,165,352,159,376,157,405,160,422,168"/>
+<area shape="rect" id="Node000005" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a6f620a5642f390489fe6693a0e8f4d89" title=" " alt="" coords="15,29,209,84"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="331,177,278,136,217,98,194,87,197,82,220,93,281,132,334,173"/>
+<area shape="rect" id="Node000006" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a7bf2a31575d648841e10a2adb975f48f" title=" " alt="" coords="15,132,209,187"/>
+<area shape="poly" id="edge7_Node000004_Node000006" title=" " alt="" coords="253,190,209,181,210,176,254,185"/>
+<area shape="rect" id="Node000007" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#ae48bfa5b526931e0a743106ff962deaf" title=" " alt="" coords="5,235,219,289"/>
+<area shape="poly" id="edge9_Node000004_Node000007" title=" " alt="" coords="254,238,219,244,218,239,253,232"/>
+<area shape="poly" id="edge6_Node000005_Node000005" title=" " alt="" coords="156,18,140,11,112,8,88,10,73,15,66,21,66,29,61,29,61,19,70,10,87,5,112,3,142,6,159,14"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="156,121,140,114,112,111,88,113,73,117,66,124,66,132,61,132,61,122,70,113,87,107,112,105,142,108,159,116"/>
+<area shape="poly" id="edge10_Node000007_Node000007" title=" " alt="" coords="156,224,140,216,112,213,88,215,73,220,66,226,66,235,61,235,61,224,70,216,87,210,112,208,142,211,159,219"/>
+<area shape="poly" id="edge13_Node000008_Node000008" title=" " alt="" coords="677,326,663,319,637,316,615,318,601,323,595,329,595,337,589,337,590,327,598,318,614,313,637,311,664,314,680,322"/>
+<area shape="rect" id="Node000009" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#a9d66e4718fcf15bcbee64b8f54bc64be" title=" " alt="" coords="268,337,484,392"/>
+<area shape="poly" id="edge14_Node000008_Node000009" title=" " alt="" coords="519,367,484,367,484,362,519,362"/>
+<area shape="poly" id="edge19_Node000009_Node000009" title=" " alt="" coords="419,326,404,319,376,316,353,318,338,323,331,329,331,337,326,337,326,327,335,318,352,313,376,311,405,314,422,322"/>
+<area shape="rect" id="Node000010" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#a136b3d3f6629b1eaa45ba5fec6eb9cde" title=" " alt="" coords="15,337,209,392"/>
+<area shape="poly" id="edge15_Node000009_Node000010" title=" " alt="" coords="254,367,210,367,210,362,254,362"/>
+<area shape="rect" id="Node000011" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#abd7ba9249ce297d9134ffdd5e0e1dfb6" title=" " alt="" coords="15,440,209,495"/>
+<area shape="poly" id="edge17_Node000009_Node000011" title=" " alt="" coords="288,399,268,407,180,442,178,437,266,402,286,394"/>
+<area shape="poly" id="edge16_Node000010_Node000010" title=" " alt="" coords="156,326,140,319,112,316,88,318,73,323,66,329,66,337,61,337,61,327,70,318,87,313,112,311,142,314,159,322"/>
+<area shape="poly" id="edge18_Node000011_Node000011" title=" " alt="" coords="156,429,140,422,112,419,88,421,73,425,66,432,66,440,61,440,61,430,70,421,87,415,112,413,142,416,159,424"/>
+<area shape="rect" id="Node000013" href="$classgeom_1_1AnnulusGeomObject.html#abf7fe5059670b16d9bff9182e689d77e" title="Prints the information about the object." alt="" coords="285,417,467,457"/>
+<area shape="poly" id="edge21_Node000012_Node000013" title=" " alt="" coords="531,439,468,439,468,434,531,434"/>
+</map>

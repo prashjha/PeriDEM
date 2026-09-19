@@ -1,0 +1,16 @@
+<map id="geom::Circle::box" name="geom::Circle::box">
+<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="413,104,539,129"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="512,94,502,86,476,83,455,85,444,89,441,95,447,102,443,105,436,96,440,86,453,80,476,77,504,81,515,90"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Circle.html#a5edd3ab1480c63d5a6609cd9df21ef45" title="Checks if box intersects this object." alt="" coords="183,5,365,31"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="447,97,409,70,364,44,334,33,335,28,366,40,412,65,450,93"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Circle.html#a8ce8b2fda4057dfc6ff2d40770927d16" title="Checks if box is completely inside." alt="" coords="199,55,349,80"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="409,103,326,83,327,77,411,98"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Circle.html#ab09b05010c4bf3c21fe7bf9eee329a58" title="Checks if box is within given distance of this object." alt="" coords="203,104,345,129"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="400,119,346,119,346,114,400,114"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Circle.html#afc98beaf9cad4d21049749fa5759b9b2" title="Checks if box is outside of the object." alt="" coords="195,153,353,179"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="411,135,327,156,326,151,409,130"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Circle.html#ac90843bcbe059060c40d1cd1d53789dc" title="Returns the string containing printable information about the object." alt="" coords="201,203,347,228"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="450,140,412,167,366,192,332,205,330,200,364,188,409,163,447,136"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Circle.html#a0b293faa076b7d884d5aa1a3c164260e" title="Prints the information about the object." alt="" coords="5,203,135,228"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="187,218,135,218,135,213,187,213"/>
+</map>

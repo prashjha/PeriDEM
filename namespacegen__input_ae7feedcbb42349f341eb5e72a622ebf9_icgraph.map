@@ -1,0 +1,12 @@
+<map id="gen_input.contact_pair" name="gen_input.contact_pair">
+<area shape="rect" id="Node000001" title=" " alt="" coords="479,5,632,31"/>
+<area shape="rect" id="Node000002" href="$namespacegen__input.html#ad59869bef6ed45c0170b371a86be14d3" title=" " alt="" coords="5,31,115,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="465,17,323,17,163,27,115,35,114,29,162,22,323,12,465,12"/>
+<area shape="rect" id="Node000003" href="$namespacegen__input.html#a4d6e6c3c2fadde436455d9149c3caecf" title=" " alt="" coords="321,31,431,56"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="465,33,432,38,431,33,465,28"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="307,46,115,46,115,41,307,41"/>
+<area shape="rect" id="Node000004" href="$namespacegen__input.html#a702caeba5ab71eba75abc3c0dc455544" title=" " alt="" coords="163,105,273,131"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="337,64,247,108,245,103,335,60"/>
+<area shape="poly" id="edge5_Node000004_Node000002" title=" " alt="" coords="177,102,87,58,89,54,179,97"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="245,95,237,87,218,84,202,86,193,91,191,96,196,104,191,107,186,97,189,87,200,81,218,79,240,82,249,91"/>
+</map>

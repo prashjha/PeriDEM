@@ -1,0 +1,7 @@
+<map id="geom::Rectangle::isNear" name="geom::Rectangle::isNear">
+<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="532,5,699,31"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Rectangle.html#a72e34265e3f48325a386da0b3a8940ee" title="cons" alt="" coords="261,5,484,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="518,21,484,21,484,15,518,15"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Rectangle.html#a5d9782230533ecc4352a0843a9e1f47e" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,213,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="248,21,213,21,213,15,248,15"/>
+</map>
