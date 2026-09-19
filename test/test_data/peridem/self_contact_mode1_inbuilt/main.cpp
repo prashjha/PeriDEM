@@ -182,7 +182,8 @@ struct LawResult {
 };
 
 LawResult runLaw(const std::string &self_contact, const std::filesystem::path &run_dir, double L,
-                 double mesh_size, double horizon, unsigned n_threads) {
+                 double mesh_size, double horizon, unsigned n_threads,
+                 bool deck_only = false) {
   namespace fs = std::filesystem;
   const fs::path out_dir = run_dir / "out";
   const fs::path inp_dir = run_dir / "inp";
@@ -197,6 +198,13 @@ LawResult runLaw(const std::string &self_contact, const std::filesystem::path &r
   {
     std::ofstream os(inp_dir / "input.json");
     os << input_json.dump(2);
+  }
+
+  // -deckOnly stops after the deck is written. The deck comparison reads the
+  // deck and does not need this driver to run the simulation.
+  if (deck_only) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    return LawResult{};
   }
 
   auto deck = std::make_shared<inp::Input>(input_json);
@@ -267,8 +275,13 @@ int main(int argc, char *argv[]) {
   LawResult bb;
   LawResult rg;
   try {
-    bb = runLaw("broken_bond_kn", base / "broken_bond_kn", L, mesh_size, horizon, n_threads);
-    rg = runLaw("reference_gap", base / "reference_gap", L, mesh_size, horizon, n_threads);
+    const bool deck_only = input.cmdOptionExists("-deckOnly");
+    bb = runLaw("broken_bond_kn", base / "broken_bond_kn", L, mesh_size, horizon,
+                n_threads, deck_only);
+    rg = runLaw("reference_gap", base / "reference_gap", L, mesh_size, horizon,
+                n_threads, deck_only);
+    if (deck_only)
+      return EXIT_SUCCESS;
   } catch (const std::exception &e) {
     util::io::print(std::format("self-contact Mode-I failed: {}\n", e.what()));
     return 1;

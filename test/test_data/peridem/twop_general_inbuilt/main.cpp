@@ -301,6 +301,12 @@ int main(int argc, char *argv[]) {
     util::io::print(std::format("Input directory (input.json, meshes): {}\n", fs::absolute(inp_dir).string()));
     util::io::print(std::format("Wrote deck to {}\n", fs::absolute(input_json_path).string()));
 
+    // -deckOnly stops after the deck is written. The deck comparison reads the
+    // deck and does not need this driver to run the simulation. Each geometry
+    // writes its own deck, so this continues rather than returns.
+    if (input.cmdOptionExists("-deckOnly"))
+      continue;
+
     auto deck = std::make_shared<inp::Input>(inputJson);
 
     PeriDEMModel dem(deck);
