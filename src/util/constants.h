@@ -1,6 +1,6 @@
 /*
 * -------------------------------------------
- * Copyright (c) 2021 - 2024 Prashant K. Jha
+ * Copyright (c) 2021 - 2026 Prashant K. Jha
  * -------------------------------------------
  * PeriDEM https://github.com/prashjha/PeriDEM
  *

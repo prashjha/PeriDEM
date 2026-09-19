@@ -1,6 +1,12 @@
-//
-// Created by prashant on 5/16/25.
-//
+/*
+ * -------------------------------------------
+ * Copyright (c) 2021 - 2026 Prashant K. Jha
+ * -------------------------------------------
+ * PeriDEM https://github.com/prashjha/PeriDEM
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE)
+ */
 
 #ifndef GEOM_GEOMINCLUDES_H
 #define GEOM_GEOMINCLUDES_H
