@@ -1,9 +1,0 @@
-<map id="inp::Zone::printStr" name="inp::Zone::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="357,35,484,60"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1Zone.html#ae8fdce634cb5ecc9845555953441f720" title="Prints the information about the object." alt="" coords="191,5,300,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="343,37,300,30,301,24,344,32"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1ParticleZone.html#a8e17f5dad0559571e5a39985127f62d9" title="Returns the string containing printable information about the object." alt="" coords="181,55,309,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="344,62,310,68,309,63,343,57"/>
-<area shape="rect" id="Node000004" href="$structinp_1_1ParticleZone.html#a12bfb6cae7040783161b3b0897e3cd92" title="Prints the information about the object." alt="" coords="5,55,133,95"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="167,78,133,78,133,73,167,73"/>
-</map>

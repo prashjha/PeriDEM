@@ -1,9 +1,0 @@
-<map id="util::geometry::Square::isInside" name="util::geometry::Square::isInside">
-<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,23,156,63"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#ae95a03ba8a9adb6aac7260048c38b9db" title="Checks if point is inside a rectangle." alt="" coords="204,31,385,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,41,191,41,191,46,157,46"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="433,5,533,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="385,28,419,24,420,29,386,34"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="441,55,526,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="386,52,427,58,427,63,385,58"/>
-</map>

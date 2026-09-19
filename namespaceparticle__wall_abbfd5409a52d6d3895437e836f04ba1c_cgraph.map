@@ -1,5 +1,0 @@
-<map id="particle_wall.particle_locations" name="particle_wall.particle_locations">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,145,45"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a9ece00bdfa36ec661ae172119c1a2064" title=" " alt="" coords="193,13,285,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,23,180,23,180,28,146,28"/>
-</map>

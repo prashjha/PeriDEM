@@ -1,9 +1,0 @@
-<map id="material::BaseInfluenceFn" name="material::BaseInfluenceFn">
-<area shape="rect" id="Node000001" title="A base class for computing influence function." alt="" coords="213,5,379,171"/>
-<area shape="rect" id="Node000002" href="$classmaterial_1_1ConstInfluenceFn.html" title="A class to implement constant influence function." alt="" coords="5,229,176,394"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="213,182,169,230,165,227,209,179"/>
-<area shape="rect" id="Node000003" href="$classmaterial_1_1GaussianInfluenceFn.html" title="A class to implement Gaussian influence function." alt="" coords="201,219,391,404"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="299,184,299,218,293,218,293,184"/>
-<area shape="rect" id="Node000004" href="$classmaterial_1_1LinearInfluenceFn.html" title="A class to implement linear influence function." alt="" coords="416,219,587,404"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="383,179,418,217,414,220,379,183"/>
-</map>

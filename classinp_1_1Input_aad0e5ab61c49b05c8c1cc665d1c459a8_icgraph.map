@@ -1,5 +1,0 @@
-<map id="inp::Input::setContactDeck" name="inp::Input::setContactDeck">
-<area shape="rect" id="Node000001" title="Read data into particle deck and store its pointer." alt="" coords="167,5,345,31"/>
-<area shape="rect" id="Node000002" href="$classinp_1_1Input.html#a0259771f00b712054f5f33d807990869" title="Constructor." alt="" coords="5,5,119,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="153,21,119,21,119,15,153,15"/>
-</map>

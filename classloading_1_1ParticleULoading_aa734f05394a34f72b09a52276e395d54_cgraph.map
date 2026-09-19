@@ -1,9 +1,0 @@
-<map id="loading::ParticleULoading::apply" name="loading::ParticleULoading::apply">
-<area shape="rect" id="Node000001" title="Applies displacement boundary condition." alt="" coords="5,47,176,87"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#ab7d5682092a46bbda25e06c4d5b41e6a" title="Computes derivative of rotation wrt to time." alt="" coords="249,5,370,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,46,238,31,240,36,177,51"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="224,55,395,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="176,65,210,65,210,70,176,70"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a2d74dcc9e380437472ba9a7be69dc585" title="Rotates a vector in xy&#45;plane assuming ACW convention." alt="" coords="261,104,358,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="177,84,248,100,247,105,176,89"/>
-</map>

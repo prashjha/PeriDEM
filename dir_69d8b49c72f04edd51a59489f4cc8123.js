@@ -1,4 +1,0 @@
-var dir_69d8b49c72f04edd51a59489f4cc8123 =
-[
-    [ "problem_setup.py", "examples_2PeriDEM_2attrition__tests_2sim2__multi__particle__circ__tri__drum__hex__with__rotating55a3791f74235677eb61ddf2ba3e367e.html", "examples_2PeriDEM_2attrition__tests_2sim2__multi__particle__circ__tri__drum__hex__with__rotating55a3791f74235677eb61ddf2ba3e367e" ]
-];

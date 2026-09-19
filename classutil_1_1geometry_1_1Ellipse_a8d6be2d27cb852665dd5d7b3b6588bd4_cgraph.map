@@ -1,5 +1,0 @@
-<map id="util::geometry::Ellipse::isOutside" name="util::geometry::Ellipse::isOutside">
-<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,5,153,45"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a5a54fd6f6720dd75956e3ce06b814ad6" title="Returns all corner points in the box." alt="" coords="201,13,343,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,23,187,23,187,28,154,28"/>
-</map>

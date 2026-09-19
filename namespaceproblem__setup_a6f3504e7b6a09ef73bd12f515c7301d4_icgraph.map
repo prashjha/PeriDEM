@@ -1,6 +1,0 @@
-<map id="problem_setup.generate_rigid_rect_container_moving_wall_setup_gmsh_input" name="problem_setup.generate_rigid_rect_container_moving_wall_setup_gmsh_input">
-<area shape="rect" id="Node000001" title=" " alt="" coords="257,22,472,77"/>
-<area shape="rect" id="Node000002" href="$namespaceproblem__setup.html#a16a9d169ecf04b1a867bec4dbf274c01" title=" " alt="" coords="5,29,209,69"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="244,52,209,52,209,47,244,47"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="151,18,136,11,107,8,83,10,68,15,62,21,65,28,60,30,57,20,65,10,81,5,107,3,137,6,153,13"/>
-</map>

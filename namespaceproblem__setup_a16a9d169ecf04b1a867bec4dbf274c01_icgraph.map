@@ -1,4 +1,0 @@
-<map id="problem_setup.generate_moving_rect_wall_gmsh_input" name="problem_setup.generate_moving_rect_wall_gmsh_input">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,209,69"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="141,18,129,11,107,8,88,10,76,15,72,21,74,28,69,30,67,20,73,11,87,5,107,3,131,6,144,13"/>
-</map>

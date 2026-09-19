@@ -1,5 +1,0 @@
-<map id="util::geometry::Circle::printStr" name="util::geometry::Circle::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="196,5,339,45"/>
-<area shape="rect" id="Node000002" href="$classutil_1_1geometry_1_1Circle.html#a0126bd73b8ca488907d2f354eadba90d" title="Prints the information about the object." alt="" coords="5,5,148,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,28,148,28,148,23,183,23"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="inp::Input::setContactDeck" name="inp::Input::setContactDeck">
-<area shape="rect" id="Node000001" title="Read data into particle deck and store its pointer." alt="" coords="5,35,184,60"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="263,5,348,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="184,32,249,23,250,28,185,38"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1ContactPairDeck.html#ab81bbedb62aae664a6a640cab1572c13" title="Returns the string containing printable information about the object." alt="" coords="232,55,379,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="185,57,218,61,218,66,184,62"/>
-<area shape="rect" id="Node000004" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="427,63,540,88"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="379,73,413,73,413,78,379,78"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="gmsh_particles.open_pipe_mesh" name="gmsh_particles.open_pipe_mesh">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,148,45"/>
-<area shape="rect" id="Node000002" href="$namespacegeom__util.html#a13f030c6d181d0210c230fc01e33331c" title=" " alt="" coords="196,5,365,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="148,23,182,23,182,28,148,28"/>
-</map>

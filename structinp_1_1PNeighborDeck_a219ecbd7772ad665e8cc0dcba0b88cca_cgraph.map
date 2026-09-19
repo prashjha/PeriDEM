@@ -1,5 +1,0 @@
-<map id="inp::PNeighborDeck::printStr" name="inp::PNeighborDeck::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="5,5,144,45"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of given size." alt="" coords="192,13,305,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,23,178,23,178,28,144,28"/>
-</map>

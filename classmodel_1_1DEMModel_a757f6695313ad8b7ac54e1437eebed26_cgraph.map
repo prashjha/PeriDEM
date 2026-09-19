@@ -1,9 +1,0 @@
-<map id="model::DEMModel::updateGeometryObjectsPostInit" name="model::DEMModel::updateGeometryObjectsPostInit">
-<area shape="rect" id="Node000001" title="Update varioud geometry objects associated with container, particles, and reference particles." alt="" coords="5,35,240,75"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1geometry.html#ae276de197ea051002fc7c062c259537e" title=" " alt="" coords="288,5,468,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="240,39,274,35,275,40,241,44"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="294,70,462,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,65,281,69,280,75,240,70"/>
-<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#a86460acadab9a2e99a92121c0213e444" title="Find if data is in the list." alt="" coords="516,70,663,95"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="462,80,502,80,502,85,462,85"/>
-</map>

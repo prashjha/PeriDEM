@@ -1,9 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classmodel_1_1ModelData.html" title="A class to store model data." alt="" coords="5,31,133,56"/>
-<area shape="rect" id="Node000001" href="$classmodel_1_1DEMModel.html" title="A class for discrete element particle simulation with peridynamic model" alt="" coords="181,31,312,56"/>
-<area shape="poly" id="edge14_Node000000_Node000001" title=" " alt="" coords="147,41,181,41,181,46,147,46"/>
-<area shape="rect" id="Node000002" href="$classperidynamics_1_1Model.html" title="Main model class to simulate peridynamics deformation of single particle." alt="" coords="372,5,515,31"/>
-<area shape="poly" id="edge15_Node000001_Node000002" title=" " alt="" coords="325,31,372,24,372,30,326,36"/>
-<area shape="rect" id="Node000003" href="$classtwoparticle__demo_1_1Model.html" title="Main model class to handle demo two&#45;particle test implementation. Goal is to show that it is easy to ..." alt="" coords="360,55,527,80"/>
-<area shape="poly" id="edge16_Node000001_Node000003" title=" " alt="" coords="326,50,360,55,359,60,325,56"/>
-</map>
