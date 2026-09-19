@@ -5,6 +5,7 @@ UBUNTU_CODENAME="$(cat /etc/os-release | grep UBUNTU_CODENAME | cut -d = -f 2)"
 
 # get name of this script
 this_script=$(basename "$0")
+SCRIPTPATH="$(cd "$(dirname "$0")" && pwd)"
 
 (
 
@@ -43,7 +44,7 @@ sudo apt-get install -y \
   less ca-certificates gpg wget curl \
   lzip bzip2 unzip \
   software-properties-common ubuntu-dev-tools build-essential \
-  openssh-server rsync 
+  rsync 
 
 # -----------------------
 # make/configure related libraries
@@ -142,20 +143,14 @@ fi
 # -----------------------
 echo "installing essential computational/hpc libraries"
 sudo apt-get install -y \
-  libblas-dev liblapack-dev libmpfr-dev libgmp-dev \
-  libtbb-dev libasio-dev libglvnd-dev 
+  libblas-dev liblapack-dev \
+  libglvnd-dev 
 
 # -----------------------
 # gmsh
 # -----------------------
 echo "installing gmsh libraries" 
 sudo apt-get install -y libgmsh-dev gmsh
-
-# -----------------------
-# flann
-# -----------------------
-echo "installing flann library" 
-sudo apt-get install -y libflann-dev
 
 # -----------------------
 # metis

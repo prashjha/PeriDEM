@@ -50,11 +50,14 @@ cmake-build*
 # pixi lock file
 pixi.lock
 
+# pixi local env
+.pixi/
+
 # ide directory
 .idea
 .idea/workspace.xml
 .vscode
-
+.cursor/
 
 # docs directory
 docs/doxy
@@ -62,7 +65,7 @@ docs/doxy.log
 docs/conf.doxy
 
 # src directory
-src/Config.h 
+src/Config.h
 
 # from mac
 ._*
@@ -84,6 +87,14 @@ test_ignored_dir
 
 # Local coding-agent helpers (not committed)
 .agent/
+
+# Local MPI / deck compare trees (do not commit)
+**/cmp_*/
+**/mpi_cmp_*/
+
+# Example and app run outputs
+**/runs/
+**/Screenshot*.png
 
 # compressive example run outputs (decks + restart IC are tracked)
 examples/PeriDEM/compressive/n500/runs/
