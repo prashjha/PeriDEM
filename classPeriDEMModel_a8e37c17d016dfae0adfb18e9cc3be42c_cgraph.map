@@ -1,0 +1,8 @@
+<map id="PeriDEMModel::log" name="PeriDEMModel::log">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,140,55"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="188,29,271,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,39,174,39,174,45,140,45"/>
+<area shape="rect" id="Node000003" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="319,29,448,55"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="271,39,305,39,305,45,271,45"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="358,31,352,21,355,11,366,5,383,3,404,6,413,15,410,19,402,11,383,8,368,10,359,15,358,20,362,28"/>
+</map>

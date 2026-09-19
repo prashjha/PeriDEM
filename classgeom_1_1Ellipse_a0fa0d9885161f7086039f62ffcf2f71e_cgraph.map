@@ -1,0 +1,5 @@
+<map id="geom::Ellipse::isOutside" name="geom::Ellipse::isOutside">
+<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,5,169,31"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipse.html#ac55433064abc8e69dae0bfefb65f6b14" title="Checks if point is inside this object." alt="" coords="217,5,372,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,15,203,15,203,21,170,21"/>
+</map>

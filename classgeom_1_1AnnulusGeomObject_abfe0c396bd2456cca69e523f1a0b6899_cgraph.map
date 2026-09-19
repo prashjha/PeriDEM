@@ -1,0 +1,5 @@
+<map id="geom::AnnulusGeomObject::isInside" name="geom::AnnulusGeomObject::isInside">
+<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,5,188,45"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html#a7ad182dc9086663d8667cdfd50eaa842" title="Checks if point is inside this object." alt="" coords="236,13,424,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,23,222,23,222,28,189,28"/>
+</map>

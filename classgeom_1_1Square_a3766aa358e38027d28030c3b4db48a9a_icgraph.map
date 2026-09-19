@@ -1,0 +1,22 @@
+<map id="geom::Square::box" name="geom::Square::box">
+<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="735,129,867,155"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="838,120,828,111,801,108,779,110,767,115,764,120,771,128,767,131,759,121,763,111,777,105,801,103,830,106,841,115"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Square.html#a6feb9bd77cb5eaa54a448d5c149e5df0" title="Checks if box intersects this object." alt="" coords="496,5,687,31"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="778,121,737,81,712,61,685,44,658,33,660,28,688,40,715,57,741,77,781,117"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Square.html#a27cbccf16086b1d616e8ff04efc909f8" title="Checks if box is completely inside." alt="" coords="513,55,669,80"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="761,126,686,94,649,83,650,78,688,89,763,121"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Square.html#a1cf1991035f65cfa82c3f523aba78382" title="Checks if box is within given distance of this object." alt="" coords="517,104,666,129"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="721,135,666,128,667,123,721,130"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Square.html#a3be9fecd29c6a233582f62c331f46d60" title="Checks if point is within given distance of this object." alt="" coords="517,153,666,179"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="721,154,667,160,666,155,721,148"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Square.html#a7966f7b5c4cd60a395cfcca12dc96889" title="Checks if box is outside of the object." alt="" coords="508,203,675,228"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="761,163,688,193,646,205,644,200,686,187,759,158"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Square.html#a10962eb6c34440e751d83ff2ec88f1e5" title="Returns the string containing printable information about the object." alt="" coords="515,252,668,277"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="781,167,741,206,688,243,660,254,658,250,685,238,737,202,778,163"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Square.html#a13e34510a0acf44391e777ed1c23f2e4" title="cons" alt="" coords="244,153,448,179"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="503,169,448,169,448,163,503,163"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Square.html#aa4e15684de1b9391e2ad593a1e1d07ef" title="Checks if point lies exactly on the boundary." alt="" coords="5,153,196,179"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="230,169,196,169,196,163,230,163"/>
+<area shape="rect" id="Node000010" href="$classgeom_1_1Square.html#a83bffe9bb75b8dfd2aa546eec8502809" title="Prints the information about the object." alt="" coords="278,252,414,277"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="501,267,414,267,414,262,501,262"/>
+</map>

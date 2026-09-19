@@ -1,0 +1,5 @@
+<map id="geom::Plane::wallContactQuery" name="geom::Plane::wallContactQuery">
+<area shape="rect" id="Node000001" title="Closest&#45;point / signed&#45;gap query for analytical wall contact. Default: unsupported (returns false,..." alt="" coords="5,5,177,45"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="225,13,345,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="178,23,211,23,211,28,178,28"/>
+</map>

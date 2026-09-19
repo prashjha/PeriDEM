@@ -1,0 +1,12 @@
+<map id="fe::BaseElem::getQuadPoints" name="fe::BaseElem::getQuadPoints">
+<area shape="rect" id="Node000001" title="Same as getQuadDatas without transforming dN/dξ to dN/dx." alt="" coords="5,21,200,46"/>
+<area shape="rect" id="Node000002" href="$namespacefe.html#a50f89354fe7844df70c795cffb6b0a4a" title=" " alt="" coords="248,21,379,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,31,234,31,234,36,200,36"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a36edfc51cf94041fb395bde721d02bd1" title="Computes the determinant of matrix." alt="" coords="540,21,605,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="355,18,419,5,456,3,492,5,528,14,526,19,492,11,456,8,420,10,356,23"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a9ccabde99187d658896793ba141c6d51" title="Computes the dot product between matrix and vector." alt="" coords="427,21,492,46"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="379,31,413,31,413,36,379,36"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a76bf29236b7065c3718ff181343c84f8" title="Computes the determinant of matrix." alt="" coords="427,70,491,95"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="352,43,415,65,414,70,351,48"/>
+<area shape="poly" id="edge5_Node000005_Node000003" title=" " alt="" coords="488,67,529,49,531,54,490,72"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="inp::ParticleDeck" name="inp::ParticleDeck">
+<area shape="rect" id="Node000001" title="Structure to read and store particle related input data." alt="" coords="133,313,344,812"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1ContactDeck.html" title="Structure to read and store particle&#45;particle contact related input data." alt="" coords="5,5,136,251"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,250,134,288,138,297,133,299,130,290,115,252"/>
+<area shape="rect" id="Node000003" href="$structinp_1_1PNeighborDeck.html" title="User&#45;input data for particle neighbor search." alt="" coords="161,15,317,241"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="241,241,241,297,236,297,236,241"/>
+<area shape="rect" id="Node000004" href="$structinp_1_1PGenDeck.html" title="Structure to read and store particle generation data, such as particle locations and group file." alt="" coords="341,25,528,231"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="391,232,353,315,348,313,386,230"/>
+</map>

@@ -1,0 +1,6 @@
+<map id="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::buildOccBoxFromAabb" name="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::buildOccBoxFromAabb">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,232,84"/>
+<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="71,29,72,19,80,10,96,5,119,3,146,6,162,14,159,18,145,11,119,8,97,10,83,15,77,21,77,29"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html#a06e0d2d5fc995263b3314f71c98397b3" title="Computes the bounding box of object." alt="" coords="280,44,444,69"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,54,266,54,266,59,232,59"/>
+</map>

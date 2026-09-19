@@ -1,0 +1,9 @@
+<map id="anonymous_namespace{particleMesh::cpp}::maybeWriteMeshFile" name="anonymous_namespace{particleMesh::cpp}::maybeWriteMeshFile">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,62,168,117"/>
+<area shape="rect" id="Node000002" href="$classrw_1_1writer_1_1Writer.html#add5b0f4ec99faab2d2dc09fe2b19c824" title="Writes the mesh data to file." alt="" coords="240,5,359,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,62,225,45,227,50,169,67"/>
+<area shape="rect" id="Node000003" href="$classrw_1_1writer_1_1Writer.html#ac448fb1c1505ec11c31be73d8996a1cf" title="Closes the file and store it to the hard disk." alt="" coords="240,69,359,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,87,226,87,226,92,169,92"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1io.html#ab41cbd366c1550587cc6d0bf1a088c5a" title="Remove extension from the filename Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="216,133,383,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="169,111,220,127,218,132,168,116"/>
+</map>

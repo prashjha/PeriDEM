@@ -1,0 +1,6 @@
+<map id="geom::anonymous_namespace{geomObjects::cpp}::ellipseMetricInside" name="geom::anonymous_namespace{geomObjects::cpp}::ellipseMetricInside">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,223,84"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="75,29,75,19,82,10,95,5,114,3,137,6,149,14,147,18,135,11,114,8,97,10,85,15,80,21,80,29"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="271,44,356,69"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="223,54,257,54,257,59,223,59"/>
+</map>

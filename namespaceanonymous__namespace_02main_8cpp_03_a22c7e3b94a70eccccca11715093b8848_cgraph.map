@@ -1,0 +1,7 @@
+<map id="anonymous_namespace{main::cpp}::checkWallSpringOnly" name="anonymous_namespace{main::cpp}::checkWallSpringOnly">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,27,224,67"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="318,5,438,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,32,304,23,305,29,225,38"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1GeomObject.html#a97e971431bedb2d8c0236210ee0f6abc" title="Closest&#45;point / signed&#45;gap query for analytical wall contact. Default: unsupported (returns false,..." alt="" coords="272,55,484,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="225,56,259,60,258,65,224,62"/>
+</map>

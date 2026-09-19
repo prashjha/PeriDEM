@@ -1,0 +1,12 @@
+<map id="geom::Triangle::isOutside" name="geom::Triangle::isOutside">
+<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,70,176,95"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Triangle.html#a894d2f637bcb88f53063670081499a9c" title="Checks if point is inside this object." alt="" coords="224,70,385,95"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,80,211,80,211,85,176,85"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Triangle.html#a77cf266fe6285c2c55a7976c382ace88" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="433,5,601,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,67,429,46,430,52,353,73"/>
+<area shape="rect" id="Node000004" href="$namespacegeom.html#ad0c44866910d6391d8d3d193ef1d5676" title="Compute area of triangle." alt="" coords="649,95,780,121"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="386,85,636,100,635,106,385,90"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Triangle.html#ac1e80cd8d49916b2d426203eedf51edc" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="438,121,597,146"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="360,93,451,115,450,120,358,98"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="596,121,635,115,636,121,597,126"/>
+</map>

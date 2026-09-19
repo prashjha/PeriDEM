@@ -1,0 +1,5 @@
+<map id="geom::Line::isInside" name="geom::Line::isInside">
+<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="203,5,341,31"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Line.html#aa199a8e7932ed70ec46cf92c4135235e" title="Checks if point is outside of this object." alt="" coords="5,5,155,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,21,155,21,155,15,189,15"/>
+</map>

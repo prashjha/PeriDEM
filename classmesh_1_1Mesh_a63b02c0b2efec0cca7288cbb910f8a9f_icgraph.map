@@ -1,0 +1,18 @@
+<map id="mesh::Mesh::computeMeshSize" name="mesh::Mesh::computeMeshSize">
+<area shape="rect" id="Node000001" title="Compute the mesh size." alt="" coords="992,63,1203,88"/>
+<area shape="rect" id="Node000002" href="$classmesh_1_1Mesh.html#a98f9041e741ceb27b9436eb9c71f94cd" title="After nodes, enc, nec, and dof&#45;related fields are set: 2D z clear, bbox, optional nodal volume,..." alt="" coords="731,55,944,95"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="978,78,944,78,944,73,978,73"/>
+<area shape="rect" id="Node000003" href="$classmesh_1_1Mesh.html#af5dec00167434e6bd3703d23a9dfba43" title="Reads mesh data from the file and populates other data." alt="" coords="498,5,665,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="734,55,638,33,639,28,735,50"/>
+<area shape="rect" id="Node000005" href="$classmesh_1_1Mesh.html#accc7f7a8bcefe0e9073c315d5f26d315" title="Populate mesh from 3D tetrahedron data (0&#45;based node indices in enc) without reading a file." alt="" coords="489,55,674,95"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="717,78,674,78,674,73,717,73"/>
+<area shape="rect" id="Node000022" href="$classmesh_1_1Mesh.html#acd7d96f02baf9e52eadd0ca080fda891" title="Populate mesh from 2D triangle data (0&#45;based node indices in enc) without reading a file." alt="" coords="480,119,683,159"/>
+<area shape="poly" id="edge7_Node000002_Node000022" title=" " alt="" coords="744,101,662,122,661,117,743,96"/>
+<area shape="rect" id="Node000004" href="$classmesh_1_1Mesh.html#a3fa880fd0bfa4170aa901c5605e96d0e" title="Constructor." alt="" coords="263,5,398,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="484,21,398,21,398,15,484,15"/>
+<area shape="rect" id="Node000006" href="$namespacemesh__gen.html#a09a4d51818a0d718ca2cce08f6e2c2f4" title=" " alt="" coords="229,87,432,127"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="475,92,432,97,432,92,475,86"/>
+<area shape="rect" id="Node000007" href="$namespacemesh__gen.html#a4589036e29bbbbc112bbd785ac32eca2" title="In&#45;process Gmsh mesh from geom::GeomObject (after createGeomObject on deck / Particle data)." alt="" coords="5,87,181,127"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="216,110,182,110,182,105,216,105"/>
+<area shape="poly" id="edge8_Node000022_Node000006" title=" " alt="" coords="466,127,432,123,432,118,467,122"/>
+</map>
