@@ -29,13 +29,27 @@ mpirun -n 1 $BIN -i input_long.json -nThreads 8
 
 Keep run outputs out of the source tree; copy this folder into `build/linux/examples/...` first.
 
-Python (in-process, `-DEnable_Python=ON`):
+## Python (`-DEnable_Python=ON`)
+
+`problem.py` derives the whole setup from `R` and the pack size rather than
+reading a deck. The grain spacing is slightly larger than the contact radius, and
+the open U-channel cup and the moving plate follow from the resulting pack
+bounding box. `test/test_data/peridem/jha2021_comp_n50/main.cpp` builds the
+same deck in C++, and `python/tests/test_example_parity.py` compares the two key
+by key.
 
 ```bash
-./run.py                                          # input_quick.json, 1 rank, 8 threads
-DECK=input_long.json ./run.py
-NP=4 DECK=input_quick_particle.json ./run.py
-NP=4 DECK=input_quick_dof.json ./run.py
+./run.py                                  # 4x3, default 20k steps
+./problem.py --ncols 6 --nrows 4          # a different pack
+./problem.py --in-process-mesh            # write no .msh at all
+./problem.py --num-steps 2000 --snapshot pack.png
+./problem.py --write-deck /tmp/input.json # then bin/PeriDEM -i /tmp/input.json
+```
+
+To run an existing MPI-strategy deck in-process instead:
+
+```bash
+mpirun -n 4 python3 -m peridem -i input_quick_particle.json -nThreads 8
 ```
 
 VTUs: `runs/out/output.pvd`.

@@ -18,6 +18,7 @@
     * [Parallelism (MPI)](#parallelism-mpi)
   - [Running simulations](#Running-simulations)
     * [Deck layout (JSON)](#Deck-layout-JSON)
+    * [Setting up a problem in Python](#setting-up-a-problem-in-python)
     * [Two-particle contact](#Two-particle-contact)
     * [Compressive test](#Compressive-test)
     * [Attrition](#Attrition)
@@ -221,12 +222,21 @@ repository.
 
 ### Python
 
-In-process `import peridem` (nanobind). See [python/README.md](./python/README.md).
+`-DEnable_Python=ON` builds an in-process `import peridem` (nanobind). It is a
+library interface, not a wrapper that shells out to `bin/PeriDEM`: you build the
+problem, run it, and read the node fields as numpy arrays in the same process.
 
 ```sh
 cmake -S . -B build -DEnable_Python=ON
-cmake --build build --target peridem_core
+cmake --build build --target peridem_core PeriDEM -j
+export PYTHONPATH="$PWD/build/python:$PYTHONPATH"
+
+# or, to install it
+pip install -e . --no-build-isolation
 ```
+
+See [Setting up a problem in Python](#setting-up-a-problem-in-python) below and
+[python/README.md](./python/README.md) for the full API.
 
 ### Install & use as a CMake package
 - Build and install (starting from a fresh clone, e.g., `git clone ... && cd PeriDEM`; create a build dir wherever you like—`build` inside the source is assumed below):
@@ -313,6 +323,10 @@ mpirun -n 4 <path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 2
 
 Most example folders provide `./run.sh` (or `run_stage1.sh` / `run_stage2.sh`) that locate `bin/PeriDEM` under `build/`. Index: [examples/README.md](./examples/README.md).
 
+The same problems can be set up and run from Python. Every example folder has
+a `problem.py` that builds its deck through the `peridem` interface. See
+[Setting up a problem in Python](#setting-up-a-problem-in-python).
+
 ### Deck layout (JSON)
 
 A multi-particle deck has these top-level blocks:
@@ -329,10 +343,139 @@ A multi-particle deck has these top-level blocks:
 
 Copy a short deck from `examples/PeriDEM/compressive/n12/` or `examples/Peridynamics/circle/` and change geometry, BCs, and time. Full block details: [Doxygen](https://prashjha.github.io/PeriDEM/) and the checked-in example JSON files.
 
+### Setting up a problem in Python
+
+With `-DEnable_Python=ON`, a problem can be built and run entirely in Python.
+No JSON file and no `.msh` need exist: geometry, mesh, material, contact,
+boundary conditions and particle placement are all set through the API, and the
+mesh is generated in-process by Gmsh.
+
+```python
+import peridem
+from peridem import Deck, Geometry
+from peridem.deck import MeshSpec, contact_stiffness
+
+peridem.init(n_threads=4)
+
+R, h = 0.001, 0.0002                       # grain radius, mesh size
+horizon = 3.0 * h
+
+d = Deck(dim=2, t_final=0.012, n_steps=36000)
+d.set_output("runs/out", tags=["Displacement", "Velocity", "Damage_Z"],
+             interval=3600)
+d.set_gravity(0.0, -10.0)
+
+grain = d.add_particle_type(Geometry("circle", [R, 0, 0, 0]),
+                            MeshSpec(size=h))          # Gmsh, in memory
+steel = d.add_material(horizon=horizon, density=1200.0, K=2.16e7, nu=0.25,
+                       Gc=50.0, influence_fn_type=1)
+d.add_contact_pair(0, 0, Kn=contact_stiffness(2.16e7, 2.16e7, horizon),
+                   K=2.16e7, eps=0.9)
+
+d.add_displacement_bc(particles=[0], direction=[1, 2], zero_displacement=True)
+d.add_initial_velocity([0.0, -0.089, 0.0], particles=[1])  # free fall, 0.4 mm
+
+d.place(R, R, geometry=grain, material=steel)           # fixed grain
+d.place(R, 4 * R, geometry=grain, material=steel)       # falling grain
+
+sim = d.run()
+
+u = sim.displacement                        # numpy (N, 3) view into the model
+print(sim.n_particles, "grains,", sim.n_nodes, "nodes at t =", sim.time)
+for p in sim.particles:
+    print(p.id, p.geometry_name, p.center_of_mass, float(p.damage.max()))
+```
+
+```
+2 grains, 246 nodes at t = 0.012
+0 circle [0.001, 0.001, 0.0] 0.0
+1 circle [0.001, 0.003797, 0.0] 0.001737
+```
+
+`d.write("input.json")` writes the same deck out, so a problem prototyped in
+Python can be handed to `bin/PeriDEM` unchanged. Conversely
+`peridem.Simulation.from_file("input.json")` runs an existing deck in-process,
+and `python -m peridem -i input.json -nThreads 4` does it from the shell
+(`mpirun` works on both).
+
+Beyond deck building, the interface exposes the model itself: per-particle node
+slices (`sim.particle(i).velocity`), writable field views, the peridynamic bond
+graph (`sim.break_bonds_in_slots(...)`, used to seed a pre-notch), and the
+individual steps of the time loop so it can be driven from Python. Full API:
+[python/README.md](./python/README.md).
+
+#### Examples in Python
+
+Every example folder has a `problem.py` that sets that problem up through this
+interface. `run.py` next to it runs that file:
+
+```sh
+cd examples/PeriDEM/ellipse_triangle
+./run.py                                  # in-process, Python-authored deck
+./problem.py --num-steps 2000 --snapshot crack.png
+./problem.py --write-deck /tmp/input.json # then: bin/PeriDEM -i /tmp/input.json
+```
+
+Where a specific mesh is needed, which is the case for the attrition packs and
+for runs compared against archived C++ output, `problem.py` reads the committed
+`.msh`. Otherwise it generates the mesh in the calling process and writes no
+file.
+
+#### Does it give the same answer?
+
+`python/tests/test_example_parity.py` checks two independent things per
+example. Neither side is allowed to read a deck the other produced:
+
+* **deck**: the Python deck against the deck the matching C++ driver writes,
+  key by key, including every floating-point value;
+* **run**: that deck run through `bin/PeriDEM` in a separate process and
+  through the in-process interface, into separate directories, compared node by
+  node on `Displacement`, `Velocity`, `Force`, `Damage_Z` and `Damage`.
+
+| case | deck vs C++ | nodes | max L∞ |
+|------|-------------|-------|--------|
+| `twop_circ_contact` | identical | 246 | 0 |
+| `ellipse_triangle` | identical | 402 | 0 |
+| `compressive_n12` | identical | 2274 | 0 |
+| `peridynamics_circle` | no C++ driver | 123 | 0 |
+| `peridynamics_rectangle` | no C++ driver | 2601 | 0 |
+| `attrition_sim1` | no C++ driver | 13553 | 0 |
+| `attrition_sim2` | no C++ driver | 15367 | 0 |
+| `silling_kw_quick` | identical (+170 pre-notch bonds) | 571 | 0 |
+| `silling_kw_2d` | identical (+1012 pre-notch bonds) | 25350 | 0 |
+| `silling_kw_3d` | identical (+26064 pre-notch bonds) | 354330 | 0 |
+
+"no C++ driver" means the example ships a hand-written JSON deck rather than a
+C++ program, so only the run comparison applies there.
+
+```sh
+PYTHONPATH=build/python python3 python/tests/test_example_parity.py
+ctest --test-dir build -R Test_Python -V
+```
+
+This is possible because the Python side is a binding, not a second
+implementation: `peridem.decks.*` forwards to the same
+`inp::*Deck::getExampleJson` factories the C++ drivers call, and `peridem.to_E`,
+`peridem.contact_stiffness`, `Geometry` and the bond-cutting calls are the C++
+`material::`, `util::`, `geom::` and `geometry::` functions. Where a helper did
+not exist it was added to `src/` rather than written in Python:
+`util::normalContactStiffness` now replaces the same expression that was
+copy-pasted at nine sites, and `src/fracture/prenotch.h` replaces three
+near-duplicate notch routines in the notched-impact driver.
+
+`test/test_exec/inp/testDeckRoundTrip.cpp` keeps that layer honest: each deck's
+`getExampleJson` output is read back by its own `readFromJson` and the values
+checked, which is the gap that had let three writer/reader mismatches through.
+
 ### Two-particle contact
 
 JSON via `bin/PeriDEM`: start from a compressive or attrition short deck.
 C++ driver (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_contact](./examples/PeriDEM/twop_circ_contact).
+
+```sh
+cd examples/PeriDEM/twop_circ_contact
+./run.py                          # Python; both discs meshed in-process
+```
 
 ### Compressive test
 
@@ -351,6 +494,14 @@ NP=4 ./run_stage1.sh              # or use checked-in settled restart
 NP=1 ./run_stage2.sh
 ```
 
+In Python the pack, the U-channel cup and the moving plate are derived from
+`R` and the pack size rather than read from a deck:
+
+```sh
+cd examples/PeriDEM/compressive/n12
+./problem.py --ncols 4 --nrows 3 --in-process-mesh --num-steps 2000
+```
+
 ### Attrition
 
 | Path | Role |
@@ -360,12 +511,34 @@ NP=1 ./run_stage2.sh
 
 Each folder has `./run.sh` (and mesh/CSV setup scripts). Keep outputs under `runs/` (gitignored).
 
+```sh
+cd examples/PeriDEM/attrition/sim1_rotating_cylinder
+./problem.py --preset short --snapshot damage.png
+```
+
+`problem.py` builds the drum as a `complex` geometry (outer circle, inner
+circle removed, protrusion added) and places it at its signed-volume centroid,
+which the geometry object computes. The grain packs come from the committed
+CSV and `.msh` files so the runs stay comparable with the archived results.
+
 ### Impact and fracture
 
 | Path | Role |
 |------|------|
 | [silling_kw](./examples/PeriDEM/silling_kw) | Silling KW 3D (`./run_3d.sh`) and 2D (`./run_2d.sh`) |
 | [ellipse_triangle](./examples/PeriDEM/ellipse_triangle) | Hollow ellipse dropped on a tip |
+
+The Kalthoff–Winkler case needs more than a deck: after the model is built, the
+peridynamic bonds spanning each notch slot have to be cut. That is a Python
+call, and the time loop can then be driven step by step to record when each
+node first becomes damaged, which is how the crack speed is measured.
+
+```sh
+cd examples/PeriDEM/silling_kw
+./problem.py --quick                      # smaller, softer plate
+./problem.py --arrival-times              # 2D, reports crack speed
+./problem.py --dim3                       # Silling's 200x100x9 mm plate
+```
 
 ### Single-particle Peridynamics
 
@@ -378,6 +551,12 @@ Each folder has `./run.sh` (and mesh/CSV setup scripts). Keep outputs under `run
 cd examples/Peridynamics/circle
 ./run.sh                          # short deck
 DECK=input.json NP=2 ./run.sh     # full; auto → DOF-MPI on multi-rank
+
+./run.py                          # same problem, set up in Python
+./problem.py --mesh-size 3e-4     # ... meshing in-process instead
+
+cd ../rectangle
+./problem.py --snapshot pull.png  # uniform grid built in memory
 ```
 
 ## Visualizing results

@@ -14,5 +14,13 @@ Both accept `Model.MPI_Strategy`: `auto` (→ DOF-MPI for single particle),
 ```bash
 cd circle && ./run.sh                 # short deck (input_quick.json)
 cd rectangle && DECK=input.json ./run.sh
-cd circle && ./run.py                 # same deck, in-process Python
+```
+
+Each folder also has a `problem.py` that builds the same problem through the
+`peridem` interface (`-DEnable_Python=ON`), and a `run.py` that runs it:
+
+```bash
+cd circle && ./run.py
+./problem.py --mesh-size 3e-4         # mesh the disc in-process instead
+cd ../rectangle && ./problem.py --snapshot pull.png
 ```

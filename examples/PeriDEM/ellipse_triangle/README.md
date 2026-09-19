@@ -13,7 +13,16 @@
 `./run.sh` wipes stale meshes/VTUs and **fails unless** mesh+VTU are elliptical (`SHAPE_OK`)
 and health gates pass (through-crack → spatially separated pieces, no spray).
 
-`./run.py` runs the existing `inp/input.json` in-process (`-DEnable_Python=ON`).
-Generate that deck first with `./run.sh` or `example_ellipse_triangle` if it is missing.
+`problem.py` builds the same deck as `main.cpp` through the `peridem`
+interface, with the same geometry, materials and contact parameters.
+`python/tests/test_example_parity.py` compares the two decks key by key, so
+that comparing the runs compares the interfaces and not two problems.
+
+```bash
+./run.py                                   # default 30k steps
+./problem.py --num-steps 2000 --snapshot crack.png
+./problem.py --in-process-mesh             # write no .msh at all
+./problem.py --write-deck /tmp/input.json  # then bin/PeriDEM -i /tmp/input.json
+```
 
 Tip contact and crack opening: [ellipse_triangle_impact.png](../../../docs/assets/ellipse_triangle_impact.png).
