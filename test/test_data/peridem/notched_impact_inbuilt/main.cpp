@@ -14,6 +14,7 @@
  * -finalTime, -outputDir, -nThreads, -selfContact, -bondBreak.
  */
 
+#include "fracture/prenotch.h"
 #include "inp/deckIncludes.h"
 #include "material/materialUtil.h"
 #include "periDEMModel.h"
@@ -35,6 +36,31 @@
 #include <vector>
 
 namespace {
+// The pre-notch functions are in src/fracture/prenotch.h, so that this driver
+// and the Python interface break the same bonds.
+size_t applyNotches(PeriDEMModel &dem, double x_left, double x_right, double y_lo,
+                    double y_hi) {
+  return geometry::breakBondsCrossingVerticalLines(
+      *dem.d_fracture_p, dem.d_xRef, dem.d_neighPd, dem.d_ptId, 0,
+      {x_left, x_right}, y_lo, y_hi);
+}
+
+size_t applyNotchSlots(PeriDEMModel &dem, double notch_half, double notch_w,
+                       double y_lo, double y_hi) {
+  return geometry::breakBondsInSlots(*dem.d_fracture_p, dem.d_xRef,
+                                     dem.d_neighPd, dem.d_ptId, 0,
+                                     {-notch_half, notch_half}, notch_w, y_lo,
+                                     y_hi);
+}
+
+// A V-notch is seeded on its midplane, which is the same zero-width cut.
+size_t applyNotchMidplanes(PeriDEMModel &dem, double notch_half, double y_tip,
+                           double y_top) {
+  return geometry::breakBondsCrossingVerticalLines(
+      *dem.d_fracture_p, dem.d_xRef, dem.d_neighPd, dem.d_ptId, 0,
+      {-notch_half, notch_half}, y_tip, y_top);
+}
+
 
 std::string directoryPathWithTrailingSep(const std::filesystem::path &dir) {
   namespace fs = std::filesystem;
@@ -45,113 +71,10 @@ std::string directoryPathWithTrailingSep(const std::filesystem::path &dir) {
   return s;
 }
 
-bool segmentCrossesVertical(double x0, double y0, double x1, double y1, double x_line,
-                            double y_lo, double y_hi) {
-  if ((x0 - x_line) * (x1 - x_line) >= 0.)
-    return false;
-  const double t = (x_line - x0) / (x1 - x0);
-  if (t < 0. || t > 1.)
-    return false;
-  const double y = y0 + t * (y1 - y0);
-  return y >= y_lo && y <= y_hi;
-}
 
-size_t applyNotches(PeriDEMModel &dem, double x_left, double x_right, double y_lo,
-                    double y_hi) {
-  size_t n_broken = 0;
-  for (size_t i = 0; i < dem.d_neighPd.size(); ++i) {
-    if (dem.d_ptId[i] != 0)
-      continue;
-    const auto &xi = dem.d_xRef[i];
-    for (size_t k = 0; k < dem.d_neighPd[i].size(); ++k) {
-      const size_t j = dem.d_neighPd[i][k];
-      if (dem.d_ptId[j] != 0)
-        continue;
-      const auto &xj = dem.d_xRef[j];
-      if (segmentCrossesVertical(xi.d_x, xi.d_y, xj.d_x, xj.d_y, x_left, y_lo, y_hi) ||
-          segmentCrossesVertical(xi.d_x, xi.d_y, xj.d_x, xj.d_y, x_right, y_lo, y_hi)) {
-        dem.d_fracture_p->setBondState(i, k, true);
-        ++n_broken;
-      }
-    }
-  }
-  return n_broken;
-}
 
-// Break bonds that still span an open rectangular notch slot (δ > notch width).
-size_t applyNotchSlots(PeriDEMModel &dem, double notch_half, double notch_w, double y_lo,
-                       double y_hi) {
-  const double hw = 0.5 * notch_w;
-  auto crossesSlot = [&](double x0, double y0, double x1, double y1, double xc) {
-    const double xa = xc - hw, xb = xc + hw;
-    auto inSlot = [&](double x, double y) {
-      return x >= xa && x <= xb && y >= y_lo && y <= y_hi;
-    };
-    if (inSlot(x0, y0) || inSlot(x1, y1))
-      return true;
-    for (int s = 0; s <= 8; ++s) {
-      const double t = s / 8.0;
-      const double x = x0 + t * (x1 - x0);
-      const double y = y0 + t * (y1 - y0);
-      if (inSlot(x, y))
-        return true;
-    }
-    return segmentCrossesVertical(x0, y0, x1, y1, xc, y_lo, y_hi);
-  };
-  size_t n_broken = 0;
-  for (size_t i = 0; i < dem.d_neighPd.size(); ++i) {
-    if (dem.d_ptId[i] != 0)
-      continue;
-    const auto &xi = dem.d_xRef[i];
-    for (size_t k = 0; k < dem.d_neighPd[i].size(); ++k) {
-      const size_t j = dem.d_neighPd[i][k];
-      if (dem.d_ptId[j] != 0)
-        continue;
-      const auto &xj = dem.d_xRef[j];
-      if (crossesSlot(xi.d_x, xi.d_y, xj.d_x, xj.d_y, -notch_half) ||
-          crossesSlot(xi.d_x, xi.d_y, xj.d_x, xj.d_y, notch_half)) {
-        dem.d_fracture_p->setBondState(i, k, true);
-        ++n_broken;
-      }
-    }
-  }
-  return n_broken;
-}
 
 // Break bonds that cross the midplane of each prenotch.
-size_t applyNotchMidplanes(PeriDEMModel &dem, double notch_half, double y_tip,
-                           double y_top) {
-  auto crossesMid = [&](double x0, double y0, double x1, double y1, double xc) {
-    if ((x0 - xc) * (x1 - xc) >= 0.)
-      return false;
-    const double den = x1 - x0;
-    if (std::abs(den) < 1.0e-30)
-      return false;
-    const double t = (xc - x0) / den;
-    if (t <= 0. || t >= 1.)
-      return false;
-    const double y = y0 + t * (y1 - y0);
-    return y >= y_tip && y <= y_top;
-  };
-  size_t n_broken = 0;
-  for (size_t i = 0; i < dem.d_neighPd.size(); ++i) {
-    if (dem.d_ptId[i] != 0)
-      continue;
-    const auto &xi = dem.d_xRef[i];
-    for (size_t k = 0; k < dem.d_neighPd[i].size(); ++k) {
-      const size_t j = dem.d_neighPd[i][k];
-      if (dem.d_ptId[j] != 0)
-        continue;
-      const auto &xj = dem.d_xRef[j];
-      if (crossesMid(xi.d_x, xi.d_y, xj.d_x, xj.d_y, -notch_half) ||
-          crossesMid(xi.d_x, xi.d_y, xj.d_x, xj.d_y, notch_half)) {
-        dem.d_fracture_p->setBondState(i, k, true);
-        ++n_broken;
-      }
-    }
-  }
-  return n_broken;
-}
 
 double nodePhi(const PeriDEMModel &dem, size_t i) {
   const auto &nb = dem.d_neighPd[i];
@@ -927,10 +850,12 @@ int main(int argc, char *argv[]) {
       const auto &xi = dem.d_xRef[i];
       const auto &xj = dem.d_xRef[j];
       const bool on_notch =
-          segmentCrossesVertical(xi.d_x, xi.d_y, xj.d_x, xj.d_y, -notch_half, y_tip,
-                                 y_top + 0.01 * H) ||
-          segmentCrossesVertical(xi.d_x, xi.d_y, xj.d_x, xj.d_y, notch_half, y_tip,
-                                 y_top + 0.01 * H);
+          geometry::segmentCrossesVerticalLine(xi.d_x, xi.d_y, xj.d_x, xj.d_y,
+                                               -notch_half, y_tip,
+                                               y_top + 0.01 * H) ||
+          geometry::segmentCrossesVerticalLine(xi.d_x, xi.d_y, xj.d_x, xj.d_y,
+                                               notch_half, y_tip,
+                                               y_top + 0.01 * H);
       if (!on_notch)
         ++n_extra;
     }
