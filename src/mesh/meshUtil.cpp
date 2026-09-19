@@ -9,6 +9,8 @@
  */
 
 #include "meshUtil.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "mesh.h"
 #include "fe/elemIncludes.h"
 #include "fe/bMatrix.h"
@@ -63,8 +65,9 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
 
   mesh_p->d_dim = dim;
   if (nGrid.size() < dim or box.first.size() < dim or box.second.size() < dim) {
-    std::cerr << "createUniformMesh(): check nGrid or box arguments.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "createUniformMesh(): check nGrid or box arguments.\n");
   }
 
   if (dim == 1) {
@@ -86,8 +89,9 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
     mesh_p->d_numElems = nGrid[0] * nGrid[1] * nGrid[2];
     mesh_p->d_eType = util::vtk_type_hexahedron;
   } else {
-    std::cerr << "createUniformMesh(): invalid dim = " << dim << " argument.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "createUniformMesh(): invalid dim = " << dim << " argument.\n");
   }
 
   mesh_p->d_eNumVertex = util::vtk_map_element_to_num_nodes[mesh_p->d_eType];

@@ -9,6 +9,8 @@
  */
 
 #include "triElem.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "util/feElementDefs.h" // global definition of elements
 #include "util/function.h"
 #include <iostream>
@@ -86,15 +88,16 @@ fe::TriElem::mapPointToRefElem(const util::Point &p,
 
   if (util::isLess(xi, -1.0E-5) || util::isLess(eta, -1.0E-5) ||
       util::isGreater(xi, 1. + 1.0E-5 - eta)) {
-    std::cerr << "Error: Trying to map point p = (" << p.d_x << ", " << p.d_y
-              << ") in triangle to reference triangle.\n"
-              << "But the point p does not belong to triangle = {("
-              << nodes[0].d_x << ", " << nodes[0].d_y << "), (" << nodes[1].d_x
-              << "," << nodes[1].d_y << "), (" << nodes[2].d_x << ","
-              << nodes[2].d_y << ")}.\n"
-              << "Coordinates in reference triangle are: xi = " << xi
-              << ", eta = " << eta << "\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Trying to map point p = (" << p.d_x << ", " << p.d_y
+        << ") in triangle to reference triangle.\n"
+        << "But the point p does not belong to triangle = {("
+        << nodes[0].d_x << ", " << nodes[0].d_y << "), (" << nodes[1].d_x
+        << "," << nodes[1].d_y << "), (" << nodes[2].d_x << ","
+        << nodes[2].d_y << ")}.\n"
+        << "Coordinates in reference triangle are: xi = " << xi
+        << ", eta = " << eta << "\n");
   }
 
   if (util::isLess(xi, 0.))

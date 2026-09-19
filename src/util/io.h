@@ -12,6 +12,8 @@
 #define UTILS_UTIL_IO_H
 
 #include "point.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "constants.h"
 #include "logger.h"
 #include <fstream>
@@ -370,11 +372,12 @@ inline std::string checkAndCreateNewFilename(std::string const & filename, std::
   }
   else {
     if (f_ext != filename_ext) {
-      std::cerr << "checkAndCreateNewFilename(): Argument filename = "
-                << filename << " has extension = "
-                << f_ext << " which does not match expected extension = "
-                << filename_ext << std::endl;
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "checkAndCreateNewFilename(): Argument filename = "
+          << filename << " has extension = "
+          << f_ext << " which does not match expected extension = "
+          << filename_ext << std::endl);
     }
   }
 

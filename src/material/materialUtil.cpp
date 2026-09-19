@@ -9,6 +9,8 @@
  */
 
 #include "materialUtil.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "particle/baseParticle.h"
 #include "util/function.h"
 #include "util/parallelUtil.h"
@@ -65,9 +67,9 @@ double computeStateMxI(size_t i, const std::vector<util::Point> &nodes,
     oss << "nodal coord = " << xi.printStr() << "\n";
     oss << material->printStr(0, 0);
 
-    std::cout << oss.str();
-
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << oss.str());
   }
   return m;
 }

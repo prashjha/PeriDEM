@@ -12,6 +12,8 @@
 
 #include "util/feElementDefs.h"
 
+#include "util/io.h"
+#include <stdexcept>
 #include "baseElem.h"
 #include "lineElem.h"
 #include "quadElem.h"
@@ -37,8 +39,9 @@ inline std::unique_ptr<BaseElem> elem(size_t type, size_t order) {
     return std::make_unique<TetElem>(order);
   if (type == util::vtk_type_hexahedron)
     return std::make_unique<HexElem>(order);
-  std::cerr << std::format("Error: element type = {} is not supported.\n", type);
-  exit(EXIT_FAILURE);
+  throw std::runtime_error(
+      util::io::Msg()
+      << std::format("Error: element type = {} is not supported.\n", type));
 }
 
 } // namespace fe

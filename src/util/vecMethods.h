@@ -14,6 +14,8 @@
 #include <cstdint> // uint8_t type
 #include <cstring> // string and size_t type
 #include <vector>
+#include "util/io.h"
+#include <stdexcept>
 #include <chrono>
 #include <numeric>      // std::iota
 #include <algorithm>    // std::sort, std::stable_sort
@@ -118,23 +120,26 @@ inline size_t maxIndex(const std::vector<T> &data,
                        size_t data_start, size_t data_end) {
 
   if (data.size() == 0) {
-    std::cerr << "Error: maxIndex() is called with data of size " << data.size()
-              << ".\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: maxIndex() is called with data of size " << data.size()
+        << ".\n");
   }
 
   if (data_end == 0 or data_end > data.size()) {
-    std::cerr << "Error: maxIndex() data_end = " << data_end
-              << " is not valid for the data of size " << data.size()
-              << ".\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: maxIndex() data_end = " << data_end
+        << " is not valid for the data of size " << data.size()
+        << ".\n");
   }
 
   if (data_start > data.size() - 1) {
-    std::cerr << "Error: maxIndex() data_start = " << data_start
-              << " is not valid for the data of size " << data.size()
-              << ".\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: maxIndex() data_start = " << data_start
+        << " is not valid for the data of size " << data.size()
+        << ".\n");
   }
 
   // initialize original index locations
@@ -310,8 +315,9 @@ inline float timeDiff(std::chrono::steady_clock::time_point begin,
       else if (unit == "seconds")
         return std::chrono::duration_cast<std::chrono::seconds>(end - begin).count();
       else {
-        std::cerr << "Unit = " << unit << " not valid.\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Unit = " << unit << " not valid.\n");
       }
 };
 
@@ -326,8 +332,9 @@ inline T_out getKeyData(std::string key, std::map<std::string, T_out> &data_map,
 
   if (issue_err) {
     if (data_map.find(key) == data_map.end()) {
-      std::cerr << "Error: key = " << key << " does not exist in data map.\n";
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: key = " << key << " does not exist in data map.\n");
     }
   }
 
@@ -345,8 +352,9 @@ inline void appendKeyData(std::string key, T_out data, std::map<std::string, T_o
 
   if (data_map.find(key) == data_map.end()) {
     if (issue_err) {
-      std::cerr << "Error: key = " << key << " does not exist in data map.\n";
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: key = " << key << " does not exist in data map.\n");
     }
     else {
       data_map[key] = data;
@@ -367,8 +375,9 @@ inline void setKeyData(std::string key, T_out data, std::map<std::string, T_out>
 
   if (data_map.find(key) == data_map.end()) {
     if (issue_err) {
-      std::cerr << "Error: key = " << key << " does not exist in data map.\n";
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: key = " << key << " does not exist in data map.\n");
     }
   }
 

@@ -9,6 +9,7 @@
  */
 
 #include "vtkParticleReader.h"
+#include <stdexcept>
 #include "util/feElementDefs.h"
 #include "util/io.h"
 #include "mesh/mesh.h"
@@ -55,10 +56,11 @@ void rw::reader::VtkParticleReader::readNodes(
   vtkIdType num_nodes = d_grid_p->GetNumberOfPoints();
 
   if (num_nodes != model->d_x.size()) {
-    std::cerr << "Error: Number of points data = " << num_nodes <<
-                 " in file does not match the number of points = "
-              << model->d_x.size() << ". Aborting reading.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Number of points data = " << num_nodes <<
+        " in file does not match the number of points = "
+        << model->d_x.size() << ". Aborting reading.\n");
   }
 
   // read current configuration
@@ -97,9 +99,10 @@ void rw::reader::VtkParticleReader::readNodes(
     } else {
 
       if (tag == "Velocity") {
-        std::cerr << "Error: Restart file does not have <Velocity> data. "
-                     "Aborting reading.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Restart file does not have <Velocity> data. "
+            "Aborting reading.\n");
       } else if (tag == "Displacement") {
         // compute from current and reference configuration
         for (size_t i=0; i<model->d_x.size(); i++)

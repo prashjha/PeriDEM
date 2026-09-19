@@ -9,6 +9,8 @@
  */
 
 #include "lineElem.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "util/feElementDefs.h" // global definition of elements
 #include "util/function.h"
 #include <iostream>
@@ -75,11 +77,12 @@ fe::LineElem::mapPointToRefElem(const util::Point &p,
 
   if (util::isLess(xi, -1. - 1.0E-8) ||
       util::isGreater(xi, 1. + 1.0E-8) ) {
-    std::cerr << "Error: Trying to map point p = " << p.d_x
-              << " in given line to reference line.\n"
-              << "But the point p does not belong to line = {"
-              << nodes[0].d_x << ", " << nodes[1].d_x << "}.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Trying to map point p = " << p.d_x
+        << " in given line to reference line.\n"
+        << "But the point p does not belong to line = {"
+        << nodes[0].d_x << ", " << nodes[1].d_x << "}.\n");
   }
 
   if (util::isLess(xi, -1.))

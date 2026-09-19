@@ -9,6 +9,8 @@
  */
 
 #include "reader.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "mshReader.h"
 #include "vtkReader.h"
 #include <csv/csv.h>
@@ -147,15 +149,17 @@ void rw::reader::readVtuFileNodes(const std::string &filename, size_t dim,
   if (ref_config) {
     std::vector<util::Point> u;
     if (rdr.readPointData("Displacement", &u)) {
-      std::cerr << "Error: Did not find displacement in the vtu file."
-                << std::endl;
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Did not find displacement in the vtu file."
+          << std::endl);
     }
 
     if (u.size() != nodes->size()) {
-      std::cerr << "Error: Displacement data and node data size do not match."
-                << std::endl;
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Displacement data and node data size do not match."
+          << std::endl);
     }
 
     for (size_t i = 0; i < u.size(); i++)
@@ -190,9 +194,10 @@ void rw::reader::readVtuFileRestart(const std::string &filename,
     std::vector<util::Point> y;
     rdr.readNodes(&y);
     if (y.size() != X->size()) {
-      std::cerr << "Error: Number of nodes in input file = " << filename
-                << " and number nodes in data X are not same.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Number of nodes in input file = " << filename
+          << " and number nodes in data X are not same.\n");
     }
 
     u->resize(y.size());
@@ -372,9 +377,10 @@ void rw::reader::readMshFileRestart(const std::string &filename,
     std::vector<util::Point> y;
     rdr.readNodes(&y);
     if (y.size() != X->size()) {
-      std::cerr << "Error: Number of nodes in input file = " << filename
-                << " and number nodes in data X are not same.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Number of nodes in input file = " << filename
+          << " and number nodes in data X are not same.\n");
     }
 
     u->resize(y.size());

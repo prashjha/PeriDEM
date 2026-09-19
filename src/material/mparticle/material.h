@@ -12,6 +12,8 @@
 #define MATERIAL_PARTILCE_MATERIAL_H
 
 #include "influenceFn.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "inp/materialDeck.h"
 #include "util/function.h"
 #include "util/point.h" // definition of Point
@@ -287,10 +289,11 @@ public:
             deck.d_influenceFnParams, dim);
     }
     else {
-      std::cerr << "Error: Influence function type = "
-                << deck.d_influenceFnType
-                << " is invalid.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Influence function type = "
+          << deck.d_influenceFnType
+          << " is invalid.\n");
     }
 
     if (dim == 1)
@@ -547,9 +550,10 @@ private:
     //
     if (util::isLess(deck.d_matData.d_E, 0.) &&
         util::isLess(deck.d_matData.d_K, 0.)) {
-      std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
-                   " to compute the RNP bond-based peridynamic parameters.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Require either Young's modulus E or Bulk modulus K"
+          " to compute the RNP bond-based peridynamic parameters.\n");
     }
     if (util::isGreater(deck.d_matData.d_E, 0.) &&
         util::isGreater(deck.d_matData.d_K, 0.)) {
@@ -563,10 +567,11 @@ private:
 
     if (util::isLess(deck.d_matData.d_Gc, 0.) &&
         util::isLess(deck.d_matData.d_KIc, 0.)) {
-      std::cerr << "Error: Require either critical energy release rate Gc or "
-                   "critical stress intensity factor KIc to compute the RNP "
-                   "bond-based peridynamic parameters.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Require either critical energy release rate Gc or "
+          "critical stress intensity factor KIc to compute the RNP "
+          "bond-based peridynamic parameters.\n");
     } else if (util::isGreater(deck.d_matData.d_Gc, 0.) &&
                util::isGreater(deck.d_matData.d_KIc, 0.)) {
       std::cout << "Warning: Both critical energy release rate Gc and critical "
@@ -699,10 +704,11 @@ public:
             deck.d_influenceFnParams, dim);
     }
     else {
-      std::cerr << "Error: Influence function type = "
-                << deck.d_influenceFnType
-                << " is invalid.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Influence function type = "
+          << deck.d_influenceFnType
+          << " is invalid.\n");
     }
 
     // check if we need to compute the material parameters
@@ -933,9 +939,10 @@ private:
     //
     if (util::isLess(deck.d_matData.d_E, 0.) &&
         util::isLess(deck.d_matData.d_K, 0.)) {
-      std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
-                   " to compute the PMB bond-based peridynamic parameters.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Require either Young's modulus E or Bulk modulus K"
+          " to compute the PMB bond-based peridynamic parameters.\n");
     }
     if (util::isGreater(deck.d_matData.d_E, 0.) &&
         util::isGreater(deck.d_matData.d_K, 0.)) {
@@ -946,10 +953,11 @@ private:
 
     if (util::isLess(deck.d_matData.d_Gc, 0.) &&
         util::isLess(deck.d_matData.d_KIc, 0.)) {
-      std::cerr << "Error: Require either critical energy release rate Gc or "
-                   "critical stress intensity factor KIc to compute the PMB "
-                   "bond-based peridynamic parameters.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Require either critical energy release rate Gc or "
+          "critical stress intensity factor KIc to compute the PMB "
+          "bond-based peridynamic parameters.\n");
     } else if (util::isGreater(deck.d_matData.d_Gc, 0.) &&
                util::isGreater(deck.d_matData.d_KIc, 0.)) {
       std::cout << "Warning: Both Gc and KIc provided; selecting Gc.\n";
@@ -1000,8 +1008,9 @@ private:
                    "Parameters=[1].\n";
     }
     if (!(J_scale > 0.)) {
-      std::cerr << "Error: PMB influence scale must be > 0.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: PMB influence scale must be > 0.\n");
     }
 
     if (dim == 2) {
@@ -1019,9 +1028,10 @@ private:
           (3.0 * mu + std::pow(3.0 / 4.0, 4) * (kappa - 5.0 * mu / 3.0)) * h;
       d_s0 = std::sqrt(Gc / dens);
     } else {
-      std::cerr << "Error: PMB computeParameters: unsupported dim=" << dim
-                << "\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: PMB computeParameters: unsupported dim=" << dim
+          << "\n");
     }
     d_c /= J_scale;
   };
@@ -1088,10 +1098,11 @@ public:
             deck.d_influenceFnParams, dim);
     }
     else {
-      std::cerr << "Error: Influence function type = "
-                << deck.d_influenceFnType
-                << " is invalid.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Influence function type = "
+          << deck.d_influenceFnType
+          << " is invalid.\n");
     }
 
     // check if we need to compute the material parameters
@@ -1291,9 +1302,10 @@ private:
     // Elastic-only bond-based micromodulus (same δ powers as PMB).
     if (util::isLess(deck.d_matData.d_E, 0.) &&
         util::isLess(deck.d_matData.d_K, 0.)) {
-      std::cerr << "Error: Require either Young's modulus E or Bulk modulus K"
-                   " to compute the PdElastic parameters.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Require either Young's modulus E or Bulk modulus K"
+          " to compute the PdElastic parameters.\n");
     }
     if (util::isGreater(deck.d_matData.d_E, 0.) &&
         util::isGreater(deck.d_matData.d_K, 0.)) {
@@ -1328,9 +1340,10 @@ private:
     else if (dim == 3)
       d_c = 18.0 * kappa / (M_PI * std::pow(h, 4.0));
     else {
-      std::cerr << "Error: PdElastic computeParameters: unsupported dim=" << dim
-                << "\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: PdElastic computeParameters: unsupported dim=" << dim
+          << "\n");
     }
     d_c /= J_scale;
   };
@@ -1394,10 +1407,11 @@ public:
             deck.d_influenceFnParams, dim);
     }
     else {
-      std::cerr << "Error: Influence function type = "
-                << deck.d_influenceFnType
-                << " is invalid.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Influence function type = "
+          << deck.d_influenceFnType
+          << " is invalid.\n");
     }
 
     // check if we need to compute the material parameters
@@ -1649,16 +1663,18 @@ private:
                    "PdState material. Pairs supported are (E, K), (E, G), "
                    "(E, nu), (K, G).\n";
       oss << deck.printStr(0, 0) << "\n";
-      std::cout << oss.str();
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << oss.str());
     }
 
     if (util::isLess(deck.d_matData.d_Gc, 0.) &&
         util::isLess(deck.d_matData.d_KIc, 0.)) {
-      std::cerr << "Error: Require either critical energy release rate Gc or "
-                   "critical stress intensity factor KIc to compute the RNP "
-                   "bond-based peridynamic parameters.\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Require either critical energy release rate Gc or "
+          "critical stress intensity factor KIc to compute the RNP "
+          "bond-based peridynamic parameters.\n");
     } else if (util::isGreater(deck.d_matData.d_Gc, 0.) &&
                util::isGreater(deck.d_matData.d_KIc, 0.)) {
       std::cout << "Warning: Both critical energy release rate Gc and critical "
@@ -1743,9 +1759,10 @@ private:
       dens = (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) *
              d_horizon;
     } else {
-      std::cerr << "Error: PdState computeParameters: unsupported dim=" << dim
-                << "\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: PdState computeParameters: unsupported dim=" << dim
+          << "\n");
     }
     d_s0 = std::sqrt(deck.d_matData.d_Gc / dens);
   };

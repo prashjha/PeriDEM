@@ -9,6 +9,7 @@
  */
 
 #include "mesh.h"
+#include "util/io.h"
 #include "inp/meshDeck.h"
 #include "inp/modelDeck.h"
 #include "fe/elemIncludes.h"
@@ -49,13 +50,15 @@ Mesh::Mesh(const inp::MeshDeck *meshDeck, const inp::ModelDeck *modelDeck)
   }
 
   if (d_dim < 0 or d_dim > 3) {
-    std::cerr << "Error: Check Dimension in input data.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Check Dimension in input data.\n");
   }
 
   if (d_filename.empty()) {
-    std::cerr << "Error: Filename for mesh data not specified.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Filename for mesh data not specified.\n");
   }
 
   // read mesh data from file
@@ -78,16 +81,18 @@ void Mesh::createData(const std::string &filename, bool ref_config) {
   else if (util::io::getExtensionFromFile(filename) == "vtu")
     file_type = 2;
   else {
-    std::cerr << "Error: Currently only '.csv', '.msg', and '.vtu' "
-                 "files are supported for reading mesh.\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Currently only '.csv', '.msg', and '.vtu' "
+        "files are supported for reading mesh.\n");
   }
 
   if (d_spatialDiscretization != "finite_difference" and file_type == 0) {
 
-    std::cerr << "Error: For discretization = " << d_spatialDiscretization
-              << " .vtu or .msh mesh file is required.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: For discretization = " << d_spatialDiscretization
+        << " .vtu or .msh mesh file is required.\n");
   }
 
   //
@@ -267,9 +272,9 @@ void Mesh::finalizeMeshDerivedFieldsFromCurrentNodes(
                 << d_nodes[counter].printStr() << "\n";
       if (!volume_error_note.empty())
         std::cerr << volume_error_note << "\n";
-      std::cerr << printStr() << "\n";
-
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << printStr() << "\n");
     }
 
     counter++;
@@ -297,15 +302,17 @@ bool Mesh::readElementData(const std::string &filename) {
   else if (util::io::getExtensionFromFile(filename) == "vtu")
     file_type = 2;
   else {
-    std::cerr << "Error: Currently only '.csv', '.msg', and '.vtu' "
-                 "files are supported for reading mesh.\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Currently only '.csv', '.msg', and '.vtu' "
+        "files are supported for reading mesh.\n");
   }
 
   if (file_type == 0) {
-    std::cerr << "Error: readElementData() requires file to be either "
-                 ".vtu or .msh mesh file.\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: readElementData() requires file to be either "
+        ".vtu or .msh mesh file.\n");
   }
 
   if (file_type == 1) {
@@ -338,11 +345,12 @@ void Mesh::computeVol() {
   // check if we have valid element-node connectivity data for nodal volume
   // calculations
   if (d_nec.size() != d_numNodes || d_enc.empty()) {
-    std::cerr << "Error: Can not compute nodal volume for given finite "
-                 "element mesh as the element-node connectivity data is "
-                 "invalid."
-              << std::endl;
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Can not compute nodal volume for given finite "
+        "element mesh as the element-node connectivity data is "
+        "invalid."
+        << std::endl);
   }
 
   if (false) {
@@ -376,8 +384,9 @@ void Mesh::computeVol() {
             loc_i = l;
 
         if (loc_i == -1) {
-          std::cerr << "Error: Check node element connectivity.\n";
-          exit(1);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Check node element connectivity.\n");
         }
 
         // get quad data

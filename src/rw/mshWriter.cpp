@@ -9,6 +9,7 @@
  */
 
 #include "mshWriter.h"
+#include <stdexcept>
 #include "util/feElementDefs.h"
 #include "util/io.h"
 #include <iostream>
@@ -64,8 +65,9 @@ void rw::writer::MshWriter::appendNodes(const std::vector<util::Point> *nodes,
     d_file = fopen(d_filename.c_str(), "w");
 
   if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename  <<".\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Can not open file = " << d_filename  <<".\n");
   }
 
   // Write the file header.

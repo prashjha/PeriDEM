@@ -9,6 +9,7 @@
  */
 
 #include "function.h"
+#include "util/io.h"
 #include <cmath>                  // definition of sin, cosine etc
 #include <iostream>               // cerr
 #include <stdexcept>              // invalid_argument
@@ -94,9 +95,10 @@ double util::gaussian2d(const util::Point &x, const size_t &dof,
                                   const std::vector<double> &params) {
 
   if (params.size() < 6) {
-    std::cerr << "Error: Not enough parameters to compute guassian 2-d "
-                 "function.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Not enough parameters to compute guassian 2-d "
+        "function.\n");
   }
 
   return util::gaussian(
@@ -110,9 +112,10 @@ double util::doubleGaussian2d(const util::Point &x,
                                         const std::vector<double> &params) {
 
   if (params.size() < 10) {
-    std::cerr << "Error: Not enough parameters to compute guassian 2-d "
-                 "function.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Not enough parameters to compute guassian 2-d "
+        "function.\n");
   }
 
   return util::gaussian(

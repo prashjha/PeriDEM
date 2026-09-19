@@ -10,6 +10,8 @@
  */
 
 #include "meshPartitioning.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "mesh.h"
 #include "util/vecMethods.h" // declares std::chrono and defines timeDiff()
 
@@ -60,10 +62,11 @@ void mesh::metisGraphPartition(std::string partitionMethod,
                                        NULL, &nParts, NULL, NULL, NULL, &objval,
                                        part.data());
   } else {
-    std::cerr << "Argument partitionMethod = "
-              << partitionMethod << " is invalid.\n"
-              << "Valid values are {'metis_recursive', 'metis_kway'}.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Argument partitionMethod = "
+        << partitionMethod << " is invalid.\n"
+        << "Valid values are {'metis_recursive', 'metis_kway'}.\n");
   }
 
   // record time

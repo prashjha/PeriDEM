@@ -9,6 +9,8 @@
  */
 
 #include "influenceFn.h"
+#include "util/io.h"
+#include <stdexcept>
 #include <cmath>
 
 material::ConstInfluenceFn::ConstInfluenceFn(
@@ -114,8 +116,9 @@ double material::GaussianInfluenceFn::getMoment(const size_t &i) const {
     return 0.5 * d_alpha * d_beta * d_beta *
            (1. - (1. + 1. / d_beta) * std::exp(-1. / d_beta));
   } else {
-    std::cerr << "Error: getMoment() accepts argument i from 0 to 3.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: getMoment() accepts argument i from 0 to 3.\n");
   }
 
 

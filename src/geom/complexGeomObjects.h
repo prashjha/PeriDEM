@@ -12,6 +12,7 @@
 #define GEOM_COMPLEXGEOMOBJECTS_H
 
 #include <iostream>
+#include <stdexcept>
 #include <utility>
 #include <memory>
 #include <map>
@@ -314,10 +315,10 @@ namespace geom {
         else if (s == "minus")
           d_objFlagInt.push_back(-1);
         else {
-          std::cerr
+          throw std::invalid_argument(
+              util::io::Msg()
               << "Error: Check object flag " + s +
-              " passed to create ComplexGeomObject\n";
-          exit(1);
+                     " passed to create ComplexGeomObject\n");
         }
     };
 

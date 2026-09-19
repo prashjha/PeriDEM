@@ -12,6 +12,7 @@
 #define INP_MODELDECK_H
 
 #include <string>
+#include <stdexcept>
 #include "util/io.h"
 #include "util/json.h"
 
@@ -150,8 +151,9 @@ namespace inp {
         d_simType = "explicit";
 
       if (std::abs(d_tFinal) < 1.0E-10 or d_Nt <= 0) {
-        std::cerr << "Error: Check Final_Time and Time_Steps data.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Check Final_Time and Time_Steps data.\n");
       }
 
       d_dt = d_tFinal / d_Nt;
@@ -213,8 +215,9 @@ namespace inp {
         for (const auto &r : j.at("Rigid_Particles")) {
           const double mass = r.value("Mass", -1.);
           if (!(mass > 0.)) {
-            std::cerr << "Error: Model.Rigid_Particles entries need Mass > 0.\n";
-            exit(1);
+            throw std::runtime_error(
+                util::io::Msg()
+                << "Error: Model.Rigid_Particles entries need Mass > 0.\n");
           }
           d_rigidParticles.emplace_back(r.at("Id").get<size_t>(), mass);
         }
@@ -222,28 +225,33 @@ namespace inp {
 
       if (d_mpiStrategy != "auto" && d_mpiStrategy != "none" &&
           d_mpiStrategy != "particle" && d_mpiStrategy != "dof") {
-        std::cerr << "Error: Model.MPI_Strategy must be auto|none|particle|dof.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Model.MPI_Strategy must be auto|none|particle|dof.\n");
       }
       if (d_bondBreak != "tension" && d_bondBreak != "absolute_stretch") {
-        std::cerr << "Error: Model.Bond_Break must be tension|absolute_stretch.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Model.Bond_Break must be tension|absolute_stretch.\n");
       }
       if (d_selfContact != "broken_bond_kn" &&
           d_selfContact != "reference_gap" && d_selfContact != "none") {
-        std::cerr << "Error: Model.Self_Contact must be "
-                     "broken_bond_kn|reference_gap|none.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Model.Self_Contact must be "
+            "broken_bond_kn|reference_gap|none.\n");
       }
       if (d_wallContact != "meshed" && d_wallContact != "analytical_plane") {
-        std::cerr << "Error: Model.Wall_Contact must be "
-                     "meshed|analytical_plane.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Model.Wall_Contact must be "
+            "meshed|analytical_plane.\n");
       }
 
       if (std::abs(d_tFinal) < 1.0E-10 or d_Nt <= 0) {
-        std::cerr << "Error: Check Final_Time and Time_Steps data.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Check Final_Time and Time_Steps data.\n");
       }
 
       d_dt = d_tFinal / d_Nt;

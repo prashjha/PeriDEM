@@ -9,6 +9,7 @@
  */
 
 #include "tetElem.h"
+#include <stdexcept>
 #include "util/function.h"
 #include "util/matrix.h"
 #include <iostream>
@@ -44,22 +45,23 @@ void checkPoint(const std::vector<double> &p, const std::vector<util::Point> &no
   }
 
   if (check) {
-    std::cerr << "Error: Point p = ("
-              << p[0] << ", " << p[1] << ", " << p[2]
-              << ") does not belong to reference tet element = {("
-              << nodes[0].d_x << ", " << nodes[0].d_y << ", " << nodes[0].d_z
-              << "), ("
-              << nodes[1].d_x << "," << nodes[1].d_y << ", " << nodes[1].d_z
-              << "), ("
-              << nodes[2].d_x << "," << nodes[2].d_y << ", " << nodes[2].d_z
-              << "), ("
-              << nodes[3].d_x << "," << nodes[3].d_y << ", " << nodes[3].d_z
-              << ")}.\n"
-              << "Coordinates in reference element are: "
-              << "xi = " << p[0]
-              << ", eta = " << p[1]
-              << ", zeta = " << p[2] << "\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Point p = ("
+        << p[0] << ", " << p[1] << ", " << p[2]
+        << ") does not belong to reference tet element = {("
+        << nodes[0].d_x << ", " << nodes[0].d_y << ", " << nodes[0].d_z
+        << "), ("
+        << nodes[1].d_x << "," << nodes[1].d_y << ", " << nodes[1].d_z
+        << "), ("
+        << nodes[2].d_x << "," << nodes[2].d_y << ", " << nodes[2].d_z
+        << "), ("
+        << nodes[3].d_x << "," << nodes[3].d_y << ", " << nodes[3].d_z
+        << ")}.\n"
+        << "Coordinates in reference element are: "
+        << "xi = " << p[0]
+        << ", eta = " << p[1]
+        << ", zeta = " << p[2] << "\n");
   }
 }
 
@@ -69,9 +71,10 @@ fe::TetElem::TetElem(size_t order)
     : fe::BaseElem(order, util::vtk_type_tetra) {
 
   if (d_quadOrder > 3) {
-    std::cout << "Error: For linear tet element, we only support upto 3 quad "
-                 "order approximation.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: For linear tet element, we only support upto 3 quad "
+        "order approximation.\n");
   }
 
   // compute quad data

@@ -9,6 +9,7 @@
  */
 
 #include "mshReader.h"
+#include <stdexcept>
 #include "util/io.h"
 
 #include <fstream>
@@ -44,9 +45,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
   (void)is_fd;
 
   if (util::io::isFileEmpty(d_filename)) {
-    std::cerr << "Error: Filename = " << d_filename <<
-                 " in MshReader is either nonexistent or empty.\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Filename = " << d_filename <<
+        " in MshReader is either nonexistent or empty.\n");
   }
 
   // open file
@@ -55,9 +57,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
   d_file.open(d_filename);
 
   if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename + ".msh"
-              << ".\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Can not open file = " << d_filename + ".msh"
+        << ".\n");
   }
 
   int format = 0;
@@ -72,10 +75,11 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
   // specify type of element to read
   if (dim != 2 and dim != 3) {
-    std::cerr << "Error: MshReader currently only supports reading of "
-                 "triangle/quadrangle elements in dimension 2 and tetragonal "
-                 "elements in 3.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: MshReader currently only supports reading of "
+        "triangle/quadrangle elements in dimension 2 and tetragonal "
+        "elements in 3.\n");
   }
 
   bool read_nodes = false;
@@ -89,8 +93,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
     if (line == "$MeshFormat") {
       if (!std::getline(d_file, line)) {
-        std::cerr << "Error: Unexpected end of file in MshReader (after $MeshFormat).\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Unexpected end of file in MshReader (after $MeshFormat).\n");
       }
       trim_inplace(line);
       {
@@ -98,19 +103,22 @@ void rw::reader::MshReader::readMesh(size_t dim,
         iss >> version >> format >> size;
       }
       if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
-        std::cerr << "Error: Unknown .msh file version " << version << "\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Unknown .msh file version " << version << "\n");
       }
       if (format) {
-        std::cerr << "Error: Format of .msh is possibly binary which is not"
-                     " supported currently.\n ";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Format of .msh is possibly binary which is not"
+            " supported currently.\n ");
       }
     } else if (line == "$Nodes" || line == "$NOD" || line == "$NOE") {
       read_nodes = true;
       if (!std::getline(d_file, line)) {
-        std::cerr << "Error: Unexpected end of file in MshReader (node count).\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Unexpected end of file in MshReader (node count).\n");
       }
       trim_inplace(line);
       unsigned int num_nodes = 0;
@@ -123,8 +131,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
       for (unsigned int i = 0; i < num_nodes; ++i) {
         if (!std::getline(d_file, line)) {
-          std::cerr << "Error: Unexpected end of file in MshReader (reading nodes).\n";
-          exit(EXIT_FAILURE);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Unexpected end of file in MshReader (reading nodes).\n");
         }
         trim_inplace(line);
         std::istringstream ls(line);
@@ -132,8 +141,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
         double x, y, z;
         ls >> id >> x >> y >> z;
         if (id < 1 || id > num_nodes) {
-          std::cerr << "Error: MshReader: node id out of range in file " << d_filename << "\n";
-          exit(EXIT_FAILURE);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: MshReader: node id out of range in file " << d_filename << "\n");
         }
         // 2D: planar meshes use xy; some .msh exports leave z as denormal/garbage — ignore file z.
         if (dim == 2)
@@ -144,8 +154,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
     } else if (line == "$Elements" || line == "$ELM") {
       read_elements = true;
       if (!std::getline(d_file, line)) {
-        std::cerr << "Error: Unexpected end of file in MshReader (element count).\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Unexpected end of file in MshReader (element count).\n");
       }
       trim_inplace(line);
       unsigned int num_elem = 0;
@@ -160,8 +171,9 @@ void rw::reader::MshReader::readMesh(size_t dim,
 
       for (unsigned int iel = 0; iel < num_elem; ++iel) {
         if (!std::getline(d_file, line)) {
-          std::cerr << "Error: Unexpected end of file in MshReader (reading elements).\n";
-          exit(EXIT_FAILURE);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Unexpected end of file in MshReader (reading elements).\n");
         }
         trim_inplace(line);
         std::istringstream ls(line);
@@ -225,10 +237,11 @@ void rw::reader::MshReader::readMesh(size_t dim,
       }
 
       if (found_quad and found_tri) {
-        std::cerr << "Error: Check mesh file. It appears to have both "
-                     "quadrangle elements and triangle elements. "
-                     "Currently we only support one kind of elements.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Check mesh file. It appears to have both "
+            "quadrangle elements and triangle elements. "
+            "Currently we only support one kind of elements.\n");
       }
 
       num_elems = elem_counter;
@@ -237,9 +250,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
   }
 
   if (!read_nodes || !read_elements) {
-    std::cerr << "Error: MshReader: incomplete .msh file (need $Nodes and $Elements): "
-              << d_filename << "\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: MshReader: incomplete .msh file (need $Nodes and $Elements): "
+        << d_filename << "\n");
   }
 
   // close file
@@ -249,9 +263,10 @@ void rw::reader::MshReader::readMesh(size_t dim,
 void rw::reader::MshReader::readNodes(std::vector<util::Point> *nodes) {
 
   if (util::io::isFileEmpty(d_filename)) {
-    std::cerr << "Error: Filename = " << d_filename <<
-              " in MshReader is either nonexistent or empty.\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Filename = " << d_filename <<
+        " in MshReader is either nonexistent or empty.\n");
   }
 
   // open file
@@ -260,8 +275,9 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point> *nodes) {
   d_file.open(d_filename);
 
   if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename + ".msh.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Can not open file = " << d_filename + ".msh.\n");
   }
 
   std::string line;
@@ -280,16 +296,18 @@ void rw::reader::MshReader::readNodes(std::vector<util::Point> *nodes) {
       if (line.find("$MeshFormat") == static_cast<std::string::size_type>(0)) {
         d_file >> version >> format >> size;
         if ((version != 2.0) && (version != 2.1) && (version != 2.2)) {
-          std::cerr << "Error: Unknown .msh file version " << version << "\n";
-          exit(1);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Unknown .msh file version " << version << "\n");
         }
 
         // we only support reading of ascii format, so issue error if this
         // condition is not met
         if (format) {
-          std::cerr << "Error: Format of .msh is possibly binary which is not"
-                       " supported currently.\n ";
-          exit(1);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Format of .msh is possibly binary which is not"
+              " supported currently.\n ");
         }
       }
       // read $Nodes block
@@ -337,9 +355,10 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
         std::vector<std::vector<size_t>> *nec) {
 
   if (util::io::isFileEmpty(d_filename)) {
-    std::cerr << "Error: Filename = " << d_filename <<
-              " in MshReader is either nonexistent or empty.\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Filename = " << d_filename <<
+        " in MshReader is either nonexistent or empty.\n");
   }
 
   // open file
@@ -348,17 +367,19 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
   d_file.open(d_filename);
 
   if (!d_file) {
-    std::cerr << "Error: Can not open file = " << d_filename + ".msh"
-              << ".\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Can not open file = " << d_filename + ".msh"
+        << ".\n");
   }
 
   // specify type of element to read
   if (dim != 2 and dim != 3) {
-    std::cerr << "Error: MshReader currently only supports reading of "
-                 "triangle/quadrangle elements in dimension 2 and tetragonal "
-                 "elements in 3.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: MshReader currently only supports reading of "
+        "triangle/quadrangle elements in dimension 2 and tetragonal "
+        "elements in 3.\n");
   }
 
   enc->clear();
@@ -375,8 +396,9 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
 
     if (!have_nodes && (line == "$Nodes" || line == "$NOD" || line == "$NOE")) {
       if (!std::getline(d_file, line)) {
-        std::cerr << "Error: Unexpected end of file in MshReader (readCells node count).\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Unexpected end of file in MshReader (readCells node count).\n");
       }
       trim_inplace(line);
       unsigned int num_nodes = 0;
@@ -386,8 +408,9 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
       }
       for (unsigned int i = 0; i < num_nodes; ++i) {
         if (!std::getline(d_file, line)) {
-          std::cerr << "Error: Unexpected end of file in MshReader (readCells skip nodes).\n";
-          exit(EXIT_FAILURE);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Unexpected end of file in MshReader (readCells skip nodes).\n");
         }
       }
       nec->assign(num_nodes, {});
@@ -398,8 +421,9 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
     if (have_nodes && (line == "$Elements" || line == "$ELM")) {
       read_elements = true;
       if (!std::getline(d_file, line)) {
-        std::cerr << "Error: Unexpected end of file in MshReader (readCells element count).\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Unexpected end of file in MshReader (readCells element count).\n");
       }
       trim_inplace(line);
       unsigned int num_elem = 0;
@@ -414,8 +438,9 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
 
       for (unsigned int iel = 0; iel < num_elem; ++iel) {
         if (!std::getline(d_file, line)) {
-          std::cerr << "Error: Unexpected end of file in MshReader (readCells elements).\n";
-          exit(EXIT_FAILURE);
+          throw std::runtime_error(
+              util::io::Msg()
+              << "Error: Unexpected end of file in MshReader (readCells elements).\n");
         }
         trim_inplace(line);
         std::istringstream ls(line);
@@ -479,10 +504,11 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
       }
 
       if (found_quad and found_tri) {
-        std::cerr << "Error: Check mesh file. It appears to have both "
-                     "quadrangle elements and triangle elements. "
-                     "Currently we only support one kind of elements.\n";
-        exit(1);
+        throw std::runtime_error(
+            util::io::Msg()
+            << "Error: Check mesh file. It appears to have both "
+            "quadrangle elements and triangle elements. "
+            "Currently we only support one kind of elements.\n");
       }
 
       num_elems = elem_counter;
@@ -491,8 +517,9 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
   }
 
   if (!have_nodes || !read_elements) {
-    std::cerr << "Error: MshReader::readCells: incomplete .msh file: " << d_filename << "\n";
-    exit(EXIT_FAILURE);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: MshReader::readCells: incomplete .msh file: " << d_filename << "\n");
   }
 
   // close file
@@ -506,9 +533,10 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
 
   if (!d_file)
     if (!d_file) {
-      std::cerr << "Error: Can not open file = " << d_filename + ".msh"
-                << ".\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Can not open file = " << d_filename + ".msh"
+          << ".\n");
     }
 
   bool found_data = false;
@@ -538,10 +566,11 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         if (tag[0] == name) {
           // check if data is of desired field type
           if (field_type != 3) {
-            std::cerr << "Error: Data " << tag[0] << " is of type "
-                      << field_type << " but we expect it to be of type " << 3
-                      << ".\n";
-            exit(1);
+            throw std::runtime_error(
+                util::io::Msg()
+                << "Error: Data " << tag[0] << " is of type "
+                << field_type << " but we expect it to be of type " << 3
+                << ".\n");
           }
 
           found_data = true;
@@ -578,9 +607,10 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
 
   if (!d_file)
     if (!d_file) {
-      std::cerr << "Error: Can not open file = " << d_filename + ".msh"
-                << ".\n";
-      exit(1);
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: Can not open file = " << d_filename + ".msh"
+          << ".\n");
     }
 
   bool found_data = false;
@@ -610,10 +640,11 @@ bool rw::reader::MshReader::readPointData(const std::string &name,
         if (tag[0] == name) {
           // check if data is of desired field type
           if (field_type != 1) {
-            std::cerr << "Error: Data " << tag[0] << " is of type "
-                      << field_type << " but we expect it to be of type " << 1
-                      << ".\n";
-            exit(1);
+            throw std::runtime_error(
+                util::io::Msg()
+                << "Error: Data " << tag[0] << " is of type "
+                << field_type << " but we expect it to be of type " << 1
+                << ".\n");
           }
 
           found_data = true;

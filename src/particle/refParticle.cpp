@@ -9,6 +9,8 @@
  */
 
 #include "refParticle.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "inp/particleDeck.h"
 #include "fe/baseElem.h"
 #include <iostream>
@@ -26,8 +28,9 @@ particle::RefParticle::RefParticle(size_t id,
       d_pRadius(geom->boundingRadius()) {
 
   if (d_pRadius < 1.0E-10) {
-    std::cerr << "Error: Reference particle radius is too small.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "Error: Reference particle radius is too small.\n");
   }
 
   // find the node which is closest to the particle center

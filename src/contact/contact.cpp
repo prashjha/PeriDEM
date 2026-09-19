@@ -9,6 +9,7 @@
  */
 
 #include "contact.h"
+#include <stdexcept>
 #include "damping.h"
 #include "policy.h"
 #include "wallContact.h"
@@ -186,14 +187,15 @@ bool contact::Contact::updateSearchParameters(data::ModelData &data) {
                                               pi->d_globStart, pi->d_globEnd);
 
     if (max_v_node > pi->d_globEnd or max_v_node < pi->d_globStart) {
-      std::cerr << std::format("Error: max_v_node = {} for "
-                               "particle of id = {} is not in the limit.\n",
-                               max_v_node, pi->getId())
-                << "Particle info = \n"
-                << pi->printStr()
-                << "\n\n Magnitude of velocity = "
-                << data.d_vMag[max_v_node] << "\n";
-      exit(EXIT_FAILURE);
+      throw std::runtime_error(
+          util::io::Msg()
+          << std::format("Error: max_v_node = {} for "
+          "particle of id = {} is not in the limit.\n",
+          max_v_node, pi->getId())
+          << "Particle info = \n"
+          << pi->printStr()
+          << "\n\n Magnitude of velocity = "
+          << data.d_vMag[max_v_node] << "\n");
     }
 
     data.d_maxVelocityParticlesListTypeAll[pi->getId()]

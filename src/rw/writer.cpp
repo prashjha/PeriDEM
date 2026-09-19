@@ -9,6 +9,8 @@
  */
 
 #include "writer.h"
+#include "util/io.h"
+#include <stdexcept>
 #include "vtkWriter.h"
 #include "legacyVtkWriter.h"
 #include "mshWriter.h"
@@ -37,8 +39,9 @@ void rw::writer::Writer::open(const std::string &filename,
     d_legacyVtkWriter_p =
         new rw::writer::LegacyVtkWriter(filename, compress_type);
   else {
-    std::cerr << "File format " << d_format << " is not supported.\n";
-    exit(1);
+    throw std::runtime_error(
+        util::io::Msg()
+        << "File format " << d_format << " is not supported.\n");
   }
 }
 
