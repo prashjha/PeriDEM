@@ -1,9 +1,0 @@
-<map id="geom::isPointInsideAngledRectangle" name="geom::isPointInsideAngledRectangle">
-<area shape="rect" id="Node000001" title="Checks if point is inside an angled rectangle." alt="" coords="5,47,183,87"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="241,5,341,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,45,227,31,228,36,175,50"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="248,55,333,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="183,65,234,65,234,70,183,70"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#ac37c77bce2370e83008c6436dcec26c0" title="Rotates a vector in xy&#45;plane in clockwise direction." alt="" coords="231,104,351,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="175,85,227,98,226,103,174,90"/>
-</map>

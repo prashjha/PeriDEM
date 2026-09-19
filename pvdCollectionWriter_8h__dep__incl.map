@@ -1,9 +1,0 @@
-<map id="/home/user/project/src/rw/pvdCollectionWriter.h" name="/home/user/project/src/rw/pvdCollectionWriter.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="215,5,406,45"/>
-<area shape="rect" id="Node000002" href="$periDEMModel_8cpp.html" title=" " alt="" coords="5,93,200,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="253,53,149,96,147,91,251,48"/>
-<area shape="rect" id="Node000003" href="$particleOutput_8cpp.html" title=" " alt="" coords="225,93,397,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="313,59,313,93,308,93,308,59"/>
-<area shape="rect" id="Node000004" href="$pvdCollectionWriter_8cpp.html" title=" " alt="" coords="421,93,625,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="371,48,477,91,475,96,369,53"/>
-</map>

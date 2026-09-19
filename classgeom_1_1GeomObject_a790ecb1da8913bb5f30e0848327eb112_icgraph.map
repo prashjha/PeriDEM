@@ -1,9 +1,0 @@
-<map id="geom::GeomObject::printStr" name="geom::GeomObject::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="467,35,652,60"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html#a69dbdf2ea4a56804b3020ce5cdc8c087" title="Prints the information about the object." alt="" coords="243,5,411,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="452,37,411,31,412,26,453,31"/>
-<area shape="rect" id="Node000003" href="$classgeom_1_1AnnulusGeomObject.html#a33f56bd7030f19ac1b48690b8568f801" title="Returns the string containing printable information about the object." alt="" coords="236,55,419,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="453,63,419,67,418,62,452,58"/>
-<area shape="rect" id="Node000004" href="$classgeom_1_1AnnulusGeomObject.html#abf7fe5059670b16d9bff9182e689d77e" title="Prints the information about the object." alt="" coords="5,55,188,95"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="223,78,188,78,188,73,223,73"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="geom::Ellipse" name="geom::Ellipse">
-<area shape="rect" id="Node000001" title="Filled ellipse in the plane z = center.d_z, semi&#45;axes in the xy plane." alt="" coords="86,753,213,1059"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,144,691"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="125,704,132,753,126,753,120,705"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="168,45,283,651"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,651,175,738,170,737,181,651"/>
-</map>

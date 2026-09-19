@@ -1,7 +1,0 @@
-<map id="geom::Cube" name="geom::Cube">
-<area shape="rect" id="Node000001" title="Defines cube." alt="" coords="86,753,213,1499"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,144,691"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="112,704,116,753,111,753,106,705"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="168,45,283,651"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="198,651,190,737,185,737,193,651"/>
-</map>
