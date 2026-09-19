@@ -661,6 +661,14 @@ int main(int argc, char *argv[]) {
     os << inputJson.dump(2);
   }
   util::io::print(std::format("Wrote deck to {}\n", fs::absolute(input_json_path).string()));
+
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
+  }
   if (jha_test > 0) {
     const auto &p1 = inputJson["Particle_Generation"]["Data"]["1"];
     const auto &v = inputJson["IC"]["Set_1"]["Constant_Velocity"]["Velocity_Vector"];

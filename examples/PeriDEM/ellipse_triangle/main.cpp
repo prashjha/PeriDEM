@@ -243,6 +243,14 @@ int main(int argc, char *argv[]) {
     ofs << std::setw(2) << j << std::endl;
   }
 
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
+  }
+
   // Hard check: deck must request a hollow ellipse, not a rectangle plate.
   if (j["Particle"]["Set_2"]["Type"] != "ellipse_minus_ellipse")
     throw std::runtime_error("ellipse_triangle: Particle Set_2 must be ellipse_minus_ellipse");

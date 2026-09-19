@@ -541,6 +541,14 @@ int main(int argc, char *argv[]) {
     os << inputJson.dump(2);
   }
 
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
+  }
+
   {
     const double R = 0.001;
     const double mesh_size = R / 5.0;

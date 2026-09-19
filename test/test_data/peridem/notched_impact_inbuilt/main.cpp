@@ -758,6 +758,14 @@ int main(int argc, char *argv[]) {
     os << input_json.dump(2);
   }
 
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
+  }
+
   auto deck = std::make_shared<inp::Input>(input_json);
   PeriDEMModel dem(deck);
   dem.init();
