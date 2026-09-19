@@ -174,23 +174,26 @@ namespace inp {
         // get json object for geometry
         auto j_geom = json({});
         geom::writeGeometry(j_geom, regionGeomData);
-        j["Region"] = {"Geometry", j_geom};
+        // Must be an object: readFromJson does j.at("Region").at("Geometry").
+        j["Region"] = json{{"Geometry", j_geom}};
       }
 
       if (pList.size() > 0) j["Particle_List"] = pList;
 
       if (pNotList.size() > 0) j["Particle_Exclude_List"] = pNotList;
 
+      // Objects, not arrays, and Parameters must not overwrite Type:
+      // readFromJson does j.at("Time_Function").value("Type", ...).
       if (timeFnType != "") {
-        j["Time_Function"] = {"Type", timeFnType};
+        j["Time_Function"] = json{{"Type", timeFnType}};
         if (timeFnParams.size() > 0)
-          j["Time_Function"] = {"Parameters", timeFnParams};
+          j["Time_Function"]["Parameters"] = timeFnParams;
       }
 
       if (spatialFnType != "") {
-        j["Spatial_Function"] = {"Type", spatialFnType};
+        j["Spatial_Function"] = json{{"Type", spatialFnType}};
         if (spatialFnParams.size() > 0)
-          j["Spatial_Function"] = {"Parameters", spatialFnParams};
+          j["Spatial_Function"]["Parameters"] = spatialFnParams;
       }
 
       if (type != "IC") {
