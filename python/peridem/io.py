@@ -130,27 +130,40 @@ def _order_by_xref(xref: np.ndarray) -> np.ndarray:
     return np.lexsort((xref[:, 2], xref[:, 1], xref[:, 0]))
 
 
-def _align(a: dict[str, np.ndarray], b: dict[str, np.ndarray]) -> tuple[np.ndarray, np.ndarray]:
-    """Permutation of ``b`` so ``b_xref[perm]`` matches ``a_xref``."""
+def _align(
+    a: dict[str, np.ndarray],
+    b: dict[str, np.ndarray],
+    *,
+    atol: float = 1e-6,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Permutation of ``b`` so ``b_xref[perm]`` matches ``a_xref``.
+
+    Matches nodes by rounded reference coordinates (not by lexsort rank).
+    Lexsort pairwise matching fails when two grids share the same points but
+    differ at floating-point noise, because sort order can diverge.
+    """
     xa = np.asarray(a["x_ref"], dtype=np.float64)
     xb = np.asarray(b["x_ref"], dtype=np.float64)
     if xa.shape != xb.shape:
         raise ValueError(f"node count mismatch {xa.shape} vs {xb.shape}")
-    ia = _order_by_xref(xa)
-    ib = _order_by_xref(xb)
-    if np.max(np.abs(xa[ia] - xb[ib])) > 1e-12:
-        raise ValueError(
-            f"reference coordinates do not match (max |Δx_ref|="
-            f"{np.max(np.abs(xa[ia] - xb[ib])):g})"
-        )
-    # perm such that xb[perm] == xa in original a-order
-    inv_ib = np.empty_like(ib)
-    inv_ib[ib] = np.arange(ib.size)
-    # after lexsort both are the same physical order; map a-index → b-index
-    # xa[i] == xb[perm[i]]
-    perm = np.empty(xa.shape[0], dtype=int)
-    perm[ia] = ib
-    return ia, perm
+    last_err = ""
+    for dec in (6, 7, 8, 9, 10, 11, 12):
+        ka = _xref_key(xa, decimals=dec)
+        kb = _xref_key(xb, decimals=dec)
+        if len(np.unique(ka)) != ka.size or len(np.unique(kb)) != kb.size:
+            last_err = f"duplicate xref keys at decimals={dec}"
+            continue
+        index_b = {int(k): i for i, k in enumerate(kb)}
+        try:
+            perm = np.array([index_b[int(k)] for k in ka], dtype=int)
+        except KeyError:
+            last_err = f"xref key sets differ at decimals={dec}"
+            continue
+        err = float(np.max(np.linalg.norm(xa - xb[perm], axis=1)))
+        if err <= atol:
+            return np.arange(xa.shape[0]), perm
+        last_err = f"matched keys at decimals={dec} but max |Δx_ref|={err:g}"
+    raise ValueError(f"reference coordinates do not match ({last_err})")
 
 
 def nodal_error(

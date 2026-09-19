@@ -16,9 +16,25 @@
 #include "mesh/mesh.h"
 #include "mesh/meshUtil.h"
 #include "meshGenerator.h"
+#include "rw/writer.h"
 #include "util/io.h"
 
 #include <stdexcept>
+
+namespace {
+
+void maybeWriteMeshFile(const inp::MeshDeck &zmeshDeck, const mesh::Mesh &mesh) {
+  if (!zmeshDeck.d_writeMeshFile || zmeshDeck.d_filename.empty())
+    return;
+  // Deck File is typically *.msh; MshWriter appends/checks that extension.
+  const std::string stem = util::io::removeExtensionFromFile(zmeshDeck.d_filename);
+  rw::writer::Writer writer(stem, "msh", "");
+  writer.appendMesh(mesh.getNodesP(), mesh.getElementType(),
+                    mesh.getElementConnectivitiesP());
+  writer.close();
+}
+
+} // namespace
 
 std::shared_ptr<mesh::Mesh>
 mesh_gen::createParticleMesh(const inp::MeshDeck &zmeshDeck,
@@ -67,6 +83,7 @@ mesh_gen::createParticleMesh(const inp::MeshDeck &zmeshDeck,
     mesh::createUniformMesh(&temp_mesh, dim, box, nGrid);
     if (!zmeshDeck.d_voidRegions.empty())
       mesh::removeNodesInBoxes(&temp_mesh, zmeshDeck.d_voidRegions);
+    maybeWriteMeshFile(zmeshDeck, temp_mesh);
     return std::make_shared<mesh::Mesh>(temp_mesh);
   }
 

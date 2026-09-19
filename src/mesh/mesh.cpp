@@ -313,6 +313,9 @@ bool Mesh::readElementData(const std::string &filename) {
                                        &d_enc,
                                        &d_nec);
     d_encDataPopulated = true;
+    // createData() may have skipped cells when Node_Volume was present, leaving
+    // d_eNumVertex from the default element type (1). Refresh after cell read.
+    d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
     return true;
   }
   else if (file_type == 2) {
@@ -320,6 +323,7 @@ bool Mesh::readElementData(const std::string &filename) {
                                  &d_enc,
                                  &d_nec);
     d_encDataPopulated = true;
+    d_eNumVertex = util::vtk_map_element_to_num_nodes[d_eType];
     return true;
   }
 
