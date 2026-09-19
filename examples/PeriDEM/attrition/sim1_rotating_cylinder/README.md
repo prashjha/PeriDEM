@@ -2,7 +2,7 @@
 
 Modular port of PeriDEM main
 `sim1_multi_particle_circ_tri_drum_with_rotating_cylinder_with_protrusion`
-(GIF: `assets/attrition_test_sim1.gif`).
+(GIF: `docs/assets/attrition_test_sim1.gif`).
 
 | Item | Value |
 |------|-------|

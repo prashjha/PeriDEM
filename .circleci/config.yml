@@ -188,7 +188,7 @@ jobs:
             name: Report
             command: |
               cd build
-              gcovr -e ../build -e ../external -e ../examples -e ../tools --r ..
+              gcovr -e ../build -e ../external -e ../examples --r ..
         - run:
             name: Publish 
             command: |

@@ -13,4 +13,4 @@
 `./run.sh` wipes stale meshes/VTUs and **fails unless** mesh+VTU are elliptical (`SHAPE_OK`)
 and health gates pass (through-crack → spatially separated pieces, no spray).
 
-Tip contact and crack opening: [assets/ellipse_triangle_impact.png](../../../assets/ellipse_triangle_impact.png).
+Tip contact and crack opening: [ellipse_triangle_impact.png](../../../docs/assets/ellipse_triangle_impact.png).

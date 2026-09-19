@@ -3,13 +3,12 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/eba90e085ba048cb8f895010b8f13b03)](https://app.codacy.com/gh/prashjha/PeriDEM?utm_source=github.com&utm_medium=referral&utm_content=prashjha/PeriDEM&utm_campaign=Badge_Grade_Settings) [![CircleCI](https://circleci.com/gh/prashjha/PeriDEM.svg?style=shield)](https://circleci.com/gh/prashjha/PeriDEM) [![codecov](https://codecov.io/gh/prashjha/PeriDEM/branch/main/graph/badge.svg?token=JyVHXtXJWS)](https://codecov.io/gh/prashjha/PeriDEM) [![GitHub release](https://img.shields.io/github/release/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/releases/) [![GitHub license](https://img.shields.io/github/license/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/blob/main/LICENSE) [![GitHub issues](https://img.shields.io/github/issues/prashjha/PeriDEM.svg)](https://github.com/prashjha/PeriDEM/issues) [![Join the chat at https://gitter.im/PeriDEM/community](https://badges.gitter.im/PeriDEM/community.svg)](https://gitter.im/PeriDEM/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![GitHub repo size](https://img.shields.io/github/repo-size/prashjha/PeriDEM.svg)](https://GitHub.com/prashjha/PeriDEM/) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.13888588.svg)](https://zenodo.org/records/13888588) [![DOI](https://joss.theoj.org/papers/10.21105/joss.07525/status.svg)](https://doi.org/10.21105/joss.07525)
 
 
-<p align="center"> <img src="./assets/logo/logo.png" width="400"> </p>
+<p align="center"> <img src="./docs/assets/logo/logo.png" width="400"> </p>
 
 ## Table of contents
 
   - [Introduction](#Introduction)
   - [Documentation](#Documentation)
-  - [Tutorial](#Tutorial)
   - [Examples](#Examples)
   - [Brief implementation details](#Brief-implementation-details)
   - [Installation](#Installation)
@@ -62,28 +61,23 @@ We have created channels on various platforms:
 
 [Doxygen generated documentation](https://prashjha.github.io/PeriDEM/) details functions and objects in the library. 
 
-## Tutorial
-
-Problem setup for current `bin/PeriDEM` is under [examples/](./examples/README.md)
-(see [Running simulations](#Running-simulations)). JSON decks only.
-
 ## Examples
 
 We next highlight some key examples. Further details are available in [examples/README.md](./examples/README.md). 
 
 ### Two-particle tests
 
-|      <img src="./assets/two_particle_circ_no_damp.gif" width="200">       |     <img src="./assets/two_particle_circ_damp.gif" width="200">      |
+|      <img src="./docs/assets/two_particle_circ_no_damp.gif" width="200">       |     <img src="./docs/assets/two_particle_circ_damp.gif" width="200">      |
 |:-------------------------------------------------------------------------:|:--------------------------------------------------------------------:|
 | Circular without damping | Circular with damping |
 
-|    <img src="./assets/two_particle_circ_diff_material.gif" width="200">    |   <img src="./assets/two_particle_circ_damp_diff_radius.gif" width="200">   |            <img src="./assets/two_particle_circ_diff_radius_diff_material.gif" width="200">            |
+|    <img src="./docs/assets/two_particle_circ_diff_material.gif" width="200">    |   <img src="./docs/assets/two_particle_circ_damp_diff_radius.gif" width="200">   |            <img src="./docs/assets/two_particle_circ_diff_radius_diff_material.gif" width="200">            |
 |:--------------------------------------------------------------------------:|:---------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------:|
 | Different materials | Different radius | Different radius different material |
 
 ### Two-particle with wall test
 
-|   <img src="./assets/two_particle_wall_concave_diff_material_diff_size.gif" width="400">   | 
+|   <img src="./docs/assets/two_particle_wall_concave_diff_material_diff_size.gif" width="400">   | 
 |:------------------------------------------------------------------------------------------:| 
 | Concave particles |
 
@@ -96,11 +90,11 @@ Runnable decks: small pack [n12](./examples/PeriDEM/compressive/n12) and paper-s
 two-stage [n500](./examples/PeriDEM/compressive/n500). Details:
 [Jha et al. 2021](https://prashjha.github.io/publication/jha-2020-peridem/).
 
-| <img src="./assets/compressive_test_cir_hex_n500.jpg" width="420"> | <img src="./assets/compressive_test_reaction_force_n500.jpg" width="420"> |
+| <img src="./docs/assets/compressive_test_cir_hex_n500.jpg" width="420"> | <img src="./docs/assets/compressive_test_reaction_force_n500.jpg" width="420"> |
 |:------------------------------------------------------------------:|:------------------------------------------------------------------------:|
 | Pack geometry (N≈502) | Wall reaction and damage frames |
 
-| <img src="./assets/compressive_test.gif" width="600"> | 
+| <img src="./docs/assets/compressive_test.gif" width="600"> | 
 |:-----------------------------------------------------:| 
 | Compressive test simulation |
 
@@ -108,13 +102,13 @@ two-stage [n500](./examples/PeriDEM/compressive/n500). Details:
 
 Mix of circular, triangular, hexagonal, and drum-shaped grains in a rotating container (size and toughness vary). Portable JSON decks:
 
-|                                         <img src="./assets/attrition_test_sim1.gif" width="250">                                         |                                                                              <img src="./assets/attrition_test_sim2.gif" width="250">                                                                               | 
+|                                         <img src="./docs/assets/attrition_test_sim1.gif" width="250">                                         |                                                                              <img src="./docs/assets/attrition_test_sim2.gif" width="250">                                                                               | 
 |:----------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:| 
 | Rotating cylinder ([setup](./examples/PeriDEM/attrition/sim1_rotating_cylinder)) | Thin container, offset rotation ([setup](./examples/PeriDEM/attrition/sim2_thin_container)) | 
 
 ### Impact and fracture
 
-| <img src="./assets/ellipse_triangle_impact.png" width="320"> |
+| <img src="./docs/assets/ellipse_triangle_impact.png" width="320"> |
 |:------------------------------------------------------------:|
 | Hollow ellipse on a tip ([setup](./examples/PeriDEM/ellipse_triangle)) |
 

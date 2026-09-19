@@ -2,7 +2,7 @@
 
 Modular port of PeriDEM main
 `sim2_...thin_container_and_change_rotation_rate`
-(GIF: `assets/attrition_test_sim2.gif`).
+(GIF: `docs/assets/attrition_test_sim2.gif`).
 
 See **`INPUT_DEFAULTS.md`** for explicit keys (avoid modular defaults).
 

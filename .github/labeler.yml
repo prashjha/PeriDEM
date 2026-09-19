@@ -2,7 +2,7 @@ test:
   - tests/*
 code:
   - src/*
-documentaiton:
+documentation:
   - docs/*
 examples:
   - examples/*
@@ -10,5 +10,3 @@ build:
   - CMakeLists.txt
 cmake:
   - cmake/*
-tools:
-  - tools/*
