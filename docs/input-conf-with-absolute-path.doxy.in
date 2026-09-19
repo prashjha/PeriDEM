@@ -14,7 +14,7 @@ PROJECT_LOGO           = @CMAKE_CURRENT_SOURCE_DIR@/../assets/logo/doxy_logo.jpg
 OUTPUT_DIRECTORY       = @CMAKE_CURRENT_BINARY_DIR@/
 WARN_LOGFILE           = @CMAKE_CURRENT_BINARY_DIR@/doxy.log
 
-INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../apps/ \
+INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../PeriDEM/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../examples/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../src/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../test/ \
@@ -22,8 +22,7 @@ INPUT                  = @CMAKE_CURRENT_SOURCE_DIR@/../apps/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../tutorial/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../README.md
 
-EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/../apps/ \
-                         @CMAKE_CURRENT_SOURCE_DIR@/../examples/ \
+EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/../examples/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../test/ \
                          @CMAKE_CURRENT_SOURCE_DIR@/../tutorial/
 EXAMPLE_RECURSIVE      = YES

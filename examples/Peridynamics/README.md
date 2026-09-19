@@ -15,5 +15,3 @@ Both accept `Model.MPI_Strategy`: `auto` (→ DOF-MPI for single particle),
 cd circle && ./run.sh                 # short deck (input_quick.json)
 cd rectangle && DECK=input.json ./run.sh
 ```
-
-Same physics also lives under `apps/peridynamics/example/` (app-local copies).

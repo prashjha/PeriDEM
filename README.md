@@ -331,7 +331,8 @@ Copy a short deck from `examples/PeriDEM/compressive/n12/` or `examples/Peridyna
 
 ### Two-particle contact
 
-C++ driver example (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_contact](./examples/PeriDEM/twop_circ_contact). For a JSON deck via `bin/PeriDEM`, start from compressive or attrition short decks, or the Peridynamics single-body demos.
+JSON via `bin/PeriDEM`: start from a compressive or attrition short deck.
+C++ driver (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_contact](./examples/PeriDEM/twop_circ_contact).
 
 ### Compressive test
 

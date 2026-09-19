@@ -16,7 +16,7 @@ PROJECT_LOGO           = ../assets/logo/doxy_logo.jpg
 OUTPUT_DIRECTORY       = doxy
 WARN_LOGFILE           = doxy.log
 
-INPUT                  = ../apps/ \
+INPUT                  = ../PeriDEM/ \
                          ../examples/ \
                          ../src/ \
                          ../test/ \
@@ -24,8 +24,7 @@ INPUT                  = ../apps/ \
                          ../tutorial/ \
                          ../README.md
 
-EXAMPLE_PATH           = ../apps/ \
-                         ../examples/ \
+EXAMPLE_PATH           = ../examples/ \
                          ../test/ \
                          ../tutorial/
 EXAMPLE_RECURSIVE      = YES

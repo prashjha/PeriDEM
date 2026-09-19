@@ -90,11 +90,9 @@ set(Enable_Documentation FALSE CACHE BOOL "Generate documentation if ON")
 set(Enable_Tests FALSE CACHE BOOL "Build test executables and perform tests if ON")
 set(Enable_High_Load_Tests FALSE CACHE BOOL "Perform high load tests if ON")
 set(Disable_Docker_MPI_Tests TRUE CACHE BOOL "Disable (ON) or enable (OFF) MPI tests inside docker")
-set(Enable_Apps FALSE CACHE BOOL "Build applications if ON")
 set(Enable_Examples FALSE CACHE BOOL "Build C++ example programs under examples/ (each subdir may add targets)")
 set(Test_Exec_Path "${CMAKE_CURRENT_BINARY_DIR}/test/bin")
 set(Test_Data_Path "${CMAKE_CURRENT_BINARY_DIR}/test/test_data/")
-set(Apps_Path "${CMAKE_CURRENT_BINARY_DIR}/apps/")
 
 #----------------------------------#
 #<<<<<<<<<< Rpath setting >>>>>>>>>>#
@@ -216,12 +214,11 @@ endif()
 #----------------------------------#
 #<<<<<<<<<< Applications >>>>>>>>>>#
 #----------------------------------#
-# PeriDEM/ is always built (PeriDEMModel + PeriDEM). Extra apps: -DEnable_Apps=ON
+# PeriDEM/ is always built (PeriDEMModel + bin/PeriDEM).
 if (${Enable_CMAKE_Debug_Build})
-    message(STATUS "Building PeriDEM (extra apps Enable_Apps=${Enable_Apps})")
+    message(STATUS "Building PeriDEM")
 endif()
 add_subdirectory(PeriDEM)
-add_subdirectory(apps)
 
 if(${Enable_Examples})
     if (${Enable_CMAKE_Debug_Build})
