@@ -1,5 +1,5 @@
 {
-  "Comment": "Jha JMPS 2021 n500_circ_hex (smoke_2k); 502 mixed circle/hex; paper M1 params",
+  "Comment": "Jha JMPS 2021 n500_circ_hex (2k steps); 502 mixed circle/hex; paper M1 params",
   "Model": {
     "Dimension": 2,
     "Final_Time": 0.0002,
@@ -14,7 +14,7 @@
     "Seed": 0
   },
   "Output": {
-    "Path": "smoke_out/",
+    "Path": "short_out/",
     "Perform_Out": true,
     "Tags": [
       "Displacement",

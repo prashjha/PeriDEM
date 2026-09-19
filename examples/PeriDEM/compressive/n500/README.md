@@ -15,7 +15,7 @@ Two-stage paper protocol. Force–penetration needs **stage 2** (settled IC + to
 
 Wall move is a **reference** shift in `Particle_Generation`, not a DispBC change. BC stays `u = −0.06 t`. At restart t=0.06 that places the wall bottom edge at the paper’s **0.0312 m**.
 
-Bring-up only: `input_smoke.json` (2k steps), `input_short.json` (T=0.003).
+Short decks: `input_smoke.json` (2k steps), `input_short.json` (T=0.003).
 
 ## Run
 

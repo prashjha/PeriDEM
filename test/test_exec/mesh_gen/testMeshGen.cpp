@@ -37,7 +37,7 @@ size_t meshDimForBuiltin(const std::string &deckName, const std::shared_ptr<geom
 }
 
 /**
- * @brief Circle: write .msh and .vtk via the built-in Gmsh path (file I/O smoke).
+ * @brief Circle: write .msh and .vtk via the built-in Gmsh path (file I/O check).
  */
 bool testCircleMeshWritesFiles() {
   util::io::log("Testing circle mesh file output (gmsh_builtin_mesh)...\n");
@@ -78,14 +78,14 @@ bool testCircleMeshWritesFiles() {
  * @brief For one acceptable geometry name: exampleGeomParams → mesh in memory → non-empty nodes,
  *        every node inside geom::box() (loose tolerance).
  */
-bool builtinMeshSmokeTestForGeometry(const std::string &geomName, double s) {
+bool builtinMeshCheckForGeometry(const std::string &geomName, double s) {
   try {
     auto geom = geom::makeExampleGeomObject(geomName, util::Point(0., 0., 0.), s);
     const double meshSize = s / 5.0;
 
     inp::MeshDeck meshDeck;
     meshDeck.d_hMeshing = meshSize;
-    meshDeck.d_filename = std::string("smoke_") + geomName + ".msh";
+    meshDeck.d_filename = std::string("mesh_") + geomName + ".msh";
 
     const size_t dim = meshDimForBuiltin(geomName, geom);
     const auto modelJson =
@@ -98,7 +98,7 @@ bool builtinMeshSmokeTestForGeometry(const std::string &geomName, double s) {
                                               &modelDeck);
 
     if (mesh.getNodes().empty()) {
-      util::io::log(std::format("Error: mesh smoke: {} produced zero nodes.\n", geomName));
+      util::io::log(std::format("Error: mesh check: {} produced zero nodes.\n", geomName));
       return false;
     }
 
@@ -108,16 +108,16 @@ bool builtinMeshSmokeTestForGeometry(const std::string &geomName, double s) {
       if (p.d_x < box.first.d_x - tol || p.d_y < box.first.d_y - tol || p.d_z < box.first.d_z - tol ||
           p.d_x > box.second.d_x + tol || p.d_y > box.second.d_y + tol || p.d_z > box.second.d_z + tol) {
         util::io::log(std::format(
-            "Error: mesh smoke {}: node ({},{},{}) outside geometry box (tol {}).\n", geomName, p.d_x,
+            "Error: mesh check {}: node ({},{},{}) outside geometry box (tol {}).\n", geomName, p.d_x,
             p.d_y, p.d_z, tol));
         return false;
       }
     }
 
-    util::io::log(std::format("  mesh smoke [ {} ] passed.\n", geomName));
+    util::io::log(std::format("  mesh check [ {} ] passed.\n", geomName));
     return true;
   } catch (const std::exception &e) {
-    util::io::log(std::format("Error: mesh smoke {}: {}\n", geomName, e.what()));
+    util::io::log(std::format("Error: mesh check {}: {}\n", geomName, e.what()));
     return false;
   }
 }
@@ -135,13 +135,13 @@ int main() {
   }
 
   const double s = 0.001;
-  util::io::log("Builtin Gmsh mesh smoke tests (exampleGeomParams + bounding box)...\n");
+  util::io::log("Builtin Gmsh mesh checks (exampleGeomParams + bounding box)...\n");
   for (const std::string &name : geom::getAcceptableGeometries()) {
     // "complex" needs subtype/flag vectors; not covered by exampleGeomParams.
     if (name == "complex")
       continue;
-    if (!builtinMeshSmokeTestForGeometry(name, s)) {
-      util::io::log(std::format("Mesh smoke failed for geometry: {}\n", name));
+    if (!builtinMeshCheckForGeometry(name, s)) {
+      util::io::log(std::format("Mesh check failed for geometry: {}\n", name));
       allTestsPassed = false;
     }
   }

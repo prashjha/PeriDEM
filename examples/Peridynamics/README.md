@@ -12,7 +12,7 @@ Both accept `Model.MPI_Strategy`: `auto` (→ DOF-MPI for single particle),
 `none`, or `dof`. Use `NP>1` with `mpirun` for nodal partition.
 
 ```bash
-cd circle && ./run.sh                 # smoke
+cd circle && ./run.sh                 # short deck (input_smoke.json)
 cd rectangle && DECK=input.json ./run.sh
 ```
 

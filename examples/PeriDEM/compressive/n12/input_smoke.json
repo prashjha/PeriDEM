@@ -15,7 +15,7 @@
     "MPI_Strategy": "auto"
   },
   "Output": {
-    "Path": "smoke_out/",
+    "Path": "short_out/",
     "Perform_Out": true,
     "Tags": [
       "Displacement",

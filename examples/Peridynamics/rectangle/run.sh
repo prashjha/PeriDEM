@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Single-particle Peridynamics demo (JSON → bin/PeriDEM).
-# Default deck is input_smoke.json; set DECK=input.json for the full run.
+# Default deck is input_smoke.json (short run); set DECK=input.json for the full run.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../../.." && pwd)"

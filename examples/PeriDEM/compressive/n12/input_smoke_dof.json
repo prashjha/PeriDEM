@@ -15,7 +15,7 @@
     "MPI_Strategy": "dof"
   },
   "Output": {
-    "Path": "smoke_dof_out/",
+    "Path": "short_dof_out/",
     "Perform_Out": true,
     "Tags": [
       "Displacement",

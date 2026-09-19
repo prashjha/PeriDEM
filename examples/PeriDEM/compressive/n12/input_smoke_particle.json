@@ -15,7 +15,7 @@
     "MPI_Strategy": "particle"
   },
   "Output": {
-    "Path": "smoke_particle_out/",
+    "Path": "short_particle_out/",
     "Perform_Out": true,
     "Tags": [
       "Displacement",

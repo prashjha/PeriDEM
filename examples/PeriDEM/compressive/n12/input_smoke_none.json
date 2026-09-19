@@ -15,7 +15,7 @@
     "MPI_Strategy": "none"
   },
   "Output": {
-    "Path": "smoke_none_out/",
+    "Path": "short_none_out/",
     "Perform_Out": true,
     "Tags": [
       "Displacement",

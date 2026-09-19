@@ -261,13 +261,13 @@ Decks are independent of MPI mode. Set `Model.MPI_Strategy` in the JSON input:
 | `particle` | **Particle-MPI:** distribute whole particles across ranks |
 | `dof` | **DOF-MPI:** distribute nodes/DOFs across ranks |
 
-- **Particle-MPI:** each rank owns whole grains; ghosts for near contacts and walls.
-- **DOF-MPI:** each rank owns a subset of nodes (any body, including packs with walls). Before contact, Multi_Particle runs sync owned nodal `u`/`v` to every rank.
+- **Particle-MPI:** each rank owns whole particles; near-contact and wall neighbors are exchanged as ghosts.
+- **DOF-MPI:** each rank owns a subset of nodes (any body, including packs with walls). Before contact, Multi_Particle syncs owned nodal `u`/`v` to every rank.
 - Threads (`-nThreads`) combine with MPI.
 
-Identity checks (serial vs particle@2 vs dof@2) live under `test/test_data/peridem/twop_circ_inbuilt/` and `jha2021_comp_n50/`.
+Identity checks (serial vs particle@2 vs dof@2) live under `test/test_data/peridem/twop_circ_inbuilt/`, `jha2021_comp_n50/`, and `mpi_identity_twop_wall/`.
 
-Still open / welcome collaborators: GPU offload; larger-scale weak scaling. 
+Not covered here: GPU offload; larger-scale weak scaling. 
 
 ### Ask for help
 
@@ -300,18 +300,18 @@ Most example folders ship `./run.sh` (or `run_stage1.sh` / `run_stage2.sh`) that
 
 ### Two-particle contact
 
-C++ driver example (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_contact](./examples/PeriDEM/twop_circ_contact). For a JSON deck via `bin/PeriDEM`, start from compressive or attrition smoke decks, or the Peridynamics single-body demos.
+C++ driver example (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_contact](./examples/PeriDEM/twop_circ_contact). For a JSON deck via `bin/PeriDEM`, start from compressive or attrition short decks, or the Peridynamics single-body demos.
 
 ### Compressive test
 
 | Path | Role |
 |------|------|
-| [examples/PeriDEM/compressive/n12](./examples/PeriDEM/compressive/n12) | Small 4×3 pack; smoke / MPI identity |
+| [examples/PeriDEM/compressive/n12](./examples/PeriDEM/compressive/n12) | Small 4×3 pack; short / MPI identity decks |
 | [examples/PeriDEM/compressive/n500](./examples/PeriDEM/compressive/n500) | Paper N≈502 two-stage settle → compress |
 
 ```sh
 cd examples/PeriDEM/compressive/n12
-./run.sh                          # smoke by default
+./run.sh                          # short deck by default
 DECK=input_smoke_dof.json NP=4 ./run.sh
 
 cd examples/PeriDEM/compressive/n500
@@ -344,7 +344,7 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
 
 ## Contributing
 
-We welcome contributions to the code. Open directions are noted under [Parallelism (MPI)](#parallelism-mpi).
+We welcome contributions to the code. Limitations under [Parallelism (MPI)](#parallelism-mpi) are noted there.
 Please fork this repository, make changes, and make a pull request to the 
 source branch.  
  

@@ -229,7 +229,7 @@ void createGeomObject(const std::string &geom_type,
                   bool perform_check = true);
 
 /*!
- * @brief Canonical parameter vector for examples, mesh smoke tests, and demos.
+ * @brief Canonical parameter vector for examples, mesh generation tests, and demos.
  *
  * Convention matches `twop_general_inbuilt`: reference center @p c and length scale @p s (typical
  * outer half-width). Names must be from getAcceptableGeometries().

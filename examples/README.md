@@ -23,4 +23,4 @@ JSON demos for `bin/PeriDEM` (`Single_Particle`). See `Peridynamics/README.md`.
 | `Peridynamics/circle/` | File mesh; fixed / pull BC |
 | `Peridynamics/rectangle/` | In-process `CreateMesh`; fixed / pull BC |
 
-`./run.sh` defaults to `input_smoke.json`. Set `DECK=input.json` for the full run.
+`./run.sh` defaults to `input_smoke.json` (short run). Set `DECK=input.json` for the full run.

@@ -1,5 +1,5 @@
 {
-  "Comment": "Short smoke of circle Single_Particle (same IC/BC as input.json)",
+  "Comment": "Short run of circle Single_Particle (same IC/BC as input.json)",
   "Model": {
     "Dimension": 2,
     "Discretization_Type": {
@@ -108,7 +108,7 @@
     }
   },
   "Output": {
-    "Path": "runs/smoke/",
+    "Path": "runs/short/",
     "Tags": [
       "Displacement",
       "Velocity",
