@@ -19,6 +19,7 @@
 
 ... Please describe your environment
 
-  - HPX Version:
+  - PeriDEM / CMake version:
   - Platform (compiler, OS):
+  - MPI / VTK / Metis (versions if known):
 

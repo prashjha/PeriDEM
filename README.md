@@ -288,13 +288,11 @@ Not covered here: GPU offload; larger-scale weak scaling.
 
 ### Ask for help
 
-In the past, `PeriDEM` library depended on large libraries such as `HPX`, `PCL`, `Boost` (explicitly dependence). 
-We have put a lot of efforts into reducing the dependencies to absolutely minimum 
-so that it is easier to build and run `PeriDEM` in different operating systems and clusters. 
-At this point, only major library it depends on is `VTK` which can be compiled to 
-different machines quite successfully (patience is needed in compiling `VTK` though). 
-If you carefully read the information and use the scripts provided, you should be 
-able to compile PeriDEM in ubuntu (>= 18.04) and mac.  
+Earlier releases depended on large libraries such as `HPX`, `PCL`, and `Boost`.
+Those are gone. Current configure needs **VTK**, **MPI**, **Metis**, **Gmsh** (for
+built-in meshing / some tests), and **BLAS/LAPACK** (Accelerate on macOS), plus a
+C++20 toolchain. Use the scripts under `tools/compile_scripts/` or `pixi.toml` on
+Ubuntu and macOS.
 
 Feel free to reach out or open an issue. For more open 
 discussion of issues and ideas, contact via 
