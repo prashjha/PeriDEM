@@ -7,37 +7,26 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-"""In-process Python run. Same DECK / NP / NTHREADS as ./run.sh."""
+"""Run this example in-process from Python.
+
+``problem.py`` next to this file sets up the problem: geometry, materials,
+contact, boundary conditions and particle placement, through the ``peridem``
+interface. Run ``./problem.py --help`` for its arguments.
+
+To run the same problem through the C++ executable instead, hand it the deck:
+
+    ./problem.py --write-deck /tmp/input.json
+    <build>/bin/PeriDEM -i /tmp/input.json -nThreads 4
+"""
 
 from __future__ import annotations
 
 import sys
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from problem import main  # noqa: E402
 
-def _root() -> Path:
-    for p in [HERE, *HERE.parents]:
-        if (p / "python" / "peridem" / "__init__.py").is_file():
-            return p
-    raise SystemExit("PeriDEM repo root not found")
-
-
-ROOT = _root()
-sys.path.insert(0, str(ROOT / "python"))
-for _b in (ROOT / "build/linux/python", ROOT / "build/python"):
-    if (_b / "peridem").is_dir():
-        sys.path.insert(0, str(_b))
-        break
-
-from peridem.__main__ import example_script  # noqa: E402
-
-raise SystemExit(
-    example_script(
-        HERE,
-        default_deck="input.json",
-        default_np=4,
-        default_nthreads=1,
-    )
-)
+if __name__ == "__main__":
+    raise SystemExit(main())
