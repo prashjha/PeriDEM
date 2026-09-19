@@ -193,6 +193,11 @@ void rw::reader::MshReader::readMesh(size_t dim,
           element_type = util::vtk_type_tetra;
           num_nodes_con =
               util::msh_map_element_to_num_nodes[util::msh_type_tetrahedron];
+        } else if (type == util::msh_type_hexahedron and dim == 3) {
+          read_this_element = true;
+          element_type = util::vtk_type_hexahedron;
+          num_nodes_con =
+              util::msh_map_element_to_num_nodes[util::msh_type_hexahedron];
         }
 
         if (read_this_element) {
@@ -442,6 +447,11 @@ void rw::reader::MshReader::readCells(size_t dim, size_t &element_type,
           element_type = util::vtk_type_tetra;
           num_nodes_con =
               util::msh_map_element_to_num_nodes[util::msh_type_tetrahedron];
+        } else if (type == util::msh_type_hexahedron and dim == 3) {
+          read_this_element = true;
+          element_type = util::vtk_type_hexahedron;
+          num_nodes_con =
+              util::msh_map_element_to_num_nodes[util::msh_type_hexahedron];
         }
 
         if (read_this_element) {

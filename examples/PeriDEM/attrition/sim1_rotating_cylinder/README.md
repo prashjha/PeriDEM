@@ -17,4 +17,5 @@ Modular port of PeriDEM main
 DECK=input_medium.json ./run.sh
 DECK=input_short.json ./run.sh
 CLEAN=1 ./run.sh                  # wipe VTUs then run
+./run.py                          # same default deck, in-process Python (NP=4)
 ```

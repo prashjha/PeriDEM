@@ -1,6 +1,7 @@
 # PeriDEM examples
 
 JSON decks for `bin/PeriDEM`. Optional C++ drivers need `-DEnable_Examples=ON`.
+JSON folders with a `run.py` can be driven in-process (`-DEnable_Python=ON`).
 
 ## JSON / script decks
 

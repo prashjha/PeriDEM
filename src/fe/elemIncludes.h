@@ -17,6 +17,7 @@
 #include "quadElem.h"
 #include "triElem.h"
 #include "tetElem.h"
+#include "hexElem.h"
 
 #include <cstdlib>
 #include <format>
@@ -34,6 +35,8 @@ inline std::unique_ptr<BaseElem> elem(size_t type, size_t order) {
     return std::make_unique<QuadElem>(order);
   if (type == util::vtk_type_tetra)
     return std::make_unique<TetElem>(order);
+  if (type == util::vtk_type_hexahedron)
+    return std::make_unique<HexElem>(order);
   std::cerr << std::format("Error: element type = {} is not supported.\n", type);
   exit(EXIT_FAILURE);
 }

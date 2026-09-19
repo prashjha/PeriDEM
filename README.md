@@ -219,6 +219,15 @@ make -j 4
 directory. You can create the `build` directory either inside or outside the 
 repository. 
 
+### Python
+
+In-process `import peridem` (nanobind). See [python/README.md](./python/README.md).
+
+```sh
+cmake -S . -B build -DEnable_Python=ON
+cmake --build build --target peridem_core
+```
+
 ### Install & use as a CMake package
 - Build and install (starting from a fresh clone, e.g., `git clone ... && cd PeriDEM`; create a build dir wherever you like—`build` inside the source is assumed below):
   ```sh

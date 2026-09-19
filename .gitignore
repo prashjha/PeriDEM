@@ -103,3 +103,11 @@ examples/PeriDEM/compressive/n500/*_out/
 /n96_contact_long_*/
 /inp/
 /out/
+
+# Python packaging
+__pycache__/
+*.egg-info/
+.eggs/
+dist/
+_skbuild/
+.venv/

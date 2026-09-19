@@ -13,4 +13,7 @@
 `./run.sh` wipes stale meshes/VTUs and **fails unless** mesh+VTU are elliptical (`SHAPE_OK`)
 and health gates pass (through-crack → spatially separated pieces, no spray).
 
+`./run.py` runs the existing `inp/input.json` in-process (`-DEnable_Python=ON`).
+Generate that deck first with `./run.sh` or `example_ellipse_triangle` if it is missing.
+
 Tip contact and crack opening: [ellipse_triangle_impact.png](../../../docs/assets/ellipse_triangle_impact.png).
