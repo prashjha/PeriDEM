@@ -17,5 +17,21 @@ Modular port of PeriDEM main
 DECK=input_medium.json ./run.sh
 DECK=input_short.json ./run.sh
 CLEAN=1 ./run.sh                  # wipe VTUs then run
-./run.py                          # same default deck, in-process Python (NP=4)
 ```
+
+Python (`-DEnable_Python=ON`). `problem.py` builds the same deck through the
+`peridem` interface. The drum is a complex geometry: an outer circle, an inner
+circle removed and a protrusion added. It is placed at the signed-volume
+centroid computed by the geometry object. The mesh axis is at the origin, so
+any other site translates the mesh.
+
+```bash
+./run.py                          # preset "short"
+./problem.py --preset paper --snapshot damage.png
+./problem.py --num-steps 2000 --output-interval 1000
+./problem.py --write-deck /tmp/input.json
+```
+
+`gen_input.py` still writes the standalone JSON decks for `bin/PeriDEM`; the
+two paths are compared in `python/tests/test_example_parity.py`. Grain packs
+come from the committed CSV and `.msh` files either way.

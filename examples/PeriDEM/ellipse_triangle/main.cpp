@@ -74,9 +74,9 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
   const double Gc_e = 1.0;
 
   const double R_contact_factor = 0.95;
-  const double Kn_tt = 18.0 * util::harmonicMean(K_t, K_t) / (M_PI * std::pow(horizon, 5));
-  const double Kn_ee = 18.0 * util::harmonicMean(K_e, K_e) / (M_PI * std::pow(horizon, 5));
-  const double Kn_te = 18.0 * util::harmonicMean(K_t, K_e) / (M_PI * std::pow(horizon, 5));
+  const double Kn_tt = util::normalContactStiffness(K_t, K_t, horizon);
+  const double Kn_ee = util::normalContactStiffness(K_e, K_e, horizon);
+  const double Kn_te = util::normalContactStiffness(K_t, K_e, horizon);
 
   const double g = 10.0;
   const double ic_vy = -2.5;
@@ -241,6 +241,14 @@ int main(int argc, char *argv[]) {
   {
     std::ofstream ofs(inp_dir / "input.json");
     ofs << std::setw(2) << j << std::endl;
+  }
+
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
   }
 
   // Hard check: deck must request a hollow ellipse, not a rectangle plate.

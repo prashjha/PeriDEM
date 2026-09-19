@@ -12,6 +12,7 @@
 #define INP_MESHDECK_H
 
 #include "util/io.h"
+#include <stdexcept>
 #include "util/json.h"
 #include <string>
 
@@ -76,16 +77,42 @@ struct MeshDeck {
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
-  static json getExampleJson(std::string filename = "", double h_meshing = -1.) {
+  static json getExampleJson(std::string filename = "", double h_meshing = -1.,
+                             bool createMesh = false,
+                             std::string createMeshInfo = "gmsh_builtin_mesh",
+                             bool writeMeshFile = true,
+                             std::vector<std::vector<double>> voidRegions =
+                                 std::vector<std::vector<double>>()) {
 
     auto j = json({});
     if (!filename.empty())
       j["File"] = filename;
-    if (filename.empty() && h_meshing > 0.) {
-      j["CreateMesh"] = json{{"Flag", true},
-                             {"Info", "gmsh_builtin_mesh"},
-                             {"Mesh_Size", h_meshing},
-                             {"Write_Mesh_File", true}};
+
+    // A mesh size with no filename requests generation. This call shape is
+    // kept for the existing callers. The createMesh argument lets a set both
+    // generate a mesh and name the file it is written to or read back from.
+    const bool create = createMesh || (filename.empty() && h_meshing > 0.);
+    if (create) {
+      if (!(h_meshing > 0.))
+        throw std::runtime_error(
+            "MeshDeck::getExampleJson: mesh creation needs a positive "
+            "Mesh_Size.");
+      auto cm = json{{"Flag", true},
+                     {"Info", createMeshInfo},
+                     {"Mesh_Size", h_meshing},
+                     {"Write_Mesh_File", writeMeshFile}};
+      for (const auto &r : voidRegions) {
+        if (r.size() != 6)
+          throw std::runtime_error(
+              "MeshDeck::getExampleJson: each Void_Regions entry needs 6 "
+              "values [xlo, ylo, zlo, xhi, yhi, zhi].");
+      }
+      if (!voidRegions.empty())
+        cm["Void_Regions"] = voidRegions;
+      j["CreateMesh"] = cm;
+    } else if (filename.empty()) {
+      throw std::runtime_error(
+          "MeshDeck::getExampleJson: a mesh set needs a File or a Mesh_Size.");
     }
     return j;
   }

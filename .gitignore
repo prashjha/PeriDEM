@@ -95,6 +95,9 @@ test_ignored_dir
 
 # Example and app run outputs
 **/runs/
+**/runs_py/
+**/meshes_py/
+**/inp_py/
 **/Screenshot*.png
 
 # compressive example run outputs (decks + restart IC are tracked)

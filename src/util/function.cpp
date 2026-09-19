@@ -11,6 +11,7 @@
 #include "function.h"
 #include <cmath>                  // definition of sin, cosine etc
 #include <iostream>               // cerr
+#include <stdexcept>              // invalid_argument
 
 bool util::isGreater(const double &a, const double &b) {
   return (a - b) > ((std::abs(a) < std::abs(b) ? std::abs(b) : std::abs(a)) *
@@ -130,4 +131,22 @@ double util::equivalentMass(const double &m1, const double &m2) {
 
 double util::harmonicMean(const double &m1, const double &m2) {
   return 2. * m1 * m2 / (m1 + m2);
+}
+
+double util::normalContactStiffness(const double &K1, const double &K2,
+                                    const double &horizon, int horizonPower) {
+  if (!(horizon > 0.))
+    throw std::invalid_argument(
+        "normalContactStiffness: horizon must be positive");
+  return 18. * util::harmonicMean(K1, K2) /
+         (M_PI * std::pow(horizon, horizonPower));
+}
+
+double util::selfContactStiffness(const double &K, const double &horizon,
+                                  int horizonPower) {
+  if (!(horizon > 0.))
+    throw std::invalid_argument(
+        "selfContactStiffness: horizon must be positive");
+  // Grouping preserved from BaseParticle for bit-for-bit equality.
+  return (18. / (M_PI * std::pow(horizon, horizonPower))) * K;
 }

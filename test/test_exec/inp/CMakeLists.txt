@@ -6,11 +6,10 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-add_subdirectory(util)
-add_subdirectory(fe)
-add_subdirectory(nsearch)
-add_subdirectory(contact)
-add_subdirectory(parallelcomp)
-add_subdirectory(meshpartitioning)
-add_subdirectory(mesh_gen)
-add_subdirectory(inp)
+add_executable(TestDeckRoundTrip testDeckRoundTrip.cpp)
+
+target_link_libraries(TestDeckRoundTrip PUBLIC
+        Inp Geom Util)
+
+add_test(NAME test_deck_roundtrip COMMAND TestDeckRoundTrip)
+set_tests_properties(test_deck_roundtrip PROPERTIES LABELS "Inp")

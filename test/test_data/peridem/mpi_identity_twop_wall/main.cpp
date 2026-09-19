@@ -233,7 +233,7 @@ json buildInputJson(const std::string &output_path,
   const double G = material::toGE(E, poisson);
   const double Gc = 50.0;
   const double Kn =
-      18.0 * util::harmonicMean(K, K) / (M_PI * std::pow(horizon, 5));
+      util::normalContactStiffness(K, K, horizon);
 
   auto model = inp::ModelDeck::getExampleJson(
       2, final_time, num_steps, "finite_difference", "central_difference", true,

@@ -89,9 +89,9 @@ json getInputJson() {
 
   // Contact parameters
   const double R_contact_factor = 0.95;
-  const double Kn_11 = 18.0 * util::harmonicMean(K1, K1) / (M_PI * std::pow(horizon, 5));
-  const double Kn_22 = 18.0 * util::harmonicMean(K2, K2) / (M_PI * std::pow(horizon, 5));
-  const double Kn_12 = 18.0 * util::harmonicMean(K1, K2) / (M_PI * std::pow(horizon, 5));
+  const double Kn_11 = util::normalContactStiffness(K1, K1, horizon);
+  const double Kn_22 = util::normalContactStiffness(K2, K2, horizon);
+  const double Kn_12 = util::normalContactStiffness(K1, K2, horizon);
   const double beta_n_eps = 0.9;
   const double friction_coeff = 0.5;
   const double beta_n_factor = 100.0;

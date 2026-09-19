@@ -126,9 +126,9 @@ json buildInputJson(const std::string &output_path_for_deck,
   const double Gc2 = 50.0;
 
   const double R_contact_factor = 0.95;
-  const double Kn_11 = 18.0 * util::harmonicMean(K1, K1) / (M_PI * std::pow(horizon, 5));
-  const double Kn_22 = 18.0 * util::harmonicMean(K2, K2) / (M_PI * std::pow(horizon, 5));
-  const double Kn_12 = 18.0 * util::harmonicMean(K1, K2) / (M_PI * std::pow(horizon, 5));
+  const double Kn_11 = util::normalContactStiffness(K1, K1, horizon);
+  const double Kn_22 = util::normalContactStiffness(K2, K2, horizon);
+  const double Kn_12 = util::normalContactStiffness(K1, K2, horizon);
   const double friction_coeff = 0.5;
 
   std::vector<double> p1_center = center;
@@ -661,6 +661,14 @@ int main(int argc, char *argv[]) {
     os << inputJson.dump(2);
   }
   util::io::print(std::format("Wrote deck to {}\n", fs::absolute(input_json_path).string()));
+
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
+  }
   if (jha_test > 0) {
     const auto &p1 = inputJson["Particle_Generation"]["Data"]["1"];
     const auto &v = inputJson["IC"]["Set_1"]["Constant_Velocity"]["Velocity_Vector"];

@@ -13,6 +13,7 @@
 #include "fe/elemIncludes.h"
 #include "material/materialUtil.h"
 #include "util/feElementDefs.h"
+#include "util/function.h"
 #include "geom/geomIncludes.h"
 #include <cmath>
 #include <iostream>
@@ -140,8 +141,9 @@ particle::BaseParticle::BaseParticle(size_t id,
   d_Rc = 0.95 * d_h;
 
   // set contact coefficient for internal contact
-  d_Kn = (18. / (M_PI * std::pow(horizon, 5))) *
-         d_material_p->computeMaterialProperties(getDimension()).d_K;
+  const double K_self =
+      d_material_p->computeMaterialProperties(getDimension()).d_K;
+  d_Kn = util::selfContactStiffness(K_self, horizon);
 
   if (!d_computeForce) {
     std::cout << "Warning: Compute force is OFF in particle with id = "

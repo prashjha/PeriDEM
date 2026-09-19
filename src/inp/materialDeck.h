@@ -405,7 +405,10 @@ struct MaterialDeck {
     d_matData.readFromJson(j);
 
     d_computeParamsFromElastic = j.value("Compute_From_Classical", true);
-    d_isPlaneStrain = j.value("Is_Plain_Strain", false);
+    // getExampleJson writes "Is_Plane_Strain"; older decks use the
+    // misspelled "Is_Plain_Strain". Accept both.
+    d_isPlaneStrain = j.value("Is_Plane_Strain",
+                              j.value("Is_Plain_Strain", false));
     d_materialType = j.value("Type", "");
     d_density = j.value("Density", 1.);
     d_horizon = j.value("Horizon", -1.);

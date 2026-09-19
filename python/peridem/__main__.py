@@ -6,12 +6,16 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-"""Run a PeriDEM JSON deck in-process.
+"""Run an existing PeriDEM JSON deck in-process.
 
     python -m peridem -i examples/Peridynamics/circle/input.json -nThreads 4
     mpirun -n 2 python -m peridem -i input.json -nThreads 4
 
-Does not change Time_Steps, Horizon, or mesh size.
+This performs the same run as ``bin/PeriDEM -i``, in the calling process. The
+deck is used as written, including Time_Steps, Horizon and the mesh size.
+
+To build a problem in Python instead of reading a deck, see
+:class:`peridem.Deck` and the ``problem.py`` in each example folder.
 """
 
 from __future__ import annotations
@@ -19,11 +23,11 @@ from __future__ import annotations
 import argparse
 import json
 import os
-import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import Any
+
+__all__ = ["main", "run_deck", "stage_deck"]
 
 
 def _ensure_import() -> None:
@@ -44,6 +48,7 @@ def _ensure_import() -> None:
 
 
 def _abs_meshes(deck: dict[str, Any], src_dir: Path) -> None:
+    """Resolve relative Mesh.Set_*.File entries against the deck's folder."""
     mesh = deck.get("Mesh") or {}
     for key, block in mesh.items():
         if not key.startswith("Set_") or not isinstance(block, dict):
@@ -62,9 +67,10 @@ def _abs_meshes(deck: dict[str, Any], src_dir: Path) -> None:
 
 
 def stage_deck(src: Path, out_dir: Path) -> Path:
-    """Write a runnable copy: mesh paths resolved, Output.Path → out_dir.
+    """Write a runnable copy of ``src``: mesh paths resolved, output redirected.
 
-    Physics keys (Time_Steps, Horizon, mesh size) are left unchanged.
+    Physics keys (Time_Steps, Horizon, mesh size) are left untouched. Returns
+    the path of the staged deck.
     """
     src = src.resolve()
     out_dir = out_dir.resolve()
@@ -86,18 +92,6 @@ def stage_deck(src: Path, out_dir: Path) -> Path:
     return dest
 
 
-def _already_under_mpi() -> bool:
-    return any(
-        k in os.environ
-        for k in (
-            "OMPI_COMM_WORLD_SIZE",
-            "PMIX_RANK",
-            "PMI_RANK",
-            "MPI_LOCALNRANKS",
-        )
-    )
-
-
 def run_deck(deck: Path, n_threads: int) -> None:
     _ensure_import()
     import peridem
@@ -107,61 +101,20 @@ def run_deck(deck: Path, n_threads: int) -> None:
     sim.run()
     if peridem.mpi_rank() == 0:
         out = Path(json.loads(deck.read_text())["Output"]["Path"])
-        print(f"done n={sim.n_nodes} step={sim.step_index} t={sim.time}", flush=True)
+        print(f"done n={sim.n_nodes} step={sim.step_index} t={sim.time}",
+              flush=True)
         print(f"VTU/PVD under {out}", flush=True)
 
 
-def example_script(
-    here: Path,
-    *,
-    default_deck: str,
-    default_np: int,
-    default_nthreads: int,
-) -> int:
-    """Entry used by examples/*/run.py. Honours DECK, NP, NTHREADS, CLEAN."""
-    here = here.resolve()
-    deck_name = os.environ.get("DECK", default_deck)
-    np = int(os.environ.get("NP", str(default_np)))
-    nthreads = int(os.environ.get("NTHREADS", str(default_nthreads)))
-    src = here / deck_name
-    if not src.is_file():
-        raise SystemExit(f"missing deck {src}")
-    out_dir = here / "runs" / "out"
-    if os.environ.get("CLEAN", "0") == "1" and out_dir.exists():
-        shutil.rmtree(out_dir)
-    staged = stage_deck(src, out_dir)
-
-    if np > 1 and not _already_under_mpi():
-        mpiexec = os.environ.get("MPIEXEC") or shutil.which("mpirun") or "mpirun"
-        cmd = [
-            mpiexec,
-            "-n",
-            str(np),
-            sys.executable,
-            "-m",
-            "peridem",
-            "-i",
-            str(staged),
-            "-nThreads",
-            str(nthreads),
-        ]
-        print(f"MPIEXEC={mpiexec} NP={np} DECK={deck_name} nThreads={nthreads}", flush=True)
-        return subprocess.call(cmd, env=os.environ.copy())
-
-    print(f"DECK={deck_name} NP={np} nThreads={nthreads}", flush=True)
-    run_deck(staged, nthreads)
-    return 0
-
-
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(description="Run a PeriDEM JSON deck in-process")
-    p.add_argument("-i", "--input", required=True, help="input JSON")
-    p.add_argument("-nThreads", type=int, default=int(os.environ.get("NTHREADS", "4")))
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("-i", "--input", required=True, help="input JSON deck")
+    p.add_argument("-nThreads", type=int,
+                   default=int(os.environ.get("NTHREADS", "4")))
     args = p.parse_args(argv)
     src = Path(args.input)
     if not src.is_file():
         raise SystemExit(f"missing deck {src}")
-    # Direct -i: run that file as-is (no restage) so a staged python_input.json works.
     run_deck(src.resolve(), args.nThreads)
     return 0
 

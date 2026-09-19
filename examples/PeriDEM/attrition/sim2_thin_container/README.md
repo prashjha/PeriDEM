@@ -17,5 +17,15 @@ See **`INPUT_DEFAULTS.md`** for explicit keys (avoid modular defaults).
 ./run.sh                          # default paper if DECK unset in this copy: see run.sh
 DECK=input_short.json ./run.sh
 CLEAN=1 ./run.sh
-./run.py                          # same default deck, in-process Python (NP=4)
 ```
+
+Python (`-DEnable_Python=ON`), same problem through the `peridem` API:
+
+```bash
+./run.py                          # preset "short"
+./problem.py --preset paper --snapshot damage.png
+./problem.py --write-deck /tmp/input.json
+```
+
+`problem.py` checks the initial pack before building the deck. No grain may
+start inside the wall, inside the protrusion, or overlapping another grain.

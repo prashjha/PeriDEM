@@ -60,9 +60,11 @@ namespace inp {
       if (testName == "")
         return json({});
 
-      auto j = json({"Test_Name", testName});
+      // Object, not array: readFromJson does j.value("Test_Name", "").
+      auto j = json{{"Test_Name", testName}};
 
-      if (testName == "Compressive_Test") {
+      // readFromJson accepts either spelling of the test name.
+      if (testName == "Compressive_Test" || testName == "compressive_test") {
         j["Compressive_Test"] = json{{"Wall_Id", particleIdCompressiveTest},
           {"Wall_Force_Direction", particleForceDirectionCompressiveTest}};
       }

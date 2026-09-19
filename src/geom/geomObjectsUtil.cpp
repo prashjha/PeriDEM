@@ -93,8 +93,9 @@ namespace geom {
       else if (geom_type == "open_cuboid_channel_3d")
         return {8};
       else {
-        std::cerr << "Error: Invalid geometry type: " << geom_type << std::endl;
-        exit(1);
+        throw std::invalid_argument(
+            util::io::Msg()
+            << "Error: Invalid geometry type: " << geom_type << std::endl);
       }
     }
 
@@ -115,9 +116,10 @@ namespace geom {
         if (nps.size() > 0)
           num_params += nps[nps.size() - 1];
         else {
-          std::cerr << "Error: Geometry type = " << s
-                    << " has zero number of parameters required. \n";
-          exit(EXIT_FAILURE);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: Geometry type = " << s
+              << " has zero number of parameters required. \n");
         }
       }
       return n == num_params;
@@ -174,8 +176,9 @@ namespace geom {
       // issue error
       if (!check_passed) {
         if (perform_check || util::methods::isTagInList(type, no_default_obj)) {
-          std::cerr << oss.str();
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << oss.str());
         }
       }
 
@@ -190,13 +193,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() < 1) {
             // if params are not adequate
-            std::cerr << "Error: need at least " << 1
-                      << " parameters for creating circle. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(EXIT_FAILURE);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need at least " << 1
+                << " parameters for creating circle. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -215,13 +219,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() != 6 or params.size() != 5) {
             // if params are not adequate
-            std::cerr << "Error: need either 5 or 6"
-                      << " parameters for creating Rectangle. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(EXIT_FAILURE);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need either 5 or 6"
+                << " parameters for creating Rectangle. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -246,13 +251,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() != 6) {
             // if params are not adequate
-            std::cerr << "Error: need " << 6
-                      << " parameters for creating Square. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(EXIT_FAILURE);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need " << 6
+                << " parameters for creating Square. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -272,13 +278,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() != 4) {
             // if params are not adequate
-            std::cerr << "Error: need at least " << 4
-                      << " parameters for creating triangle. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(1);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need at least " << 4
+                << " parameters for creating triangle. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -297,13 +304,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() != 4) {
             // if params are not adequate
-            std::cerr << "Error: need at least " << 4
-                      << " parameters for creating hexagon. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(1);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need at least " << 4
+                << " parameters for creating hexagon. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -323,13 +331,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() < 5) {
             // if params are not adequate
-            std::cerr << "Error: need at least " << 5
-                      << " parameters for creating drum2d. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(1);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need at least " << 5
+                << " parameters for creating drum2d. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -348,13 +357,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() < 1) {
             // if params are not adequate
-            std::cerr << "Error: need at least " << 1
-                      << " parameters for creating sphere. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(1);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need at least " << 1
+                << " parameters for creating sphere. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -369,13 +379,14 @@ namespace geom {
                   params[0], params[1], params[2],
                   util::Point(params[3], params[4], params[5]));
         } else {
-          std::cerr << "Error: need at least " << 6
-                    << " parameters for creating ellipse (a, b, theta, cx, cy, cz). "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need at least " << 6
+              << " parameters for creating ellipse (a, b, theta, cx, cy, cz). "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // ellipse
       else if (type == "ellipsoid") {
@@ -392,13 +403,14 @@ namespace geom {
                     util::Point(params[7], params[8], params[9]));
           }
         } else {
-          std::cerr << "Error: need 6 parameters (cx, cy, cz, r1, r2, r3) or 10 parameters "
-                       "(cx, cy, cz, r1, r2, r3, ax, ay, az, theta) for creating ellipsoid. "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need 6 parameters (cx, cy, cz, r1, r2, r3) or 10 parameters "
+              "(cx, cy, cz, r1, r2, r3, ax, ay, az, theta) for creating ellipsoid. "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // ellipsoid
       else if (type == "cuboid") {
@@ -409,13 +421,14 @@ namespace geom {
                   params[0], params[1], params[2],
                   util::Point(params[3], params[4], params[5]));
         } else {
-          std::cerr << "Error: need at least " << 6
-                    << " parameters for creating cuboid. "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need at least " << 6
+              << " parameters for creating cuboid. "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }// if else check_failed
       }// if cuboid
       else if (type == "cube") {
@@ -429,13 +442,14 @@ namespace geom {
           // if check is failed check if we can use other constructor
           if (params.size() < 6) {
             // if params are not adequate
-            std::cerr << "Error: need " << 6
-                      << " parameters for creating Cube. "
-                         "Number of params provided = "
-                      << params.size()
-                      << ", params = "
-                      << util::io::printStr(params) << " \n";
-            exit(EXIT_FAILURE);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: need " << 6
+                << " parameters for creating Cube. "
+                "Number of params provided = "
+                << params.size()
+                << ", params = "
+                << util::io::printStr(params) << " \n");
           }
 
           // reached here it means we have adequate parameters
@@ -452,13 +466,14 @@ namespace geom {
                   params[0], util::Point(params[1], params[2], params[3]),
                   util::Point(params[4], params[5], params[6]));
         } else {
-          std::cerr << "Error: need at least " << 7
-                    << " parameters for creating Cylinder. "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need at least " << 7
+              << " parameters for creating Cylinder. "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }// if else check_failed
       }// if cylinder
       else if (type == "rectangle_minus_rectangle") {
@@ -478,13 +493,14 @@ namespace geom {
           obj = std::make_shared<geom::AnnulusGeomObject>
                   (rin, rout);
         } else {
-          std::cerr << "Error: need at least " << 12
-                    << " parameters for creating rectangle_minus_rectangle. "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need at least " << 12
+              << " parameters for creating rectangle_minus_rectangle. "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }// if else check_failed
       }// if rectangle_minus_rectangle
       else if (type == "cuboid_minus_cuboid") {
@@ -505,13 +521,14 @@ namespace geom {
           obj = std::make_shared<geom::AnnulusGeomObject>
                   (rin, rout);
         } else {
-          std::cerr << "Error: need at least " << 12
-                    << " parameters for creating cuboid_minus_cuboid. "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need at least " << 12
+              << " parameters for creating cuboid_minus_cuboid. "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }// if else check_failed
       }// if cuboid_minus_cuboid
       else if (type == "circle_minus_circle") {
@@ -529,13 +546,14 @@ namespace geom {
           auto *cout = new geom::Circle(r_outer, util::Point(cx, cy, cz));
           obj = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
         } else {
-          std::cerr << "Error: need " << 5
-                    << " parameters for creating circle_minus_circle (cx, cy, cz, r_outer, r_inner). "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need " << 5
+              << " parameters for creating circle_minus_circle (cx, cy, cz, r_outer, r_inner). "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // circle_minus_circle
       else if (type == "ellipse_minus_ellipse") {
@@ -555,14 +573,15 @@ namespace geom {
           auto *eout = new geom::Ellipse(a_out, b_out, theta, c);
           obj = std::make_shared<geom::AnnulusGeomObject>(ein, eout);
         } else {
-          std::cerr << "Error: need " << 8
-                    << " parameters for creating ellipse_minus_ellipse "
-                       "(a_out, b_out, a_in, b_in, theta, cx, cy, cz). "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need " << 8
+              << " parameters for creating ellipse_minus_ellipse "
+              "(a_out, b_out, a_in, b_in, theta, cx, cy, cz). "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // ellipse_minus_ellipse
       else if (type == "sphere_minus_sphere") {
@@ -580,13 +599,14 @@ namespace geom {
           auto *cout = new geom::Sphere(r_outer, util::Point(cx, cy, cz));
           obj = std::make_shared<geom::AnnulusGeomObject>(cin, cout);
         } else {
-          std::cerr << "Error: need " << 5
-                    << " parameters for creating sphere_minus_sphere (cx, cy, cz, r_outer, r_inner). "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need " << 5
+              << " parameters for creating sphere_minus_sphere (cx, cy, cz, r_outer, r_inner). "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // sphere_minus_sphere
       else if (type == "open_rect_channel_2d") {
@@ -595,13 +615,14 @@ namespace geom {
           obj = std::make_shared<geom::OpenRectChannel2D>(
                   params[0], params[1], params[2], params[3], params[4], params[5]);
         } else {
-          std::cerr << "Error: need " << 6
-                    << " parameters for open_rect_channel_2d (x0,y0,x1,y1,t,z). "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need " << 6
+              << " parameters for open_rect_channel_2d (x0,y0,x1,y1,t,z). "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // open_rect_channel_2d
       else if (type == "open_cuboid_channel_3d") {
@@ -611,14 +632,15 @@ namespace geom {
                   params[0], params[1], params[2], params[3], params[4], params[5], params[6],
                   static_cast<int>(params[7]));
         } else {
-          std::cerr << "Error: need " << 8
-                    << " parameters for open_cuboid_channel_3d "
-                       "(x0,y0,z0,x1,y1,z1,t,open_face 0..5). "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: need " << 8
+              << " parameters for open_cuboid_channel_3d "
+              "(x0,y0,z0,x1,y1,z1,t,open_face 0..5). "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }
       } // open_cuboid_channel_3d
       else if (type == "complex") {
@@ -652,12 +674,13 @@ namespace geom {
                                                                     vec_flag);
           //obj->print();
         } else {
-          std::cerr << "Error: Not enough parameters for creating complex. "
-                       "Number of params provided = "
-                    << params.size()
-                    << ", params = "
-                    << util::io::printStr(params) << " \n";
-          exit(1);
+          throw std::invalid_argument(
+              util::io::Msg()
+              << "Error: Not enough parameters for creating complex. "
+              "Number of params provided = "
+              << params.size()
+              << ", params = "
+              << util::io::printStr(params) << " \n");
         }// if else check_failed
       }// if complex
     }
@@ -1173,9 +1196,10 @@ namespace geom {
           if (nps.size() > 0)
             params_level[i] = nps[nps.size() - 1];
           else {
-            std::cerr << "Error: Geometry type = " << vec_type[i]
-                      << " has zero number of parameters required. \n";
-            exit(EXIT_FAILURE);
+            throw std::invalid_argument(
+                util::io::Msg()
+                << "Error: Geometry type = " << vec_type[i]
+                << " has zero number of parameters required. \n");
           }
 
           //std::cout << "Geom type = " << vec_type[i]
@@ -1220,13 +1244,15 @@ namespace geom {
         } // if params.size() == n
       }  // complex
       else {
-        std::cerr << "Error: Invalid geometry type: " << geom_type << std::endl;
-        exit(1);
+        throw std::invalid_argument(
+            util::io::Msg()
+            << "Error: Invalid geometry type: " << geom_type << std::endl);
       }
 
 
-      std::cerr << printErrMsg(geom_type, params, num_params_needed);
-      exit(1);
+      throw std::invalid_argument(
+          util::io::Msg()
+          << printErrMsg(geom_type, params, num_params_needed));
     }
 
     void createGeomObject(GeomData &geomData,
@@ -1374,23 +1400,26 @@ namespace geom {
   void readGeometry(const json &j, geom::GeomData &geomData) {
 
     if (j.find("Type") == j.end()) {
-      std::cerr << "Error: Geometry type not found in json file.\n";
-      exit(1);
+      throw std::invalid_argument(
+          util::io::Msg()
+          << "Error: Geometry type not found in json file.\n");
     }
     geomData.d_geomName = j.at("Type");
 
     if (geomData.d_geomName == "complex") {
       if ((j.find("Vec_type") == j.end()) or (j.find("Vec_flag") == j.end())) {
-        std::cerr << "Error: Geometry type and/or flag not found in json file.\n";
-        exit(1);
+        throw std::invalid_argument(
+            util::io::Msg()
+            << "Error: Geometry type and/or flag not found in json file.\n");
       }
       geomData.d_geomComplexInfo.first = j.at("Vec_type").get<std::vector<std::string>>();
       geomData.d_geomComplexInfo.second = j.at("Vec_flag").get<std::vector<std::string>>();
     }
 
     if (j.find("Parameters") == j.end()) {
-      std::cerr << "Error: Geometry parameters not found in json file.\n";
-      exit(1);
+      throw std::invalid_argument(
+          util::io::Msg()
+          << "Error: Geometry parameters not found in json file.\n");
     }
 
     for (auto a: j.at("Parameters"))
@@ -1441,8 +1470,9 @@ namespace geom {
     if (type == "complex")
       return new ComplexGeomObject(*dynamic_cast<const ComplexGeomObject *>(obj));
 
-    std::cerr << "Error: Unsupported object type '" << type << "' in createGeomDeepCopy\n";
-    exit(1);
+    throw std::invalid_argument(
+        util::io::Msg()
+        << "Error: Unsupported object type '" << type << "' in createGeomDeepCopy\n");
   }
 
 }

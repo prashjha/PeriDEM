@@ -15,6 +15,7 @@
 #include <algorithm>
 #include <ctime>
 #include <filesystem>
+#include <stdexcept>
 
 // PeriDEM includes
 #include "inp/input.h"                          // Input class
@@ -60,21 +61,28 @@ int main(int argc, char *argv[]) {
   // current time
   auto begin = steady_clock::now();
 
-  // read input data
-  std::string filename = input.getCmdOption("-i");
-  if (!std::filesystem::exists(filename)) {
-    throw std::runtime_error(std::format("Input file {} does not exist.", filename));
-  }
-  std::ifstream f(filename);
-  auto j = json::parse(f);
-  auto deck = std::make_shared<inp::Input>(j);
+  // The library reports invalid input by throwing, so that an embedding
+  // process is not terminated. Convert that to a message and an exit code.
+  try {
+    std::string filename = input.getCmdOption("-i");
+    if (!std::filesystem::exists(filename)) {
+      throw std::runtime_error(
+          std::format("Input file {} does not exist.", filename));
+    }
+    std::ifstream f(filename);
+    auto j = json::parse(f);
+    auto deck = std::make_shared<inp::Input>(j);
 
-  // run model
-  if (deck->isPeriDEM()) {
-    PeriDEMModel dem(deck);
-    dem.run(deck);
-  } else {
-    std::cout << "PeriDEM model not found in input file.\n";
+    if (deck->isPeriDEM()) {
+      PeriDEMModel dem(deck);
+      dem.run(deck);
+    } else {
+      std::cout << "PeriDEM model not found in input file.\n";
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "PeriDEM error: " << e.what() << std::endl;
+    util::parallel::finalizeMpi();
+    return EXIT_FAILURE;
   }
 
   // get time elapsed

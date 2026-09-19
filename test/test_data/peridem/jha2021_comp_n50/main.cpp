@@ -136,7 +136,7 @@ json buildInputJson(const std::string &output_path_for_deck,
   const double E = material::toE(K, poisson);
   const double G = material::toGE(E, poisson);
   const double Gc = 50.0;
-  const double Kn = 18.0 * util::harmonicMean(K, K) / (M_PI * std::pow(horizon, 5));
+  const double Kn = util::normalContactStiffness(K, K, horizon);
 
   const double dt = final_time / static_cast<double>(num_steps);
   const double c_wave = std::sqrt(E / rho);
@@ -539,6 +539,14 @@ int main(int argc, char *argv[]) {
   {
     std::ofstream os(inp_dir / "input.json");
     os << inputJson.dump(2);
+  }
+
+  // -deckOnly stops after the deck is written. The Python comparison reads
+  // the deck and does not need this driver to run the simulation.
+  if (input.cmdOptionExists("-deckOnly")) {
+    util::io::print("deck written; -deckOnly, not running\n");
+    util::parallel::finalizeMpi();
+    return 0;
   }
 
   {

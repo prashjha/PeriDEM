@@ -176,6 +176,55 @@ double equivalentMass(const double &m1, const double &m2);
 
 double harmonicMean(const double &m1, const double &m2);
 
+/*!
+ * @brief Silling normal contact stiffness from two bulk moduli and the horizon
+ *
+ * \f[ K_n = \frac{18\,\bar{K}}{\pi \delta^{p}}, \quad
+ *     \bar{K} = \mathrm{harmonicMean}(K_1, K_2) \f]
+ *
+ * The contact force density in PairForce is \f$ K_n V_j \, \mathrm{overlap}
+ * \f$, so \f$ K_n \f$ carries one power of the horizon per spatial
+ * dimension of the nodal weight: \f$ p = 5 \f$ with 3D weights \f$ h^3 \f$,
+ * \f$ p = 4 \f$ with 2D weights \f$ h^2 \cdot 1\,\mathrm{m} \f$.
+ *
+ * @note The two-dimensional examples and the internal-contact stiffness in
+ * BaseParticle use \f$ p = 5 \f$, while the notched-impact driver uses
+ * \f$ p = 4 \f$ in two dimensions. That difference is older than this
+ * function. The exponent is an argument so that each caller keeps the value it
+ * had, and changing the default would change the contact force in every
+ * example.
+ *
+ * @param K1 Bulk modulus of the first body
+ * @param K2 Bulk modulus of the second body
+ * @param horizon Peridynamic horizon
+ * @param horizonPower Power of the horizon in the denominator
+ * @return Kn Normal contact stiffness
+ */
+double normalContactStiffness(const double &K1, const double &K2,
+                              const double &horizon, int horizonPower = 5);
+
+/*!
+ * @brief Contact stiffness for a body against itself
+ *
+ * \f[ K_n = \frac{18}{\pi \delta^{p}} K \f]
+ *
+ * Analytically this equals normalContactStiffness(K, K, horizon), because
+ * harmonicMean(K, K) == K. The two are separate functions because the order of
+ * operations is not the same in floating point. BaseParticle evaluates
+ * \f$ (18 / (\pi \delta^5)) \cdot K \f$. Over the 36 combinations of bulk
+ * modulus and horizon that the examples and tests use, the regrouped form
+ * \f$ 18 K / (\pi \delta^5) \f$ differs from it in the last bit in 8 cases, by
+ * 2e-16 relative. This function keeps the original order of operations so that
+ * the internal contact stiffness is unchanged.
+ *
+ * @param K Bulk modulus
+ * @param horizon Peridynamic horizon
+ * @param horizonPower Power of the horizon in the denominator
+ * @return Kn Normal contact stiffness
+ */
+double selfContactStiffness(const double &K, const double &horizon,
+                            int horizonPower = 5);
+
 } // namespace util
 
 #endif // UTIL_FUNCTION_H
