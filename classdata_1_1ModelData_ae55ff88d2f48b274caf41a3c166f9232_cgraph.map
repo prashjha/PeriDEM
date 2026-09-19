@@ -1,8 +1,0 @@
-<map id="data::ModelData::setKeyData" name="data::ModelData::setKeyData">
-<area shape="rect" id="Node000001" title="Set value to data associated with key." alt="" coords="5,5,200,31"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="248,5,379,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,15,234,15,234,21,200,21"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="427,5,589,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="379,24,413,24,413,30,379,29"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="426,12,393,12,393,6,426,6"/>
-</map>

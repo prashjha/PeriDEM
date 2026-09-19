@@ -1,8 +1,0 @@
-<map id="geom::Circle::isNearBoundary" name="geom::Circle::isNearBoundary">
-<area shape="rect" id="Node000001" title="cons" alt="" coords="5,5,203,31"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="441,5,527,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,15,428,15,428,21,203,21"/>
-<area shape="rect" id="Node000003" href="$classgeom_1_1Circle.html#ac61db825ba7b4ffc32c6e5c3a15fd3a4" title="Checks if point is within given distance of this object." alt="" coords="251,31,393,56"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="203,27,237,31,237,36,203,32"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="393,30,427,24,428,29,394,35"/>
-</map>

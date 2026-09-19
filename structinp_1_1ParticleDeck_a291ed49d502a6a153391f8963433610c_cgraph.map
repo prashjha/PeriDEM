@@ -1,5 +1,0 @@
-<map id="inp::ParticleDeck::getParticleMeshExampleJson" name="inp::ParticleDeck::getParticleMeshExampleJson">
-<area shape="rect" id="Node000001" title="Returns example JSON object for ModelDeck configuration." alt="" coords="5,5,200,45"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1MeshDeck.html#ab59710750e3793fb3463bbde94d143f4" title="Returns example JSON object for ModelDeck configuration." alt="" coords="248,13,463,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,23,234,23,234,28,200,28"/>
-</map>

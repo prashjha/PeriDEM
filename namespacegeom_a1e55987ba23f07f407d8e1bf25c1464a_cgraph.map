@@ -1,5 +1,0 @@
-<map id="geom::pointDistanceSegment" name="geom::pointDistanceSegment">
-<area shape="rect" id="Node000001" title="Compute distance between point and line." alt="" coords="5,5,200,31"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="248,5,368,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,15,234,15,234,21,201,21"/>
-</map>

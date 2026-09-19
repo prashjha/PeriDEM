@@ -1,5 +1,0 @@
-<map id="geom::Triangle::isNearBoundary" name="geom::Triangle::isNearBoundary">
-<area shape="rect" id="Node000001" title="cons" alt="" coords="248,5,457,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Triangle.html#a88b0b4a91e572c2dc79019944394d745" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,200,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="235,21,200,21,200,15,235,15"/>
-</map>

@@ -1,8 +1,0 @@
-<map id="particle::BaseParticle::getId" name="particle::BaseParticle::getId">
-<area shape="rect" id="Node000001" title="Get id." alt="" coords="276,53,423,93"/>
-<area shape="rect" id="Node000002" href="$classrw_1_1writer_1_1VtkParticleWriter.html#a23b8b8413299e07bc9efa124c9ec65d1" title="Writes the nodes to the file." alt="" coords="25,5,208,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="262,58,208,47,209,42,263,53"/>
-<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02vtkParticleWriter_8cpp_03.html#a45ddfcc69824d41dcd26263205e90c06" title=" " alt="" coords="5,94,228,149"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="263,94,229,101,228,96,262,89"/>
-<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="155,83,141,76,117,73,96,75,83,79,77,86,77,94,71,94,72,84,80,75,95,69,117,67,143,70,158,78"/>
-</map>

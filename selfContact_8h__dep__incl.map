@@ -1,9 +1,0 @@
-<map id="/home/user/project/src/pd/selfContact.h" name="/home/user/project/src/pd/selfContact.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="176,5,320,45"/>
-<area shape="rect" id="Node000002" href="$pdForce_8cpp.html" title=" " alt="" coords="5,101,144,141"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="202,54,111,103,108,98,200,49"/>
-<area shape="rect" id="Node000003" href="$selfContact_8cpp.html" title=" " alt="" coords="169,101,327,141"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="251,59,251,101,245,101,245,59"/>
-<area shape="rect" id="Node000004" href="$test_2test__exec_2contact_2main_8cpp.html" title=" " alt="" coords="351,93,507,148"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="298,49,379,91,377,96,295,54"/>
-</map>

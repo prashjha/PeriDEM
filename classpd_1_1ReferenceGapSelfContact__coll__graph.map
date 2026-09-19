@@ -1,5 +1,0 @@
-<map id="pd::ReferenceGapSelfContact" name="pd::ReferenceGapSelfContact">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,139,195,204"/>
-<area shape="rect" id="Node000002" href="$classpd_1_1SelfContact.html" title="Intra&#45;body force between nodes when the PD bond is inactive." alt="" coords="45,5,155,91"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,104,103,138,97,138,97,104"/>
-</map>

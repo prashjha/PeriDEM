@@ -1,9 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" href="$classpd_1_1SelfContact.html" title="Intra&#45;body force between nodes when the PD bond is inactive." alt="" coords="5,55,119,80"/>
-<area shape="rect" id="Node000001" href="$classpd_1_1BrokenBondKnSelfContact.html" title="Default: Kn * volj * capped_gap / R along yji with gap = R &#45; Rc." alt="" coords="167,5,367,31"/>
-<area shape="poly" id="edge39_Node000000_Node000001" title=" " alt="" coords="128,49,166,39,212,28,214,33,167,45,129,54"/>
-<area shape="rect" id="Node000002" href="$classpd_1_1NoneSelfContact.html" title="No force on broken bonds (Trask: broken → weight 0)." alt="" coords="195,55,339,80"/>
-<area shape="poly" id="edge40_Node000000_Node000002" title=" " alt="" coords="133,65,195,65,195,70,133,70"/>
-<area shape="rect" id="Node000003" href="$classpd_1_1ReferenceGapSelfContact.html" title=" " alt="" coords="168,104,365,129"/>
-<area shape="poly" id="edge41_Node000000_Node000003" title=" " alt="" coords="129,81,214,101,213,107,128,86"/>
-</map>

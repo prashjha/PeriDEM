@@ -1,5 +1,0 @@
-<map id="geom::getEdges" name="geom::getEdges">
-<area shape="rect" id="Node000001" title="Returns all corner points in the box." alt="" coords="5,5,123,31"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="171,5,327,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="123,15,157,15,157,21,123,21"/>
-</map>
