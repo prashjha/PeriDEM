@@ -15,7 +15,7 @@ Two-stage paper protocol. Force–penetration needs **stage 2** (settled IC + to
 
 Wall move is a **reference** shift in `Particle_Generation`, not a DispBC change. BC stays `u = −0.06 t`. At restart t=0.06 that places the wall bottom edge at the paper’s **0.0312 m**.
 
-Short decks: `input_smoke.json` (2k steps), `input_short.json` (T=0.003).
+Short decks: `input_quick.json` (2k steps), `input_short.json` (T=0.003).
 
 ## Run
 
@@ -24,7 +24,7 @@ BIN=build/linux/bin/PeriDEM
 cd examples/PeriDEM/compressive/n500
 
 # optional bring-up
-mpirun -n 4 --quiet $BIN -i input_smoke.json -nThreads 1
+mpirun -n 4 --quiet $BIN -i input_quick.json -nThreads 1
 
 # stage 1 settle (long) — or skip if using the checked-in settled VTU
 NP=4 NTHREADS=1 ./run_stage1.sh

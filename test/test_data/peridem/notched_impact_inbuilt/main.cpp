@@ -10,7 +10,7 @@
  * Notched-plate impact driver (Silling / Trask / Bhat KW setups).
  * Checks: prenotch bonds, tip damage growth, no blow-up.
  * Paper-angle validation lives outside ctest.
- * Flags: -smoke, -traskDisp, -bhatKW, -dim3, -vImpact, -Gc, -meshSize,
+ * Flags: -quick, -traskDisp, -bhatKW, -dim3, -vImpact, -Gc, -meshSize,
  * -finalTime, -outputDir, -nThreads, -selfContact, -bondBreak.
  */
 
@@ -690,7 +690,7 @@ int main(int argc, char *argv[]) {
     n_threads = static_cast<unsigned>(std::stoi(input.getCmdOption("-nThreads")));
   util::parallel::initNThreads(n_threads);
 
-  const bool smoke = input.cmdOptionExists("-smoke");
+  const bool quick = input.cmdOptionExists("-quick");
   const bool trask = input.cmdOptionExists("-traskDisp");
   const bool bhat = input.cmdOptionExists("-bhatKW");
   // Silling's actual case is 3D: a 9 mm plate on a 200 x 100 x 9 grid.
@@ -699,7 +699,7 @@ int main(int argc, char *argv[]) {
   namespace fs = std::filesystem;
   // Always write under the binary cwd (build/linux/.../notched_impact_inbuilt/) unless overridden.
   std::string run_tag =
-      smoke ? "smoke" : (trask ? "trask" : (bhat ? "bhat" : (dim3 ? "silling3d" : "lit")));
+      quick ? "quick" : (trask ? "trask" : (bhat ? "bhat" : (dim3 ? "silling3d" : "lit")));
   // New campaign outputs go under runs_new/ (do not mix with archived runs/).
   fs::path base = fs::current_path() / "runs_new" / run_tag;
   if (input.cmdOptionExists("-outputDir"))
@@ -762,7 +762,7 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-horizonFactor"))
     horizon = std::stod(input.getCmdOption("-horizonFactor")) * mesh_size;
 
-  if (smoke) {
+  if (quick) {
     W = 0.040;
     H = 0.020;
     notch_depth = 0.5 * H;
@@ -852,7 +852,7 @@ int main(int argc, char *argv[]) {
   }
 
   const char *mode_str =
-      smoke ? "smoke"
+      quick ? "quick"
             : (trask ? "trask_disp"
                      : (bhat ? "bhat_kw" : (dim3 ? "silling_3d" : "silling_impact")));
   std::cout << std::format(
@@ -962,7 +962,7 @@ int main(int argc, char *argv[]) {
 
   const double band_x = 0.45 * W;
   const double band_y = 0.55 * H;
-  const double phi_cut = smoke ? 0.20 : 0.35;
+  const double phi_cut = quick ? 0.20 : 0.35;
   const double exclude_r = 2.0 * mesh_size;
   const bool use_bond_dmg = bhat;
   auto left = fitCrackFromPhi(dem, -notch_half, y_tip, -1.0, phi_cut, band_x, band_y, exclude_r,

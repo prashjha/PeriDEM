@@ -57,7 +57,7 @@ Run: `ctest --test-dir build/linux -R 'Test_PeriDEM_twop_jha2021_(table2|inbuilt
 
 Notched-plate impact (§6.2 / Fig. 4), Kalthoff–Winkler lineage (Silling 2003, Trask 2019).
 
-CTest: `Test_PeriDEM_notched_impact` / `_smoke` — prenotch bonds, tip damage growth, no blow-up. Paper-path checks live under ValidationPeriDEM.
+CTest: `Test_PeriDEM_notched_impact` / `_quick` — prenotch bonds, tip damage growth, no blow-up. Paper-path checks live under ValidationPeriDEM.
 
 **Locked parameters (driver default):**
 - Geometry: 200×100 mm plate; notches 50 / 1.5 / 50 mm; impactor 1.57 kg @ 32 m/s

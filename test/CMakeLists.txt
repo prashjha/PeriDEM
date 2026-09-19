@@ -272,13 +272,13 @@ set_tests_properties(Test_PeriDEM_notched_impact PROPERTIES
   TIMEOUT 7200
 )
 
-# Coarse soft-moduli smoke of the same driver.
-add_test(NAME Test_PeriDEM_notched_impact_smoke
-  COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 1 -smoke
-    -outputDir runs/smoke_ctest
+# Coarse soft-moduli quick run of the same driver.
+add_test(NAME Test_PeriDEM_notched_impact_quick
+  COMMAND Test_PeriDEM_notched_impact_inbuilt -nThreads 1 -quick
+    -outputDir runs/quick_ctest
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_notched_impact_inbuilt>
 )
-set_tests_properties(Test_PeriDEM_notched_impact_smoke PROPERTIES
+set_tests_properties(Test_PeriDEM_notched_impact_quick PROPERTIES
   LABELS "PeriDEM;Physics"
   TIMEOUT 300
 )
@@ -326,12 +326,12 @@ add_test(NAME Test_PeriDEM_compressive_mixed_inbuilt
 set_tests_properties(Test_PeriDEM_compressive_mixed_inbuilt PROPERTIES LABELS "PeriDEM;Examples")
 
 # Short contacting pack (12 circles). Default Δt=0.2 μs, T=0.004 s, require grain–grain contact.
-add_test(NAME Test_PeriDEM_jha2021_comp_n50_smoke
+add_test(NAME Test_PeriDEM_jha2021_comp_n50_quick
   COMMAND Test_PeriDEM_jha2021_comp_n50 -nThreads 4
-    -outputDir jha2021_comp_n50_smoke_out -inputDir jha2021_comp_n50_smoke_inp
+    -outputDir jha2021_comp_n50_quick_out -inputDir jha2021_comp_n50_quick_inp
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_jha2021_comp_n50>
 )
-set_tests_properties(Test_PeriDEM_jha2021_comp_n50_smoke PROPERTIES
+set_tests_properties(Test_PeriDEM_jha2021_comp_n50_quick PROPERTIES
   LABELS "PeriDEM;Literature"
   TIMEOUT 300
 )
@@ -382,7 +382,7 @@ set_tests_properties(Test_PeriDEM_mpi_output_art_particle PROPERTIES
 )
 
 # T11a: larger pack (N=96) under particle-MPI — stepping-stone toward §4.4 (~502).
-# Short horizon exercises MPI at paper-adjacent N; contact assert stays on n50_smoke
+# Short horizon exercises MPI at paper-adjacent N; contact assert stays on n50_quick
 # (plate needs ~0.003 s to close the 1.15 Rc gap; full contact at N=96 is offline).
 add_test(NAME Test_PeriDEM_jha2021_comp_n96_mpi_scale
   COMMAND mpirun -n 2 --quiet

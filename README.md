@@ -343,7 +343,7 @@ C++ driver example (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_c
 ```sh
 cd examples/PeriDEM/compressive/n12
 ./run.sh
-DECK=input_smoke_dof.json NP=4 ./run.sh
+DECK=input_quick_dof.json NP=4 ./run.sh
 
 cd examples/PeriDEM/compressive/n500
 NP=4 ./run_stage1.sh              # or use checked-in settled restart

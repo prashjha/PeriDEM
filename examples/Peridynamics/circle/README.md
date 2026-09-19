@@ -6,7 +6,7 @@ right. Material is `PDState` with classical K/G → PD conversion.
 | File | Role |
 |------|------|
 | `input.json` | Full run (T = 0.01, 20k steps) |
-| `input_smoke.json` | Short run (default for `./run.sh`) |
+| `input_quick.json` | Short run (default for `./run.sh`) |
 | `mesh_cir_1_0.msh` | File mesh |
 | `view.png` | Reference ParaView view |
 

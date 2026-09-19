@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Single-particle Peridynamics demo (JSON → bin/PeriDEM).
-# Default deck is input_smoke.json (short run); set DECK=input.json for the full run.
+# Default deck is input_quick.json (short run); set DECK=input.json for the full run.
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
 ROOT="$(cd "$HERE/../../.." && pwd)"
@@ -14,7 +14,7 @@ if [[ -z "${BIN}" || ! -x "$BIN" ]]; then
   echo "missing PeriDEM binary — cmake --build <build> --target PeriDEM" >&2
   exit 1
 fi
-DECK="${DECK:-input_smoke.json}"
+DECK="${DECK:-input_quick.json}"
 NP="${NP:-1}"
 OUT_KEY=$(python3 - <<PY
 import json
