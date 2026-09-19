@@ -11,6 +11,7 @@
 #ifndef INP_DECKFIELD_H
 #define INP_DECKFIELD_H
 
+#include "util/io.h"
 #include "util/json.h"
 
 #include <algorithm>
@@ -20,6 +21,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <vector>
 
 namespace inp {
@@ -61,6 +63,9 @@ template <class Deck> struct Field {
   /*! @brief Appends the key and its value to a stream, after a tab prefix */
   std::function<void(const Deck &, std::ostringstream &, const std::string &)>
       print;
+
+  /*! @brief Throws if the value is one the field does not accept */
+  std::function<void(const json &)> check;
 };
 
 /*! @brief Name of the type of a field, reported by the schema */
@@ -86,6 +91,18 @@ template <> inline std::string typeName<std::vector<std::string>>() {
 /*! @copydoc typeName() */
 template <> inline std::string typeName<std::vector<std::size_t>>() {
   return "size_t[]";
+}
+
+/*! @brief Appends a value to a stream */
+template <class T>
+void printValue(std::ostringstream &oss, const T &v) {
+  oss << v;
+}
+
+/*! @brief Appends the entries of a vector, separated by commas */
+template <class T>
+void printValue(std::ostringstream &oss, const std::vector<T> &v) {
+  oss << util::io::printStr<T>(v, 0);
 }
 
 /*!
@@ -126,28 +143,35 @@ Field<Deck> field(
     Accepts<T> accepts = {},
     std::function<bool(const T &)> emitIf = [](const T &) { return true; }) {
 
+  // Accepted values and bounds apply to the scalar types. A field holding a
+  // list is checked by the deck if it needs to be.
+  constexpr bool checkable =
+      std::is_arithmetic_v<T> || std::is_same_v<T, std::string>;
+
   auto check = [key, accepts](const T &v) {
-    if (!accepts.values.empty() &&
-        std::find(accepts.values.begin(), accepts.values.end(), v) ==
-            accepts.values.end()) {
-      std::ostringstream oss;
-      oss << "Error: " << key << " must be one of:";
-      for (const auto &a : accepts.values)
-        oss << " " << a;
-      oss << ". Given value is " << v << ".\n";
-      throw std::runtime_error(oss.str());
-    }
-    if (accepts.min.has_value() && v < accepts.min.value()) {
-      std::ostringstream oss;
-      oss << "Error: " << key << " must be at least " << accepts.min.value()
-          << ". Given value is " << v << ".\n";
-      throw std::runtime_error(oss.str());
-    }
-    if (accepts.max.has_value() && accepts.max.value() < v) {
-      std::ostringstream oss;
-      oss << "Error: " << key << " must be at most " << accepts.max.value()
-          << ". Given value is " << v << ".\n";
-      throw std::runtime_error(oss.str());
+    if constexpr (checkable) {
+      if (!accepts.values.empty() &&
+          std::find(accepts.values.begin(), accepts.values.end(), v) ==
+              accepts.values.end()) {
+        std::ostringstream oss;
+        oss << "Error: " << key << " must be one of:";
+        for (const auto &a : accepts.values)
+          oss << " " << a;
+        oss << ". Given value is " << v << ".\n";
+        throw std::runtime_error(oss.str());
+      }
+      if (accepts.min.has_value() && v < accepts.min.value()) {
+        std::ostringstream oss;
+        oss << "Error: " << key << " must be at least " << accepts.min.value()
+            << ". Given value is " << v << ".\n";
+        throw std::runtime_error(oss.str());
+      }
+      if (accepts.max.has_value() && accepts.max.value() < v) {
+        std::ostringstream oss;
+        oss << "Error: " << key << " must be at most " << accepts.max.value()
+            << ". Given value is " << v << ".\n";
+        throw std::runtime_error(oss.str());
+      }
     }
   };
 
@@ -167,8 +191,11 @@ Field<Deck> field(
       },
       [m, key](const Deck &d, std::ostringstream &oss,
                const std::string &tab) {
-        oss << tab << key << " = " << d.*m << std::endl;
-      }};
+        oss << tab << key << " = ";
+        printValue(oss, d.*m);
+        oss << std::endl;
+      },
+      [check](const json &v) { check(v.get<T>()); }};
 }
 
 /*!
@@ -332,6 +359,9 @@ void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
 /*!
  * @brief The default block with the given keys replaced
  *
+ * The name of every key and the value of every field are checked here, so
+ * that a deck is rejected where it is built rather than where it is read.
+ *
  * @param given Keys and values to replace, checked against the table
  * @param fs Field table of the deck
  * @param extra Keys the deck handles outside the table
@@ -342,9 +372,15 @@ json applyGiven(const json &given, const std::vector<Field<Deck>> &fs,
                 const std::vector<std::string> &extra = {}) {
   checkKeys(given, fs, extra);
   json j = defaultsJson(fs);
-  if (given.is_object())
-    for (const auto &item : given.items())
-      j[item.key()] = item.value();
+  if (!given.is_object())
+    return j;
+
+  for (const auto &item : given.items()) {
+    for (const auto &f : fs)
+      if (f.key == item.key())
+        f.check(item.value());
+    j[item.key()] = item.value();
+  }
   return j;
 }
 

@@ -11,6 +11,7 @@
 #ifndef INP_OUTPUTDECK_H
 #define INP_OUTPUTDECK_H
 
+#include "deckField.h"
 #include "util/io.h"
 #include "util/json.h"
 #include "util/vecMethods.h"
@@ -153,13 +154,69 @@ namespace inp {
                 std::string tagPPFile = "",
                 bool pvdCollection = false) {
 
-      json j = {{"Path", path}, {"Perform_Out", performOut}, {"Tags", outTags},
-        {"Output_Interval", outputInterval}, {"Debug", debug}, {"Perform_FE_Out", performFEOut},
-        {"Compress_Type", compressType}, {"File_Format", outFormat},
-        {"Test_Output_Interval", dtTestOut}, {"Tag_PP", tagPPFile}};
+      json given = json{{"Path", path},
+                        {"Perform_Out", performOut},
+                        {"Tags", outTags},
+                        {"Output_Interval", outputInterval},
+                        {"Debug", debug},
+                        {"Perform_FE_Out", performFEOut},
+                        {"Compress_Type", compressType},
+                        {"File_Format", outFormat},
+                        {"Test_Output_Interval", dtTestOut},
+                        {"Tag_PP", tagPPFile}};
       if (pvdCollection)
-        j["PVD_Collection"] = true;
-      return j;
+        given["PVD_Collection"] = true;
+      return getExampleJson(given);
+    }
+
+    /*!
+     * @brief The fields of this deck, declared once
+     *
+     * Reading, writing, printing and the schema are generated from this
+     * table. The output criteria are a block of their own and are read in
+     * readDerived.
+     *
+     * @return fields The field table
+     */
+    static const std::vector<Field<OutputDeck>> &fields() {
+      static const std::vector<Field<OutputDeck>> f = {
+          field(&OutputDeck::d_path, "Path", std::string("./"),
+                "Directory the output is written to"),
+          field(&OutputDeck::d_performOut, "Perform_Out", true,
+                "Write output at all"),
+          field(&OutputDeck::d_outTags, "Tags", std::vector<std::string>(),
+                "Fields written at each output step"),
+          field(&OutputDeck::d_dtOut, "Output_Interval", size_t(1),
+                "Steps between outputs", {{}, size_t(1), {}}),
+          field(&OutputDeck::d_debug, "Debug", size_t(2),
+                "How much is written to the log"),
+          field(&OutputDeck::d_performFEOut, "Perform_FE_Out", true,
+                "Write the finite element mesh as well as the nodes"),
+          field(&OutputDeck::d_compressType, "Compress_Type",
+                std::string("zlib"), "Compression used in the output files"),
+          field(&OutputDeck::d_outFormat, "File_Format", std::string("vtu"),
+                "Output file format"),
+          field(&OutputDeck::d_dtTestOut, "Test_Output_Interval", size_t(1),
+                "Steps between post-processing outputs"),
+          field(&OutputDeck::d_tagPPFile, "Tag_PP", std::string(),
+                "Suffix of the post-processing file"),
+          // Absent unless a collection is asked for, which is how the decks
+          // in the repository were written.
+          field<OutputDeck, bool>(&OutputDeck::d_pvdCollection,
+                                  "PVD_Collection", false,
+                                  "Write a PVD file indexing the time steps",
+                                  {}, [](const bool &v) { return v; }),
+      };
+      return f;
+    }
+
+    /*!
+     * @brief Returns the block with the given fields set
+     * @param given Field names and values to set, checked against the table
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given) {
+      return applyGiven(given, fields(), {"Output_Criteria"});
     }
 
     /*!
@@ -169,27 +226,15 @@ namespace inp {
       if (j.empty())
         return ;
 
-      d_outFormat = j.value("File_Format", "vtu");
-      d_path = j.value("Path", "./");
+      readFields(*this, j, fields());
+
+      // An empty path names the working directory.
       if (d_path.empty())
         d_path = "./";
-      d_dtOut = j.value("Output_Interval", size_t(1));
-      if (d_dtOut < 1)
-        throw std::runtime_error(
-            "Output_Interval must be >= 1 (use 1 to write every step).");
+
+      // Both follow the output interval until the criteria block changes one.
       d_dtOutOld = d_dtOut;
       d_dtOutCriteria = d_dtOut;
-
-      d_debug = j.value("Debug", size_t(2));
-      d_performFEOut = j.value("Perform_FE_Out", true);
-      d_compressType = j.value("Compress_Type", "zlib");
-      d_performOut = j.value("Perform_Out", true);
-      d_dtTestOut = j.value("Test_Output_Interval", size_t(1));
-      d_tagPPFile = j.value("Tag_PP", "");
-
-      d_pvdCollection = j.value("PVD_Collection", false);
-
-      d_outTags = j.value("Tags", std::vector<std::string>());
 
       if (j.contains("Output_Criteria")) {
         d_outCriteria = j.at("Output_Criteria").value("Type", std::string(""));
@@ -212,22 +257,14 @@ namespace inp {
       auto tabS = util::io::getTabS(nt);
       std::ostringstream oss;
       oss << tabS << "------- OutputDeck --------" << std::endl << std::endl;
-      oss << tabS << "Output format = " << d_outFormat << std::endl;
-      oss << tabS << "Output path = " << d_path
+      printFields(*this, oss, fields(), tabS);
+      oss << tabS << "Output_Interval before the criteria = " << d_dtOutOld
           << std::endl;
-      oss << tabS << "Output tags = " << util::io::printStr<std::string>(d_outTags, 0) << std::endl;
-      oss << tabS << "Output time step = " << d_dtOut << std::endl;
-      oss << tabS << "Output time step old = " << d_dtOutOld << std::endl;
-      oss << tabS << "Debug level = " << d_debug << std::endl;
-      oss << tabS << "Perform FE output = " << d_performFEOut << std::endl;
-      oss << tabS << "Output file compression type = " << d_compressType << std::endl;
-      oss << tabS << "Output criteria = " << d_outCriteria << std::endl;
-      oss << tabS << "Output dt criteria = " << d_dtOutCriteria << std::endl;
-      oss << tabS << "Output criteria parameters = " << util::io::printStr<double>(d_outCriteriaParams, 0) << std::endl;
-      oss << tabS << "Perform output = " << d_performOut << std::endl;
-      oss << tabS << "Output time step when test = " << d_dtTestOut << std::endl;
-      oss << tabS << "Tag for postprocessing file = " << d_tagPPFile << std::endl;
-      oss << tabS << "Write ParaView PVD collection = " << d_pvdCollection << std::endl;
+      oss << tabS << "Output_Criteria.Type = " << d_outCriteria << std::endl;
+      oss << tabS << "Output_Criteria.New_Interval = " << d_dtOutCriteria
+          << std::endl;
+      oss << tabS << "Output_Criteria.Parameters = "
+          << util::io::printStr<double>(d_outCriteriaParams, 0) << std::endl;
       oss << tabS << std::endl;
 
       return oss.str();

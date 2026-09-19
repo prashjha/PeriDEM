@@ -13,6 +13,7 @@
 
 #include <string>
 #include <stdexcept>
+#include "deckField.h"
 #include "util/io.h"
 #include "util/json.h"
 
@@ -170,21 +171,76 @@ namespace inp {
                                size_t quadOrder = 2,
                                std::string particleSimType = "Multi_Particle",
                                int seed = 0) {
-      return json{
-          {"Dimension",                        dim},
-          {"Final_Time",                       tFinal},
-          {"Time_Steps",                       Nt},
-          {"Discretization_Type",              {{"Spatial", spatialDiscretization},
-                                                   {"Time", timeDiscretization}}},
-          {"Populate_ElementNodeConnectivity", populateElementNodeConnectivity},
-          {"Quad_Approximation_Order",         quadOrder},
-          {"Particle_Sim_Type",                particleSimType},
-          {"MPI_Strategy",                     "auto"},
-          {"Bond_Break",                       "tension"},
-          {"Self_Contact",                     "broken_bond_kn"},
-          {"Wall_Contact",                     "meshed"},
-          {"Seed",                             seed}
+      return getExampleJson(
+          json{{"Dimension", dim},
+               {"Final_Time", tFinal},
+               {"Time_Steps", Nt},
+               {"Discretization_Type",
+                json{{"Spatial", spatialDiscretization},
+                     {"Time", timeDiscretization}}},
+               {"Populate_ElementNodeConnectivity",
+                populateElementNodeConnectivity},
+               {"Quad_Approximation_Order", quadOrder},
+               {"Particle_Sim_Type", particleSimType},
+               {"Seed", seed}});
+    }
+
+    /*!
+     * @brief The fields of this deck, declared once
+     *
+     * Reading, writing, printing and the schema are generated from this
+     * table. The discretization block, the simulation type it implies, the
+     * time step and the rigid particles are read in readDerived.
+     *
+     * @return fields The field table
+     */
+    static const std::vector<Field<ModelDeck>> &fields() {
+      static const std::vector<Field<ModelDeck>> f = {
+          field(&ModelDeck::d_dim, "Dimension", size_t(2),
+                "Spatial dimension", {{size_t(1), size_t(2), size_t(3)}, {}, {}}),
+          field(&ModelDeck::d_tFinal, "Final_Time", 1.0,
+                "End of the integration window"),
+          field(&ModelDeck::d_Nt, "Time_Steps", size_t(10),
+                "Number of time steps", {{}, size_t(1), {}}),
+          field(&ModelDeck::d_populateElementNodeConnectivity,
+                "Populate_ElementNodeConnectivity", true,
+                "Build the element to node map, which strain output needs"),
+          field(&ModelDeck::d_quadOrder, "Quad_Approximation_Order", size_t(2),
+                "Order of the quadrature rule"),
+          field(&ModelDeck::d_particleSimType, "Particle_Sim_Type",
+                std::string("Multi_Particle"), "One body or many",
+                {{"Multi_Particle", "Single_Particle"}, {}, {}}),
+          field(&ModelDeck::d_mpiStrategy, "MPI_Strategy", std::string("auto"),
+                "What is distributed across ranks",
+                {{"auto", "none", "particle", "dof"}, {}, {}}),
+          field(&ModelDeck::d_bondBreak, "Bond_Break", std::string("tension"),
+                "Criterion for breaking a bond",
+                {{"tension", "absolute_stretch"}, {}, {}}),
+          field(&ModelDeck::d_selfContact, "Self_Contact",
+                std::string("broken_bond_kn"),
+                "Contact across broken bonds inside one body",
+                {{"broken_bond_kn", "reference_gap", "none"}, {}, {}}),
+          field(&ModelDeck::d_wallContact, "Wall_Contact",
+                std::string("meshed"), "How a wall is represented for contact",
+                {{"meshed", "analytical_plane"}, {}, {}}),
+          field(&ModelDeck::d_seed, "Seed", 0,
+                "Seed of the random number generator"),
       };
+      return f;
+    }
+
+    /*!
+     * @brief Returns the block with the given fields set
+     * @param given Field names and values to set, checked against the table
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given) {
+      json j = applyGiven(given, fields(),
+                          {"Discretization_Type", "Rigid_Particles"});
+      if (j.find("Discretization_Type") == j.end())
+        j["Discretization_Type"] = json{{"Spatial", "finite_difference"},
+                                        {"Time", "central_difference"}};
+      return j;
     }
 
     /*!
@@ -194,21 +250,13 @@ namespace inp {
       if (j.empty())
         return;
 
-      d_dim = j.at("Dimension");
-      d_tFinal = j.at("Final_Time");
-      d_Nt = j.at("Time_Steps");
+      readFields(*this, j, fields());
+
       d_spatialDiscretization = j.at("Discretization_Type").at("Spatial");
       d_timeDiscretization = j.at("Discretization_Type").at("Time");
-      if (d_timeDiscretization == "central_difference" or d_timeDiscretization == "velocity_verlet")
+      if (d_timeDiscretization == "central_difference" or
+          d_timeDiscretization == "velocity_verlet")
         d_simType = "explicit";
-      d_populateElementNodeConnectivity = j.value("Populate_ElementNodeConnectivity", true);
-      d_quadOrder = j.value("Quad_Approximation_Order", size_t(2));
-      d_particleSimType = j.value("Particle_Sim_Type", "Multi_Particle");
-      d_mpiStrategy = j.value("MPI_Strategy", "auto");
-      d_bondBreak = j.value("Bond_Break", "tension");
-      d_selfContact = j.value("Self_Contact", "broken_bond_kn");
-      d_wallContact = j.value("Wall_Contact", "meshed");
-      d_seed = j.value("Seed", 0);
 
       d_rigidParticles.clear();
       if (j.find("Rigid_Particles") != j.end()) {
@@ -221,31 +269,6 @@ namespace inp {
           }
           d_rigidParticles.emplace_back(r.at("Id").get<size_t>(), mass);
         }
-      }
-
-      if (d_mpiStrategy != "auto" && d_mpiStrategy != "none" &&
-          d_mpiStrategy != "particle" && d_mpiStrategy != "dof") {
-        throw std::runtime_error(
-            util::io::Msg()
-            << "Error: Model.MPI_Strategy must be auto|none|particle|dof.\n");
-      }
-      if (d_bondBreak != "tension" && d_bondBreak != "absolute_stretch") {
-        throw std::runtime_error(
-            util::io::Msg()
-            << "Error: Model.Bond_Break must be tension|absolute_stretch.\n");
-      }
-      if (d_selfContact != "broken_bond_kn" &&
-          d_selfContact != "reference_gap" && d_selfContact != "none") {
-        throw std::runtime_error(
-            util::io::Msg()
-            << "Error: Model.Self_Contact must be "
-            "broken_bond_kn|reference_gap|none.\n");
-      }
-      if (d_wallContact != "meshed" && d_wallContact != "analytical_plane") {
-        throw std::runtime_error(
-            util::io::Msg()
-            << "Error: Model.Wall_Contact must be "
-            "meshed|analytical_plane.\n");
       }
 
       if (std::abs(d_tFinal) < 1.0E-10 or d_Nt <= 0) {
@@ -268,25 +291,14 @@ namespace inp {
       auto tabS = util::io::getTabS(nt);
       std::ostringstream oss;
       oss << tabS << "------- ModelDeck --------" << std::endl << std::endl;
+      printFields(*this, oss, fields(), tabS);
+      oss << tabS << "Discretization_Type.Spatial = " << d_spatialDiscretization
+          << std::endl;
+      oss << tabS << "Discretization_Type.Time = " << d_timeDiscretization
+          << std::endl;
       oss << tabS << "Simulation type = " << d_simType << std::endl;
-      oss << tabS << "Restart active = " << d_isRestartActive << std::endl;
-      oss << tabS << "Populate element-node connectivity data = " << d_populateElementNodeConnectivity <<
-          std::endl;
-      oss << tabS << "Order of quad approximation = " << d_quadOrder << std::endl;
-      oss << tabS << "Spatial discretization type = " << d_spatialDiscretization
-          << std::endl;
-      oss << tabS << "Time discretization type = " << d_timeDiscretization
-          << std::endl;
-      oss << tabS << "Particle simulation type = " << d_particleSimType << std::endl;
-      oss << tabS << "MPI strategy = " << d_mpiStrategy << std::endl;
-      oss << tabS << "Bond break = " << d_bondBreak << std::endl;
-      oss << tabS << "Self contact = " << d_selfContact << std::endl;
-      oss << tabS << "Wall contact = " << d_wallContact << std::endl;
-      oss << tabS << "Dimension = " << d_dim << std::endl;
-      oss << tabS << "Final time = " << d_tFinal << std::endl;
       oss << tabS << "Time step size = " << d_dt << std::endl;
-      oss << tabS << "Number of time step = " << d_Nt << std::endl;
-      oss << tabS << "Seed = " << d_seed << std::endl;
+      oss << tabS << "Restart active = " << d_isRestartActive << std::endl;
       oss << tabS << std::endl;
 
       return oss.str();

@@ -154,6 +154,24 @@ void testKeysAreNamed() {
   check(j.find("Nested") != j.end(), "a key named in extra is kept");
 }
 
+void testValuesCheckedWhenBuilt() {
+  std::cout << "values are checked when a deck is built\n";
+  // A deck is rejected where it is built, not only where it is read.
+  checkThrows([] { inp::applyGiven(json{{"Count", 9}}, SampleDeck::fields()); },
+              "must be at most",
+              "a value above the bound is rejected when the deck is built");
+  checkThrows(
+      [] {
+        inp::applyGiven(json{{"Method", "backward_euler"}},
+                        SampleDeck::fields());
+      },
+      "must be one of",
+      "a value outside the accepted set is rejected when the deck is built");
+
+  json ok = inp::applyGiven(json{{"Count", 3}}, SampleDeck::fields());
+  check(ok.at("Count") == 3, "an accepted value is kept");
+}
+
 void testPrint() {
   std::cout << "printed form\n";
   SampleDeck d;
@@ -192,6 +210,7 @@ int main() {
   run(testReadAndWrite, "read and write");
   run(testAccepted, "accepted values");
   run(testKeysAreNamed, "keys are named");
+  run(testValuesCheckedWhenBuilt, "values checked when built");
   run(testPrint, "printed form");
   run(testEditDistance, "edit distance");
 
