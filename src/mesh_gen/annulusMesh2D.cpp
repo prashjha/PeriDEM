@@ -8,6 +8,7 @@
  */
 
 #include "annulusMesh2D.h"
+#include "gmshOccCompat.h"
 #include "geom/complexGeomObjects.h"
 #include "geom/geomObjects.h"
 #include <cmath>
@@ -65,9 +66,7 @@ int addEllipseDiskOcc(const geom::Ellipse &e) {
   double theta = e.d_theta;
   if (e.d_a < e.d_b)
     theta += M_PI / 2.;
-  const std::vector<double> zAxis = {0., 0., 1.};
-  const std::vector<double> xAxis = {std::cos(theta), std::sin(theta), 0.};
-  return gmsh::model::occ::addDisk(e.d_x.d_x, e.d_x.d_y, e.d_x.d_z, rx, ry, -1, zAxis, xAxis);
+  return addDiskOcc(e.d_x.d_x, e.d_x.d_y, e.d_x.d_z, rx, ry, theta);
 }
 
 static int firstTagOfDim(const std::vector<std::pair<int, int>> &ov, int dim) {
@@ -160,14 +159,11 @@ void buildCircleAnnulus2D(const geom::AnnulusGeomObject &a, double h) {
   const auto &inner = *static_cast<const geom::Circle *>(a.d_inObj_p);
   assertCircleAnnulusValid(outer, inner);
 
-  const std::vector<double> zAxis = {0., 0., 1.};
-  const std::vector<double> xAxis = {1., 0., 0.};
-
-  const int out_surf = gmsh::model::occ::addDisk(outer.d_x.d_x, outer.d_x.d_y, outer.d_x.d_z,
-                                                   outer.d_r, outer.d_r, -1, zAxis, xAxis);
+  const int out_surf = addDiskOcc(outer.d_x.d_x, outer.d_x.d_y, outer.d_x.d_z,
+                                  outer.d_r, outer.d_r);
   gmsh::model::occ::synchronize();
-  const int in_surf = gmsh::model::occ::addDisk(inner.d_x.d_x, inner.d_x.d_y, inner.d_x.d_z,
-                                                 inner.d_r, inner.d_r, -1, zAxis, xAxis);
+  const int in_surf = addDiskOcc(inner.d_x.d_x, inner.d_x.d_y, inner.d_x.d_z,
+                                 inner.d_r, inner.d_r);
   gmsh::model::occ::synchronize();
 
   std::vector<std::pair<int, int>> ov;

@@ -9,6 +9,7 @@
  */
 
 #include "primitiveOccMesh.h"
+#include "gmshOccCompat.h"
 #include "geom/geomObjects.h"
 #include "geom/geomUtilFunctions.h"
 #include <algorithm>
@@ -45,10 +46,7 @@ void buildEllipseOcc(const geom::Ellipse &e, double h) {
   if (e.d_a < e.d_b)
     theta += M_PI / 2.;
 
-  const std::vector<double> zAxis = {0., 0., 1.};
-  const std::vector<double> xAxis = {std::cos(theta), std::sin(theta), 0.};
-
-  const int s = gmsh::model::occ::addDisk(e.d_x.d_x, e.d_x.d_y, e.d_x.d_z, rx, ry, -1, zAxis, xAxis);
+  const int s = addDiskOcc(e.d_x.d_x, e.d_x.d_y, e.d_x.d_z, rx, ry, theta);
   gmsh::model::occ::synchronize();
   const int p = gmsh::model::occ::addPoint(e.d_x.d_x, e.d_x.d_y, e.d_x.d_z, h);
   gmsh::model::occ::synchronize();
