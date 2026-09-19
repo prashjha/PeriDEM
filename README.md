@@ -15,7 +15,6 @@
   - [Installation](#Installation)
     * [Dependencies](#Dependencies)
     * [Building the code](#Building-the-code)
-    * [Recommendations for quick build](#Recommendations-for-quick-build)
     * [Install & use as a CMake package](#install--use-as-a-cmake-package)
     * [Parallelism (MPI)](#parallelism-mpi)
   - [Running simulations](#Running-simulations)
@@ -212,7 +211,7 @@ pixi run test
 If all the dependencies are installed on the global path (e.g., `/usr/local/`), 
 commands for building the PeriDEM code is as simple as
 ```sh
-cmake   -DEnable_Documentation=OFF
+cmake   -DEnable_Documentation=OFF \
         -DEnable_Tests=ON \
         -DEnable_High_Load_Tests=OFF \
         -DDisable_Docker_MPI_Tests=ON \
@@ -246,7 +245,7 @@ repository.
   project(peridem_consumer LANGUAGES CXX)
   find_package(PeriDEM REQUIRED)
   add_executable(hello main.cpp)
-  target_link_libraries(hello PRIVATE PeriDEM::Model) # or another PeriDEM library target
+  target_link_libraries(hello PRIVATE PeriDEM::PeriDEMModel)
   ```
   Place this in, e.g., `/tmp/peridem-consumer/CMakeLists.txt`. A minimal `main.cpp` in the same folder:
   ```cpp
@@ -265,7 +264,7 @@ repository.
   cmake --build build -- -j$(sysctl -n hw.ncpu)
   ./build/hello
   ```
-- External dependencies required on the target system: MPI, Threads, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis (found via bundled `FindMetis.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers.
+- External dependencies required on the target system: MPI, Threads, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis and Gmsh (found via bundled `FindMetis.cmake` and `FindGmsh.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers. Bundled headers (`nlohmann_json`, nanoflann, csv, taskflow) are installed with the package.
 
 ### Parallelism (MPI)
 
@@ -291,8 +290,8 @@ Not covered here: GPU offload; larger-scale weak scaling.
 Earlier releases depended on large libraries such as `HPX`, `PCL`, and `Boost`.
 Those are gone. Current configure needs **VTK**, **MPI**, **Metis**, **Gmsh** (for
 built-in meshing / some tests), and **BLAS/LAPACK** (Accelerate on macOS), plus a
-C++20 toolchain. Use the scripts under `tools/compile_scripts/` or `pixi.toml` on
-Ubuntu and macOS.
+C++20 toolchain. Use `pixi.toml` (see **Pixi** above) or the CMake steps in
+**Building the code**.
 
 Feel free to reach out or open an issue. For more open 
 discussion of issues and ideas, contact via 

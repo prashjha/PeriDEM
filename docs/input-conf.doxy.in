@@ -9,7 +9,7 @@
 # we assume that the index.html file is in the root directory of project
 
 PROJECT_NAME           = @CMAKE_PROJECT_NAME@
-PROJECT_NUMBER         = @VERSION_MAJOR@.@VERSION_MINOR@.@VERSION_UPDATE@
+PROJECT_NUMBER         = @PROJECT_VERSION@
 PROJECT_BRIEF          = @CMAKE_PROJECT_DESCRIPTION@
 PROJECT_LOGO           = ../assets/logo/doxy_logo.jpg
 

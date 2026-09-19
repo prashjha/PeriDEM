@@ -66,6 +66,7 @@ docs/conf.doxy
 
 # src directory
 src/Config.h
+src/PeriDEMConfig.h
 
 # from mac
 ._*

@@ -249,6 +249,7 @@ install(DIRECTORY src/ DESTINATION include FILES_MATCHING PATTERN "*.h")
 install(FILES external/csv/csv.h DESTINATION include/csv)
 install(DIRECTORY external/nanoflann/ DESTINATION include/nanoflann FILES_MATCHING PATTERN "*.hpp")
 install(DIRECTORY external/taskflow/taskflow/ DESTINATION include/taskflow)
+install(FILES external/nlohmann_json/json.hpp DESTINATION include/nlohmann_json)
 
 configure_package_config_file(
   cmake/PeriDEMConfig.cmake.in
@@ -260,6 +261,7 @@ install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/PeriDEMConfig.cmake
   ${CMAKE_CURRENT_BINARY_DIR}/PeriDEMConfigVersion.cmake
   ${PROJECT_SOURCE_DIR}/cmake/FindMetis.cmake
+  ${PROJECT_SOURCE_DIR}/cmake/FindGmsh.cmake
   DESTINATION lib/cmake/PeriDEM
 )
 

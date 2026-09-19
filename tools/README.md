@@ -1,4 +1,7 @@
 # PeriDEM: Tools
 
-`tools` directory contains scripts for building library on ubuntu or mac, some details about using docker, and python utility functions. The files in this folder are outdated. For installation, we refer to `pixi.toml` file in base directory. 
+Install with `pixi.toml` at the repository root, or the CMake steps in the
+root README.
 
+This directory holds Docker notes (`tools/docker/`) and optional Python
+helpers for writing JSON deck fragments (`tools/python_utils/`).

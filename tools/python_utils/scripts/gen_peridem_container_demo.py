@@ -3,7 +3,7 @@
 Helpers for a 2D PeriDEM case with many particle types in a workspace.
 
 This script writes JSON *fragments* you can merge into a full input deck produced
-elsewhere (e.g. from apps/example-modular or test/twop_general_inbuilt patterns):
+elsewhere (e.g. from examples/ or test/twop_general_inbuilt patterns):
 
   - Five gmsh_builtin_mesh reference groups: circle, triangle, hexagon, rectangle, ellipse.
   - Twenty particle placements with geom_id cycling 0..4 (four particles per shape).
