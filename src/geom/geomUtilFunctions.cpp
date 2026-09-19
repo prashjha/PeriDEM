@@ -9,6 +9,7 @@
  */
 
 #include "geomUtilFunctions.h"
+#include <stdexcept>
 #include "geomObjects.h"
 #include "util/function.h"
 #include <cmath>
@@ -46,8 +47,9 @@ std::vector<util::Point> getCornerPoints(
             box.first + util::Point(0., b, c)};
   }
   else {
-    std::cerr << "Error: Check dimension = " << dim << ".\n";
-    exit(1);
+    throw std::invalid_argument(
+        util::io::Msg()
+        << "Error: Check dimension = " << dim << ".\n");
   }
 }
 
@@ -94,8 +96,9 @@ std::pair<util::Point, util::Point> &box) {
 
     return data;
   } else {
-    std::cerr << "getEdges(): Function implemented for dim = 1,2,3 only.\n";
-    exit(EXIT_FAILURE);
+    throw std::invalid_argument(
+        util::io::Msg()
+        << "getEdges(): Function implemented for dim = 1,2,3 only.\n");
   }
 }
 
@@ -112,8 +115,9 @@ util::Point getCenter(size_t dim,
                         0.5 * box.second.d_y + 0.5 * box.first.d_y,
                         0.5 * box.second.d_z + 0.5 * box.first.d_z};
   else {
-    std::cerr << "Error: Check dimension = " << dim << ".\n";
-    exit(1);
+    throw std::invalid_argument(
+        util::io::Msg()
+        << "Error: Check dimension = " << dim << ".\n");
   }
 }
 
@@ -186,8 +190,9 @@ bool isPointInsideBox(util::Point x, size_t dim,
              util::isGreater(x.d_y, box.second.d_y + 1.0E-12) or
              util::isGreater(x.d_z, box.second.d_z + 1.0E-12));
   else {
-    std::cerr << "isPointInsideBox(): Function implemented for dim = 1,2,3 only.\n";
-    exit(EXIT_FAILURE);
+    throw std::invalid_argument(
+        util::io::Msg()
+        << "isPointInsideBox(): Function implemented for dim = 1,2,3 only.\n");
   }
 }
 
@@ -211,8 +216,9 @@ double inscribedRadiusInBox(size_t dim,
     else
       return r;
   } else {
-    std::cerr << "inscribedRadiusInBox(): Function implemented for dim = 1,2,3 only.\n";
-    exit(EXIT_FAILURE);
+    throw std::invalid_argument(
+        util::io::Msg()
+        << "inscribedRadiusInBox(): Function implemented for dim = 1,2,3 only.\n");
   }
 }
 

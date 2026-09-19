@@ -15,6 +15,7 @@
 #include "constants.h"
 #include "logger.h"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -30,6 +31,46 @@ namespace util {
 
 /*! @brief Provides geometrical methods such as point inside rectangle */
 namespace io {
+
+/*!
+ * @brief Collects a message with stream syntax for use in an exception
+ *
+ * Validation in the library reports failure by throwing rather than by calling
+ * exit(), because exit() terminates the embedding process. Under the Python
+ * interface that ends the interpreter with no traceback. The checks already
+ * composed their message as std::cerr << a << b. This collects the same
+ * sequence into a std::string that an exception can carry.
+ *
+ * @code
+ * throw std::invalid_argument(util::io::Msg()
+ *                             << "need " << n << " parameters, got "
+ *                             << params.size());
+ * @endcode
+ */
+class Msg {
+public:
+  /*! @brief Appends a value to the message */
+  template <typename T> Msg &operator<<(const T &v) {
+    d_oss << v;
+    return *this;
+  }
+
+  /*! @brief Appends a stream manipulator such as std::endl */
+  Msg &operator<<(std::ostream &(*manip)(std::ostream &)) {
+    d_oss << manip;
+    return *this;
+  }
+
+  /*! @brief The message built so far */
+  std::string str() const { return d_oss.str(); }
+
+  /*! @brief Implicit conversion so it can be passed straight to an exception */
+  operator std::string() const { return d_oss.str(); }
+
+private:
+  /*! @brief Message under construction */
+  std::ostringstream d_oss;
+};
 
 /*!
  * @brief Returns tab spaces of a given size
