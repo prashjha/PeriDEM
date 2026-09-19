@@ -29,12 +29,11 @@ if(NOT SKBUILD)
   set_target_properties(peridem_core PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY "${_py_out}"
   )
-  configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/peridem/__init__.py
-    ${_py_out}/__init__.py
-    COPYONLY
-  )
+  file(GLOB _py_pkg "${CMAKE_CURRENT_SOURCE_DIR}/peridem/*.py")
+  foreach(_f ${_py_pkg})
+    configure_file(${_f} ${_py_out}/ COPYONLY)
+  endforeach()
 endif()
 
 install(TARGETS peridem_core LIBRARY DESTINATION peridem)
-install(FILES peridem/__init__.py DESTINATION peridem)
+install(DIRECTORY peridem/ DESTINATION peridem FILES_MATCHING PATTERN "*.py")

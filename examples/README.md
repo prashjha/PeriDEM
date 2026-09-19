@@ -18,7 +18,8 @@ as in-process drivers. They are not required to run a deck.
 | `Peridynamics/circle/` | Single particle; file mesh; fixed / pull BC |
 | `Peridynamics/rectangle/` | Single particle; `CreateMesh`; fixed / pull BC |
 
-`./run.sh` defaults to `input_quick.json`. Set `DECK=input.json` for the full run.
+`./run.sh` defaults to `input_quick.json` (`bin/PeriDEM`). Set `DECK=input.json` for the full run.
+JSON examples also have `./run.py` (in-process `import peridem`; same `DECK` / `NP` / `NTHREADS`). Needs `-DEnable_Python=ON`.
 
 ## C++ drivers (`-DEnable_Examples=ON`)
 

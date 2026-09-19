@@ -14,4 +14,5 @@ Both accept `Model.MPI_Strategy`: `auto` (→ DOF-MPI for single particle),
 ```bash
 cd circle && ./run.sh                 # short deck (input_quick.json)
 cd rectangle && DECK=input.json ./run.sh
+cd circle && ./run.py                 # same deck, in-process Python
 ```

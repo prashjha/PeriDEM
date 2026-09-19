@@ -28,3 +28,14 @@ mpirun -n 1 $BIN -i input_long.json -nThreads 8
 ```
 
 Keep run outputs out of the source tree; copy this folder into `build/linux/examples/...` first.
+
+Python (in-process, `-DEnable_Python=ON`):
+
+```bash
+./run.py                                          # input_quick.json, 1 rank, 8 threads
+DECK=input_long.json ./run.py
+NP=4 DECK=input_quick_particle.json ./run.py
+NP=4 DECK=input_quick_dof.json ./run.py
+```
+
+VTUs: `runs/out/output.pvd`.

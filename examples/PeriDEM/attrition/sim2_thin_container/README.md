@@ -17,4 +17,5 @@ See **`INPUT_DEFAULTS.md`** for explicit keys (avoid modular defaults).
 ./run.sh                          # default paper if DECK unset in this copy: see run.sh
 DECK=input_short.json ./run.sh
 CLEAN=1 ./run.sh
+./run.py                          # same default deck, in-process Python (NP=4)
 ```

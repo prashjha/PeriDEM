@@ -13,6 +13,11 @@ right. Material is `PDState` with classical K/G → PD conversion.
 ```bash
 ./run.sh                          # short deck
 DECK=input.json NP=2 ./run.sh     # full; auto → DOF-MPI on multi-rank
+
+# same deck in-process (needs -DEnable_Python=ON)
+./run.py
+DECK=input.json NP=2 ./run.py
 ```
 
-Requires `bin/PeriDEM`. Outputs go under `runs/` (gitignored).
+C++: `bin/PeriDEM`. Python: `run.py` / `python -m peridem -i input.json`.
+Outputs go under `runs/` (gitignored).

@@ -49,6 +49,16 @@ u = sim.displacement   # numpy (N, 3)
 z = sim.damage         # numpy (N,)
 ```
 
+JSON examples also have `run.py` next to `run.sh` (same `DECK` / `NP` / `NTHREADS`):
+
+```sh
+cd examples/Peridynamics/circle
+./run.py
+DECK=input.json NP=2 ./run.py
+# or
+python -m peridem -i input.json -nThreads 4
+```
+
 `from_file` resolves mesh and output paths from the deck folder (the Python
 process working directory is left unchanged). `from_dict` / `from_json` take a
 deck in memory and use the current working directory.
@@ -56,4 +66,12 @@ deck in memory and use the current working directory.
 ```python
 sim.setup()   # init particles / mesh
 sim.step()    # one integrator step
+```
+
+## Output
+
+```python
+data = peridem.read_vtu("runs/output_10.vtu")
+u = data["point_data"]["Displacement"]
+peridem.snapshot(data, "snap.png", color="|Displacement|")
 ```

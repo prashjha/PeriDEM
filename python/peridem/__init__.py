@@ -15,6 +15,7 @@ import json
 from typing import Any
 
 from ._core import Simulation, finalize, init, mpi_rank, mpi_size, version
+from .io import fields_from_vtu, last_vtu, nodal_error, read_vtu, snapshot
 
 
 def _from_dict(cls, deck: dict[str, Any]) -> Simulation:
@@ -24,4 +25,16 @@ def _from_dict(cls, deck: dict[str, Any]) -> Simulation:
 Simulation.from_dict = classmethod(_from_dict)
 atexit.register(finalize)
 
-__all__ = ["Simulation", "finalize", "init", "mpi_rank", "mpi_size", "version"]
+__all__ = [
+    "Simulation",
+    "finalize",
+    "init",
+    "fields_from_vtu",
+    "last_vtu",
+    "mpi_rank",
+    "mpi_size",
+    "nodal_error",
+    "read_vtu",
+    "snapshot",
+    "version",
+]
