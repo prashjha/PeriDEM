@@ -424,7 +424,7 @@ if(${Enable_Apps})
   message(STATUS "Building tests for apps")
 
   add_test(NAME test_apps_twoparticle_demo
-    COMMAND ${Apps_Path}/twoparticle_demo/TwoParticle_Demo -i ./example/input_0.yaml -nThreads 2
+    COMMAND ${Apps_Path}/twoparticle_demo/TwoParticle_Demo -i ./example/input_0.json -nThreads 2
     WORKING_DIRECTORY ${Apps_Path}/twoparticle_demo
   )
 

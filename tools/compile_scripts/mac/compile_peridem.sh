@@ -5,7 +5,7 @@ this_script=$(basename "$0")
 
 (
 ## dependencies
-# brew install vtk yaml-cpp metis
+# brew install vtk metis
 # if building documentation, we also need doxygen
 # brew install doxygen
 

@@ -172,12 +172,6 @@ echo METIS_LIB_DIR="/usr/lib" >> ${path_file}
 echo METIS_INCLUDE_DIR="/usr/include" >> ${path_file}
 
 # -----------------------
-# yaml-cpp
-# -----------------------
-echo "installing yaml-cpp" 
-sudo apt-get install -y libyaml-cpp-dev
-
-# -----------------------
 # vtk (build in focal/bionic and apt-get in noble/jammy)
 # -----------------------
 # decide if we use apt-get or build vtk

@@ -36,7 +36,7 @@ several places; if a key is missing you silently get different physics.
 
 ## Wall DOFs — already controlled by input (do not confuse with main’s flag)
 
-Main YAML `All_Dofs_Constrained: true` set two things: (a) fix all wall dofs,
+Previously, `All_Dofs_Constrained: true` set two things: (a) fix all wall dofs,
 (b) `d_computeForce=false` (wall out of PD + out of contact *search*).
 
 Modular already covers (a) via **`Displacement_BC`** on the wall particle

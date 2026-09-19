@@ -1,0 +1,150 @@
+{
+  "Model": {
+    "Dimension": 2,
+    "Discretization_Type": {
+      "Spatial": "finite_difference",
+      "Time": "central_difference"
+    },
+    "Final_Time": 0.005,
+    "Time_Steps": 50000,
+    "Particle_Sim_Type": "Multi_Particle",
+    "MPI_Strategy": "auto"
+  },
+  "Zone": {
+    "Zones": 2
+  },
+  "Particle": {
+    "Sets": 2,
+    "Set_1": {
+      "Type": "circle",
+      "Parameters": [0.003, 0.0, 0.0, 0.0]
+    },
+    "Set_2": {
+      "Type": "circle",
+      "Parameters": [0.001, 0.0, 0.0, 0.0]
+    }
+  },
+  "Particle_Generation": {
+    "From_File": "./example/particle_locations_0.csv",
+    "File_Data_Type": "loc_rad_orient"
+  },
+  "Mesh": {
+    "Sets": 2,
+    "Set_1": {
+      "File": "./example/mesh_cir_1_0.msh"
+    },
+    "Set_2": {
+      "File": "./example/mesh_cir_2_0.msh"
+    }
+  },
+  "Material": {
+    "Sets": 2,
+    "Set_1": {
+      "Type": "PDState",
+      "Horizon": 0.0006,
+      "Density": 1200.0,
+      "Compute_From_Classical": true,
+      "K": 2.0e9,
+      "G": 1.2e9,
+      "Gc": 500.0,
+      "Influence_Function": {"Type": 1}
+    },
+    "Set_2": {
+      "Type": "PDState",
+      "Horizon": 0.0006,
+      "Density": 1200.0,
+      "Compute_From_Classical": true,
+      "K": 2.16e7,
+      "G": 1.296e7,
+      "Gc": 50.0,
+      "Influence_Function": {"Type": 1}
+    }
+  },
+  "Contact": {
+    "Sets": 2,
+    "Set_1_1": {
+      "Contact_Radius_Factor": 0.95,
+      "Friction_On": false,
+      "Kn": 1.473657e26,
+      "Epsilon": 0.95,
+      "Friction_Coeff": 0.5,
+      "Kn_Factor": 1.0,
+      "Beta_n_Factor": 100.0
+    },
+    "Set_1_2": {
+      "Contact_Radius_Factor": 0.95,
+      "Friction_On": false,
+      "Kn": 3.149089e24,
+      "Epsilon": 0.95,
+      "Friction_Coeff": 0.5,
+      "Kn_Factor": 1.0,
+      "Beta_n_Factor": 100.0
+    },
+    "Set_2_2": {
+      "Contact_Radius_Factor": 0.95,
+      "Friction_On": false,
+      "Kn": 1.591549e24,
+      "Epsilon": 0.95,
+      "Friction_Coeff": 0.5,
+      "Kn_Factor": 1.0,
+      "Beta_n_Factor": 100.0
+    }
+  },
+  "Neighbor": {
+    "Update_Criteria": "simple_all",
+    "Search_Factor": 10.0,
+    "Search_Interval": 100
+  },
+  "Force_BC": {
+    "Gravity": [0.0, -10.0, 0.0]
+  },
+  "IC": {
+    "Constant_Velocity": {
+      "Velocity_Vector": [0.0, -0.08944272, 0.0],
+      "Particle_List": [1]
+    }
+  },
+  "Displacement_BC": {
+    "Sets": 1,
+    "Set_1": {
+      "Particle_List": [0],
+      "Direction": [1, 2],
+      "Time_Function": {
+        "Type": "constant",
+        "Parameters": [0.0]
+      },
+      "Spatial_Function": {
+        "Type": "constant"
+      },
+      "Zero_Displacement": true
+    }
+  },
+  "Output": {
+    "Path": "./example/",
+    "Tags": [
+      "Displacement",
+      "Velocity",
+      "Force",
+      "Force_Density",
+      "Damage_Z",
+      "Damage",
+      "Nodal_Volume",
+      "Zone_ID",
+      "Particle_ID",
+      "Fixity",
+      "Force_Fixity",
+      "Contact_Nodes",
+      "No_Fail_Node",
+      "Boundary_Node_Flag",
+      "Strain_Stress",
+      "Theta"
+    ],
+    "Output_Interval": 5000,
+    "Compress_Type": "zlib",
+    "Perform_FE_Out": true,
+    "Perform_Out": true,
+    "Test_Output_Interval": 500,
+    "Debug": 2,
+    "Tag_PP": 0
+  }
+}

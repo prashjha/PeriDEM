@@ -29,7 +29,7 @@ MESH_FILES = [
     "mesh_wall_0.msh",
 ]
 
-# outer circle, inner circle (minus), protrusion rectangle (plus) — same as yaml
+# outer circle, inner circle (minus), protrusion rectangle (plus)
 WALL_PARAMS = [
     0.021,
     0.0,
@@ -206,7 +206,7 @@ def build(
             "Quad_Approximation_Order": 2,
             "Particle_Sim_Type": "Multi_Particle",
             "Seed": 0,
-            # main yaml omitted Bond_Break → tension (PMB default)
+            # Bond_Break omitted → tension (PMB default)
             "Bond_Break": "tension",
             "Self_Contact": "none",
             "Wall_Contact": "meshed",

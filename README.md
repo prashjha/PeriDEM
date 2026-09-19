@@ -65,10 +65,8 @@ We have created channels on various platforms:
 
 ## Tutorial
 
-Setup for current `bin/PeriDEM` is JSON under [examples/](./examples/README.md)
-(see [Running simulations](#Running-simulations)). The [tutorial/](./tutorial/README.md)
-notebooks and Python helpers still write `input.yaml`; that path is not wired to the
-JSON driver.
+Problem setup for current `bin/PeriDEM` is under [examples/](./examples/README.md)
+(see [Running simulations](#Running-simulations)). JSON decks only.
 
 ## Examples
 

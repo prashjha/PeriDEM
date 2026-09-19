@@ -361,7 +361,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
                                          "Force_Fixity", "Contact_Nodes", "No_Fail_Node", "Boundary_Node_Flag"};
   /* Perform_FE_Out must be true so VTU includes element connectivity (appendMesh). If false, only
    * points are written (appendNodes) and ParaView’s default “Surface” view looks empty — use
-   * Representation → Points, or enable this flag. problem_setup.yaml used false for huge runs. */
+   * Representation → Points, or enable this flag. Large packs often leave FE out. */
   auto outputDeckJson = inp::OutputDeck::getExampleJson("vtu", output_path_for_deck, out_tags, dt_out_n, 2,
                                                           true, "zlib", true, test_dt_out_n, "0", true);
 

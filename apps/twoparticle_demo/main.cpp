@@ -14,11 +14,14 @@
 #include "inp/input.h"
 #include "periDEMModel.h"
 #include "util/io.h"
+#include "util/json.h"
 #include "util/parallelUtil.h"
 #include "util/vecMethods.h"
 
 #include <chrono>
+#include <filesystem>
 #include <format>
+#include <fstream>
 #include <iostream>
 #include <memory>
 
@@ -31,8 +34,8 @@ int main(int argc, char *argv[]) {
   util::io::InputParser input(argc, argv);
 
   if (input.cmdOptionExists("-h")) {
-    std::cout << "Syntax to run the app: ./TwoParticle_Demo -i <input file> -nThreads <number of threads>";
-    std::cout << "Example: ./TwoParticle_Demo -i input.json -nThreads 2";
+    std::cout << "Syntax to run the app: ./TwoParticle_Demo -i <input.json> -nThreads <number of threads>\n";
+    std::cout << "Example: ./TwoParticle_Demo -i input.json -nThreads 2\n";
   }
 
   unsigned int nThreads;
@@ -48,13 +51,19 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-i"))
     filename = input.getCmdOption("-i");
   else {
-    filename = "./example/input_0.yaml";
+    filename = "./example/input_0.json";
     std::cout << std::format("Running TwoParticle_Demo with example input file = {}\n", filename);
+  }
+
+  if (!std::filesystem::exists(filename)) {
+    throw std::runtime_error(std::format("Input file {} does not exist.", filename));
   }
 
   auto begin = std::chrono::steady_clock::now();
 
-  std::shared_ptr<inp::Input> deck = std::make_shared<inp::Input>(filename);
+  std::ifstream f(filename);
+  auto j = json::parse(f);
+  auto deck = std::make_shared<inp::Input>(j);
 
   if (deck->isPeriDEM()) {
     deck->getModelDeck()->d_populateElementNodeConnectivity = true;
