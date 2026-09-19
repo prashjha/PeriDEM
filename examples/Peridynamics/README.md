@@ -1,7 +1,7 @@
 # Peridynamics examples (single particle)
 
-JSON decks for `bin/PeriDEM` (`Particle_Sim_Type: Single_Particle`). Legacy YAML
-is removed — the modular driver parses JSON only.
+JSON decks for `bin/PeriDEM` (`Particle_Sim_Type: Single_Particle`). The driver
+parses JSON only.
 
 | Path | Mesh | Notes |
 |------|------|-------|
