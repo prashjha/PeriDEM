@@ -1,0 +1,5 @@
+<map id="geom::AnnulusGeomObject::isNearBoundary" name="geom::AnnulusGeomObject::isNearBoundary">
+<area shape="rect" id="Node000001" title="cons" alt="" coords="236,5,419,45"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1AnnulusGeomObject.html#a40a84e4701befa29d71a5ef9b4a5b5d4" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,188,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="223,28,188,28,188,23,223,23"/>
+</map>

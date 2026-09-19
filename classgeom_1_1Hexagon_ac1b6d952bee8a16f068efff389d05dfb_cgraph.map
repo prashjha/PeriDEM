@@ -1,0 +1,12 @@
+<map id="geom::Hexagon::doesIntersect" name="geom::Hexagon::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,79,207,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#a57694f60eade2838a8780650cd2dc3ba" title="Computes the bounding box of object." alt="" coords="267,29,409,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="166,76,264,55,265,60,167,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="260,79,416,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="207,89,247,89,247,94,207,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Hexagon.html#a23cb90ec4eecd0784efae79494cacde0" title="Checks if point is inside this object." alt="" coords="255,128,421,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="167,101,265,122,264,128,166,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="302,31,295,21,299,11,313,5,338,3,368,6,380,15,377,20,366,11,338,8,315,10,302,15,300,20,306,28"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Hexagon.html#ae21b00427b9d56e491cabf75622befac" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="469,121,644,161"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="422,138,455,138,455,143,422,143"/>
+</map>

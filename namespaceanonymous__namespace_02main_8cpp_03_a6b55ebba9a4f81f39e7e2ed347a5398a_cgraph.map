@@ -1,0 +1,5 @@
+<map id="anonymous_namespace{main::cpp}::minGrainWallGap" name="anonymous_namespace{main::cpp}::minGrainWallGap">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,201,45"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html#a97e971431bedb2d8c0236210ee0f6abc" title="Closest&#45;point / signed&#45;gap query for analytical wall contact. Default: unsupported (returns false,..." alt="" coords="249,5,461,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="201,23,236,23,236,28,201,28"/>
+</map>

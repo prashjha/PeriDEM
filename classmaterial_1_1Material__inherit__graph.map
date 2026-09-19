@@ -1,0 +1,11 @@
+<map id="material::Material" name="material::Material">
+<area shape="rect" id="Node000001" title="Collection of methods and database related to peridynamic material." alt="" coords="337,5,503,271"/>
+<area shape="rect" id="Node000002" href="$classmaterial_1_1PdElastic.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="5,379,195,804"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="327,204,265,257,235,288,209,320,173,380,169,377,204,317,231,284,261,253,324,200"/>
+<area shape="rect" id="Node000003" href="$classmaterial_1_1PdState.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="219,339,408,844"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="388,285,375,339,370,338,383,284"/>
+<area shape="rect" id="Node000004" href="$classmaterial_1_1PmbMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="432,359,621,824"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="457,283,475,358,469,359,452,285"/>
+<area shape="rect" id="Node000005" href="$classmaterial_1_1RnpMaterial.html" title="A class providing methods to compute energy density and force of peridynamic material." alt="" coords="645,319,835,864"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="516,200,579,253,609,284,635,317,647,334,643,337,631,320,605,288,575,257,513,204"/>
+</map>

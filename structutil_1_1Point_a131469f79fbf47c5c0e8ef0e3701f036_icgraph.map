@@ -1,0 +1,31 @@
+<map id="util::Point::dist" name="util::Point::dist">
+<area shape="rect" id="Node000001" title="Computes the distance between a given point from this point." alt="" coords="448,105,555,131"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a58e32fb4508d62369fbccfcc89c425ef" title="Compute sum of two gaussian function in 2&#45;d." alt="" coords="245,31,399,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="464,101,399,70,367,59,369,54,401,65,466,96"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a88b51abc3e98d9abcee326e275c4bd22" title="Compute gaussian function in 2&#45;d." alt="" coords="265,80,379,105"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="434,111,378,103,379,98,435,106"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Circle.html#a94e4eebc0d1add7f295c85e520907906" title="Checks if point is inside this object." alt="" coords="247,129,397,155"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="435,130,398,135,397,129,434,124"/>
+<area shape="rect" id="Node000010" href="$classgeom_1_1Sphere.html#a3b15c462fd4ca457f9bcfb574b29d665" title="Checks if point is inside this object." alt="" coords="244,325,400,351"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="483,143,336,327,331,324,479,140"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Circle.html#a5edd3ab1480c63d5a6609cd9df21ef45" title="Checks if box intersects this object." alt="" coords="9,5,192,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="253,126,242,119,226,99,218,80,210,61,194,44,174,33,177,28,198,40,215,59,223,78,230,97,246,115,256,121"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Circle.html#a8ce8b2fda4057dfc6ff2d40770927d16" title="Checks if box is completely inside." alt="" coords="26,55,175,80"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="264,127,243,119,219,106,195,94,160,83,162,78,197,89,221,101,245,114,266,122"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Circle.html#ab09b05010c4bf3c21fe7bf9eee329a58" title="Checks if box is within given distance of this object." alt="" coords="29,104,172,129"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="234,135,172,127,173,122,234,129"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Circle.html#afc98beaf9cad4d21049749fa5759b9b2" title="Checks if box is outside of the object." alt="" coords="21,153,180,179"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="234,154,180,160,180,155,234,149"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Circle.html#ae6af1a8f2e4400fc68cab8b8e4e7c377" title="Checks if point is outside of this object." alt="" coords="21,203,180,228"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="279,162,197,193,154,205,152,200,195,187,277,157"/>
+<area shape="rect" id="Node000011" href="$classgeom_1_1Sphere.html#a55350887f171ad4d3f78a337f81cc1a5" title="Checks if box intersects this object." alt="" coords="5,252,196,277"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="278,322,195,291,156,280,157,275,197,286,280,317"/>
+<area shape="rect" id="Node000012" href="$classgeom_1_1Sphere.html#adee45788a761bf882ce2173c9f33f0e1" title="Checks if box is completely inside." alt="" coords="23,301,179,327"/>
+<area shape="poly" id="edge11_Node000010_Node000012" title=" " alt="" coords="230,331,178,325,179,320,230,325"/>
+<area shape="rect" id="Node000013" href="$classgeom_1_1Sphere.html#a3a71116644e5d432fa21073207a16928" title="Checks if box is within given distance of this object." alt="" coords="26,351,175,376"/>
+<area shape="poly" id="edge12_Node000010_Node000013" title=" " alt="" coords="230,351,176,357,175,352,230,346"/>
+<area shape="rect" id="Node000014" href="$classgeom_1_1Sphere.html#aed2f808fc1278ea0fd29b026c8dd6bc0" title="Checks if box is outside of the object." alt="" coords="17,400,184,425"/>
+<area shape="poly" id="edge13_Node000010_Node000014" title=" " alt="" coords="280,358,197,390,154,402,153,397,195,385,278,353"/>
+<area shape="rect" id="Node000015" href="$classgeom_1_1Sphere.html#ad11e5a8c0e86b647994c426e1c6c2f48" title="Checks if point is outside of this object." alt="" coords="17,449,184,475"/>
+<area shape="poly" id="edge14_Node000010_Node000015" title=" " alt="" coords="300,362,255,402,197,439,164,452,163,447,195,434,252,397,297,358"/>
+</map>

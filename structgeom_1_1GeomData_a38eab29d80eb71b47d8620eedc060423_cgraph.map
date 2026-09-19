@@ -1,0 +1,8 @@
+<map id="geom::GeomData::copyGeometry" name="geom::GeomData::copyGeometry">
+<area shape="rect" id="Node000001" title="Copies the geometry details." alt="" coords="5,29,224,55"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#a0d3372c6903cbab2d7506192ba067ab3" title=" " alt="" coords="272,29,443,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,39,258,39,258,45,224,45"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="319,31,311,21,315,11,331,5,357,3,390,7,403,16,400,20,388,11,357,8,332,10,319,15,316,20,323,27"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad72f3599a20927cdb1cb4d86f641908a" title="Get num params required for creation of object." alt="" coords="491,29,696,55"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="443,39,477,39,477,45,443,45"/>
+</map>

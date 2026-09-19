@@ -1,0 +1,17 @@
+<map id="geom::OpenRectChannel2D::doesIntersect" name="geom::OpenRectChannel2D::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,192,45"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenRectChannel2D.html#ac60b2bfeb2d27433ea540b80659427ca" title="Checks if point is within given distance of this object." alt="" coords="240,5,427,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,23,226,23,226,28,192,28"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="979,13,1065,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="427,16,653,7,789,6,924,11,966,15,965,20,924,16,789,11,653,12,427,21"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1OpenRectChannel2D.html#afc31a9ad12d132f0b7076966b1e94cd6" title="Checks if point is within given distance of this object." alt="" coords="475,43,661,83"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="427,38,461,43,461,48,426,43"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1OpenRectChannel2D.html#a17c347b65eda4eb0357d1f4e41bf140b" title="Computes the bounding box of object." alt="" coords="709,50,924,75"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="662,60,696,60,696,65,662,65"/>
+<area shape="rect" id="Node000006" href="$namespacegeom.html#a5629d4efa093fda6590987a646ea1bba" title="Returns true if point is inside box." alt="" coords="737,99,897,125"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="662,79,739,94,738,99,661,84"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="783,52,776,42,779,32,793,26,817,23,845,27,857,36,853,40,843,32,817,29,795,31,783,35,781,41,787,48"/>
+<area shape="poly" id="edge8_Node000006_Node000003" title=" " alt="" coords="890,97,923,86,960,66,992,44,995,49,963,71,925,90,891,102"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="972,99,1072,125"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="897,109,958,109,958,115,897,115"/>
+</map>

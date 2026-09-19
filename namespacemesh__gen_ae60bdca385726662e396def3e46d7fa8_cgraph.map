@@ -1,0 +1,45 @@
+<map id="mesh_gen::createParticleMesh" name="mesh_gen::createParticleMesh">
+<area shape="rect" id="Node000001" title="Build a reference&#45;particle mesh: file, uniform rectangle, or in&#45;process Gmsh." alt="" coords="5,493,208,518"/>
+<area shape="rect" id="Node000002" href="$namespacemesh.html#a82e71035ab6e7a6910e7bafb7a027aeb" title="Creates uniform mesh for rectangle/cuboid domain." alt="" coords="263,315,439,341"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="115,491,168,424,208,385,255,351,270,343,273,348,257,356,212,389,172,428,119,494"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen.html#a4589036e29bbbbc112bbd785ac32eca2" title="In&#45;process Gmsh mesh from geom::GeomObject (after createGeomObject on deck / Particle data)." alt="" coords="263,365,439,405"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="133,490,296,409,298,414,135,495"/>
+<area shape="rect" id="Node000036" href="$namespaceanonymous__namespace_02particleMesh_8cpp_03.html#a7a6428c6f3f4b6b712ad738092f93196" title=" " alt="" coords="270,478,433,533"/>
+<area shape="poly" id="edge17_Node000001_Node000036" title=" " alt="" coords="208,503,256,503,256,508,208,508"/>
+<area shape="rect" id="Node000039" href="$namespaceutil_1_1io.html#ab41cbd366c1550587cc6d0bf1a088c5a" title="Remove extension from the filename Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="527,575,693,615"/>
+<area shape="poly" id="edge21_Node000001_Node000039" title=" " alt="" coords="150,516,257,543,391,566,514,582,513,587,390,571,255,548,149,521"/>
+<area shape="rect" id="Node000040" href="$namespacemesh.html#ab84fa2023806d8eed95f8cb94930c072" title="Removes nodes lying inside any of the given axis&#45;aligned boxes." alt="" coords="256,609,447,634"/>
+<area shape="poly" id="edge22_Node000001_Node000040" title=" " alt="" coords="129,516,186,550,257,587,295,602,293,607,255,592,183,555,127,521"/>
+<area shape="rect" id="Node000004" href="$namespacemesh__gen.html#a4006992a671a5441fafebd73766a3eac" title=" " alt="" coords="505,151,715,191"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="424,363,445,350,462,331,470,312,478,292,493,269,530,230,568,197,572,201,534,234,497,272,483,294,475,314,466,334,448,354,427,368"/>
+<area shape="rect" id="Node000011" href="$namespacemesh__gen.html#a09a4d51818a0d718ca2cce08f6e2c2f4" title=" " alt="" coords="509,283,711,323"/>
+<area shape="poly" id="edge10_Node000003_Node000011" title=" " alt="" coords="408,363,446,349,494,332,520,324,522,329,496,337,448,355,410,368"/>
+<area shape="rect" id="Node000034" href="$namespacegeom.html#aa4bf1b3a7ff9cceda6be2204ec51e23a" title="Returns list of acceptable geometries for PeriDEM simulation." alt="" coords="504,347,716,373"/>
+<area shape="poly" id="edge15_Node000003_Node000034" title=" " alt="" coords="439,374,490,369,490,374,440,379"/>
+<area shape="rect" id="Node000035" href="$namespacemesh__gen.html#a4abd2ef9795359a52f6ed56a831130b5" title=" " alt="" coords="495,397,725,422"/>
+<area shape="poly" id="edge16_Node000003_Node000035" title=" " alt="" coords="440,391,481,395,481,400,439,396"/>
+<area shape="rect" id="Node000005" href="$namespacemesh__gen.html#a9b79659dfc490cd72816741fa3130abc" title=" " alt="" coords="779,5,971,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="634,148,694,102,772,55,788,48,790,53,775,60,697,107,637,153"/>
+<area shape="rect" id="Node000006" href="$namespacemesh__gen.html#a6200d5005384acabe86d538496576b62" title=" " alt="" coords="779,69,971,109"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="675,148,795,111,796,116,677,153"/>
+<area shape="rect" id="Node000007" href="$namespacemesh__gen.html#ac010f2e59e5a8000ed6af2579fe63b31" title=" " alt="" coords="780,134,969,159"/>
+<area shape="poly" id="edge6_Node000004_Node000007" title=" " alt="" coords="715,159,766,154,767,159,715,164"/>
+<area shape="rect" id="Node000008" href="$namespacemesh__gen.html#aa7d9c453836c6f6c4593015fafb2323a" title=" " alt="" coords="785,183,965,209"/>
+<area shape="poly" id="edge7_Node000004_Node000008" title=" " alt="" coords="715,178,771,183,771,189,715,183"/>
+<area shape="rect" id="Node000009" href="$namespacemesh__gen.html#a35a6acca8813b772b9117e6d30750662" title=" " alt="" coords="779,233,970,258"/>
+<area shape="poly" id="edge8_Node000004_Node000009" title=" " alt="" coords="675,188,774,217,809,227,808,232,773,223,674,193"/>
+<area shape="rect" id="Node000010" href="$namespacegeom.html#ad8236ad8cc776188c0e4f81536acb257" title="Row&#45;major 3×3 rotation &#160;from ellipsoid axis–angle (identity if )." alt="" coords="1033,233,1228,258"/>
+<area shape="poly" id="edge9_Node000009_Node000010" title=" " alt="" coords="970,243,1020,243,1020,248,970,248"/>
+<area shape="rect" id="Node000012" href="$classmesh_1_1Mesh.html#accc7f7a8bcefe0e9073c315d5f26d315" title="Populate mesh from 3D tetrahedron data (0&#45;based node indices in enc) without reading a file." alt="" coords="782,283,967,323"/>
+<area shape="poly" id="edge11_Node000011_Node000012" title=" " alt="" coords="712,300,768,300,768,305,712,305"/>
+<area shape="rect" id="Node000033" href="$classmesh_1_1Mesh.html#acd7d96f02baf9e52eadd0ca080fda891" title="Populate mesh from 2D triangle data (0&#45;based node indices in enc) without reading a file." alt="" coords="773,347,976,387"/>
+<area shape="poly" id="edge13_Node000011_Node000033" title=" " alt="" coords="694,320,779,341,778,346,693,325"/>
+<area shape="rect" id="Node000013" href="$classmesh_1_1Mesh.html#a98f9041e741ceb27b9436eb9c71f94cd" title="After nodes, enc, nec, and dof&#45;related fields are set: 2D z clear, bbox, optional nodal volume,..." alt="" coords="1024,315,1237,355"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="968,312,1011,317,1010,322,967,317"/>
+<area shape="poly" id="edge14_Node000033_Node000013" title=" " alt="" coords="976,351,1010,347,1011,352,976,357"/>
+<area shape="rect" id="Node000037" href="$classrw_1_1writer_1_1Writer.html#add5b0f4ec99faab2d2dc09fe2b19c824" title="Writes the mesh data to file." alt="" coords="551,447,669,487"/>
+<area shape="poly" id="edge18_Node000036_Node000037" title=" " alt="" coords="433,491,537,475,538,480,433,496"/>
+<area shape="rect" id="Node000038" href="$classrw_1_1writer_1_1Writer.html#ac448fb1c1505ec11c31be73d8996a1cf" title="Closes the file and store it to the hard disk." alt="" coords="551,511,669,551"/>
+<area shape="poly" id="edge19_Node000036_Node000038" title=" " alt="" coords="433,511,537,521,537,526,433,516"/>
+<area shape="poly" id="edge20_Node000036_Node000039" title=" " alt="" coords="417,530,496,560,520,568,519,573,494,565,415,535"/>
+</map>

@@ -1,0 +1,14 @@
+<map id="geom::Sphere::doesIntersect" name="geom::Sphere::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,79,196,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Sphere.html#a7c224f18b0d185eb38dff36dbcb30dd4" title="Computes the bounding box of object." alt="" coords="256,29,388,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,76,250,55,251,60,159,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="244,79,400,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="196,89,230,89,230,94,196,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Sphere.html#a3b15c462fd4ca457f9bcfb574b29d665" title="Checks if point is inside this object." alt="" coords="244,128,400,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="159,101,251,122,250,128,158,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="292,31,286,21,289,11,302,5,322,3,347,6,357,15,353,19,344,11,322,8,303,10,293,15,291,20,297,28"/>
+<area shape="rect" id="Node000005" href="$structutil_1_1Point.html#a131469f79fbf47c5c0e8ef0e3701f036" title="Computes the distance between a given point from this point." alt="" coords="448,103,555,128"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="400,127,434,122,435,127,401,132"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="459,152,544,177"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="401,148,445,155,444,160,400,154"/>
+</map>

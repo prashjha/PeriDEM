@@ -1,0 +1,5 @@
+<map id="inp::MatData::readFromJson" name="inp::MatData::readFromJson">
+<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="185,13,373,38"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1MaterialDeck.html#a5ecb9a72aa4f41556c4e04d016fdd9ee" title="Reads from json object." alt="" coords="5,5,137,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,28,138,28,138,23,171,23"/>
+</map>

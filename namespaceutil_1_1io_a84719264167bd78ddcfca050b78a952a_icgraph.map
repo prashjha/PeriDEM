@@ -1,0 +1,9 @@
+<map id="util::io::isFileEmpty" name="util::io::isFileEmpty">
+<area shape="rect" id="Node000001" title="Check if file is empty or null." alt="" coords="208,77,343,102"/>
+<area shape="rect" id="Node000002" href="$classrw_1_1reader_1_1MshReader.html#a3ed18bdd4da959a36706c2729cd00dd5" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="5,5,160,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,75,143,48,144,43,224,70"/>
+<area shape="rect" id="Node000003" href="$classrw_1_1reader_1_1MshReader.html#a25113f35a50485228d04ca0fa413f5b8" title="Reads mesh data into node file and element file." alt="" coords="5,69,160,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="194,92,161,92,161,87,194,87"/>
+<area shape="rect" id="Node000004" href="$classrw_1_1reader_1_1MshReader.html#aef54cac192a889ea1e927235290de551" title="Reads nodal position." alt="" coords="5,133,160,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="224,109,144,136,143,131,222,104"/>
+</map>

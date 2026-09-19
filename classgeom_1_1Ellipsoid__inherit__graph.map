@@ -1,0 +1,5 @@
+<map id="geom::Ellipsoid" name="geom::Ellipsoid">
+<area shape="rect" id="Node000001" title="Ellipsoid: center , semi&#45;axes &#160;in a body frame rotated from world by axis–angle &#160;(Rodrigues)...." alt="" coords="19,739,130,1104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,144,691"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="77,704,77,739,72,739,72,704"/>
+</map>

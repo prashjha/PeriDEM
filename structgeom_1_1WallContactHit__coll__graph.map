@@ -1,0 +1,5 @@
+<map id="geom::WallContactHit" name="geom::WallContactHit">
+<area shape="rect" id="Node000001" title="Result of a wall&#45;contact query against a geom (analytical walls)." alt="" coords="5,688,148,773"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="19,5,134,611"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="79,611,79,671,74,671,74,611"/>
+</map>
