@@ -175,8 +175,9 @@ jobs:
               fi
     codecoverage:
       docker:
-        # - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
-        - image: prashjha/peridem-base-jammy:latest
+        # Match the build job image (noble). Jammy's older Gmsh lacks
+        # addDisk(..., zAxis, xAxis) and broke the coverage compile.
+        - image: prashjha/peridem-base-<<pipeline.parameters.docker-img-os>>:latest
           user: user
       steps:
         - checkout
