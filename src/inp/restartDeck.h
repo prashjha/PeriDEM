@@ -12,6 +12,7 @@
 #define INP_RESTARTDECK_H
 
 #include <string>
+#include "deckField.h"
 #include "util/json.h"
 
 namespace inp {
@@ -53,24 +54,72 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(std::string file = "", size_t step = 0, bool changeRefFreeDofs = false) {
+    static const std::vector<Field<RestartDeck>> &fields() {
+      static const std::vector<Field<RestartDeck>> f = {
+          field(&RestartDeck::d_file, "File", std::string(),
+                "File the state is read from"),
+          field(&RestartDeck::d_step, "Step", size_t(0),
+                "Step the state was written at"),
+          field(&RestartDeck::d_changeRefFreeDofs,
+                "Change_Reference_Free_Dofs", false,
+                "Move only the bodies that have a free degree of freedom"),
+      };
+      return f;
+    }
 
+    /*!
+     * @brief Returns the block with the given fields set
+     *
+     * A restart is requested by naming a file. Without one the block is
+     * empty, and the model starts from the initial condition.
+     *
+     * @param given Field names and values to set, checked against the table
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given = json::object()) {
+      json j = applyGiven(given, fields());
+      if (j.at("File").get<std::string>().empty())
+        return json({});
+      return j;
+    }
 
-      if (file.empty()) return json({});
-
-      return json({{"File", file}, {"Step", step}, {"Change_Reference_Free_Dofs", changeRefFreeDofs}});
+    /*!
+     * @brief Returns the block with the given fields set
+     *
+     * Kept so that existing callers continue to compile. Prefer the form that
+     * names each field.
+     *
+     * @param file File the state is read from
+     * @param step Step the state was written at
+     * @param changeRefFreeDofs Move only bodies with a free degree of freedom
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(std::string file, size_t step = 0,
+                               bool changeRefFreeDofs = false) {
+      return getExampleJson(json{{"File", file},
+                                 {"Step", step},
+                                 {"Change_Reference_Free_Dofs",
+                                  changeRefFreeDofs}});
     }
 
     /*!
      * @brief Reads from json object
+     * @param j JSON object
      */
     void readFromJson(const json &j) {
       if (j.empty())
         return;
+      readFields(*this, j, fields());
+    }
 
-      d_file = j.value("File", std::string());
-      d_step = j.value("Step", size_t(0));
-      d_changeRefFreeDofs = j.value("Change_Reference_Free_Dofs", false);
+    /*!
+     * @brief Returns this deck as a JSON object
+     * @return JSON object for this deck
+     */
+    json writeToJson() const {
+      json j = json::object();
+      writeFields(*this, j, fields());
+      return j;
     }
 
     /*!
@@ -84,9 +133,7 @@ namespace inp {
       auto tabS = util::io::getTabS(nt);
       std::ostringstream oss;
       oss << tabS << "------- RestartDeck --------" << std::endl << std::endl;
-      oss << tabS << "Filename = " << d_file << std::endl;
-      oss << tabS << "Restart step = " << d_step << std::endl;
-      oss << tabS << "Change only free dofs? = " << d_changeRefFreeDofs << std::endl;
+      printFields(*this, oss, fields(), tabS);
       oss << tabS << std::endl;
 
       return oss.str();

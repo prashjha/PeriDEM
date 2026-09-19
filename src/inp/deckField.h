@@ -58,8 +58,9 @@ template <class Deck> struct Field {
   /*! @brief Writes the default under the key, if it is to be written */
   std::function<void(json &)> writeDefault;
 
-  /*! @brief Appends the key and its value to a stream */
-  std::function<void(const Deck &, std::ostringstream &)> print;
+  /*! @brief Appends the key and its value to a stream, after a tab prefix */
+  std::function<void(const Deck &, std::ostringstream &, const std::string &)>
+      print;
 };
 
 /*! @brief Name of the type of a field, reported by the schema */
@@ -164,8 +165,9 @@ Field<Deck> field(
         if (emitIf(def))
           j[key] = def;
       },
-      [m, key](const Deck &d, std::ostringstream &oss) {
-        oss << "  " << key << " = " << d.*m << std::endl;
+      [m, key](const Deck &d, std::ostringstream &oss,
+               const std::string &tab) {
+        oss << tab << key << " = " << d.*m << std::endl;
       }};
 }
 
@@ -206,12 +208,20 @@ void writeFields(const Deck &d, json &j, const std::vector<Field<Deck>> &fs) {
     f.write(d, j);
 }
 
-/*! @brief Appends every field of the table to a stream */
+/*!
+ * @brief Appends every field of the table to a stream
+ *
+ * @param d The deck
+ * @param oss Stream to append to
+ * @param fs Field table of the deck
+ * @param tab Prefix written before each field
+ */
 template <class Deck>
 void printFields(const Deck &d, std::ostringstream &oss,
-                 const std::vector<Field<Deck>> &fs) {
+                 const std::vector<Field<Deck>> &fs,
+                 const std::string &tab = "") {
   for (const auto &f : fs)
-    f.print(d, oss);
+    f.print(d, oss, tab);
 }
 
 /*! @brief The block with every field at its default */

@@ -12,6 +12,7 @@
 #define INP_PNEIGHBORDECK_H
 
 #include "util/io.h"
+#include "deckField.h"
 #include "util/json.h"
 
 namespace inp {
@@ -56,27 +57,74 @@ struct PNeighborDeck {
         d_nearBdNodesTol(nearBdNodesTol) {};
 
   /*!
-   * @brief Returns example JSON object for ModelDeck configuration
-   * @return JSON object with example configuration
+   * @brief The fields of this deck, declared once
+   *
+   * Reading, writing, printing and the schema are generated from this table.
+   * @return fields The field table
    */
-  static json getExampleJson(std::string updateCriteria = "simple_all", double sFactor = 1.,
-                             size_t neighUpdateInterval = 1, double nearBdNodesTol = 0.5) {
-
-    return json({{"Update_Criteria", updateCriteria}, {"Search_Factor", sFactor},
-      {"Search_Interval", neighUpdateInterval}, {"Near_Bd_Nodes_Tol", nearBdNodesTol}});
+  static const std::vector<Field<PNeighborDeck>> &fields() {
+    static const std::vector<Field<PNeighborDeck>> f = {
+        field(&PNeighborDeck::d_updateCriteria, "Update_Criteria",
+              std::string("simple_all"),
+              "When the contact neighbor list is rebuilt"),
+        field(&PNeighborDeck::d_sFactor, "Search_Factor", 1.,
+              "Search length as a multiple of the largest particle radius"),
+        field(&PNeighborDeck::d_neighUpdateInterval, "Search_Interval",
+              size_t(1), "Steps between contact neighbor list updates"),
+        field(&PNeighborDeck::d_nearBdNodesTol, "Near_Bd_Nodes_Tol", 0.5,
+              "Depth within which a node counts as near the boundary"),
+    };
+    return f;
   }
 
   /*!
- * @brief Reads from json object
- */
+   * @brief Returns the block with the given fields set
+   * @param given Field names and values to set, checked against the table
+   * @return JSON object for this deck
+   */
+  static json getExampleJson(const json &given = json::object()) {
+    return applyGiven(given, fields());
+  }
+
+  /*!
+   * @brief Returns the block with the given fields set
+   *
+   * Kept so that existing callers continue to compile. Prefer the form that
+   * names each field.
+   *
+   * @param updateCriteria When the neighbor list is rebuilt
+   * @param sFactor Search length factor
+   * @param neighUpdateInterval Steps between updates
+   * @param nearBdNodesTol Near boundary depth
+   * @return JSON object for this deck
+   */
+  static json getExampleJson(std::string updateCriteria, double sFactor = 1.,
+                             size_t neighUpdateInterval = 1,
+                             double nearBdNodesTol = 0.5) {
+    return getExampleJson(json{{"Update_Criteria", updateCriteria},
+                               {"Search_Factor", sFactor},
+                               {"Search_Interval", neighUpdateInterval},
+                               {"Near_Bd_Nodes_Tol", nearBdNodesTol}});
+  }
+
+  /*!
+   * @brief Reads from json object
+   * @param j JSON object
+   */
   void readFromJson(const json &j) {
     if (j.empty())
       return;
+    readFields(*this, j, fields());
+  }
 
-    d_updateCriteria = j.value("Update_Criteria", std::string("simple_all"));
-    d_sFactor = j.value("Search_Factor", 1.);
-    d_neighUpdateInterval = j.value("Search_Interval", size_t(1));
-    d_nearBdNodesTol = j.value("Near_Bd_Nodes_Tol", 0.5);
+  /*!
+   * @brief Returns this deck as a JSON object
+   * @return JSON object for this deck
+   */
+  json writeToJson() const {
+    json j = json::object();
+    writeFields(*this, j, fields());
+    return j;
   }
 
   /*!
@@ -91,10 +139,7 @@ struct PNeighborDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- PNeighborDeck --------" << std::endl << std::endl;
-    oss << tabS << "Update criteria  = " << d_updateCriteria << std::endl;
-    oss << tabS << "Search factor = " << d_sFactor << std::endl;
-    oss << tabS << "Search update interval = " << d_neighUpdateInterval << std::endl;
-    oss << tabS << "Near_Bd_Nodes_Tol = " << d_nearBdNodesTol << std::endl;
+    printFields(*this, oss, fields(), tabS);
     oss << tabS << std::endl;
 
     return oss.str();

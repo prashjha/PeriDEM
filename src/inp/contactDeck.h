@@ -12,6 +12,7 @@
 #define INP_CONTACTDECK_H
 
 #include "contactPairDeck.h"
+#include "deckField.h"
 #include "util/json.h"
 
 namespace inp {
@@ -74,22 +75,41 @@ struct ContactDeck {
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
-  static json getExampleJson(size_t nSets = 0) {
+  static const std::vector<Field<ContactDeck>> &fields() {
+    static const std::vector<Field<ContactDeck>> f = {
+        field(&ContactDeck::d_dampingLaw, "Damping_Law",
+              std::string("com_and_node"), "Where contact damping is applied",
+              {{"com_and_node", "com", "node", "off"}, {}, {}}),
+        field(&ContactDeck::d_frictionLaw, "Friction_Law",
+              std::string("coulomb_simple"), "Tangential contact law",
+              {{"coulomb_simple", "stick_slip"}, {}, {}}),
+        field(&ContactDeck::d_correctVolume, "Correct_Volume", true,
+              "Scale the neighbor volume by the overlap with the contact "
+              "sphere"),
+    };
+    return f;
+  }
 
+  /*!
+   * @brief Returns the block with the given fields set
+   *
+   * One pair block is written for each pair of contact groups. Without any
+   * groups the block is empty.
+   *
+   * @param nSets Number of contact groups
+   * @param given Field names and values to set, checked against the table
+   * @return JSON object for this deck
+   */
+  static json getExampleJson(size_t nSets = 0,
+                             const json &given = json::object()) {
     if (nSets == 0)
       return json({});
 
-    auto j = json({{"Sets", nSets},
-                   {"Damping_Law", "com_and_node"},
-                   {"Friction_Law", "coulomb_simple"},
-                   {"Correct_Volume", true}});
-
-    for (size_t i = 0; i < nSets; i++) {
-      for (size_t k=i; k<nSets; k++) {
-        std::string set_name = "Set_" + std::to_string(i+1) + "_" + std::to_string(k+1);
-        j[set_name] = {};
-      }
-    }
+    json j = applyGiven(given, fields());
+    j["Sets"] = nSets;
+    for (size_t i = 0; i < nSets; i++)
+      for (size_t k = i; k < nSets; k++)
+        j["Set_" + std::to_string(i + 1) + "_" + std::to_string(k + 1)] = {};
 
     return j;
   }
@@ -101,19 +121,7 @@ struct ContactDeck {
     if (j.empty())
       return;
 
-    d_dampingLaw = j.value("Damping_Law", "com_and_node");
-    d_frictionLaw = j.value("Friction_Law", "coulomb_simple");
-    d_correctVolume = j.value("Correct_Volume", true);
-
-    if (d_dampingLaw != "com_and_node" && d_dampingLaw != "com" &&
-        d_dampingLaw != "node" && d_dampingLaw != "off") {
-      throw std::runtime_error(
-          "Contact.Damping_Law must be com_and_node|com|node|off.");
-    }
-    if (d_frictionLaw != "coulomb_simple" && d_frictionLaw != "stick_slip") {
-      throw std::runtime_error(
-          "Contact.Friction_Law must be coulomb_simple|stick_slip.");
-    }
+    readFields(*this, j, fields());
 
     auto nSets = j.value("Sets", size_t(0));
     d_data.resize(nSets);
@@ -167,9 +175,7 @@ struct ContactDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- ContactDeck --------" << std::endl << std::endl;
-    oss << tabS << "Damping law = " << d_dampingLaw << std::endl;
-    oss << tabS << "Friction law = " << d_frictionLaw << std::endl;
-    oss << tabS << "Correct volume = " << d_correctVolume << std::endl;
+    printFields(*this, oss, fields(), tabS);
     for (size_t i =0; i<d_data.size(); i++) {
       for (size_t j = 0; j < d_data.size(); j++) {
         oss << tabS << "ContactPairData id = (" << i << "," << j << ") info:"

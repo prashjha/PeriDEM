@@ -11,6 +11,7 @@
 #ifndef INP_PGENDECK_H
 #define INP_PGENDECK_H
 
+#include "deckField.h"
 #include "util/io.h"
 #include "util/json.h"
 #include "geom/geomIncludes.h"
@@ -62,28 +63,80 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(std::string genMethod = "From_File") {
+    static const std::vector<Field<PGenDeck>> &fields() {
+      static const std::vector<Field<PGenDeck>> f = {
+          field(&PGenDeck::d_genMethod, "Method", std::string("From_File"),
+                "Where the particle positions come from",
+                {{"From_File", "Use_Particle_Geometry"}, {}, {}}),
+          field(&PGenDeck::d_genWithRandomRotation, "Random_Rotation", true,
+                "Give each particle a random orientation when none is given"),
+      };
+      return f;
+    }
 
-      auto j = json({{"Method", "From_File"}, {"Random_Rotation", true}});
-      return j;
+    /*!
+     * @brief Returns the block with the given fields set
+     * @param given Field names and values to set, checked against the table
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given = json::object()) {
+      return applyGiven(given, fields(), {"Data"});
+    }
+
+    /*!
+     * @brief Returns the block with the given fields set
+     *
+     * Kept so that existing callers continue to compile. Prefer the form that
+     * names each field.
+     *
+     * @param genMethod Where the particle positions come from
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(std::string genMethod) {
+      return getExampleJson(json{{"Method", genMethod}});
+    }
+
+    /*!
+     * @brief Returns the block with the generation method set
+     *
+     * A string literal converts to both std::string and json, so this
+     * overload is needed to make getExampleJson("From_File") unambiguous.
+     *
+     * @param genMethod Where the particle positions come from
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const char *genMethod) {
+      return getExampleJson(std::string(genMethod));
     }
 
     /*!
      * @brief Reads from json object
+     * @param j JSON object
      */
     void readFromJson(const json &j) {
       if (j.empty())
         return;
+      readFields(*this, j, fields());
 
-      d_genMethod = j.value("Method", std::string("Use_Particle_Geometry"));
-      d_genWithRandomRotation = j.value("Random_Rotation", true);
-
+      // The positions themselves are a block of their own, not a field.
       if (d_genMethod == "From_File") {
         if (j.find("Data") == j.end())
           throw std::runtime_error("Need information inside key Data.");
 
         d_pGenJson = j.at("Data");
       }
+    }
+
+    /*!
+     * @brief Returns this deck as a JSON object
+     * @return JSON object for this deck
+     */
+    json writeToJson() const {
+      json j = json::object();
+      writeFields(*this, j, fields());
+      if (d_genMethod == "From_File")
+        j["Data"] = d_pGenJson;
+      return j;
     }
 
     /*!
@@ -98,8 +151,7 @@ namespace inp {
       auto tabS = util::io::getTabS(nt);
       std::ostringstream oss;
       oss << tabS << "------- PGenDeck --------" << std::endl << std::endl;
-      oss << tabS << "Method = " << d_genMethod << std::endl;
-      oss << tabS << "Random rotation of particles = " << d_genWithRandomRotation << std::endl;
+      printFields(*this, oss, fields(), tabS);
       size_t nParticles = d_pGenJson.value("N", 0);
       oss << tabS << "Number of particles in json object = " << nParticles << std::endl;
       oss << tabS << "Data for first five particles: " << std::endl;

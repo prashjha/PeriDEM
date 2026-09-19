@@ -158,11 +158,12 @@ void testPrint() {
   std::cout << "printed form\n";
   SampleDeck d;
   std::ostringstream oss;
-  inp::printFields(d, oss, SampleDeck::fields());
+  inp::printFields(d, oss, SampleDeck::fields(), "  ");
   const std::string s = oss.str();
-  check(s.find("Count = 2") != std::string::npos, "the printed form has Count");
-  check(s.find("Method = central_difference") != std::string::npos,
-        "the printed form has Method");
+  check(s.find("  Count = 2") != std::string::npos,
+        "the printed form has Count after the tab prefix");
+  check(s.find("  Method = central_difference") != std::string::npos,
+        "the printed form has Method after the tab prefix");
 }
 
 void testEditDistance() {
