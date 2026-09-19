@@ -19,9 +19,15 @@
     * [Install & use as a CMake package](#install--use-as-a-cmake-package)
     * [Parallelism (MPI)](#parallelism-mpi)
   - [Running simulations](#Running-simulations)
+    * [Deck layout (JSON)](#Deck-layout-JSON)
     * [Two-particle contact](#Two-particle-contact)
     * [Compressive test](#Compressive-test)
+    * [Attrition](#Attrition)
+    * [Impact and fracture](#Impact-and-fracture)
+    * [Single-particle Peridynamics](#Single-particle-Peridynamics)
   - [Visualizing results](#Visualizing-results)
+  - [Contributing](#Contributing)
+  - [Citations](#Citations)
   - [Developers](#Developers)
 
 ## Introduction
@@ -59,9 +65,8 @@ We have created channels on various platforms:
 
 ## Tutorial
 
-We explain the setting-up of simulations in further details in [tutorial](./tutorial/README.md). 
-We consider `two-particle` test setup with non-circular particles and `compressive-test` to 
-discuss the various aspects of simulations.
+Current setup uses **JSON decks** under [examples/](./examples/README.md) (see [Running simulations](#Running-simulations)).
+The older [tutorial/](./tutorial/README.md) notebooks and Python helpers still write `input.yaml` and are **legacy**; they do not drive the modular `bin/PeriDEM` path.
 
 ## Examples
 
@@ -85,20 +90,20 @@ We next highlight some key examples. Further details are available in [examples/
 
 ### Compressive tests
 
-Setup for this test consists of 502 circular and hexagonal-shaped particles of varying 
-radius and orientation inside a rectangle container. The container's top wall is moving 
-downward at a prescribed speed, resulting in the compression of the particle system. 
-The quantity of interest is the compressive strength of the media. The reaction force 
-(downward) on the moving wall should increase with the increasing penetration of this wall; 
-however, after a certain amount of compression of the media, the damage will initiate 
-in individual particles, especially those connected by force chains, resulting in the 
-yielding of the system. For more details, we refer to 
-[Jha et al. 2021](https://prashjha.github.io/publication/jha-2020-peridem/)
+Paper setup (Jha et al. 2021): 502 circular and hexagonal particles in a rectangle
+container; the top wall moves downward at fixed speed. Reaction on the moving wall rises
+with penetration; damage then concentrates along force chains and the pack yields.
+Runnable decks: small pack [n12](./examples/PeriDEM/compressive/n12) and paper-scale
+two-stage [n500](./examples/PeriDEM/compressive/n500). Details:
+[Jha et al. 2021](https://prashjha.github.io/publication/jha-2020-peridem/).
+
+| <img src="./assets/compressive_test_cir_hex_n500.jpg" width="420"> | <img src="./assets/compressive_test_reaction_force_n500.jpg" width="420"> |
+|:------------------------------------------------------------------:|:------------------------------------------------------------------------:|
+| Pack geometry (N≈502) | Wall reaction and damage frames |
 
 | <img src="./assets/compressive_test.gif" width="600"> | 
 |:-----------------------------------------------------:| 
-|              Compressive test simulation              | 
-
+| Compressive test simulation |
 
 ### Attrition tests
 
@@ -108,9 +113,21 @@ Mix of circular, triangular, hexagonal, and drum-shaped grains in a rotating con
 |:----------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:| 
 | Rotating cylinder ([setup](./examples/PeriDEM/attrition/sim1_rotating_cylinder)) | Thin container, offset rotation ([setup](./examples/PeriDEM/attrition/sim2_thin_container)) | 
 
+### Impact and fracture
+
+| <img src="./assets/ellipse_triangle_impact.png" width="320"> |
+|:------------------------------------------------------------:|
+| Hollow ellipse on a tip ([setup](./examples/PeriDEM/ellipse_triangle)) |
+
+Silling KW notched plate (2D/3D scripts → notched-impact driver): [examples/PeriDEM/silling_kw](./examples/PeriDEM/silling_kw).
+
 ### Single particle deformation
 
-Use `bin/PeriDEM` with `Model.Particle_Sim_Type = Single_Particle`. JSON demos: [examples/Peridynamics](./examples/Peridynamics) (`circle/`, `rectangle/`). Index: [examples/README.md](./examples/README.md).
+`Model.Particle_Sim_Type = Single_Particle`. JSON demos: [examples/Peridynamics](./examples/Peridynamics).
+
+| <img src="./examples/Peridynamics/circle/view.png" width="280"> | <img src="./examples/Peridynamics/rectangle/view.png" width="280"> |
+|:---------------------------------------------------------------:|:------------------------------------------------------------------:|
+| Circle ([setup](./examples/Peridynamics/circle)) | Rectangle / `CreateMesh` ([setup](./examples/Peridynamics/rectangle)) |
 
 ## Brief implementation details
 
@@ -296,7 +313,23 @@ Input is **JSON only** (`bin/PeriDEM -i input.json`). Mesh files (`.msh`) and pa
 mpirun -n 4 --quiet <path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 2
 ```
 
-Most example folders ship `./run.sh` (or `run_stage1.sh` / `run_stage2.sh`) that locate `bin/PeriDEM` under `build/`. See [examples/README.md](./examples/README.md).
+Most example folders provide `./run.sh` (or `run_stage1.sh` / `run_stage2.sh`) that locate `bin/PeriDEM` under `build/`. Index: [examples/README.md](./examples/README.md).
+
+### Deck layout (JSON)
+
+A multi-particle deck has these top-level blocks:
+
+| Block | Role |
+|-------|------|
+| `Model` | Dimension, time, `Particle_Sim_Type` (`Multi_Particle` / `Single_Particle`), `MPI_Strategy` |
+| `Particle` / `Mesh` / `Material` | Geometry sets, meshes (`File` or `CreateMesh`), PD material |
+| `Displacement_BC` / `Force_BC` | Regions, directions, time/space functions |
+| `Contact` / `Neighbor` | Inter-particle (and wall) contact; neighbor list |
+| `Particle_Generation` | Pack / container / wall placement when not listing every body by hand |
+| `Output` | Path, tags (`Displacement`, `Velocity`, `Damage_Z`, …), optional `PVD_Collection` |
+| `Restart` | Optional settled IC for two-stage runs |
+
+Copy a short deck from `examples/PeriDEM/compressive/n12/` or `examples/Peridynamics/circle/` and change geometry, BCs, and time. Full block details: [Doxygen](https://prashjha.github.io/PeriDEM/) and the checked-in example JSON files.
 
 ### Two-particle contact
 
@@ -311,12 +344,41 @@ C++ driver example (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_c
 
 ```sh
 cd examples/PeriDEM/compressive/n12
-./run.sh                          # short deck by default
+./run.sh
 DECK=input_smoke_dof.json NP=4 ./run.sh
 
 cd examples/PeriDEM/compressive/n500
 NP=4 ./run_stage1.sh              # or use checked-in settled restart
 NP=1 ./run_stage2.sh
+```
+
+### Attrition
+
+| Path | Role |
+|------|------|
+| [attrition/sim1_rotating_cylinder](./examples/PeriDEM/attrition/sim1_rotating_cylinder) | Thick rotating drum |
+| [attrition/sim2_thin_container](./examples/PeriDEM/attrition/sim2_thin_container) | Thin drum, offset rotation |
+
+Each folder has `./run.sh` (and mesh/CSV setup scripts). Keep outputs under `runs/` (gitignored).
+
+### Impact and fracture
+
+| Path | Role |
+|------|------|
+| [ellipse_triangle](./examples/PeriDEM/ellipse_triangle) | Hollow ellipse dropped on a tip (C++ example + `./run.sh`) |
+| [silling_kw](./examples/PeriDEM/silling_kw) | Silling KW 2D/3D via notched-impact driver scripts |
+
+### Single-particle Peridynamics
+
+| Path | Role |
+|------|------|
+| [Peridynamics/circle](./examples/Peridynamics/circle) | File mesh; fixed / pull BC |
+| [Peridynamics/rectangle](./examples/Peridynamics/rectangle) | In-process `CreateMesh`; fixed / pull BC |
+
+```sh
+cd examples/Peridynamics/circle
+./run.sh                          # short deck
+DECK=input.json NP=2 ./run.sh     # full; auto → DOF-MPI on multi-rank
 ```
 
 ## Visualizing results

@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
   if (input.cmdOptionExists("-h")) {
     std::cout << "Syntax to run the app: ./TwoParticle_Demo -i <input file> -nThreads <number of threads>";
-    std::cout << "Example: ./TwoParticle_Demo -i input.yaml -nThreads 2";
+    std::cout << "Example: ./TwoParticle_Demo -i input.json -nThreads 2";
   }
 
   unsigned int nThreads;

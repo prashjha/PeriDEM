@@ -59,7 +59,7 @@ namespace inp {
  * @brief A class to read input file
  *
  * In this class we read input file and read the data into various decks.
- * Input file is a YAML file.
+ * Input file is a JSON file.
  */
 class Input {
 

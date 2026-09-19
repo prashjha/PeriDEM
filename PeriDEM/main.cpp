@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
   if (input.cmdOptionExists("-h") or !input.cmdOptionExists("-i")) {
     // print help
     std::cout << "Syntax to run PeriDEM: PeriDEM -i <input file> -nThreads <number of threads>" << std::endl;
-    std::cout << "Example: PeriDEM -i input.yaml -nThreads 4" << std::endl;
+    std::cout << "Example: PeriDEM -i input.json -nThreads 4" << std::endl;
     exit(EXIT_FAILURE);
   }
 
