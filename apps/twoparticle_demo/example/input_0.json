@@ -145,6 +145,6 @@
     "Perform_Out": true,
     "Test_Output_Interval": 500,
     "Debug": 2,
-    "Tag_PP": 0
+    "Tag_PP": ""
   }
 }
