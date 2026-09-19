@@ -41,13 +41,18 @@
 #include "inp/deckIncludes.h"
 #include "util/io.h"
 #include "util/function.h"
+#include "util/parallelUtil.h"
+#include "geom/geomObjectsUtil.h"
 #include "material/materialUtil.h"
 #include "periDEMModel.h"
 #include "particle/baseParticle.h"
+#include "particle/particleMpi.h"
 #include "postprocess/postprocess.h"
+#include <mpi.h>
 #include <algorithm>
 #include <cmath>
 #include <cstdlib>
+#include <cstring>
 #include <filesystem>
 #include <format>
 #include <fstream>
@@ -94,7 +99,9 @@ json buildInputJson(const std::string &output_path_for_deck,
                     const std::string &friction_law = "coulomb_simple",
                     bool friction_on = false,
                     double friction_mu = -1.,
-                    double ic_vx = 0.) {
+                    double ic_vx = 0.,
+                    bool bottom_patch_bc = false,
+                    const std::string &mpi_strategy = "auto") {
 
   const std::vector<double> center = {0.0, 0.0, 0.0};
   const double R1 = 0.001;
@@ -135,6 +142,7 @@ json buildInputJson(const std::string &output_path_for_deck,
   auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps,
                                                         "finite_difference", "central_difference",
                                                         true, 2, "Multi_Particle", 0);
+  modelDeckJson["MPI_Strategy"] = mpi_strategy;
 
   auto outputDeckJson = inp::OutputDeck::getExampleJson("vtu", output_path_for_deck,
       std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage_Z", "Damage", "Particle_ID"}),
@@ -142,9 +150,25 @@ json buildInputJson(const std::string &output_path_for_deck,
 
   auto bcDeckJson = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0, -10, 0));
 
-  bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("Displacement_BC", false, geom::GeomData(),
-      {0}, {}, "", {}, "", {},
-      {1, 2}, true, "", {});
+  if (bottom_patch_bc) {
+    // Particle 0 centered at (R1,R1); fix only a bottom strip (not the whole grain).
+    geom::GeomData patch;
+    patch.d_geomName = "rectangle";
+    patch.d_geomParams = {R1 - 1.1 * R1, -0.1 * R1, 0., R1 + 1.1 * R1, 0.35 * R1,
+                          0.};
+    json j_geom;
+    geom::writeGeometry(j_geom, patch);
+    bcDeckJson["Displacement_BC"]["Set_1"] = json{
+        {"Particle_List", json::array({0})},
+        {"Region", {{"Geometry", j_geom}}},
+        {"Direction", json::array({1, 2})},
+        {"Zero_Displacement", true}};
+  } else {
+    bcDeckJson["Displacement_BC"]["Set_1"] =
+        inp::BCBaseDeck::getExampleJson("Displacement_BC", false, geom::GeomData(),
+                                        {0}, {}, "", {}, "", {}, {1, 2}, true, "",
+                                        {});
+  }
 
   std::vector<double> ic_vel = {0.0, 0.0, 0.0};
   if (!zero_ic) {
@@ -253,6 +277,7 @@ json buildInputJson(const std::string &output_path_for_deck,
                {"Particle_Generation", pDeckJson["Particle_Generation"]}});
   if (two_particle_test)
     j["Test"] = json{{"Test_Name", "two_particle"}};
+  // bottom_patch_bc keeps PD force on particle 0 (deformable base).
   return j;
 }
 
@@ -356,6 +381,114 @@ private:
   bool d_contacted = false;
 };
 
+/*! Sample scalars + dump gathered nodal u,v for MPI identity checks. */
+class MpiMetricTsProbe : public postprocess::Postprocess {
+public:
+  MpiMetricTsProbe(std::filesystem::path out_dir, size_t interval)
+      : d_outDir(std::move(out_dir)),
+        d_interval(std::max<size_t>(1, interval)) {
+    if (util::parallel::mpiRank() == 0) {
+      std::filesystem::create_directories(d_outDir / "nodal");
+      d_os.open(d_outDir / "mpi_metric_ts.csv");
+      d_os << "step,t,max_u,com1x,com1y\n";
+    }
+  }
+
+  void checkStop(data::ModelData &data) override {
+    postprocess::Postprocess::checkStop(data);
+    const size_t nstep = data.currentStep();
+    if (nstep % d_interval != 0 && nstep < data.numTimeSteps())
+      return;
+
+    double max_u = 0.;
+    for (const auto &u : data.d_u)
+      max_u = std::max(max_u, u.length());
+    if (util::parallel::mpiSize() > 1)
+      MPI_Allreduce(MPI_IN_PLACE, &max_u, 1, MPI_DOUBLE, MPI_MAX,
+                    util::parallel::mpiComm());
+    double com1x = 0., com1y = 0.;
+    if (data.d_particlesListTypeParticle.size() > 1) {
+      const auto c = data.d_particlesListTypeParticle[1]->getXCenter();
+      com1x = c.d_x;
+      com1y = c.d_y;
+    }
+    if (util::parallel::mpiRank() == 0) {
+      d_os << std::format("{},{:.12e},{:.12e},{:.12e},{:.12e}\n", nstep,
+                          data.d_time, max_u, com1x, com1y);
+      d_os.flush();
+    }
+    dumpNodalUV(data, nstep);
+  }
+
+private:
+  static bool ownsNode(const data::ModelData &data, size_t i) {
+    const int rank = util::parallel::mpiRank();
+    if (data.d_pdDofMpi) {
+      if (i >= data.d_pdNodePartition.size())
+        return false;
+      return static_cast<int>(data.d_pdNodePartition[i]) == rank;
+    }
+    // Particle-MPI / serial: owned grains; walls only from rank 0 (replicated).
+    for (const auto *p : data.d_particlesListTypeAll) {
+      const size_t i0 = p->d_globStart;
+      const size_t i1 = i0 + p->getNumNodes();
+      if (i < i0 || i >= i1)
+        continue;
+      if (p->isWall())
+        return rank == 0;
+      return particle::isLocallyOwned(*p);
+    }
+    return rank == 0;
+  }
+
+  void dumpNodalUV(data::ModelData &data, size_t nstep) {
+    const size_t n = data.d_u.size();
+    std::vector<double> buf(6 * n, 0.);
+    for (size_t i = 0; i < n; ++i) {
+      if (!ownsNode(data, i))
+        continue;
+      buf[6 * i + 0] = data.d_u[i].d_x;
+      buf[6 * i + 1] = data.d_u[i].d_y;
+      buf[6 * i + 2] = data.d_u[i].d_z;
+      buf[6 * i + 3] = data.d_v[i].d_x;
+      buf[6 * i + 4] = data.d_v[i].d_y;
+      buf[6 * i + 5] = data.d_v[i].d_z;
+    }
+    if (util::parallel::mpiSize() > 1)
+      MPI_Allreduce(MPI_IN_PLACE, buf.data(), static_cast<int>(buf.size()),
+                    MPI_DOUBLE, MPI_SUM, util::parallel::mpiComm());
+    if (util::parallel::mpiRank() != 0)
+      return;
+    if (!d_wroteXref) {
+      std::ofstream xr(d_outDir / "nodal" / "x_ref.bin", std::ios::binary);
+      const uint32_t nn = static_cast<uint32_t>(n);
+      xr.write(reinterpret_cast<const char *>(&nn), sizeof(nn));
+      for (size_t i = 0; i < n; ++i) {
+        const double p[3] = {data.d_xRef[i].d_x, data.d_xRef[i].d_y,
+                             data.d_xRef[i].d_z};
+        xr.write(reinterpret_cast<const char *>(p), sizeof(p));
+      }
+      d_wroteXref = true;
+    }
+    const auto path =
+        d_outDir / "nodal" / std::format("uv_{:06d}.bin", nstep);
+    std::ofstream os(path, std::ios::binary);
+    const char magic[4] = {'P', 'D', 'U', 'V'};
+    const uint32_t step32 = static_cast<uint32_t>(nstep);
+    const uint32_t nn = static_cast<uint32_t>(n);
+    os.write(magic, 4);
+    os.write(reinterpret_cast<const char *>(&step32), sizeof(step32));
+    os.write(reinterpret_cast<const char *>(&nn), sizeof(nn));
+    os.write(reinterpret_cast<const char *>(buf.data()),
+             static_cast<std::streamsize>(buf.size() * sizeof(double)));
+  }
+
+  std::filesystem::path d_outDir;
+  size_t d_interval;
+  std::ofstream d_os;
+  bool d_wroteXref = false;
+};
+
 int main(int argc, char *argv[]) {
 
   util::parallel::initMpi(argc, argv);
@@ -398,6 +531,9 @@ int main(int argc, char *argv[]) {
   double ic_vx = 0.;
   bool assert_lat = false;
   double lat_min = 0.;
+  bool bottom_patch_bc = false;
+  std::string mpi_strategy = "auto";
+  bool write_mpi_metric = false;
   int jha_test = 0;
   if (input.cmdOptionExists("-jha2021Table2Test"))
     jha_test = std::stoi(input.getCmdOption("-jha2021Table2Test"));
@@ -456,11 +592,18 @@ int main(int argc, char *argv[]) {
   }
   if (input.cmdOptionExists("-crTol"))
     cr_tol = std::stod(input.getCmdOption("-crTol"));
+  if (input.cmdOptionExists("-bottomPatchBC"))
+    bottom_patch_bc = true;
+  if (input.cmdOptionExists("-mpiStrategy"))
+    mpi_strategy = input.getCmdOption("-mpiStrategy");
+  if (input.cmdOptionExists("-writeMpiMetric"))
+    write_mpi_metric = true;
   util::io::print(std::format(
       "final_time = {}, num_steps = {}, zero_ic = {}, eps_n = {}, C_bar = {}, "
-      "damping = {}, Damping_Law = {}, Friction_Law = {}\n",
+      "damping = {}, Damping_Law = {}, Friction_Law = {}, bottomPatchBC = {}, "
+      "MPI_Strategy = {}\n",
       final_time, num_steps, zero_ic, eps_n, beta_n_factor, damping_on,
-      damping_law, friction_law));
+      damping_law, friction_law, bottom_patch_bc, mpi_strategy));
 
   namespace fs = std::filesystem;
   const fs::path cwd = fs::current_path();
@@ -508,7 +651,7 @@ int main(int argc, char *argv[]) {
                                   damping_on, eps_n, jha_test > 0, file_mesh,
                                   beta_n_factor, damping_law,
                                   friction_law, friction_on, friction_mu,
-                                  ic_vx);
+                                  ic_vx, bottom_patch_bc, mpi_strategy);
 
   const fs::path input_json_path = inp_dir / "input.json";
   {
@@ -541,6 +684,10 @@ int main(int argc, char *argv[]) {
     auto p = std::make_unique<LateralProbe>(ic_vx);
     lat_probe = p.get();
     dem.setPostprocess(std::move(p));
+  } else if (write_mpi_metric) {
+    const size_t ts_every = std::max<size_t>(1, num_steps / 100);
+    dem.setPostprocess(
+        std::make_unique<MpiMetricTsProbe>(out_dir, ts_every));
   }
   dem.run(deck);
 
@@ -602,5 +749,32 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  if (write_mpi_metric) {
+    double max_u = 0.;
+    for (const auto &u : dem.d_u)
+      max_u = std::max(max_u, u.length());
+    double com1x = 0., com1y = 0.;
+    if (dem.d_particlesListTypeParticle.size() > 1) {
+      const auto c = dem.d_particlesListTypeParticle[1]->getXCenter();
+      com1x = c.d_x;
+      com1y = c.d_y;
+    }
+    if (util::parallel::isMpiEnabled()) {
+      MPI_Allreduce(MPI_IN_PLACE, &max_u, 1, MPI_DOUBLE, MPI_MAX,
+                    util::parallel::mpiComm());
+      // Center node is unique; take from owning rank via MAX of abs then
+      // broadcast of values — simpler: Allreduce SUM after zeroing non-owners
+      // is wrong for COM. After DOF sync every rank has the same center x.
+    }
+    if (util::parallel::mpiRank() == 0) {
+      std::ofstream os(out_dir / "mpi_metric.txt");
+      os << std::format("{:.12e} {:.12e} {:.12e}\n", max_u, com1x, com1y);
+      util::io::print(std::format(
+          "mpi_metric: max|u|={:.12e} grain1_com=({:.12e},{:.12e})\n", max_u,
+          com1x, com1y));
+    }
+  }
+
+  util::parallel::finalizeMpi();
   return EXIT_SUCCESS;
 }

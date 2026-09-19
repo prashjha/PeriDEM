@@ -232,6 +232,7 @@ void exchangeDoubles(data::ModelData &data, std::vector<double> &field) {
 
 void pd::setupDofPartition(data::ModelData &data) {
   data.d_pdDofMpi = false;
+  data.d_pdGrainAligned = false;
   data.d_pdNodePartition.clear();
   data.d_pdGhostNeedFrom.clear();
   data.d_pdGhostServeTo.clear();
@@ -241,16 +242,6 @@ void pd::setupDofPartition(data::ModelData &data) {
   const std::string strategy = particle::resolvedMpiStrategy(data);
   if (strategy != "dof")
     return;
-  // Multi_Particle + contact: nodal Metis across grains breaks contact. Grain
-  // ownership (particle-MPI) is the supported parallel mode; treat dof as
-  // grain-aligned particle-MPI for this sim type.
-  if (data.d_input_p && data.d_input_p->isMultiParticle()) {
-    if (util::parallel::mpiRank() == 0)
-      util::io::print(
-          "PD DOF-MPI: Multi_Particle uses grain-aligned particle-MPI "
-          "(nodal Metis disabled with contact)\n");
-    return;
-  }
   const int size = util::parallel::mpiSize();
   if (size <= 1)
     return;
@@ -258,9 +249,12 @@ void pd::setupDofPartition(data::ModelData &data) {
     return;
 
   data.d_pdDofMpi = true;
+  data.d_pdGrainAligned = false; // DOF-MPI = node owners, never whole-grain brick
   const int rank = util::parallel::mpiRank();
   const size_t n_nodes = data.d_x.size();
 
+  // Partition nodes across ranks (graph partition). Walls / Multi_Particle do
+  // not change the mode: DOF-MPI always distributes nodes.
   if (rank == 0) {
     mesh::metisGraphPartition("metis_kway", data.d_neighPd,
                               data.d_pdNodePartition,
@@ -279,8 +273,14 @@ void pd::setupDofPartition(data::ModelData &data) {
   buildGhostPlan(data);
 
   util::io::print(std::format(
-      "PD DOF-MPI: rank {}/{} owns {}/{} nodes (metis_kway)\n", rank, size,
-      n_owned, n_nodes));
+      "DOF-MPI: rank {}/{} owns {}/{} nodes\n", rank, size, n_owned, n_nodes));
+}
+
+static void refreshVMagFromV(data::ModelData &data) {
+  if (data.d_vMag.size() != data.d_v.size())
+    data.d_vMag.resize(data.d_v.size(), 0.);
+  for (size_t i = 0; i < data.d_v.size(); ++i)
+    data.d_vMag[i] = data.d_v[i].length();
 }
 
 void pd::exchangeGhostDisplacement(data::ModelData &data) {
@@ -289,13 +289,17 @@ void pd::exchangeGhostDisplacement(data::ModelData &data) {
   using clock = std::chrono::steady_clock;
   const auto t0 = clock::now();
 
-  // Contact couples nodes outside the PD Metis halo. For Multi_Particle,
-  // sync full owned u/v so every rank sees consistent kinematics for contact.
+  // DOF-MPI: each rank owns a subset of nodes. Before contact (and for PD
+  // neighbors outside the local halo), every rank needs a consistent full
+  // copy of u and v on Multi_Particle. Single_Particle has no inter-body
+  // contact — PD halo exchange is enough.
+  // Always refresh d_vMag after rewriting d_v (contact search uses vMag).
   if (data.d_input_p && data.d_input_p->isMultiParticle()) {
     syncAllOwnedPoints(data, data.d_u);
     syncAllOwnedPoints(data, data.d_v);
     for (size_t i = 0; i < data.d_x.size(); ++i)
       data.d_x[i] = data.d_xRef[i] + data.d_u[i];
+    refreshVMagFromV(data);
   } else {
     exchangePoints(data, data.d_u);
     exchangePoints(data, data.d_v);
@@ -318,8 +322,6 @@ void pd::exchangeGhostTheta(data::ModelData &data) {
   using clock = std::chrono::steady_clock;
   const auto t0 = clock::now();
   if (data.d_input_p && data.d_input_p->isMultiParticle()) {
-    // Same rationale as displacement: contact/PD neighbors may lie outside
-    // the Metis PD halo on Multi_Particle runs.
     const int rank = util::parallel::mpiRank();
     const size_t n = data.d_thetaX.size();
     std::vector<double> buf(n, 0.);

@@ -17,13 +17,14 @@ class ModelData;
 
 namespace pd {
 
-/*! @brief True when nodal DOF MPI is active (Single_Particle, mpiSize > 1). */
+/*! @brief True when nodal DOF MPI is active (mpiSize > 1, MPI_Strategy=dof). */
 bool dofMpiEnabled(const data::ModelData &data);
 
 /*!
  * @brief Metis-partition nodes on the PD neighbor graph and build ghost plans.
  * Call after d_neighPd is ready and before (or while) building d_fPdCompNodes.
- * No-op for multi-particle or single-rank runs.
+ * Works for Single_Particle and Multi_Particle when MPI_Strategy is dof.
+ * No-op for single-rank runs or other strategies.
  */
 void setupDofPartition(data::ModelData &data);
 

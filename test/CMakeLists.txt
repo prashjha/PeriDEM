@@ -32,6 +32,7 @@ add_subdirectory(test_data/peridem/self_contact_mode1_inbuilt)
 add_subdirectory(test_data/peridem/wall_analytical_inbuilt)
 add_subdirectory(test_data/peridem/notched_impact_inbuilt)
 add_subdirectory(test_data/peridem/jha2021_comp_n50)
+add_subdirectory(test_data/peridem/mpi_identity_twop_wall)
 
 # ---------------------------------------------------------------------------
 # CI / environment
@@ -145,6 +146,36 @@ add_test(NAME Test_PeriDEM_twop_circ_inbuilt_contact
 set_tests_properties(Test_PeriDEM_twop_circ_inbuilt_contact PROPERTIES
   LABELS "PeriDEM;Examples"
   TIMEOUT 180
+)
+
+# Multi_Particle DOF-MPI: serial vs particle@2 vs dof@2 on bottom-patch impact.
+configure_file(
+  ${CMAKE_SOURCE_DIR}/test/test_data/peridem/twop_circ_inbuilt/run_mpi_dof_multip_compare.sh
+  ${CMAKE_BINARY_DIR}/test/test_data/peridem/twop_circ_inbuilt/run_mpi_dof_multip_compare.sh
+  COPYONLY
+)
+add_test(NAME Test_PeriDEM_twop_mpi_dof_multip
+  COMMAND ${BASH_PROGRAM} ./run_mpi_dof_multip_compare.sh
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
+)
+set_tests_properties(Test_PeriDEM_twop_mpi_dof_multip PROPERTIES
+  LABELS "PeriDEM;MPI"
+  TIMEOUT 300
+)
+
+# Quick: 2 grains + 1 fixed wall; BC + PP + wall contact; final nodal identity.
+configure_file(
+  ${CMAKE_SOURCE_DIR}/test/test_data/peridem/mpi_identity_twop_wall/run_compare.sh
+  ${CMAKE_BINARY_DIR}/test/test_data/peridem/mpi_identity_twop_wall/run_compare.sh
+  COPYONLY
+)
+add_test(NAME Test_PeriDEM_mpi_identity_twop_wall
+  COMMAND ${BASH_PROGRAM} ./run_compare.sh
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_mpi_identity_twop_wall>
+)
+set_tests_properties(Test_PeriDEM_mpi_identity_twop_wall PROPERTIES
+  LABELS "PeriDEM;MPI"
+  TIMEOUT 120
 )
 
 # Same Table-2 kinematics (test 2); Damping_Law off vs com_and_node against
@@ -318,6 +349,21 @@ add_test(NAME Test_PeriDEM_jha2021_comp_n50_mpi_particle
 set_tests_properties(Test_PeriDEM_jha2021_comp_n50_mpi_particle PROPERTIES
   LABELS "PeriDEM;MPI"
   TIMEOUT 180
+)
+
+# Multi_Particle DOF-MPI on compressive pack (12 grains default): none vs particle vs dof.
+configure_file(
+  ${CMAKE_SOURCE_DIR}/test/test_data/peridem/jha2021_comp_n50/run_mpi_dof_comp_compare.sh
+  ${CMAKE_BINARY_DIR}/test/test_data/peridem/jha2021_comp_n50/run_mpi_dof_comp_compare.sh
+  COPYONLY
+)
+add_test(NAME Test_PeriDEM_comp_mpi_dof_multip
+  COMMAND ${BASH_PROGRAM} ./run_mpi_dof_comp_compare.sh
+  WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_jha2021_comp_n50>
+)
+set_tests_properties(Test_PeriDEM_comp_mpi_dof_multip PROPERTIES
+  LABELS "PeriDEM;MPI"
+  TIMEOUT 600
 )
 
 # Artificial particle-MPI parallel VTU/PVTU/PVD layout (not physics identity).

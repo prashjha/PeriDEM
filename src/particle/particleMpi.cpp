@@ -321,13 +321,10 @@ void particle::assignMpiOwners(data::ModelData &data) {
       p->d_mpiOwner = -1;
   }
 
-  // Particle ownership for particle strategy, and for Multi_Particle DOF
-  // (cross-grain Metis splits contact kinematics; keep each grain on one rank).
+  // Particle-MPI only: spatial brick over grain centers.
+  // DOF-MPI assigns nodes in pd::setupDofPartition; do not also brick grains.
   const bool use_particle_partition =
-      (strategy == "particle" ||
-       (strategy == "dof" && data.d_input_p &&
-        data.d_input_p->isMultiParticle())) &&
-      size > 1 && !grains.empty();
+      strategy == "particle" && size > 1 && !grains.empty();
 
   if (!use_particle_partition) {
     for (auto *p : grains)
@@ -397,6 +394,15 @@ void particle::assignMpiOwners(data::ModelData &data) {
 
 void particle::exchangeGhostKinematics(data::ModelData &data) {
   if (!util::parallel::isMpiEnabled()) {
+    data.d_mpiIncludeInContactCloud.assign(data.d_particlesListTypeAll.size(),
+                                           1);
+    return;
+  }
+
+  // Particle-MPI only. DOF-MPI owns nodes, not whole grains; grain packing
+  // from the "grain owner" rank would overwrite remote-owned nodal u/v with
+  // stale zeros. Nodal sync lives in pd::exchangeGhostDisplacement.
+  if (data.d_pdDofMpi || resolvedMpiStrategy(data) == "dof") {
     data.d_mpiIncludeInContactCloud.assign(data.d_particlesListTypeAll.size(),
                                            1);
     return;

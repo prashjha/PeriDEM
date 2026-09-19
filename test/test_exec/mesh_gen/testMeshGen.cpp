@@ -137,6 +137,9 @@ int main() {
   const double s = 0.001;
   util::io::log("Builtin Gmsh mesh smoke tests (exampleGeomParams + bounding box)...\n");
   for (const std::string &name : geom::getAcceptableGeometries()) {
+    // "complex" needs subtype/flag vectors; not covered by exampleGeomParams.
+    if (name == "complex")
+      continue;
     if (!builtinMeshSmokeTestForGeometry(name, s)) {
       util::io::log(std::format("Mesh smoke failed for geometry: {}\n", name));
       allTestsPassed = false;

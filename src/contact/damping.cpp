@@ -24,15 +24,14 @@
 
 void contact::Damping::apply(data::ModelData &data) {
   util::io::log(3, "    Computing normal damping force \n");
-  // Under DOF-MPI only rank 0 applies COM damping (avoids N-rank duplication
-  // when grain ownership is inactive).
-  if (data.d_pdDofMpi && util::parallel::mpiRank() != 0)
-    return;
+  const int mpi_rank = util::parallel::mpiRank();
   for (auto &pi : data.d_particlesListTypeParticle) {
 
     if (!pi->d_computeForce)
       continue;
-    if (!particle::isLocallyOwned(*pi))
+    // Particle-MPI: one rank owns each grain. DOF-MPI: every rank may own
+    // some nodes of any grain — compute here, deposit only on owned nodes.
+    if (!data.d_pdDofMpi && !particle::isLocallyOwned(*pi))
       continue;
 
     auto pi_id = pi->getId();
@@ -132,7 +131,13 @@ void contact::Damping::apply(data::ModelData &data) {
       force_i += beta_n * vc_mag * hat_xc_ji / vol_pi;
     }
 
-    for (size_t i = 0; i < pi->getNumNodes(); i++)
-      data.d_f[pi->getNodeId(i)] += force_i;
+    for (size_t i = 0; i < pi->getNumNodes(); i++) {
+      const size_t g = pi->getNodeId(i);
+      if (data.d_pdDofMpi &&
+          (data.d_pdNodePartition.size() != data.d_x.size() ||
+           static_cast<int>(data.d_pdNodePartition[g]) != mpi_rank))
+        continue;
+      data.d_f[g] += force_i;
+    }
   }
 }

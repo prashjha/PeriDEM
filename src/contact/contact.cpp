@@ -294,15 +294,18 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
       util::parallel::isMpiEnabled() &&
       data.d_mpiIncludeInContactCloud.size() == data.d_particlesListTypeAll.size();
 
-  // Optional pruned cloud: owned + ghost + wall nodes only (MPI particle-parallel).
-  // DOF-MPI keeps the full cloud (node owners span many grains).
+  // Particle-MPI: pruned cloud (owned + ghost grains + walls).
+  // DOF-MPI: full cloud — nodes of one grain may sit on many ranks.
   std::vector<util::Point> local_cloud;
   std::vector<size_t> local_to_global;
   std::vector<size_t> local_pt_id;
   std::unique_ptr<nsearch::NFlannSearchKd<3>> local_tree;
 
+  const bool use_full_cloud = data.d_pdDofMpi;
+  const bool use_prune = mpi_prune && !use_full_cloud;
+
   double pt_cloud_update_time = 0.;
-  if (mpi_prune && !data.d_pdDofMpi) {
+  if (use_prune) {
     local_cloud.reserve(data.d_x.size() / static_cast<size_t>(std::max(
                             1, util::parallel::mpiSize())) +
                         1024);
@@ -325,9 +328,8 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
   data.appendKeyData("tree_compute_time", pt_cloud_update_time);
   data.appendKeyData("avg_tree_update_time", pt_cloud_update_time/data.d_infoN);
   data.setKeyData("contact_cloud_node_count",
-                  static_cast<double>((mpi_prune && !data.d_pdDofMpi)
-                                          ? local_cloud.size()
-                                          : data.d_x.size()));
+                  static_cast<double>(use_prune ? local_cloud.size()
+                                                : data.d_x.size()));
 
   if (data.d_neighC.size() != data.d_x.size())
     data.d_neighC.resize(data.d_x.size());
@@ -339,7 +341,7 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
     // Only query owned grain + wall nodes (d_fContCompNodes). Remote grains
     // stay in the search cloud as neighbors but are not search origins.
     const auto &query_nodes = data.d_fContCompNodes;
-    const bool use_local = mpi_prune && !data.d_pdDofMpi;
+    const bool use_local = use_prune;
     taskflow.for_each_index((std::size_t) 0, query_nodes.size(), (std::size_t) 1,
                             [&data, &query_nodes, use_local, &local_to_global,
                              &local_pt_id, &local_tree](std::size_t II) {
@@ -397,7 +399,8 @@ void contact::Contact::updateNeighborlist(data::ModelData &data) {
   data.d_neighWallNodesCondensed.resize(data.d_particlesListTypeAll.size());
 
   for (auto &pi : data.d_particlesListTypeParticle) {
-    if (!particle::isLocallyOwned(*pi))
+    // Particle-MPI: grain owner. DOF-MPI: every rank may own nodes of any grain.
+    if (!data.d_pdDofMpi && !particle::isLocallyOwned(*pi))
       continue;
 
     data.d_neighWallNodes[pi->getId()].resize(pi->getNumNodes());

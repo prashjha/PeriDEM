@@ -7,10 +7,10 @@ Deck is independent of MPI mode. Set `Model.MPI_Strategy`:
 
 | Value | Meaning |
 |-------|---------|
-| `auto` | Multi_Particle → particle-MPI; Single_Particle → DOF-MPI |
+| `auto` | Multi_Particle → Particle-MPI; Single_Particle → DOF-MPI |
 | `none` | No domain decomposition (use `mpirun -n 1`) |
-| `particle` | Grain ownership (spatial brick) |
-| `dof` | Metis nodal DOF partition |
+| `particle` | Particle-MPI: whole grains per rank |
+| `dof` | DOF-MPI: nodes distributed across ranks (including packs with walls) |
 
 ## Run (from a **copy under build/**)
 

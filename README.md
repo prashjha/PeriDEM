@@ -17,11 +17,10 @@
     * [Building the code](#Building-the-code)
     * [Recommendations for quick build](#Recommendations-for-quick-build)
     * [Install & use as a CMake package](#install--use-as-a-cmake-package)
+    * [Parallelism (MPI)](#parallelism-mpi)
   - [Running simulations](#Running-simulations)
-    * [Two-particle with wall](#Two-particle-with-wall)
+    * [Two-particle contact](#Two-particle-contact)
     * [Compressive test](#Compressive-test)
-    * [Attrition tests](#Attrition-tests)
-    * [Single particle deformation](#Single-particle-deformation)
   - [Visualizing results](#Visualizing-results)
   - [Developers](#Developers)
 
@@ -103,19 +102,15 @@ yielding of the system. For more details, we refer to
 
 ### Attrition tests
 
-We consider mix of different particles in a rotating container. Particles considered include circular, triangular, hexagonal, and drum shaped. Particles come in large and small shapes (their sizes are purturbed randomly). In order to to introduce diversity of material properties, we considered large particles to be tougher compared to the smaller ones. Setup files are in [examples/PeriDEM/attrition_tests](./examples/PeriDEM/attrition_tests)
+Mix of circular, triangular, hexagonal, and drum-shaped grains in a rotating container (size and toughness vary). Portable JSON decks:
 
 |                                         <img src="./assets/attrition_test_sim1.gif" width="250">                                         |                                                                              <img src="./assets/attrition_test_sim2.gif" width="250">                                                                               | 
 |:----------------------------------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------:| 
-| Rotating cylinder ([setup](./examples/PeriDEM/attrition_tests/sim1_multi_particle_circ_tri_drum_with_rotating_cylinder_with_protrusion)) | Rotating cylinder with center of rotation offset ([setup](./examples/PeriDEM/attrition_tests/sim2_multi_particle_circ_tri_drum_hex_with_rotating_cylinder_with_protrusion_thin_container_and_change_rotation_rate)) | 
-
-Complex container geometries can be considered as well. For example, the image below is from [attrition_tests](./examples/PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container) and includes rotating rectangle with opening and internal groves of different shapes. The rotating container with particles inside is contained within another rectangle which is fixed in its place. 
-
-<img src="./examples/PeriDEM/attrition_tests/sim4_multi_particle_circ_tri_drum_hex_with_rotating_rectangle_container_with_protrusion_and_opening_within_bigger_rectangle_container/init_view.png" width="600">
+| Rotating cylinder ([setup](./examples/PeriDEM/attrition/sim1_rotating_cylinder)) | Thin container, offset rotation ([setup](./examples/PeriDEM/attrition/sim2_thin_container)) | 
 
 ### Single particle deformation
 
-We can use the `PeriDEM` executable (`PeriDEM/` at the repository root, built as `bin/PeriDEM`) or the `Peridynamics` executable in `apps` to simulate the deformation of a single particle/structure using peridynamics. See [examples/README.md](./examples/README.md) and [examples/Peridynamics](./examples/Peridynamics) folder. 
+Use `bin/PeriDEM` with `Model.Particle_Sim_Type = Single_Particle`. JSON demos: [examples/Peridynamics](./examples/Peridynamics) (`circle/`, `rectangle/`). Index: [examples/README.md](./examples/README.md).
 
 ## Brief implementation details
 
@@ -253,24 +248,26 @@ repository.
   cmake --build build -- -j$(sysctl -n hw.ncpu)
   ./build/hello
   ```
-- External dependencies required on the target system: MPI, Threads, yaml-cpp, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis (found via bundled `FindMetis.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers.
+- External dependencies required on the target system: MPI, Threads, VTK (CommonCore/DataModel/IOXML), BLAS/LAPACK (Accelerate on macOS), Metis (found via bundled `FindMetis.cmake`), plus their transitive libraries. Ensure these are installed and discoverable (e.g., via `CMAKE_PREFIX_PATH` or system paths) when configuring consumers.
 
-### Future plans
+### Parallelism (MPI)
 
-We are trying to make PeriDEM MPI-friendly so that we can target large problems. 
-We are moving in following key directions:
-- MPI parallelism for Peridynamics simulations (deformation of single body subjected to external loading)
-- MPI parallelism for PeriDEM simulations. Issue is distributing particles to different 
-  processors and performing communication efficiently
-- Asynchronous parallelism within MPI? Currently, we use `Taskflow` to perform 
-  parallel for loops in a non-mpi simulation. In the future, we will be interested in using 
-  multithreading combined with MPI to further speed-up the simulations
-- GPU parallelism?
+Decks are independent of MPI mode. Set `Model.MPI_Strategy` in the JSON input:
 
-We are looking for collaborators and HPC experts in making the most of available 
-compute resource and performing truly large-scale high-fidelity granular media simulations. 
-If any of the above future directions interest you or if you have new directions 
-in mind, please do reach out to us.    
+| Value | Meaning |
+|-------|---------|
+| `auto` (default) | Multi_Particle → Particle-MPI; Single_Particle → DOF-MPI |
+| `none` | No domain split (`mpirun -n 1`) |
+| `particle` | **Particle-MPI:** distribute whole particles across ranks |
+| `dof` | **DOF-MPI:** distribute nodes/DOFs across ranks |
+
+- **Particle-MPI:** each rank owns whole grains; ghosts for near contacts and walls.
+- **DOF-MPI:** each rank owns a subset of nodes (any body, including packs with walls). Before contact, Multi_Particle runs sync owned nodal `u`/`v` to every rank.
+- Threads (`-nThreads`) combine with MPI.
+
+Identity checks (serial vs particle@2 vs dof@2) live under `test/test_data/peridem/twop_circ_inbuilt/` and `jha2021_comp_n50/`.
+
+Still open / welcome collaborators: GPU offload; larger-scale weak scaling. 
 
 ### Ask for help
 
@@ -291,63 +288,45 @@ please do reach out to us.
 
 ## Running simulations
 
-Assuming that the input file is `input.yaml` and all other files such as `.msh` 
-file for particle/wall and particle locations file are created and their filenames 
-with paths are correctly provided in `input.yaml`, we will run the problem (using 4 threads) 
+Input is **JSON only** (`bin/PeriDEM -i input.json`). Mesh files (`.msh`) and particle-location CSVs are referenced from the deck. Example:
+
 ```sh
-<path of PeriDEM>/bin/PeriDEM -i input.yaml -nThreads 4
+<path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 4
+# or with MPI
+mpirun -n 4 --quiet <path of PeriDEM>/bin/PeriDEM -i input.json -nThreads 2
 ```
 
-Some examples are listed below.
+Most example folders ship `./run.sh` (or `run_stage1.sh` / `run_stage2.sh`) that locate `bin/PeriDEM` under `build/`. See [examples/README.md](./examples/README.md).
 
-### Two-particle with wall
+### Two-particle contact
 
-Navigate to the example directory [examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp](.examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp) 
-and run the example as follows
-```sh
-# manually
-cd examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp
-mkdir ../out # <-- make directory for simulation output. In .yaml, we specify output path as './out'
-<peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 2
-
-# or call run.sh script
-cd examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size
-./run.sh 4 # with 4 threads
-```
-
-You may also use the included [problem_setup.py](./examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/inp/problem_setup.py) 
-to modify simulation parameters and run the simulation using 
-[run.sh](./examples/PeriDEM/two_particles/twop_wall_concave_diff_material_diff_size/run.sh).
-
-> :exclamation: You may need to modify the path of `PeriDEM` executable in `run.sh` file. 
-
-> In all `problem_setup.py` files in the example and test directory, the main function is `create_input_file()`. 
-> Here we set all model parameters, create `.yaml` input file, and `.geo` files for meshing.
+C++ driver example (shares the twop inbuilt test): [examples/PeriDEM/twop_circ_contact](./examples/PeriDEM/twop_circ_contact). For a JSON deck via `bin/PeriDEM`, start from compressive or attrition smoke decks, or the Peridynamics single-body demos.
 
 ### Compressive test
 
-Navigate to the example directory [examples/PeriDEM/compressive_test/compression_large_set/inp](./examples/PeriDEM/compressive_test/compression_large_set/inp) 
-and run the example as follows (note that this is a computationally expensive example)
+| Path | Role |
+|------|------|
+| [examples/PeriDEM/compressive/n12](./examples/PeriDEM/compressive/n12) | Small 4×3 pack; smoke / MPI identity |
+| [examples/PeriDEM/compressive/n500](./examples/PeriDEM/compressive/n500) | Paper N≈502 two-stage settle → compress |
+
 ```sh
-cd examples/PeriDEM/compressive_test/compression_large_set/inp
-mkdir ../out 
-<peridem build path>bin/PeriDEM -i input_0.yaml -nThreads 12
+cd examples/PeriDEM/compressive/n12
+./run.sh                          # smoke by default
+DECK=input_smoke_dof.json NP=4 ./run.sh
 
-# or you can use the run.sh script in the path examples/PeriDEM/compressive_test/compression_large_set/
+cd examples/PeriDEM/compressive/n500
+NP=4 ./run_stage1.sh              # or use checked-in settled restart
+NP=1 ./run_stage2.sh
 ```
-
-As before:
-  - you can modify [problem_setup.py](./examples/PeriDEM/compressive_test/compression_large_set/inp/problem_setup.py), see `create_input_file()` method, to change the simulation settings 
-  - run the simulation using [run.sh](./examples/PeriDEM/compressive_test/compression_large_set//run.sh).
 
 ## Visualizing results
 
-Simulation files `output_*.vtu` can be loaded in either [ParaView](https://www.paraview.org/) 
+Simulation files `output_*.vtu` (and `output.pvd` when `PVD_Collection` is on) can be loaded in either [ParaView](https://www.paraview.org/) 
  or [VisIt](https://wci.llnl.gov/simulation/computer-codes/visit). 
 
 By default, in all tests and examples, we only output the particle mesh, i.e., 
 a pair of nodal coordinate and nodal volume, and not the finite element mesh 
-(it can be enabled by setting `Perform_FE_Out: true` within `Output` block in the input `yaml` file). 
+(it can be enabled by setting `Perform_FE_Out` to `true` within the `Output` block in the JSON deck). 
 After loading the file in ParaView, the first thing to do is to change the plot 
 type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do are:
   - Adjust the radius of circle/sphere at the nodes by going to the `Properties` 
@@ -365,8 +344,7 @@ type from **`Surface`** to **`Point Gaussian`**. Next, a couple of things to do 
 
 ## Contributing
 
-We welcome contributions to the code. In `Future plans` section above, some 
-potential directions are listed.
+We welcome contributions to the code. Open directions are noted under [Parallelism (MPI)](#parallelism-mpi).
 Please fork this repository, make changes, and make a pull request to the 
 source branch.  
  

@@ -1,0 +1,138 @@
+{
+  "Comment": "Short smoke of rectangle Single_Particle (CreateMesh; same IC/BC as input.json)",
+  "Model": {
+    "Dimension": 2,
+    "Discretization_Type": {
+      "Spatial": "finite_difference",
+      "Time": "central_difference"
+    },
+    "Final_Time": 0.0002,
+    "Time_Steps": 400,
+    "Particle_Sim_Type": "Single_Particle",
+    "MPI_Strategy": "auto"
+  },
+  "Zone": {
+    "Zones": 1
+  },
+  "Particle": {
+    "Sets": 1,
+    "Set_1": {
+      "Type": "rectangle",
+      "Parameters": [
+        0,
+        0,
+        0,
+        0.01,
+        0.01,
+        0
+      ]
+    }
+  },
+  "Mesh": {
+    "Sets": 1,
+    "Set_1": {
+      "CreateMesh": {
+        "Flag": true,
+        "Info": "uniform"
+      },
+      "Mesh_Size": 0.0002
+    }
+  },
+  "Material": {
+    "Sets": 1,
+    "Set_1": {
+      "Type": "PDState",
+      "Horizon": 0.00032,
+      "Density": 1200.0,
+      "Compute_From_Classical": true,
+      "K": 216000.0,
+      "G": 129600.0,
+      "Gc": 500.0,
+      "Influence_Function": {
+        "Type": 1
+      }
+    }
+  },
+  "Displacement_BC": {
+    "Sets": 2,
+    "Set_1": {
+      "Region": {
+        "Geometry": {
+          "Type": "rectangle",
+          "Parameters": [
+            0,
+            0,
+            0,
+            0.002,
+            0.002,
+            0
+          ]
+        }
+      },
+      "Direction": [
+        1,
+        2
+      ],
+      "Time_Function": {
+        "Type": "constant",
+        "Parameters": [
+          0.0
+        ]
+      },
+      "Spatial_Function": {
+        "Type": "constant"
+      },
+      "Zero_Displacement": true
+    },
+    "Set_2": {
+      "Region": {
+        "Geometry": {
+          "Type": "rectangle",
+          "Parameters": [
+            0.008,
+            0.008,
+            0,
+            0.01,
+            0.01,
+            0
+          ]
+        }
+      },
+      "Direction": [
+        1,
+        2
+      ],
+      "Time_Function": {
+        "Type": "linear",
+        "Parameters": [
+          0.01
+        ]
+      },
+      "Spatial_Function": {
+        "Type": "constant"
+      }
+    }
+  },
+  "Output": {
+    "Path": "runs/smoke/",
+    "Tags": [
+      "Displacement",
+      "Velocity",
+      "Force",
+      "Damage_Z",
+      "Damage",
+      "Particle_ID",
+      "Fixity"
+    ],
+    "Output_Interval": 100,
+    "Compress_Type": "zlib",
+    "Perform_FE_Out": false,
+    "Perform_Out": true,
+    "Debug": 1,
+    "Tag_PP": "1",
+    "PVD_Collection": true
+  },
+  "Test": {
+    "Test_Name": "test_peridynamics"
+  }
+}

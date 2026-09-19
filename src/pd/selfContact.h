@@ -44,7 +44,7 @@ public:
 
 /*!
  * Bhattacharya–Lipton 2023 §4.4: act only when current separation < Rc.
- * Natural length is r0 if r0 < Rc, else Rc (inter-particle short-range law).
+ * Natural length is r0 when r0 > 0, else Rc (short-range: only when R < Rc).
  */
 class ReferenceGapSelfContact : public SelfContact {
 public:

@@ -74,6 +74,7 @@ public:
         d_mpiGhostPlanValid(false),
         d_mpiGhostStepsSinceRebuild(0),
         d_pdDofMpi(false),
+        d_pdGrainAligned(false),
         d_uLoading_p(nullptr), d_fLoading_p(nullptr),
         d_fracture_p(nullptr), d_nsearch_p(nullptr)  {}
 
@@ -675,8 +676,17 @@ public:
   /*! @brief Force steps since last ghost-plan rebuild. */
   size_t d_mpiGhostStepsSinceRebuild;
 
-  /*! @brief Nodal DOF-MPI active (Single_Particle + mpiSize > 1). */
+  /*! @brief Nodal DOF-MPI active. */
   bool d_pdDofMpi;
+
+  /*!
+   * @brief DOF owners match whole-grain brick (same as particle-MPI).
+   * When true, every node of a grain lives on one rank — contact ghosts are
+   * the particle ghost plan, not a full nodal Allreduce.
+   * When false, Metis may split a grain across ranks — need syncAllOwned (or
+   * a PD halo large enough for contact) before contact reads remote u/v.
+   */
+  bool d_pdGrainAligned;
 
   /*! @brief Owner rank for each node when d_pdDofMpi is true. */
   std::vector<size_t> d_pdNodePartition;

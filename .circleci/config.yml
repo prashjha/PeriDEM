@@ -22,7 +22,7 @@ commands:
     parameters:
       cmake-args:
         type: string
-        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Apps=ON -DEnable_Documentation=OFF -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
+        default: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Apps=ON -DEnable_Examples=ON -DEnable_Documentation=OFF -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
     steps:
       - run: 
           name: Cmake configure
@@ -77,7 +77,7 @@ jobs:
       steps:
         - checkout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Apps=ON -DEnable_Documentation=ON -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Apps=ON -DEnable_Examples=ON -DEnable_Documentation=ON -DDisable_Docker_MPI_Tests=OFF <<pipeline.parameters.cmake-include-dirs>>
         - libdoc
         - run:
             name: Push doc files to gh-pages
@@ -181,7 +181,7 @@ jobs:
       steps:
         - checkout
         - libcmake:
-            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Apps=ON -DDisable_Docker_MPI_Tests=OFF -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" <<pipeline.parameters.cmake-include-dirs>>
+            cmake-args: -DCMAKE_BUILD_TYPE=Release -DEnable_Tests=ON -DEnable_Apps=ON -DEnable_Examples=ON -DDisable_Docker_MPI_Tests=OFF -DCMAKE_CXX_FLAGS="-g -O0 -fprofile-arcs -ftest-coverage -fpic" <<pipeline.parameters.cmake-include-dirs>>
         - libmake
         - libtest
         - run:

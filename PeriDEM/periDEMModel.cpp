@@ -48,6 +48,7 @@
 #include <cstdlib>
 #include <filesystem>
 #include <format>
+#include <iostream>
 #include <random>
 
 #include <taskflow/taskflow/taskflow.hpp>
@@ -502,6 +503,10 @@ void PeriDEMModel::computeExternalForces() {
     if (p->isWall()) {
       if (util::parallel::mpiRank() == 0)
         d_fLoading_p->apply(d_time, p);
+    } else if (d_pdDofMpi) {
+      // Nodal ownership: apply on every rank; loading loops all nodes of p,
+      // but only owned force nodes are integrated.
+      d_fLoading_p->apply(d_time, p);
     } else if (particle::isLocallyOwned(*p)) {
       d_fLoading_p->apply(d_time, p);
     }

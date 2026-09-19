@@ -23,6 +23,7 @@
 #include "material/materialUtil.h"
 #include "data/modelData.h"
 #include "particle/baseParticle.h"
+#include "particle/particleMpi.h"
 #include "periDEMModel.h"
 #include "postprocess/postprocess.h"
 #include "util/function.h"
@@ -32,8 +33,10 @@
 #include <mpi.h>
 #include <algorithm>
 #include <cmath>
+#include <cstring>
 #include <filesystem>
 #include <format>
+#include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <string>
@@ -82,7 +85,8 @@ json buildInputJson(const std::string &output_path_for_deck,
                     const std::filesystem::path &mesh_fixed,
                     const std::filesystem::path &mesh_moving, double final_time,
                     size_t num_steps, bool file_mesh, bool write_meshes,
-                    size_t search_interval, int ncols, int nrows) {
+                    size_t search_interval, int ncols, int nrows,
+                    const std::string &mpi_strategy = "auto") {
 
   if (ncols < 1 || nrows < 1)
     throw std::runtime_error("jha2021_comp: ncols and nrows must be >= 1");
@@ -159,6 +163,7 @@ json buildInputJson(const std::string &output_path_for_deck,
   auto modelDeckJson = inp::ModelDeck::getExampleJson(
       2, final_time, num_steps, "finite_difference", "central_difference", true, 2,
       "Multi_Particle", 0);
+  modelDeckJson["MPI_Strategy"] = mpi_strategy;
 
   std::vector<std::string> out_tags = {"Displacement", "Velocity", "Force", "Damage_Z",
                                        "Damage", "Particle_ID", "Contact_Nodes"};
@@ -296,8 +301,18 @@ double maxAbsForceFromCsv(const std::filesystem::path &csv) {
 
 class GrainContactProbe : public postprocess::Postprocess {
 public:
+  GrainContactProbe(std::filesystem::path out_dir = {}, size_t interval = 0)
+      : d_outDir(std::move(out_dir)), d_interval(interval) {
+    if (!d_outDir.empty() && util::parallel::mpiRank() == 0) {
+      std::filesystem::create_directories(d_outDir / "nodal");
+      d_metricOs.open(d_outDir / "mpi_metric_ts.csv");
+      d_metricOs << "step,t,max_u,com0x,com0y\n";
+    }
+  }
+
   void checkStop(data::ModelData &data) override {
     postprocess::Postprocess::checkStop(data);
+    sampleMetric(data);
     if (data.d_particlesListTypeAll.size() < 3)
       return;
     double Rc = 0.;
@@ -347,11 +362,97 @@ public:
   int maxPairs() const { return d_maxPairs; }
 
 private:
+  static bool ownsNode(const data::ModelData &data, size_t i) {
+    const int rank = util::parallel::mpiRank();
+    if (data.d_pdDofMpi) {
+      if (i >= data.d_pdNodePartition.size())
+        return false;
+      return static_cast<int>(data.d_pdNodePartition[i]) == rank;
+    }
+    for (const auto *p : data.d_particlesListTypeAll) {
+      const size_t i0 = p->d_globStart;
+      const size_t i1 = i0 + p->getNumNodes();
+      if (i < i0 || i >= i1)
+        continue;
+      if (p->isWall())
+        return rank == 0;
+      return particle::isLocallyOwned(*p);
+    }
+    return rank == 0;
+  }
+
+  void sampleMetric(data::ModelData &data) {
+    if (d_outDir.empty() || d_interval == 0)
+      return;
+    const size_t nstep = data.currentStep();
+    if (nstep % d_interval != 0 && nstep < data.numTimeSteps())
+      return;
+    double max_u = 0.;
+    for (const auto &u : data.d_u)
+      max_u = std::max(max_u, u.length());
+    if (util::parallel::mpiSize() > 1)
+      MPI_Allreduce(MPI_IN_PLACE, &max_u, 1, MPI_DOUBLE, MPI_MAX,
+                    util::parallel::mpiComm());
+    double com0x = 0., com0y = 0.;
+    if (!data.d_particlesListTypeParticle.empty()) {
+      const auto c = data.d_particlesListTypeParticle[0]->getXCenter();
+      com0x = c.d_x;
+      com0y = c.d_y;
+    }
+    if (util::parallel::mpiRank() == 0) {
+      d_metricOs << std::format("{},{:.12e},{:.12e},{:.12e},{:.12e}\n", nstep,
+                                data.d_time, max_u, com0x, com0y);
+      d_metricOs.flush();
+    }
+    const size_t n = data.d_u.size();
+    std::vector<double> buf(6 * n, 0.);
+    for (size_t i = 0; i < n; ++i) {
+      if (!ownsNode(data, i))
+        continue;
+      buf[6 * i + 0] = data.d_u[i].d_x;
+      buf[6 * i + 1] = data.d_u[i].d_y;
+      buf[6 * i + 2] = data.d_u[i].d_z;
+      buf[6 * i + 3] = data.d_v[i].d_x;
+      buf[6 * i + 4] = data.d_v[i].d_y;
+      buf[6 * i + 5] = data.d_v[i].d_z;
+    }
+    if (util::parallel::mpiSize() > 1)
+      MPI_Allreduce(MPI_IN_PLACE, buf.data(), static_cast<int>(buf.size()),
+                    MPI_DOUBLE, MPI_SUM, util::parallel::mpiComm());
+    if (util::parallel::mpiRank() != 0)
+      return;
+    if (!d_wroteXref) {
+      std::ofstream xr(d_outDir / "nodal" / "x_ref.bin", std::ios::binary);
+      const uint32_t nn = static_cast<uint32_t>(n);
+      xr.write(reinterpret_cast<const char *>(&nn), sizeof(nn));
+      for (size_t i = 0; i < n; ++i) {
+        const double p[3] = {data.d_xRef[i].d_x, data.d_xRef[i].d_y,
+                             data.d_xRef[i].d_z};
+        xr.write(reinterpret_cast<const char *>(p), sizeof(p));
+      }
+      d_wroteXref = true;
+    }
+    std::ofstream os(d_outDir / "nodal" / std::format("uv_{:06d}.bin", nstep),
+                     std::ios::binary);
+    const char magic[4] = {'P', 'D', 'U', 'V'};
+    const uint32_t step32 = static_cast<uint32_t>(nstep);
+    const uint32_t nn = static_cast<uint32_t>(n);
+    os.write(magic, 4);
+    os.write(reinterpret_cast<const char *>(&step32), sizeof(step32));
+    os.write(reinterpret_cast<const char *>(&nn), sizeof(nn));
+    os.write(reinterpret_cast<const char *>(buf.data()),
+             static_cast<std::streamsize>(buf.size() * sizeof(double)));
+  }
+
   double d_minGap = 1.0e9;
   double d_gap0 = 0.;
   double d_Rc = 0.;
   double d_tMin = 0.;
   int d_maxPairs = 0;
+  std::filesystem::path d_outDir;
+  size_t d_interval = 0;
+  std::ofstream d_metricOs;
+  bool d_wroteXref = false;
 };
 
 } // namespace
@@ -385,6 +486,11 @@ int main(int argc, char *argv[]) {
     ncols = std::stoi(input.getCmdOption("-nCols"));
   if (input.cmdOptionExists("-nRows"))
     nrows = std::stoi(input.getCmdOption("-nRows"));
+  std::string mpi_strategy = "auto";
+  if (input.cmdOptionExists("-mpiStrategy"))
+    mpi_strategy = input.getCmdOption("-mpiStrategy");
+  util::io::print(std::format("MPI_Strategy = {}, pack = {}x{} ({} grains)\n",
+                              mpi_strategy, ncols, nrows, ncols * nrows));
 
   namespace fs = std::filesystem;
   const fs::path cwd = fs::current_path();
@@ -428,7 +534,7 @@ int main(int argc, char *argv[]) {
   const std::string output_path_for_deck = directoryPathWithTrailingSep(out_dir);
   auto inputJson = buildInputJson(output_path_for_deck, mesh_cir, mesh_fixed, mesh_moving,
                                   final_time, num_steps, file_mesh, write_meshes,
-                                  search_interval, ncols, nrows);
+                                  search_interval, ncols, nrows, mpi_strategy);
 
   {
     std::ofstream os(inp_dir / "input.json");
@@ -445,7 +551,8 @@ int main(int argc, char *argv[]) {
 
   auto deck = std::make_shared<inp::Input>(inputJson);
   PeriDEMModel dem(deck);
-  auto probe = std::make_unique<GrainContactProbe>();
+  const size_t ts_every = std::max<size_t>(1, num_steps / 100);
+  auto probe = std::make_unique<GrainContactProbe>(out_dir, ts_every);
   GrainContactProbe *probe_p = probe.get();
   dem.setPostprocess(std::move(probe));
   dem.run(deck);
@@ -511,7 +618,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  // Metric for serial vs MPI particle-parallel checks (rank 0).
+  // Metric for serial vs MPI checks (rank 0). Allreduce max|u| for DOF-MPI.
   {
     double max_u = 0.;
     for (const auto &u : dem.d_u)
@@ -522,6 +629,9 @@ int main(int argc, char *argv[]) {
       com0x = c.d_x;
       com0y = c.d_y;
     }
+    if (util::parallel::mpiSize() > 1)
+      MPI_Allreduce(MPI_IN_PLACE, &max_u, 1, MPI_DOUBLE, MPI_MAX,
+                    util::parallel::mpiComm());
     if (util::parallel::mpiRank() == 0) {
       std::ofstream os(out_dir / "mpi_metric.txt");
       os << std::format("{:.12e} {:.12e} {:.12e}\n", max_u, com0x, com0y);

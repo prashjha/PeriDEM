@@ -76,8 +76,8 @@ namespace inp {
      * Allowed: `auto` (default), `none`, `particle`, `dof`.
      * - auto: Multi_Particle → particle; Single_Particle → dof
      * - none: no domain split (use one MPI rank)
-     * - particle: spatial grain ownership
-     * - dof: Metis nodal partition
+     * - particle: distribute whole particles across ranks (Particle-MPI)
+     * - dof: distribute nodes/DOFs across ranks (DOF-MPI)
      */
     std::string d_mpiStrategy;
 

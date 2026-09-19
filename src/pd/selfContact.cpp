@@ -48,12 +48,14 @@ util::Point BrokenBondKnSelfContact::force(const util::Point &yji, double volj,
 util::Point ReferenceGapSelfContact::force(const util::Point &yji, double volj,
                                            double Kn, double Rc,
                                            double r0) const {
-  // Short-range only: act when current separation < Rc. Natural length is
-  // min(r0, Rc) when r0 is positive; otherwise Rc.
+  // Short-range only: act when current separation < Rc. Natural length is the
+  // unbroken reference distance r0 when available (often r0 > Rc for Mode-I
+  // crack-crossing bonds); otherwise Rc. Using min(r0, Rc) collapsed to Rc
+  // whenever r0 > Rc and made this law identical to broken_bond_kn.
   const double Rji = yji.length();
   if (!(Rji > 0.) || !(Rc > 0.) || !(Rji < Rc))
     return util::Point();
-  const double natural = (r0 > 0. && r0 < Rc) ? r0 : Rc;
+  const double natural = (r0 > 0.) ? r0 : Rc;
   return cappedRepulsive(yji, volj, Kn, natural);
 }
 

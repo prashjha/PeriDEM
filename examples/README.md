@@ -16,7 +16,11 @@
 
 ## Peridynamics (single particle)
 
-Manual YAML demos (not Enable_Examples): `Peridynamics/circle/`, `Peridynamics/rectangle/`.
+JSON demos for `bin/PeriDEM` (`Single_Particle`). See `Peridynamics/README.md`.
 
-A curated showcase suite (Silling KW, compressive restart, attrition, ellipse–triangle)
-will live under `../ShowcaseExamples/` once runs are packaged.
+| Path | Role |
+|------|------|
+| `Peridynamics/circle/` | File mesh; fixed / pull BC |
+| `Peridynamics/rectangle/` | In-process `CreateMesh`; fixed / pull BC |
+
+`./run.sh` defaults to `input_smoke.json`. Set `DECK=input.json` for the full run.

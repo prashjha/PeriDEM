@@ -11,7 +11,7 @@ cmake_minimum_required(VERSION 3.10...4.3)
 #----------------------------------#
 #<<<<<<<<<< Project name >>>>>>>>>>#
 #----------------------------------#
-project(PeriDEM VERSION 0.2.1 LANGUAGES CXX C)
+project(PeriDEM VERSION 0.3.0 LANGUAGES CXX C)
 
 set(CMAKE_PROJECT_HOMEPAGE_URL "https://github.com/prashjha/PeriDEM")
 set(CMAKE_PROJECT_DESCRIPTION "PeriDEM -- Peridynamics-based high-fidelity model for granular media")
