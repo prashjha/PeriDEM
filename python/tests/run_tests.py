@@ -135,6 +135,17 @@ def main(argv: list[str] | None = None) -> int:
             print(f)
             print("-" * 70)
     print(f"\n{total_pass} passed, {total_fail} failed")
+
+    # Collecting nothing is a failure, not a pass. A module whose tests this
+    # runner cannot see, such as one that states them through pytest, would
+    # otherwise report success without having run anything.
+    if total_pass == 0 and total_fail == 0:
+        what = "no test ran"
+        if args.select:
+            what += f" (nothing matched {', '.join(args.select)})"
+        print(f"{what}: {', '.join(p_.name for p_ in paths)}", file=sys.stderr)
+        return 2
+
     return 0 if total_fail == 0 else 1
 
 
