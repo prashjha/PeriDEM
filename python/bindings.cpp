@@ -315,9 +315,12 @@ std::string contact_pair_json(double contact_r, bool compute_contact_r,
 
 std::string bc_json(size_t n_force_sets, size_t n_disp_sets, size_t n_ic_sets,
                     bool gravity_active, const std::vector<double> &gravity) {
-  return inp::BCDeck::getExampleJson(n_force_sets, n_disp_sets, n_ic_sets,
-                                     gravity_active, to_point(gravity))
-      .dump();
+  json given = json{{"Force_BC_Sets", n_force_sets},
+                    {"Displacement_BC_Sets", n_disp_sets},
+                    {"IC_Sets", n_ic_sets}};
+  if (gravity_active)
+    given["Gravity"] = to_point(gravity).toVec();
+  return inp::BCDeck::getExampleJson(given).dump();
 }
 
 std::string bc_set_json(const std::string &type, const Geometry *region,
@@ -330,13 +333,24 @@ std::string bc_set_json(const std::string &type, const Geometry *region,
                         const std::vector<size_t> &direction,
                         bool zero_displacement, const std::string &ic_type,
                         const std::vector<double> &ic_vec) {
-  const bool region_active = region != nullptr;
+  json given = json{{"Type", type},
+                    {"Particle_List", p_list},
+                    {"Particle_Exclude_List", p_exclude_list},
+                    {"Direction", direction},
+                    {"Zero_Displacement", zero_displacement},
+                    {"IC_Type", ic_type},
+                    {"IC_Vector", ic_vec}};
+  if (!time_fn_type.empty())
+    given["Time_Function"] =
+        json{{"Type", time_fn_type}, {"Parameters", time_fn_params}};
+  if (!spatial_fn_type.empty())
+    given["Spatial_Function"] =
+        json{{"Type", spatial_fn_type}, {"Parameters", spatial_fn_params}};
+
   const geom::GeomData region_data =
-      region_active ? region->data() : geom::GeomData();
+      region != nullptr ? region->data() : geom::GeomData();
   return inp::BCBaseDeck::getExampleJson(
-             type, region_active, region_data, p_list, p_exclude_list,
-             time_fn_type, time_fn_params, spatial_fn_type, spatial_fn_params,
-             direction, zero_displacement, ic_type, ic_vec)
+             given, region != nullptr ? &region_data : nullptr)
       .dump();
 }
 

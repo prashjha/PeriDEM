@@ -70,7 +70,8 @@ json buildInputJson(const std::string &output_path,
            {"Tag_PP", ""},
            {"PVD_Collection", false}});
 
-  auto bc = inp::BCDeck::getExampleJson(0, 1, 0, false, util::Point());
+  auto bc = inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 1}});
   bc["Displacement_BC"]["Set_1"] = json{
       {"Particle_List", std::vector<size_t>{1}},
       {"Direction", std::vector<size_t>{1, 2}},

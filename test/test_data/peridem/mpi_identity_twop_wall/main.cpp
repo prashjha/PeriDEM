@@ -256,7 +256,10 @@ json buildInputJson(const std::string &output_path,
            {"PVD_Collection", false}});
 
   // Wall (particle index 2) fully fixed; downward IC on both grains.
-  auto bc = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0, -10, 0));
+  auto bc = inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 1},
+           {"IC_Sets", 1},
+           {"Gravity", util::Point(0, -10, 0).toVec()}});
   bc["Displacement_BC"]["Set_1"] = json{
       {"Particle_List", std::vector<size_t>{2}},
       {"Direction", std::vector<size_t>{1, 2}},
@@ -265,8 +268,10 @@ json buildInputJson(const std::string &output_path,
       {"Spatial_Function", {{"Type", "constant"}}},
       {"Zero_Displacement", true}};
   bc["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
-      "IC", false, geom::GeomData(), {0, 1}, {}, "", {}, "", {}, {}, false,
-      "Constant_Velocity", {0., -0.02, 0.});
+      json{{"Type", "IC"},
+           {"Particle_List", {0, 1}},
+           {"IC_Type", "Constant_Velocity"},
+           {"IC_Vector", {0., -0.02, 0.}}});
 
   auto particle = inp::ParticleDeck::getParticleGeomExampleJson({grain, floor});
   auto mesh_set = [&](const std::filesystem::path &f) {

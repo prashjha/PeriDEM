@@ -157,7 +157,10 @@ json buildInputJson(const std::string &output_path_for_deck,
            {"Tag_PP", ""},
            {"PVD_Collection", true}});
 
-  auto bcDeckJson = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0, -10, 0));
+  auto bcDeckJson = inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 1},
+           {"IC_Sets", 1},
+           {"Gravity", util::Point(0, -10, 0).toVec()}});
 
   if (bottom_patch_bc) {
     // Particle 0 centered at (R1,R1); fix only a bottom strip (not the whole grain).
@@ -174,9 +177,11 @@ json buildInputJson(const std::string &output_path_for_deck,
         {"Zero_Displacement", true}};
   } else {
     bcDeckJson["Displacement_BC"]["Set_1"] =
-        inp::BCBaseDeck::getExampleJson("Displacement_BC", false, geom::GeomData(),
-                                        {0}, {}, "", {}, "", {}, {1, 2}, true, "",
-                                        {});
+        inp::BCBaseDeck::getExampleJson(
+      json{{"Type", "Displacement_BC"},
+           {"Particle_List", {0}},
+           {"Direction", {1, 2}},
+           {"Zero_Displacement", true}});
   }
 
   std::vector<double> ic_vel = {0.0, 0.0, 0.0};
@@ -187,9 +192,11 @@ json buildInputJson(const std::string &output_path_for_deck,
       ic_vel[1] = -std::sqrt(2.0 * std::abs(-10.0) * fallen);
   }
   ic_vel[0] = ic_vx;
-  bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("IC", false, geom::GeomData(),
-      {1}, {}, "", {}, "", {},
-      {}, false, "Constant_Velocity", ic_vel);
+  bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
+      json{{"Type", "IC"},
+           {"Particle_List", {1}},
+           {"IC_Type", "Constant_Velocity"},
+           {"IC_Vector", ic_vel}});
 
   auto pDeckJson = json({});
 

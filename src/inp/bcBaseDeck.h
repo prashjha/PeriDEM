@@ -217,56 +217,76 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(std::string type = "Foce_BC",
-                                bool isRegionActive = false,
-                               geom::GeomData regionGeomData = geom::GeomData(),
-                               std::vector<size_t> pList = std::vector<size_t>(),
-                               std::vector<size_t> pNotList = std::vector<size_t>(),
-                               std::string timeFnType = "",
-                               std::vector<double> timeFnParams = std::vector<double>(),
-                               std::string spatialFnType = "",
-                               std::vector<double> spatialFnParams = std::vector<double>(),
-                               std::vector<size_t> direction = std::vector<size_t>(),
-                               bool isDisplacementZero = false,
-                               std::string icType = "",
-                               std::vector<double> icVec = std::vector<double>()) {
+    /*!
+     * @brief Returns the block with the given fields set
+     *
+     * Type selects what the block may carry rather than appearing in it: a
+     * set of initial conditions takes IC_Type and IC_Vector, any other takes
+     * Direction and Zero_Displacement. A region is given as a geometry
+     * rather than as a key, so it is a parameter of its own; leaving it out
+     * means the set applies everywhere.
+     *
+     * @param given Field names and values to set, checked against the table
+     * @param region Geometry the set is restricted to, or nothing
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given = json::object(),
+                               const geom::GeomData *region = nullptr) {
+      const std::vector<std::string> extra = {
+          "Type", "Time_Function", "Spatial_Function", "IC_Type", "IC_Vector"};
+      checkKeys(given, fields(), extra);
+
+      const auto type = given.value("Type", std::string("Force_BC"));
 
       auto j = json({});
 
-      if (isRegionActive) {
-        // get json object for geometry
+      if (region != nullptr) {
         auto j_geom = json({});
-        geom::writeGeometry(j_geom, regionGeomData);
+        geom::writeGeometry(j_geom, *region);
         // Must be an object: readFromJson does j.at("Region").at("Geometry").
         j["Region"] = json{{"Geometry", j_geom}};
       }
 
-      json given = json{{"Particle_List", pList},
-                        {"Particle_Exclude_List", pNotList}};
+      json fieldsGiven =
+          json{{"Particle_List",
+                given.value("Particle_List", std::vector<size_t>())},
+               {"Particle_Exclude_List",
+                given.value("Particle_Exclude_List", std::vector<size_t>())}};
       if (type != "IC") {
-        given["Direction"] = direction;
-        given["Zero_Displacement"] = isDisplacementZero;
+        fieldsGiven["Direction"] =
+            given.value("Direction", std::vector<size_t>());
+        fieldsGiven["Zero_Displacement"] =
+            given.value("Zero_Displacement", false);
       }
-      j.update(applyGiven(given, fields()));
+      j.update(applyGiven(fieldsGiven, fields()));
 
-      if (timeFnType != "")
-        j["Time_Function"] = applyGiven(
-            json{{"Type", timeFnType}, {"Parameters", timeFnParams}},
-            timeFunctionFields());
+      if (given.find("Time_Function") != given.end())
+        j["Time_Function"] =
+            applyGiven(given.at("Time_Function"), timeFunctionFields());
 
-      if (spatialFnType != "")
-        j["Spatial_Function"] = applyGiven(
-            json{{"Type", spatialFnType}, {"Parameters", spatialFnParams}},
-            spatialFunctionFields());
+      if (given.find("Spatial_Function") != given.end())
+        j["Spatial_Function"] =
+            applyGiven(given.at("Spatial_Function"), spatialFunctionFields());
 
       if (type == "IC") {
-        if (icType == "Constant_Velocity") {
-          j[icType]["Velocity_Vector"] = icVec;
-        }
+        const auto icType = given.value("IC_Type", std::string());
+        if (icType == "Constant_Velocity")
+          j[icType]["Velocity_Vector"] =
+              given.value("IC_Vector", std::vector<double>());
       }
 
       return j;
     }
+
+    /*!
+     * @brief Rejects a value given where a set of named values is expected
+     *
+     * A type passed on its own would convert to a JSON string and be read as
+     * a block with no keys, so such a call is rejected when compiling.
+     */
+    static json getExampleJson(const std::string &) = delete;
+    /*! @copydoc getExampleJson(const std::string &) */
+    static json getExampleJson(const char *) = delete;
 
     /*!
      * @brief Reads from json object

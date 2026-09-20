@@ -103,9 +103,15 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
            {"Tag_PP", ""},
            {"PVD_Collection", true}});
 
-  auto bc = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0., -g, 0.));
+  auto bc = inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 1},
+           {"IC_Sets", 1},
+           {"Gravity", util::Point(0., -g, 0.).toVec()}});
   bc["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
-      "Displacement_BC", false, geom::GeomData(), {0}, {}, "", {}, "", {}, {1, 2}, true, "", {});
+      json{{"Type", "Displacement_BC"},
+           {"Particle_List", {0}},
+           {"Direction", {1, 2}},
+           {"Zero_Displacement", true}});
 
   bc["IC"]["Set_1"] = {
       {"Particle_List", std::vector<size_t>{1}},

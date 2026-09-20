@@ -266,8 +266,18 @@ void testBCBaseDeck() {
 
   // Region plus both function blocks: all three used to come out as arrays.
   auto j = inp::BCBaseDeck::getExampleJson(
-      "Displacement_BC", true, region, {0, 1}, {2}, "linear", {0.5},
-      "constant", {}, {1, 2}, true, "", {});
+      json{{"Type", "Displacement_BC"},
+           {"Particle_List", {0, 1}},
+           {"Particle_Exclude_List", {2}},
+           {"Direction", {1, 2}},
+           {"Zero_Displacement", true},
+           {"Time_Function",
+            json{{"Type", "linear"},
+                 {"Parameters", std::vector<double>{0.5}}}},
+           {"Spatial_Function",
+            json{{"Type", "constant"},
+                 {"Parameters", std::vector<double>{}}}}},
+      &region);
   checkIsObject(j, "Region");
   if (j.contains("Region"))
     checkIsObject(j.at("Region"), "Geometry");
@@ -293,8 +303,10 @@ void testBCBaseDeck() {
 
   // Initial condition shape.
   auto jic = inp::BCBaseDeck::getExampleJson(
-      "IC", false, geom::GeomData(), {1}, {}, "", {}, "", {}, {}, false,
-      "Constant_Velocity", {0., -2.5, 0.});
+      json{{"Type", "IC"},
+           {"Particle_List", {1}},
+           {"IC_Type", "Constant_Velocity"},
+           {"IC_Vector", {0., -2.5, 0.}}});
   checkIsObject(jic, "Constant_Velocity");
   inp::BCBaseDeck dic;
   dic.readFromJson(jic, "IC");
@@ -304,8 +316,10 @@ void testBCBaseDeck() {
 
 void testBCDeck() {
   std::cout << "BCDeck\n";
-  auto j = inp::BCDeck::getExampleJson(0, 1, 1, true,
-                                       util::Point(0., -10., 0.));
+  auto j = inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 1},
+           {"IC_Sets", 1},
+           {"Gravity", util::Point(0., -10., 0.).toVec()}});
   checkIsObject(j, "Force_BC");
   check(j.at("Force_BC").contains("Gravity"), "Gravity present");
   checkIsObject(j, "Displacement_BC");

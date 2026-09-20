@@ -66,35 +66,41 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(size_t nForceSets = 0, size_t nDispSets = 0, size_t nICSets = 0,
-          bool gravityActive = false, util::Point gravity = util::Point()) {
+    /*!
+     * @brief Returns the block with the given fields set
+     *
+     * Each of the three kinds of set is asked for by its count. Naming
+     * Gravity is what turns gravity on; it is a force on every particle and
+     * so sits beside the force sets rather than replacing them.
+     *
+     * @param given Force_BC_Sets, Displacement_BC_Sets, IC_Sets and Gravity
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given = json::object()) {
+      checkNames(given, {"Force_BC_Sets", "Displacement_BC_Sets", "IC_Sets",
+                         "Gravity"});
+
+      const auto nForceSets = given.value("Force_BC_Sets", size_t(0));
+      const auto nDispSets = given.value("Displacement_BC_Sets", size_t(0));
+      const auto nICSets = given.value("IC_Sets", size_t(0));
+      const bool gravityActive = given.find("Gravity") != given.end();
 
       if (nForceSets + nDispSets + nICSets == 0 and !gravityActive)
         return json({});
 
       auto j = json({});
 
-      if (gravityActive) j["Force_BC"] = {{"Gravity", gravity.toVec()}};
+      if (gravityActive)
+        j["Force_BC"]["Gravity"] = given.at("Gravity");
 
-      if (nForceSets > 0) {
-        j["Force_BC"] = {{"Sets", nForceSets}};
-        // add empty objects for each set
-        //         for (size_t i = 0; i < nForceSets; i++) j.at("Force_BC")["Set_" + std::to_string(i + 1)] = json({});
-      }
+      if (nForceSets > 0)
+        j["Force_BC"]["Sets"] = nForceSets;
 
-      if (nDispSets > 0) {
+      if (nDispSets > 0)
         j["Displacement_BC"] = {{"Sets", nDispSets}};
-        // add empty objects for each set
-        //        for (size_t i = 0; i < nDispSets; i++)
-        //          j.at("Displacement_BC") = json{{"Set_" + std::to_string(i + 1), ""}};
-      }
 
-      if (nICSets > 0) {
+      if (nICSets > 0)
         j["IC"] = {{"Sets", nICSets}};
-        // add empty objects for each set
-        //        for (size_t i = 0; i < nICSets; i++)
-        //          j.at("IC") = json{{"Set_" + std::to_string(i + 1), ""}};
-      }
 
       return j;
     }

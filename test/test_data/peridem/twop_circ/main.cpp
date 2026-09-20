@@ -136,19 +136,26 @@ json getInputJson() {
            {"Tag_PP", ""}});
 
   // BC deck
-  auto bcDeckJson = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0, -10, 0));
+  auto bcDeckJson = inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 1},
+           {"IC_Sets", 1},
+           {"Gravity", util::Point(0, -10, 0).toVec()}});
 
   // Displacement BC for fixing bottom particle
-  bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("Displacement_BC", false, geom::GeomData(),
-      {0}, {}, "", {}, "", {},
-      {1, 2}, true, "", {});
+  bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
+      json{{"Type", "Displacement_BC"},
+           {"Particle_List", {0}},
+           {"Direction", {1, 2}},
+           {"Zero_Displacement", true}});
 
   // Initial velocity for top particle
   const double free_fall_dist = particle_dist - horizon;
   const double free_fall_vel = -std::sqrt(2.0 * std::abs(-10.0) * free_fall_dist);
-  bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson("IC", false, geom::GeomData(),
-      {1}, {}, "", {}, "", {},
-      {}, false, "Constant_Velocity", {0.0, free_fall_vel, 0.0});
+  bcDeckJson["IC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
+      json{{"Type", "IC"},
+           {"Particle_List", {1}},
+           {"IC_Type", "Constant_Velocity"},
+           {"IC_Vector", {0.0, free_fall_vel, 0.0}}});
 
   // Particle deck
   auto pDeckJson = json({});

@@ -181,10 +181,14 @@ json buildInputJson(const std::string &output_path_for_deck,
            {"PVD_Collection", true}});
 
   auto bcDeckJson =
-      inp::BCDeck::getExampleJson(0, 2, 0, true, util::Point(0, -10, 0));
+      inp::BCDeck::getExampleJson(
+      json{{"Displacement_BC_Sets", 2},
+           {"Gravity", util::Point(0, -10, 0).toVec()}});
   bcDeckJson["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
-      "Displacement_BC", false, geom::GeomData(), {n_wall_fixed}, {}, "", {}, "", {},
-      {1, 2}, true, "", {});
+      json{{"Type", "Displacement_BC"},
+           {"Particle_List", {n_wall_fixed}},
+           {"Direction", {1, 2}},
+           {"Zero_Displacement", true}});
   json set2;
   set2["Particle_List"] = std::vector<size_t>{n_wall_moving};
   set2["Direction"] = std::vector<size_t>{2};
