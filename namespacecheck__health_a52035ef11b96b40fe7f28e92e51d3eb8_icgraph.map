@@ -1,0 +1,10 @@
+<map id="check_health.main" name="check_health.main">
+<area shape="rect" id="Node000001" title=" " alt="" coords="228,71,359,96"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="329,61,319,53,293,49,272,51,261,56,259,62,265,69,260,72,253,62,257,52,271,46,293,44,321,48,332,57"/>
+<area shape="rect" id="Node000002" href="$namespacecheck__health.html#abb31d5c0492beda3483423754f9f5dc4" title=" " alt="" coords="5,29,180,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,70,154,57,155,52,218,65"/>
+<area shape="rect" id="Node000003" href="$namespacecheck__health.html#adf486fc149f6810c14ceaccc7c70709d" title=" " alt="" coords="21,103,164,143"/>
+<area shape="poly" id="edge4_Node000001_Node000003" title=" " alt="" coords="216,101,165,112,164,107,215,96"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="128,20,118,11,93,8,71,10,60,15,58,20,64,28,60,31,53,21,56,11,70,5,93,3,121,6,132,16"/>
+<area shape="poly" id="edge5_Node000003_Node000003" title=" " alt="" coords="126,92,114,85,93,82,74,84,62,89,58,95,60,102,55,104,53,94,59,85,72,79,93,77,116,80,129,87"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="geom::Line::isNear" name="geom::Line::isNear">
+<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="5,31,137,56"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="185,5,285,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,31,171,25,172,30,138,36"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="193,55,278,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="138,50,179,57,179,62,137,56"/>
+</map>

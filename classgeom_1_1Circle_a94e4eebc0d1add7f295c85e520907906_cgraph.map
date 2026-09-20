@@ -1,0 +1,7 @@
+<map id="geom::Circle::isInside" name="geom::Circle::isInside">
+<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,31,155,56"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a131469f79fbf47c5c0e8ef0e3701f036" title="Computes the distance between a given point from this point." alt="" coords="203,5,309,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="154,30,189,25,190,30,155,35"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="213,55,299,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="155,51,200,57,200,62,154,56"/>
+</map>

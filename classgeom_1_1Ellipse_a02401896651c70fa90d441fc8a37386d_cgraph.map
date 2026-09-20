@@ -1,0 +1,10 @@
+<map id="geom::Ellipse::doesIntersect" name="geom::Ellipse::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,79,193,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipse.html#af2611ab24f50031b917aa2fa4b533ccb" title="Computes the bounding box of object." alt="" coords="254,29,385,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,76,248,55,249,60,157,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="241,79,397,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="193,89,228,89,228,94,193,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Ellipse.html#ac55433064abc8e69dae0bfefb65f6b14" title="Checks if point is inside this object." alt="" coords="242,128,397,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="157,101,249,122,248,128,156,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="284,31,276,21,280,11,295,5,319,3,350,6,362,15,359,20,348,11,319,8,296,10,284,15,281,20,288,28"/>
+</map>

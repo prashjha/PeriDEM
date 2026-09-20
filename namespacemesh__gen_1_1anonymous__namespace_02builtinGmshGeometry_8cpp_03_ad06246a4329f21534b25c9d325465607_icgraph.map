@@ -1,0 +1,7 @@
+<map id="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::embedPointOpenCuboidChannel3DForMesh" name="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::embedPointOpenCuboidChannel3DForMesh">
+<area shape="rect" id="Node000001" title=" " alt="" coords="304,29,563,99"/>
+<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="483,19,465,11,433,8,408,10,391,15,382,21,380,30,374,28,377,18,388,10,407,5,433,3,466,6,485,14"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02builtinGmshGeometry_8cpp_03.html#a1d477ea44609f81a783da183c3d0417c" title=" " alt="" coords="5,37,256,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="291,67,256,67,256,61,291,61"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="181,26,163,18,131,15,103,17,86,22,78,29,78,37,73,37,73,26,83,17,103,12,131,10,164,13,184,21"/>
+</map>

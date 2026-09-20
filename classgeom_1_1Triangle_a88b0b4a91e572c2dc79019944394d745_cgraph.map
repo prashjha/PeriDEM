@@ -1,0 +1,21 @@
+<map id="geom::Triangle::doesIntersect" name="geom::Triangle::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if point lies exactly on the boundary." alt="" coords="5,104,200,129"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Triangle.html#ab057ec1a0ba562fec0eb996f61aaf47a" title="cons" alt="" coords="248,104,457,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,114,235,114,235,119,200,119"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Triangle.html#a4a2aeef990139015455aa231e9876537" title="Checks if point is within given distance of this object." alt="" coords="507,53,662,79"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="411,101,512,79,513,84,412,106"/>
+<area shape="rect" id="Node000008" href="$namespacegeom.html#ad0c44866910d6391d8d3d193ef1d5676" title="Compute area of triangle." alt="" coords="727,129,857,155"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="458,120,713,135,713,140,457,125"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Triangle.html#ac1e80cd8d49916b2d426203eedf51edc" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="505,155,664,180"/>
+<area shape="poly" id="edge9_Node000002_Node000009" title=" " alt="" coords="412,127,513,149,512,154,411,132"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Triangle.html#a516e5fc1a337de66499f415440797a5e" title="Computes the bounding box of object." alt="" coords="723,29,861,55"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="662,54,709,49,710,54,663,60"/>
+<area shape="rect" id="Node000005" href="$namespacegeom.html#a5629d4efa093fda6590987a646ea1bba" title="Returns true if point is inside box." alt="" coords="712,79,872,104"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="663,73,699,77,698,83,662,78"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="763,31,757,21,760,11,772,5,792,3,816,6,826,15,823,19,814,11,792,8,773,10,764,15,762,20,767,28"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="920,55,1020,80"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="872,78,906,73,907,79,873,83"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="927,104,1013,129"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="873,100,914,106,913,111,872,105"/>
+<area shape="poly" id="edge10_Node000009_Node000008" title=" " alt="" coords="664,155,713,149,713,154,665,160"/>
+</map>

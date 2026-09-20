@@ -1,0 +1,12 @@
+<map id="geom::Hexagon::isOutside" name="geom::Hexagon::isOutside">
+<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,79,183,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#a57694f60eade2838a8780650cd2dc3ba" title="Computes the bounding box of object." alt="" coords="243,29,385,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="151,76,243,55,244,60,152,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="236,79,392,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="183,89,222,89,222,94,183,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Hexagon.html#a23cb90ec4eecd0784efae79494cacde0" title="Checks if point is inside this object." alt="" coords="231,128,397,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="152,101,244,122,243,128,151,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="278,31,271,21,275,11,289,5,314,3,344,6,356,15,353,20,342,11,314,8,291,10,278,15,276,20,282,28"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Hexagon.html#ae21b00427b9d56e491cabf75622befac" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="445,121,620,161"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="398,138,431,138,431,143,398,143"/>
+</map>

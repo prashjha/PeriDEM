@@ -1,0 +1,18 @@
+<map id="rw::reader::readMshFileCells" name="rw::reader::readMshFileCells">
+<area shape="rect" id="Node000001" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="1019,63,1208,88"/>
+<area shape="rect" id="Node000002" href="$classmesh_1_1Mesh.html#a5c466bbf40b8bb552e28956b5a7ee0fe" title="Reads element&#45;node connectivity data from file. This function is meant for cases when mesh was create..." alt="" coords="768,63,971,88"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1005,78,971,78,971,73,1005,73"/>
+<area shape="rect" id="Node000003" href="$classmesh_1_1Mesh.html#a98f9041e741ceb27b9436eb9c71f94cd" title="After nodes, enc, nec, and dof&#45;related fields are set: 2D z clear, bbox, optional nodal volume,..." alt="" coords="507,55,720,95"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="754,78,720,78,720,73,754,73"/>
+<area shape="rect" id="Node000004" href="$classmesh_1_1Mesh.html#af5dec00167434e6bd3703d23a9dfba43" title="Reads mesh data from the file and populates other data." alt="" coords="274,5,441,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="510,55,414,33,415,28,511,50"/>
+<area shape="rect" id="Node000006" href="$classmesh_1_1Mesh.html#accc7f7a8bcefe0e9073c315d5f26d315" title="Populate mesh from 3D tetrahedron data (0&#45;based node indices in enc) without reading a file." alt="" coords="265,55,450,95"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="493,78,450,78,450,73,493,73"/>
+<area shape="rect" id="Node000023" href="$classmesh_1_1Mesh.html#acd7d96f02baf9e52eadd0ca080fda891" title="Populate mesh from 2D triangle data (0&#45;based node indices in enc) without reading a file." alt="" coords="256,119,459,159"/>
+<area shape="poly" id="edge7_Node000003_Node000023" title=" " alt="" coords="520,101,438,122,437,117,519,96"/>
+<area shape="rect" id="Node000005" href="$classmesh_1_1Mesh.html#a3fa880fd0bfa4170aa901c5605e96d0e" title="Constructor." alt="" coords="39,5,174,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="260,21,174,21,174,15,260,15"/>
+<area shape="rect" id="Node000007" href="$namespacemesh__gen.html#a09a4d51818a0d718ca2cce08f6e2c2f4" title=" " alt="" coords="5,87,208,127"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="251,92,208,97,208,92,251,86"/>
+<area shape="poly" id="edge8_Node000023_Node000007" title=" " alt="" coords="242,127,208,123,208,118,243,122"/>
+</map>

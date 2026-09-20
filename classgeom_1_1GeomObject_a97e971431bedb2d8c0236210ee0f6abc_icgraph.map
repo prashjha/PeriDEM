@@ -1,0 +1,10 @@
+<map id="geom::GeomObject::wallContactQuery" name="geom::GeomObject::wallContactQuery">
+<area shape="rect" id="Node000001" title="Closest&#45;point / signed&#45;gap query for analytical wall contact. Default: unsupported (returns false,..." alt="" coords="371,37,583,77"/>
+<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a22c7e3b94a70eccccca11715093b8848" title=" " alt="" coords="104,5,323,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="357,45,322,41,323,36,357,40"/>
+<area shape="rect" id="Node000004" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a6b55ebba9a4f81f39e7e2ed347a5398a" title=" " alt="" coords="115,69,311,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="357,74,312,80,311,75,357,69"/>
+<area shape="rect" id="Node000003" href="$test_2test__data_2peridem_2wall__analytical__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,45,56,70"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,50,57,56,56,50,90,44"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="101,72,56,64,57,59,102,67"/>
+</map>

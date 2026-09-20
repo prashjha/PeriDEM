@@ -1,0 +1,2256 @@
+/*
+ * -------------------------------------------
+ * Copyright (c) 2021 - 2026 Prashant K. Jha
+ * -------------------------------------------
+ * PeriDEM https://github.com/prashjha/PeriDEM
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE)
+ */
+
+#include "geomObjects.h"
+#include "geomUtilFunctions.h"
+#include "util/function.h"
+#include "util/vecMethods.h"
+#include "util/io.h"
+#include <algorithm>
+#include <cmath>
+#include <set>
+#include <stdexcept>
+#include <vector>
+
+namespace {
+  std::string printErrMsg(const std::string &geom_type,
+                          const std::vector<double> &params,
+                          const std::vector<size_t> &num_params_needed) {
+
+    std::ostringstream oss;
+
+    oss <<  "Error: Number of parameters needed to create geometry = "
+        << geom_type << " are "
+        << util::io::printStr(num_params_needed, 0)
+        << ". But the number of parameters provided are "
+        << params.size()
+        << " and the parameters are "
+        << util::io::printStr(params, 0)
+        << ". Exiting.\n";
+
+    return oss.str();
+  }
+};
+
+//
+// Plane
+//
+namespace geom {
+    bool Plane::wallContactQuery(const util::Point &x,
+                                 WallContactHit &hit) const {
+      hit = WallContactHit();
+      const double ln = d_n.length();
+      if (!(ln > 1.e-16))
+        return false;
+      const util::Point n = d_n / ln;
+      const double gap = (x - d_p) * n;
+      hit.active = true;
+      hit.signed_gap = gap;
+      hit.outward_n = n;
+      hit.closest = x - gap * n;
+      return true;
+    }
+} // Plane
+
+//
+// Line
+//
+namespace geom {
+
+    bool Line::wallContactQuery(const util::Point &x,
+                                WallContactHit &hit) const {
+      hit = WallContactHit();
+      if (d_vertices.size() < 2)
+        return false;
+      const util::Point &a = d_vertices[0];
+      const util::Point &b = d_vertices[1];
+      const util::Point t = b - a;
+      const double t2 = t.lengthSq();
+      if (!(t2 > 1.e-24))
+        return false;
+
+      // Outward = left of directed segment in xy (CCW rotate).
+      util::Point n(-t.d_y, t.d_x, 0.);
+      const double nl = n.length();
+      if (!(nl > 1.e-16))
+        return false;
+      n = n / nl;
+
+      double s = ((x - a) * t) / t2;
+      if (s < 0.)
+        s = 0.;
+      else if (s > 1.)
+        s = 1.;
+      hit.closest = a + s * t;
+      const util::Point dx = x - hit.closest;
+      if (s > 1.e-12 && s < 1. - 1.e-12) {
+        hit.signed_gap = dx * n;
+        hit.outward_n = n;
+      } else {
+        const double dist = dx.length();
+        if (!(dist > 1.e-16)) {
+          hit.signed_gap = 0.;
+          hit.outward_n = n;
+        } else {
+          hit.outward_n = dx / dist;
+          hit.signed_gap = (hit.outward_n * n >= 0.) ? dist : -dist;
+          if (hit.outward_n * n < 0.)
+            hit.outward_n = n;
+        }
+      }
+      hit.active = true;
+      return true;
+    }
+
+    double Line::volume() const {
+      return d_L;
+    }
+
+    util::Point Line::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Line::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Line::box(const
+                                                                  double &tol) const {
+
+      return {d_vertices[0] - tol, d_vertices[1] + tol};
+    }
+
+    double Line::inscribedRadius() const {
+
+      return d_r;
+    }
+
+    double Line::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Line::isInside(const util::Point &x) const {
+
+      auto da = (d_vertices[1] - d_vertices[0]) / d_L;
+      auto db = x - d_vertices[0];
+      double dot = db * da;
+
+      if (util::isLess(dot, 0.) or util::isGreater(dot, d_L))
+        return false;
+
+
+      auto dx = db - dot * da;
+
+      return util::isLess(dx.length(), 1.0E-10);
+    }
+
+    bool Line::isOutside(const util::Point &x) const {
+
+      return !isInside(x);
+    }
+
+    bool Line::isNear(const util::Point &x,
+                                      const double &tol) const {
+
+      auto da = (d_vertices[1] - d_vertices[0]) / d_L;
+      auto db = x - d_vertices[0];
+      double dot = db * da;
+
+      if (util::isLess(dot, 0.) or util::isGreater(dot, d_L))
+        return false;
+
+      auto dx = db - dot * da;
+
+      return util::isLess(dx.length(), tol);
+    }
+
+    bool Line::isNearBoundary(const util::Point &x,
+                                              const double &tol, const bool
+                                              &within) const {
+
+      // check if particle is inside the object
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      auto da = (d_vertices[1] - d_vertices[0]) / d_L;
+      auto db = x - d_vertices[0];
+      double dot = db * da;
+
+      if (util::isLess(dot, 0.) or util::isGreater(dot, tol)
+          or util::isGreater(dot, d_L) or util::isLess(dot, d_L - tol))
+        return false;
+
+      auto dx = db - dot * da;
+
+      return util::isLess(dx.length(), tol);
+    }
+
+    bool Line::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Line::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      return false;
+    }
+
+    bool Line::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      return true;
+    }
+
+    bool Line::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      return true;
+    }
+
+    bool Line::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      return false;
+    }
+
+    std::string Line::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Line --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Length = " << d_L << std::endl;
+      oss << tabS << "Point 1 = " << d_vertices[0].printStr(0, lvl) << std::endl;
+      oss << tabS << "Point 2 = " << d_vertices[1].printStr(0, lvl) << std::endl;
+      oss << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+} //Line
+
+//
+// Triangle
+//
+namespace geom {
+    double Triangle::volume() const {
+      // 2D area of the stored triangle (works for equilateral and vertex-defined).
+      return std::abs(geom::triangleArea(d_vertices[0], d_vertices[1], d_vertices[2]));
+    }
+
+    util::Point Triangle::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Triangle::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Triangle::box(const
+                                                                      double &tol) const {
+
+      util::Point p1 = d_vertices[0], p2 = d_vertices[0];
+      for (const auto &v : d_vertices) {
+        p1.d_x = std::min(p1.d_x, v.d_x);
+        p1.d_y = std::min(p1.d_y, v.d_y);
+        p1.d_z = std::min(p1.d_z, v.d_z);
+        p2.d_x = std::max(p2.d_x, v.d_x);
+        p2.d_y = std::max(p2.d_y, v.d_y);
+        p2.d_z = std::max(p2.d_z, v.d_z);
+      }
+      return {p1 - tol, p2 + tol};
+    }
+
+    double Triangle::inscribedRadius() const {
+
+      return d_r * std::sin(M_PI / 3);
+    }
+
+    double Triangle::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Triangle::isInside(const util::Point &x) const {
+
+      if ((x - d_x).length() > d_r)
+        return false;
+
+      if ((x - d_x).length() < this->inscribedRadius())
+        return true;
+
+      double a = this->volume();
+      double a1 =
+              std::abs(geom::triangleArea(x, d_vertices[1], d_vertices[2]));
+      double a2 =
+              std::abs(geom::triangleArea(d_vertices[0], x, d_vertices[2]));
+      double a3 =
+              std::abs(geom::triangleArea(d_vertices[0], d_vertices[1], x));
+
+      return (a1 + a2 + a3 <= a * (1.0 + 1.0e-10));
+    }
+
+    bool Triangle::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Triangle::isNear(const util::Point &x,
+                                          const double &tol) const {
+
+      // get a bigger box containing this object
+      auto bbox = box(tol);
+
+      return geom::isPointInsideBox(x, 2, bbox);
+    }
+
+    bool Triangle::isNearBoundary(const util::Point &x,
+                                                  const double &tol, const bool
+                                                  &within) const {
+
+      // check if particle is inside the object
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      double a = this->volume();
+      double l = 0.5 * std::sqrt(a);
+
+      double a1 =
+              std::abs(geom::triangleArea(x, d_vertices[1], d_vertices[2]));
+      if (a1 < tol * l)
+        return true;
+
+      double a2 =
+              std::abs(geom::triangleArea(d_vertices[0], x, d_vertices[2]));
+      if (a2 < tol * l)
+        return true;
+
+      double a3 =
+              std::abs(geom::triangleArea(d_vertices[0], d_vertices[1], x));
+      if (a3 < tol * l)
+        return true;
+
+      return false;
+    }
+
+    bool Triangle::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Triangle::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Triangle::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Triangle::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 2);
+    }
+
+    bool Triangle::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Triangle::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Triangle --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Radius = " << d_r << std::endl;
+      oss << tabS << "Vertices = " << util::io::printStr(d_vertices)
+          << std::endl;
+      oss << std::endl;
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Triangle
+
+//
+// Square
+//
+namespace geom {
+  double Square::volume() const {
+    return std::pow(d_L, 2);
+  }
+
+  util::Point Square::center() const {
+    return d_x;
+  }
+
+  std::pair<util::Point, util::Point> Square::box() const {
+
+    return box(0.);
+  }
+  std::pair<util::Point, util::Point> Square::box(const
+                                                                     double &tol) const {
+
+    return {util::Point(d_vertices[0].d_x - tol, d_vertices[0].d_y - tol,
+                        0.),
+            util::Point(d_vertices[2].d_x + tol, d_vertices[2].d_y + tol,
+                        0.)};
+  }
+
+  double Square::inscribedRadius() const {
+
+    return 0.5*d_L;
+  }
+
+  double Square::boundingRadius() const {
+
+    return d_r;
+  }
+
+  bool Square::isInside(const util::Point &x) const {
+    return geom::isPointInsideRectangle(x, d_vertices[0], d_vertices[2]);
+  }
+
+  bool Square::isOutside(const util::Point &x) const {
+    return !isInside(x);
+  }
+
+  bool Square::isNear(const util::Point &x,
+                                         const double &tol) const {
+
+    // get a bigger box containing this object
+    auto bbox = box(tol);
+
+    return geom::isPointInsideBox(x, 2, bbox);
+  }
+
+  bool Square::isNearBoundary(const util::Point &x,
+                                                 const double &tol, const bool
+                                                 &within) const {
+
+    // check if particle is inside the object
+    if (!isNear(x, within ? 0. : tol))
+      return false;
+
+    bool near_x_edge = util::isLess(std::abs(x.d_x - d_vertices[0].d_x), tol) or
+                       util::isLess(std::abs(x.d_x - d_vertices[2].d_x), tol);
+
+    bool near_y_edge = util::isLess(std::abs(x.d_y - d_vertices[0].d_y), tol) or
+                       util::isLess(std::abs(x.d_y - d_vertices[2].d_y), tol);
+
+    return near_x_edge || near_y_edge;
+  }
+
+  bool Square::doesIntersect(const util::Point &x) const {
+
+    return isNearBoundary(x, 1.0E-8, false);
+  }
+
+  bool Square::isInside(
+          const std::pair<util::Point, util::Point> &box) const {
+
+    for (auto p : geom::getCornerPoints(2, box))
+      if(!this->isInside(p))
+        return false;
+
+    return true;
+  }
+
+  bool Square::isOutside(
+          const std::pair<util::Point, util::Point> &box) const {
+
+    bool intersect = false;
+    for (auto p : geom::getCornerPoints(2, box))
+      if (!intersect)
+        intersect = this->isInside(p);
+
+    return !intersect;
+  }
+
+  bool Square::isNear(
+          const std::pair<util::Point, util::Point> &box, const double &tol) const {
+
+    return geom::areBoxesNear(this->box(), box, tol, 2);
+  }
+
+  bool Square::doesIntersect(
+          const std::pair<util::Point, util::Point> &box) const {
+
+    // need to check all four corner points
+    for (auto p : geom::getCornerPoints(2, box))
+      if (this->isInside(p))
+        return true;
+
+    return false;
+  }
+
+  std::string Square::printStr(int nt, int lvl) const {
+
+    auto tabS = util::io::getTabS(nt);
+
+    std::ostringstream oss;
+
+    oss << tabS << "------- Rectangle --------" << std::endl << std::endl;
+    oss << tabS << "Name = " << d_name << std::endl;
+    oss << tabS << "Length = " << d_L << std::endl;
+    oss << tabS << "Bounding radius = " << d_r << std::endl;
+    oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+    oss << tabS << "Vertices = " << util::io::printStr(d_vertices, 0) << std::endl;
+    oss << std::endl;
+
+    if (lvl > 0)
+      oss << tabS << "Bounding box: " << util::io::printBoxStr(box(0.), nt + 1);
+
+    if (lvl == 0)
+      oss << std::endl;
+
+    return oss.str();
+  }
+}// Square
+
+//
+// Rectangle
+//
+namespace geom {
+    bool Rectangle::wallContactQuery(const util::Point &x,
+                                     WallContactHit &hit) const {
+      hit = WallContactHit();
+      // Axis-aligned SDF from current bounding box (walls are typically AA).
+      const auto bb = box();
+      const double x0 = bb.first.d_x;
+      const double y0 = bb.first.d_y;
+      const double x1 = bb.second.d_x;
+      const double y1 = bb.second.d_y;
+      if (!(x1 > x0) || !(y1 > y0))
+        return false;
+
+      const double dx = std::max(x0 - x.d_x, x.d_x - x1);
+      const double dy = std::max(y0 - x.d_y, x.d_y - y1);
+      const bool outside = dx > 0. || dy > 0.;
+
+      if (outside) {
+        // Closest point on AABB, gap = exterior distance.
+        util::Point c = x;
+        if (x.d_x < x0)
+          c.d_x = x0;
+        else if (x.d_x > x1)
+          c.d_x = x1;
+        if (x.d_y < y0)
+          c.d_y = y0;
+        else if (x.d_y > y1)
+          c.d_y = y1;
+        c.d_z = x.d_z;
+        const util::Point d = x - c;
+        const double dist = d.length();
+        if (!(dist > 1.e-16)) {
+          // On a face: pick dominant exterior axis.
+          if (dx >= dy) {
+            hit.outward_n = util::Point(x.d_x < x0 ? -1. : 1., 0., 0.);
+          } else {
+            hit.outward_n = util::Point(0., x.d_y < y0 ? -1. : 1., 0.);
+          }
+          hit.signed_gap = 0.;
+          hit.closest = c;
+        } else {
+          hit.outward_n = d / dist;
+          hit.signed_gap = dist;
+          hit.closest = c;
+        }
+      } else {
+        // Inside: negative distance to nearest face.
+        const double dl = x.d_x - x0;
+        const double dr = x1 - x.d_x;
+        const double db = x.d_y - y0;
+        const double dt = y1 - x.d_y;
+        const double m = std::min(std::min(dl, dr), std::min(db, dt));
+        hit.signed_gap = -m;
+        if (m == dl) {
+          hit.outward_n = util::Point(-1., 0., 0.);
+          hit.closest = util::Point(x0, x.d_y, x.d_z);
+        } else if (m == dr) {
+          hit.outward_n = util::Point(1., 0., 0.);
+          hit.closest = util::Point(x1, x.d_y, x.d_z);
+        } else if (m == db) {
+          hit.outward_n = util::Point(0., -1., 0.);
+          hit.closest = util::Point(x.d_x, y0, x.d_z);
+        } else {
+          hit.outward_n = util::Point(0., 1., 0.);
+          hit.closest = util::Point(x.d_x, y1, x.d_z);
+        }
+      }
+      hit.active = true;
+      return true;
+    }
+
+    double Rectangle::volume() const {
+      return d_Lx * d_Ly;
+    }
+
+    util::Point Rectangle::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Rectangle::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Rectangle::box(const
+                                                                       double &tol) const {
+
+      return {util::Point(d_vertices[0].d_x - tol, d_vertices[0].d_y - tol,
+                          0.),
+              util::Point(d_vertices[2].d_x + tol, d_vertices[2].d_y + tol,
+                          0.)};
+    }
+
+    double Rectangle::inscribedRadius() const {
+
+      return util::isLess(d_Lx, d_Ly) ? d_Lx : d_Ly;
+    }
+
+    double Rectangle::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Rectangle::isInside(const util::Point &x) const {
+      return geom::isPointInsideRectangle(x, d_vertices[0], d_vertices[2]);
+    }
+
+    bool Rectangle::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Rectangle::isNear(const util::Point &x,
+                                           const double &tol) const {
+
+      // get a bigger box containing this object
+      auto bbox = box(tol);
+
+      return geom::isPointInsideBox(x, 2, bbox);
+    }
+
+    bool Rectangle::isNearBoundary(const util::Point &x,
+                                                   const double &tol, const bool
+                                                   &within) const {
+
+      // check if particle is inside the object
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      bool near_x_edge = util::isLess(std::abs(x.d_x - d_vertices[0].d_x), tol) or
+                         util::isLess(std::abs(x.d_x - d_vertices[2].d_x), tol);
+
+      bool near_y_edge = util::isLess(std::abs(x.d_y - d_vertices[0].d_y), tol) or
+                         util::isLess(std::abs(x.d_y - d_vertices[2].d_y), tol);
+
+      return near_x_edge || near_y_edge;
+    }
+
+    bool Rectangle::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Rectangle::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Rectangle::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Rectangle::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 2);
+    }
+
+    bool Rectangle::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Rectangle::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Rectangle --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Lengths (Lx, Ly) = (" << d_Lx << ", " << d_Ly << ")" << std::endl;
+      oss << tabS << "Bounding circle radius = " << d_r << std::endl;
+      oss << tabS << "Vertices = " << util::io::printStr(d_vertices, 0) << std::endl;
+      oss << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Rectangle
+
+//
+// Hexagon
+//
+namespace geom {
+    double Hexagon::volume() const {
+      // https://en.wikipedia.org/wiki/Hexagon
+      double r_small = this->inscribedRadius();
+      return 2. * std::sqrt(3.) * r_small * r_small;
+    }
+
+    util::Point Hexagon::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Hexagon::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Hexagon::box(const
+                                                                     double &tol) const {
+
+      auto p1 = d_x - util::Point(d_r + tol, d_r + tol, d_x[2] + tol);
+      auto p2 = d_x + util::Point(d_r + tol, d_r + tol, d_x[2] + tol);
+      return {p1, p2};
+    }
+
+    double Hexagon::inscribedRadius() const {
+
+      return d_r * 0.5 * std::sqrt(3.);
+    }
+
+    double Hexagon::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Hexagon::isInside(const util::Point &x) const {
+
+      if ((x - d_x).length() > d_r)
+        return false;
+
+      if ((x - d_x).length() < inscribedRadius())
+        return true;
+
+      return false;
+    }
+
+    bool Hexagon::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Hexagon::isNear(const util::Point &x,
+                                         const double &tol) const {
+
+      // get a bigger box containing this object
+      auto bbox = box(tol);
+
+      return geom::isPointInsideBox(x, 2, bbox);
+    }
+
+    bool Hexagon::isNearBoundary(const util::Point &x,
+                                                 const double &tol, const bool
+                                                 &within) const {
+
+      if ((x - d_x).length() > d_r + tol)
+        return false;
+
+      if ((x - d_x).length() < inscribedRadius() - tol)
+        return false;
+
+      return true;
+    }
+
+    bool Hexagon::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Hexagon::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Hexagon::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Hexagon::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 2);
+    }
+
+    bool Hexagon::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Hexagon::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Hexagon --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Radius = " << d_r << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Axis = " << d_a.printStr(0, lvl) << std::endl;
+      oss << tabS << "Vertices = " << util::io::printStr(d_vertices, lvl) <<
+          std::endl;
+      oss << std::endl;
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Hexagon
+
+//
+// Drum2D
+//
+namespace geom {
+    double Drum2D::volume() const {
+
+      return (2. * d_r * d_r - d_r * (d_r - 2. * d_w)) * std::sin(M_PI / 3.);
+    }
+
+    util::Point Drum2D::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Drum2D::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Drum2D::box(const
+                                                                    double &tol) const {
+
+      auto p1 = d_x - util::Point(d_r + tol, d_r + tol, d_x[2] + tol);
+      auto p2 = d_x + util::Point(d_r + tol, d_r + tol, d_x[2] + tol);
+      return {p1, p2};
+    }
+
+    double Drum2D::inscribedRadius() const {
+
+      return d_w;
+    }
+
+    double Drum2D::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Drum2D::isInside(const util::Point &x) const {
+
+      if ((x - d_x).length() > d_r)
+        return false;
+
+      if ((x - d_x).length() < inscribedRadius())
+        return true;
+
+      // rotate axis to get orthogonal axis
+      auto ortho_axis = util::rotate(d_a, M_PI * 0.5, util::Point(0., 0., 1.));
+
+      //
+      //                                   + v2
+      //                                  /
+      //                                /    x
+      //                              /
+      //                            /
+      //                     o----+v1
+      //
+      auto ox = x - d_x;
+      double angle_ox_ov1 = std::acos(std::abs(d_a.dot(ox)) / ox.length());
+      double max_length = d_w + angle_ox_ov1 * (d_r - d_w) / (M_PI / 3.);
+
+      return ox.length() <= max_length;
+    }
+
+    bool Drum2D::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Drum2D::isNear(const util::Point &x,
+                                        const double &tol) const {
+
+      // get a bigger box containing this object
+      auto bbox = box(tol);
+
+      return geom::isPointInsideBox(x, 2, bbox);
+    }
+
+    bool Drum2D::isNearBoundary(const util::Point &x,
+                                                const double &tol, const bool
+                                                &within) const {
+
+      if ((x - d_x).length() > d_r + tol)
+        return false;
+
+      if ((x - d_x).length() < this->inscribedRadius() - tol)
+        return false;
+
+      return true;
+    }
+
+    bool Drum2D::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Drum2D::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Drum2D::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Drum2D::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 2);
+    }
+
+    bool Drum2D::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Drum2D::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Drum2D --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Radius = " << d_r << std::endl;
+      oss << tabS << "Neck half-width = " << d_w << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Axis = " << d_a.printStr(0, lvl) << std::endl;
+      oss << tabS << "Vertices = " << util::io::printStr(d_vertices, lvl) <<
+          std::endl;
+      oss << std::endl;
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Drum2D
+
+//
+// Cube
+//
+namespace geom {
+    double Cube::volume() const {
+      return std::pow(d_L, 3);
+    }
+
+    util::Point Cube::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Cube::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Cube::box(const
+                                                                    double &tol) const {
+      return {util::Point(d_vertices[0].d_x - tol, d_vertices[0].d_y - tol,
+                          d_vertices[0].d_z - tol),
+              util::Point(d_vertices[6].d_x + tol, d_vertices[6].d_y + tol,
+                          d_vertices[6].d_z + tol)};
+    }
+
+    double Cube::inscribedRadius() const {
+
+      return d_L;
+    }
+
+    double Cube::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Cube::isInside(const util::Point &x) const {
+      return geom::isPointInsideCuboid(x, d_vertices[0], d_vertices[6]);
+    }
+
+    bool Cube::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Cube::isNear(const util::Point &x,
+                                        const double &tol) const {
+
+      // get a bigger box containing this object
+      auto bbox = box(tol);
+
+      return geom::isPointInsideBox(x, 3, bbox);
+    }
+
+    bool Cube::isNearBoundary(const util::Point &x,
+                                                const double &tol, const bool
+                                                &within) const {
+
+      // check if particle is within the tolerance distance
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      bool near_x_edge = util::isLess(std::abs(x.d_x - d_vertices[0].d_x), tol) or
+                         util::isLess(std::abs(x.d_x - d_vertices[6].d_x), tol);
+
+      bool near_y_edge = util::isLess(std::abs(x.d_y - d_vertices[0].d_y), tol) or
+                         util::isLess(std::abs(x.d_y - d_vertices[6].d_y), tol);
+
+      bool near_z_edge = util::isLess(std::abs(x.d_z - d_vertices[0].d_z), tol) or
+                         util::isLess(std::abs(x.d_z - d_vertices[6].d_z), tol);
+
+      return near_x_edge || near_y_edge || near_z_edge;
+    }
+
+    bool Cube::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Cube::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Cube::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Cube::isNear(
+            const std::pair<util::Point, util::Point> &bbox, const double &tol)
+    const {
+
+      return geom::areBoxesNear(box(), bbox, tol, 3);
+    }
+
+    bool Cube::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(3, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Cube::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Cube --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Length = " << d_L << std::endl;
+      oss << tabS << "Bounding sphere radius = " << d_r << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, 0) << std::endl;
+      oss << tabS << "Vertices = " << util::io::printStr(d_vertices, 0) << std::endl;
+      oss << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Cube
+
+//
+// Cuboid
+//
+namespace geom {
+    double Cuboid::volume() const {
+      return d_Lx * d_Ly * d_Lz;
+    }
+
+    util::Point Cuboid::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Cuboid::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Cuboid::box(const
+                                                                    double &tol) const {
+      return {util::Point(d_vertices[0].d_x - tol, d_vertices[0].d_y - tol,
+                          d_vertices[0].d_z - tol),
+              util::Point(d_vertices[6].d_x + tol, d_vertices[6].d_y + tol,
+                          d_vertices[6].d_z + tol)};
+    }
+
+    double Cuboid::inscribedRadius() const {
+
+      auto l = util::isLess(d_Lx, d_Ly) ? d_Lx : d_Ly;
+      return util::isLess(l, d_Lz) ? l : d_Lz;
+    }
+
+    double Cuboid::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Cuboid::isInside(const util::Point &x) const {
+      return geom::isPointInsideCuboid(x, d_vertices[0], d_vertices[6]);
+    }
+
+    bool Cuboid::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Cuboid::isNear(const util::Point &x,
+                                        const double &tol) const {
+
+      // get a bigger box containing this object
+      auto bbox = box(tol);
+
+      return geom::isPointInsideBox(x, 3, bbox);
+    }
+
+    bool Cuboid::isNearBoundary(const util::Point &x,
+                                                const double &tol, const bool
+                                                &within) const {
+
+      // check if particle is within the tolerance distance
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      bool near_x_edge = util::isLess(std::abs(x.d_x - d_vertices[0].d_x), tol) or
+                         util::isLess(std::abs(x.d_x - d_vertices[6].d_x), tol);
+
+      bool near_y_edge = util::isLess(std::abs(x.d_y - d_vertices[0].d_y), tol) or
+                         util::isLess(std::abs(x.d_y - d_vertices[6].d_y), tol);
+
+      bool near_z_edge = util::isLess(std::abs(x.d_z - d_vertices[0].d_z), tol) or
+                         util::isLess(std::abs(x.d_z - d_vertices[6].d_z), tol);
+
+      return near_x_edge || near_y_edge || near_z_edge;
+    }
+
+    bool Cuboid::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Cuboid::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Cuboid::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Cuboid::isNear(
+            const std::pair<util::Point, util::Point> &bbox, const double &tol)
+    const {
+
+      return geom::areBoxesNear(box(), bbox, tol, 3);
+    }
+
+    bool Cuboid::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(3, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Cuboid::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Cuboid --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Lengths (Lx, Ly, Lz) = "
+                  << util::io::printStr(std::vector<double>{d_Lx, d_Ly, d_Lz}, 0)
+                  << std::endl;
+      oss << tabS << "Bounding sphere radius = " << d_r << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, 0) << std::endl;
+      oss << tabS << "Vertices = " << util::io::printStr(d_vertices, 0) << std::endl;
+      oss << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Cuboid
+
+//
+// Circle
+//
+namespace geom {
+    double Circle::volume() const {
+      return M_PI * d_r * d_r;
+    }
+
+    util::Point Circle::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Circle::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Circle::box(const
+                                                                    double &tol) const {
+      double r = d_r + tol;
+      return {
+              util::Point(d_x.d_x - r, d_x.d_y - r, 0.),
+              util::Point(d_x.d_x + r, d_x.d_y + r, 0.)
+      };
+    }
+
+    double Circle::inscribedRadius() const {
+
+      return d_r;
+    }
+
+    double Circle::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Circle::isInside(const util::Point &x) const {
+
+      return util::isLess(d_x.dist(x), d_r + 1.0E-12);
+    }
+
+    bool Circle::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Circle::isNear(const util::Point &x,
+                                        const double &tol) const {
+
+      // translate to origin
+      auto x0 = x - d_x;
+
+      return util::isLess(x0.length(), d_r + tol);
+    }
+
+    bool Circle::isNearBoundary(const util::Point &x,
+                                                const double &tol, const bool
+                                                &within) const {
+
+      // check if particle is within the tolerance distance
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      // check if it is close enough to circumference
+      auto x0 = x - d_x;
+
+      return util::isLess(x0.length(), d_r + tol) ||
+             util::isLess(x0.length(), d_r - tol);
+    }
+
+    bool Circle::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Circle::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Circle::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Circle::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      if (this->isInside(box))
+        return true;
+
+      // get corner points of box
+      auto cp = geom::getCornerPoints(2, box);
+
+      for (auto p: cp) {
+
+        // check the distance of corner point with the center
+        auto dx = p - d_x;
+        if (util::isLess(dx.length(), d_r + tol))
+          return true;
+      }
+
+      // check center to center distance
+      auto dxc = geom::getCenter(2, box) - d_x;
+
+      // check wrt inscribed circle
+      auto r = geom::inscribedRadiusInBox(2, box);
+      if (util::isLess(dxc.length(), d_r + r + tol))
+        return true;
+
+      // check wrt circumscribed circle
+      r = geom::circumscribedRadiusInBox(2, box);
+      return util::isLess(dxc.length(), d_r + r + tol);
+    }
+
+    bool Circle::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Circle::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Circle --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Radius = " << d_r << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+}// Circle
+
+//
+// Ellipse
+//
+namespace geom {
+
+    namespace {
+    bool ellipseMetricInside(double u, double v, double a, double b) {
+      if (a <= 0. || b <= 0.)
+        return false;
+      return util::isLess(u * u / (a * a) + v * v / (b * b), 1. + 1.0E-12);
+    }
+
+    void ellipseLocal(const Ellipse &e, const util::Point &x, double &u, double &v) {
+      const double dx = x.d_x - e.d_x.d_x;
+      const double dy = x.d_y - e.d_x.d_y;
+      const double c = std::cos(e.d_theta);
+      const double s = std::sin(e.d_theta);
+      u = c * dx + s * dy;
+      v = -s * dx + c * dy;
+    }
+    } // namespace
+
+    double Ellipse::volume() const {
+      return M_PI * d_a * d_b;
+    }
+
+    util::Point Ellipse::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Ellipse::box() const {
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Ellipse::box(const double &tol) const {
+
+      const double at = d_a + tol;
+      const double bt = d_b + tol;
+      const double ex = std::hypot(at * std::cos(d_theta), bt * std::sin(d_theta));
+      const double ey = std::hypot(at * std::sin(d_theta), bt * std::cos(d_theta));
+
+      return {util::Point(d_x.d_x - ex, d_x.d_y - ey, 0.),
+              util::Point(d_x.d_x + ex, d_x.d_y + ey, 0.)};
+    }
+
+    double Ellipse::inscribedRadius() const {
+      return (d_a < d_b) ? d_a : d_b;
+    }
+
+    double Ellipse::boundingRadius() const {
+      return (d_a > d_b) ? d_a : d_b;
+    }
+
+    bool Ellipse::isInside(const util::Point &x) const {
+      double u = 0., v = 0.;
+      ellipseLocal(*this, x, u, v);
+      return ellipseMetricInside(u, v, d_a, d_b);
+    }
+
+    bool Ellipse::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Ellipse::isNear(const util::Point &x, const double &tol) const {
+      double u = 0., v = 0.;
+      ellipseLocal(*this, x, u, v);
+      return ellipseMetricInside(u, v, d_a + tol, d_b + tol);
+    }
+
+    bool Ellipse::isNearBoundary(const util::Point &x, const double &tol, const bool &within) const {
+
+      double u = 0., v = 0.;
+      ellipseLocal(*this, x, u, v);
+      const bool inOuter = ellipseMetricInside(u, v, d_a + tol, d_b + tol);
+      const bool inInner = ellipseMetricInside(u, v, d_a - tol, d_b - tol);
+      if (within)
+        return inOuter && !inInner;
+      return inOuter;
+    }
+
+    bool Ellipse::doesIntersect(const util::Point &x) const {
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Ellipse::isInside(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(2, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Ellipse::isOutside(const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p : geom::getCornerPoints(2, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Ellipse::isNear(const std::pair<util::Point, util::Point> &box, const double &tol) const {
+
+      if (this->isInside(box))
+        return true;
+
+      for (auto p : geom::getCornerPoints(2, box)) {
+        if (isNear(p, tol))
+          return true;
+      }
+
+      auto dxc = geom::getCenter(2, box) - d_x;
+      auto r = geom::inscribedRadiusInBox(2, box);
+      if (util::isLess(dxc.length(), boundingRadius() + r + tol))
+        return true;
+
+      r = geom::circumscribedRadiusInBox(2, box);
+      return util::isLess(dxc.length(), boundingRadius() + r + tol);
+    }
+
+    bool Ellipse::doesIntersect(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(2, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Ellipse::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Ellipse --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Semi-axes a, b = " << d_a << ", " << d_b << std::endl;
+      oss << tabS << "Theta (rad) = " << d_theta << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+
+}// Ellipse
+
+//
+// Cylinder
+//
+namespace geom {
+    double Cylinder::volume() const {
+      return M_PI * d_r * d_r * d_l;
+    }
+
+    util::Point Cylinder::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Cylinder::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point>
+    Cylinder::box(const double &tol) const {
+
+      if (d_xa.length() < 1.0E-10)
+        return {util::Point(), util::Point()};
+
+      auto xb = d_xBegin - tol * d_xa;
+      auto xt = d_xBegin + (d_l + tol) * d_xa;
+
+      double r = d_r + tol;
+
+      return {xb - r, xt + r};
+    }
+
+    double Cylinder::inscribedRadius() const {
+
+      auto box = this->box();
+
+      return 0.5 * (box.second - box.first).length();
+    }
+
+    double Cylinder::boundingRadius() const {
+
+      return 0.5 * std::sqrt(d_l * d_l + 4. * d_r * d_r);
+    }
+
+    bool Cylinder::isInside(const util::Point &x) const {
+
+      auto dx = x - d_xBegin;
+
+      if (dx.length() < 1.0E-10)
+        return true;
+
+      double dx_dot_xa = dx * d_xa;
+      if (util::isLess(dx_dot_xa, 0.) or
+          util::isGreater(dx_dot_xa, d_l))
+        return false;
+      else {
+
+        // project dx onto cross-section plane of cylinder
+        auto dx_project = dx - dx_dot_xa * d_xa;
+
+        return !util::isGreater(dx_project.length(), d_r + 1.0E-12);
+      }
+    }
+
+    bool Cylinder::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Cylinder::isNear(const util::Point &x, const double
+    &tol) const {
+
+      auto dx = x - d_xBegin;
+
+      if (dx.length() < tol)
+        return true;
+
+      double dx_dot_xa = dx * d_xa;
+      if (util::isLess(dx_dot_xa, -tol) or
+          util::isGreater(dx_dot_xa, d_l + tol))
+        return false;
+      else {
+
+        // project dx onto cross-section plane of cylinder
+        auto dx_project = dx - dx_dot_xa * d_xa;
+
+        return !util::isGreater(dx_project.length(), d_r + tol);
+      }
+    }
+
+    bool Cylinder::isNearBoundary(const util::Point &x,
+                                                  const double &tol, const bool
+                                                  &within) const {
+
+      auto dx = x - d_xBegin;
+
+      if (dx.length() < tol)
+        return true;
+
+      double dx_dot_xa = dx * d_xa;
+      if (util::isLess(dx_dot_xa, -tol) or
+          util::isGreater(dx_dot_xa, tol) or
+          util::isGreater(dx_dot_xa, d_l + tol) or
+          util::isLess(dx_dot_xa, d_l - tol))
+        return false;
+      else {
+
+        // project dx onto cross-section plane of cylinder
+        auto dx_project = dx - dx_dot_xa * d_xa;
+
+        return !(util::isLess(dx_project.length(), d_r - tol) or
+                 util::isGreater(dx_project.length(), d_r + tol));
+      }
+    }
+
+    bool Cylinder::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Cylinder::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Cylinder::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Cylinder::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 3);
+    }
+
+    bool Cylinder::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(3, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+
+    std::string Cylinder::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Cylinder --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_xBegin.printStr(0, lvl) << std::endl;
+      oss << tabS << "Axis = " << d_xa.printStr(0, lvl) << std::endl;
+      oss << tabS << "Radius = " << d_r << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, 0) << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+
+}// Cylinder
+
+//
+// Sphere
+//
+namespace geom {
+    double Sphere::volume() const {
+      return 4. * M_PI * d_r * d_r * d_r / 3.;
+    }
+
+    util::Point Sphere::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Sphere::box() const {
+
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Sphere::box(const
+                                                                    double &tol) const {
+      double r = d_r + tol;
+
+      return {
+              util::Point(d_x.d_x - r, d_x.d_y - r, d_x.d_z - r),
+              util::Point(d_x.d_x + r, d_x.d_y + r, d_x.d_z + r)
+      };
+    }
+
+    double Sphere::inscribedRadius() const {
+
+      return d_r;
+    }
+
+    double Sphere::boundingRadius() const {
+
+      return d_r;
+    }
+
+    bool Sphere::isInside(const util::Point &x) const {
+
+      return util::isLess(d_x.dist(x), d_r + 1.0E-12);
+    }
+
+    bool Sphere::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Sphere::isNear(const util::Point &x,
+                                        const double &tol) const {
+
+      // translate to origin
+      auto x0 = x - d_x;
+
+      return util::isLess(x0.length(), d_r + tol);
+    }
+
+    bool Sphere::isNearBoundary(const util::Point &x,
+                                                const double &tol, const bool
+                                                &within) const {
+
+      // check if particle is within the tolerance distance
+      if (!isNear(x, within ? 0. : tol))
+        return false;
+
+      // check if it is close enough to circumference
+      auto x0 = x - d_x;
+
+      return util::isLess(x0.length(), d_r + tol) ||
+             util::isLess(x0.length(), d_r - tol);
+    }
+
+    bool Sphere::doesIntersect(const util::Point &x) const {
+
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Sphere::isInside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Sphere::isOutside(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p: geom::getCornerPoints(3, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Sphere::isNear(
+            const std::pair<util::Point, util::Point> &box,
+            const double &tol) const {
+
+      if (this->isInside(box))
+        return true;
+
+      // get corner points of box
+      auto cp = geom::getCornerPoints(3, box);
+
+      for (auto p: cp) {
+
+        // check the distance of corner point with the center
+        auto dx = p - d_x;
+        if (util::isLess(dx.length(), d_r + tol))
+          return true;
+      }
+
+      // check center to center distance
+      auto dxc = geom::getCenter(3, box) - d_x;
+
+      // check wrt inscribed circle
+      auto r = geom::inscribedRadiusInBox(3, box);
+      if (util::isLess(dxc.length(), d_r + r + tol))
+        return true;
+
+      // check wrt circumscribed circle
+      r = geom::circumscribedRadiusInBox(3, box);
+      return util::isLess(dxc.length(), d_r + r + tol);
+    }
+
+    bool Sphere::doesIntersect(
+            const std::pair<util::Point, util::Point> &box) const {
+
+      // need to check all four corner points
+      for (auto p: geom::getCornerPoints(3, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Sphere::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Sphere --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Radius = " << d_r << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+
+}// Sphere
+
+//
+// Ellipsoid
+//
+namespace geom {
+
+    namespace {
+
+    static void quatMul(double aw, double ax, double ay, double az,
+                        double bw, double bx, double by, double bz,
+                        double &cw, double &cx, double &cy, double &cz) {
+      cw = aw * bw - ax * bx - ay * by - az * bz;
+      cx = aw * bx + ax * bw + ay * bz - az * by;
+      cy = aw * by - ax * bz + ay * bw + az * bx;
+      cz = aw * bz + ax * by - ay * bx + az * bw;
+    }
+
+    static void axisAngleToQuatSafe(const util::Point &axisIn, double theta,
+                                    double &w, double &x, double &y, double &z) {
+      if (std::abs(theta) < 1.0e-30) {
+        w = 1.;
+        x = y = z = 0.;
+        return;
+      }
+      const double L = axisIn.length();
+      if (L < 1.0e-30) {
+        w = 1.;
+        x = y = z = 0.;
+        return;
+      }
+      const util::Point k = axisIn / L;
+      const double half = 0.5 * theta;
+      w = std::cos(half);
+      const double s = std::sin(half);
+      x = s * k.d_x;
+      y = s * k.d_y;
+      z = s * k.d_z;
+    }
+
+    static void quatToAxisAngle(double qw, double qx, double qy, double qz,
+                                util::Point &axis, double &theta) {
+      double n = std::sqrt(qw * qw + qx * qx + qy * qy + qz * qz);
+      if (n < 1.0e-30) {
+        axis = util::Point(0., 0., 1.);
+        theta = 0.;
+        return;
+      }
+      qw /= n;
+      qx /= n;
+      qy /= n;
+      qz /= n;
+      if (qw < 0.) {
+        qw = -qw;
+        qx = -qx;
+        qy = -qy;
+        qz = -qz;
+      }
+      qw = std::max(-1., std::min(1., qw));
+      theta = 2. * std::acos(qw);
+      const double sv = std::sqrt(qx * qx + qy * qy + qz * qz);
+      if (sv < 1.0e-15) {
+        axis = util::Point(0., 0., 1.);
+        theta = 0.;
+        return;
+      }
+      axis = util::Point(qx / sv, qy / sv, qz / sv);
+    }
+
+    void ellipsoidBodyCoords(const Ellipsoid &e, const util::Point &p, double R[9], double &v0,
+                             double &v1, double &v2) {
+      ellipsoidRotationMatrix(e, R);
+      v0 = R[0] * p.d_x + R[3] * p.d_y + R[6] * p.d_z;
+      v1 = R[1] * p.d_x + R[4] * p.d_y + R[7] * p.d_z;
+      v2 = R[2] * p.d_x + R[5] * p.d_y + R[8] * p.d_z;
+    }
+
+    double ellipsoidMetric(const Ellipsoid &e, const util::Point &x, double R[9], const double &ra,
+                           const double &rb, const double &rc) {
+      const util::Point p{x.d_x - e.d_x.d_x, x.d_y - e.d_x.d_y, x.d_z - e.d_x.d_z};
+      double v0, v1, v2;
+      ellipsoidBodyCoords(e, p, R, v0, v1, v2);
+      const double dx = v0 / ra;
+      const double dy = v1 / rb;
+      const double dz = v2 / rc;
+      return dx * dx + dy * dy + dz * dz;
+    }
+
+    } // namespace
+
+    void Ellipsoid::transform(const util::Point &translation, const double &scale, const double &angle,
+                              const util::Point &axis, const util::Point *rotationPoint) {
+      const util::Point c0 = d_x;
+      d_a *= scale;
+      d_b *= scale;
+      d_c *= scale;
+
+      double ow, ox, oy, oz;
+      axisAngleToQuatSafe(d_axis, d_theta, ow, ox, oy, oz);
+
+      double rw, rx, ry, rz;
+      axisAngleToQuatSafe(axis, angle, rw, rx, ry, rz);
+
+      double nw, nx, ny, nz;
+      quatMul(rw, rx, ry, rz, ow, ox, oy, oz, nw, nx, ny, nz);
+
+      quatToAxisAngle(nw, nx, ny, nz, d_axis, d_theta);
+      d_x = mapSimilarity(c0, c0, translation, scale, angle, axis, rotationPoint);
+    }
+
+    double Ellipsoid::volume() const {
+      return (4. / 3.) * M_PI * d_a * d_b * d_c;
+    }
+
+    util::Point Ellipsoid::center() const {
+      return d_x;
+    }
+
+    std::pair<util::Point, util::Point> Ellipsoid::box() const {
+      return box(0.);
+    }
+
+    std::pair<util::Point, util::Point> Ellipsoid::box(const double &tol) const {
+
+      const double ra = d_a + tol;
+      const double rb = d_b + tol;
+      const double rc = d_c + tol;
+
+      double R[9];
+      ellipsoidRotationMatrix(*this, R);
+
+      const double hx =
+              std::sqrt((ra * R[0]) * (ra * R[0]) + (rb * R[3]) * (rb * R[3]) + (rc * R[6]) * (rc * R[6]));
+      const double hy =
+              std::sqrt((ra * R[1]) * (ra * R[1]) + (rb * R[4]) * (rb * R[4]) + (rc * R[7]) * (rc * R[7]));
+      const double hz =
+              std::sqrt((ra * R[2]) * (ra * R[2]) + (rb * R[5]) * (rb * R[5]) + (rc * R[8]) * (rc * R[8]));
+
+      return {util::Point(d_x.d_x - hx, d_x.d_y - hy, d_x.d_z - hz),
+              util::Point(d_x.d_x + hx, d_x.d_y + hy, d_x.d_z + hz)};
+    }
+
+    double Ellipsoid::inscribedRadius() const {
+      double m = d_a;
+      if (d_b < m)
+        m = d_b;
+      if (d_c < m)
+        m = d_c;
+      return m;
+    }
+
+    double Ellipsoid::boundingRadius() const {
+      double m = d_a;
+      if (d_b > m)
+        m = d_b;
+      if (d_c > m)
+        m = d_c;
+      return m;
+    }
+
+    bool Ellipsoid::isInside(const util::Point &x) const {
+      if (d_a <= 0. || d_b <= 0. || d_c <= 0.)
+        return false;
+      double R[9];
+      return util::isLess(ellipsoidMetric(*this, x, R, d_a, d_b, d_c), 1. + 1.0E-12);
+    }
+
+    bool Ellipsoid::isOutside(const util::Point &x) const {
+      return !isInside(x);
+    }
+
+    bool Ellipsoid::isNear(const util::Point &x, const double &tol) const {
+      if (d_a + tol <= 0. || d_b + tol <= 0. || d_c + tol <= 0.)
+        return false;
+      double R[9];
+      return util::isLess(ellipsoidMetric(*this, x, R, d_a + tol, d_b + tol, d_c + tol),
+                          1. + 1.0E-12);
+    }
+
+    bool Ellipsoid::isNearBoundary(const util::Point &x, const double &tol, const bool &within) const {
+
+      const bool inOuter = isNear(x, tol);
+      Ellipsoid shrunk = *this;
+      shrunk.d_a = d_a - tol;
+      shrunk.d_b = d_b - tol;
+      shrunk.d_c = d_c - tol;
+      if (shrunk.d_a <= 0. || shrunk.d_b <= 0. || shrunk.d_c <= 0.)
+        return inOuter;
+      const bool inInner = shrunk.isInside(x);
+      if (within)
+        return inOuter && !inInner;
+      return inOuter;
+    }
+
+    bool Ellipsoid::doesIntersect(const util::Point &x) const {
+      return isNearBoundary(x, 1.0E-8, false);
+    }
+
+    bool Ellipsoid::isInside(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(3, box))
+        if (!this->isInside(p))
+          return false;
+
+      return true;
+    }
+
+    bool Ellipsoid::isOutside(const std::pair<util::Point, util::Point> &box) const {
+
+      bool intersect = false;
+      for (auto p : geom::getCornerPoints(3, box))
+        if (!intersect)
+          intersect = this->isInside(p);
+
+      return !intersect;
+    }
+
+    bool Ellipsoid::isNear(const std::pair<util::Point, util::Point> &box, const double &tol) const {
+
+      return geom::areBoxesNear(this->box(), box, tol, 3);
+    }
+
+    bool Ellipsoid::doesIntersect(const std::pair<util::Point, util::Point> &box) const {
+
+      for (auto p : geom::getCornerPoints(3, box))
+        if (this->isInside(p))
+          return true;
+
+      return false;
+    }
+
+    std::string Ellipsoid::printStr(int nt, int lvl) const {
+
+      auto tabS = util::io::getTabS(nt);
+
+      std::ostringstream oss;
+
+      oss << tabS << "------- Ellipsoid --------" << std::endl << std::endl;
+      oss << tabS << "Name = " << d_name << std::endl;
+      oss << tabS << "Center = " << d_x.printStr(0, lvl) << std::endl;
+      oss << tabS << "Semi-axes a, b, c = " << d_a << ", " << d_b << ", " << d_c << std::endl;
+      if (std::abs(d_theta) > 1.0e-14)
+        oss << tabS << "Rotation axis (unit) = " << d_axis.printStr(0, lvl) << ", theta = " << d_theta
+            << std::endl;
+
+      if (lvl > 0)
+        oss << tabS << "Bounding box: "
+            << util::io::printBoxStr(box(0.), nt + 1);
+
+      if (lvl == 0)
+        oss << std::endl;
+
+      return oss.str();
+    }
+
+}// Ellipsoid
+

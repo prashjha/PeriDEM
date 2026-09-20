@@ -1,0 +1,7 @@
+<map id="inp::PGenDeck::readFromJson" name="inp::PGenDeck::readFromJson">
+<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="405,13,608,38"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1ParticleDeck.html#a674d88795904b526f108771991c15070" title=" " alt="" coords="184,5,357,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="392,28,358,28,358,23,392,23"/>
+<area shape="rect" id="Node000003" href="$structinp_1_1ParticleDeck.html#ae9810f456ee39dbae63e4d71b96fe046" title=" " alt="" coords="5,5,136,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,28,136,28,136,23,170,23"/>
+</map>

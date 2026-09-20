@@ -1,0 +1,19 @@
+/*
+ * -------------------------------------------
+ * Copyright (c) 2021 - 2026 Prashant K. Jha
+ * -------------------------------------------
+ * PeriDEM https://github.com/prashjha/PeriDEM
+ *
+ * Distributed under the Boost Software License, Version 1.0. (See accompanying
+ * file LICENSE)
+ */
+
+#include "modelData.h"
+#include "particle/baseParticle.h"
+
+double data::ModelData::getDensity(size_t i) {
+  return d_particlesListTypeAll[d_ptId[i]]->getDensity();
+};
+double data::ModelData::getHorizon(size_t i) {
+  return d_particlesListTypeAll[d_ptId[i]]->getHorizon();
+};

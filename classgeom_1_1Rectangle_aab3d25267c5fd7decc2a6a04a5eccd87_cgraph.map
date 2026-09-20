@@ -1,0 +1,9 @@
+<map id="geom::Rectangle::isInside" name="geom::Rectangle::isInside">
+<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,31,180,56"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#a39308af64e5f46fb740c14cee14cd5e2" title="Checks if point is inside a rectangle." alt="" coords="228,31,424,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,41,215,41,215,46,181,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="472,5,572,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="424,28,458,24,459,29,425,33"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="479,55,565,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="425,53,466,58,465,63,424,58"/>
+</map>

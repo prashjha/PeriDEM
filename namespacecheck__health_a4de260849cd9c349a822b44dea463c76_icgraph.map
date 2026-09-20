@@ -1,0 +1,12 @@
+<map id="check_health.wall_id_from_deck" name="check_health.wall_id_from_deck">
+<area shape="rect" id="Node000001" title=" " alt="" coords="407,63,549,103"/>
+<area shape="rect" id="Node000002" href="$namespacecheck__health.html#a52035ef11b96b40fe7f28e92e51d3eb8" title=" " alt="" coords="228,71,359,96"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="393,86,359,86,359,81,393,81"/>
+<area shape="poly" id="edge4_Node000002_Node000002" title=" " alt="" coords="326,60,317,52,293,49,274,51,264,56,262,62,267,69,263,72,256,62,260,53,272,46,293,44,319,48,329,56"/>
+<area shape="rect" id="Node000003" href="$namespacecheck__health.html#abb31d5c0492beda3483423754f9f5dc4" title=" " alt="" coords="5,29,180,55"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="217,70,154,57,155,52,218,65"/>
+<area shape="rect" id="Node000004" href="$namespacecheck__health.html#adf486fc149f6810c14ceaccc7c70709d" title=" " alt="" coords="21,103,164,143"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="216,101,165,112,164,107,215,96"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="128,20,118,11,93,8,71,10,60,15,58,20,64,28,60,31,53,21,56,11,70,5,93,3,121,6,132,16"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="126,92,114,85,93,82,74,84,62,89,58,95,60,102,55,104,53,94,59,85,72,79,93,77,116,80,129,87"/>
+</map>

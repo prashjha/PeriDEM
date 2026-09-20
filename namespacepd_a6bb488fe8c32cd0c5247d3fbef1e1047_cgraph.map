@@ -1,0 +1,34 @@
+<map id="pd::computeForces" name="pd::computeForces">
+<area shape="rect" id="Node000001" title="Assemble nodal peridynamic force (constitutive response stays in material)." alt="" coords="5,197,140,223"/>
+<area shape="rect" id="Node000002" href="$namespacepd.html#ab4d67f9aed49802e7d46b67df623fd74" title="Halo&#45;exchange state&#45;based dilatation d_thetaX for PD ghosts." alt="" coords="189,109,357,135"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,195,230,138,232,143,104,200"/>
+<area shape="rect" id="Node000012" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="188,172,359,197"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="140,199,174,195,175,200,141,204"/>
+<area shape="rect" id="Node000013" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="232,221,315,247"/>
+<area shape="poly" id="edge15_Node000001_Node000013" title=" " alt="" coords="141,215,219,225,218,230,140,221"/>
+<area shape="rect" id="Node000015" href="$namespacepd.html#a69d6040cd1374cceb197075baab7f453" title="Build self&#45;contact law named by Model.Self_Contact." alt="" coords="201,271,346,296"/>
+<area shape="poly" id="edge18_Node000001_Node000015" title=" " alt="" coords="102,220,189,257,211,264,209,269,187,262,100,225"/>
+<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02pdMpi_8cpp_03.html#a4a4ac5b61caca4b51c0085c369346018" title=" " alt="" coords="407,45,613,85"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="326,107,413,85,415,90,327,112"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1parallel.html#af2fa5cf1aed1855e05ae530704c37763" title="Get MPI comm." alt="" coords="661,5,817,31"/>
+<area shape="poly" id="edge7_Node000002_Node000004" title=" " alt="" coords="286,107,336,67,369,46,406,30,467,15,531,7,592,5,648,6,647,12,592,10,531,12,468,20,408,35,372,51,339,71,290,111"/>
+<area shape="rect" id="Node000008" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="665,108,813,133"/>
+<area shape="poly" id="edge8_Node000002_Node000008" title=" " alt="" coords="357,119,651,118,651,124,358,124"/>
+<area shape="rect" id="Node000009" href="$namespaceutil_1_1methods.html#aaf9cfac99073d034d41e10d4d17e59a2" title="Returns difference between two times." alt="" coords="435,160,585,185"/>
+<area shape="poly" id="edge10_Node000002_Node000009" title=" " alt="" coords="334,132,437,154,436,160,333,137"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="608,42,662,31,663,36,609,47"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1parallel.html#ad67dcfb56bf70d082e443e849c832c00" title="Get size (number) of processors." alt="" coords="668,55,811,80"/>
+<area shape="poly" id="edge5_Node000003_Node000007" title=" " alt="" coords="613,63,654,64,654,69,613,69"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="879,55,1014,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="794,28,880,49,879,54,793,33"/>
+<area shape="poly" id="edge6_Node000007_Node000005" title=" " alt="" coords="811,65,866,65,866,70,811,70"/>
+<area shape="poly" id="edge9_Node000008_Node000005" title=" " alt="" coords="789,105,883,81,884,86,790,110"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="674,160,805,185"/>
+<area shape="poly" id="edge11_Node000009_Node000010" title=" " alt="" coords="586,170,660,170,660,175,586,175"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="865,160,1028,185"/>
+<area shape="poly" id="edge12_Node000010_Node000011" title=" " alt="" coords="805,178,851,179,851,184,805,184"/>
+<area shape="poly" id="edge13_Node000011_Node000010" title=" " alt="" coords="865,167,819,167,819,161,865,161"/>
+<area shape="rect" id="Node000014" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="445,233,575,259"/>
+<area shape="poly" id="edge16_Node000013_Node000014" title=" " alt="" coords="315,233,432,239,432,245,315,239"/>
+<area shape="poly" id="edge17_Node000014_Node000014" title=" " alt="" coords="473,235,465,225,469,215,484,209,510,207,542,211,555,220,551,224,540,215,510,212,485,214,472,219,470,224,477,231"/>
+</map>

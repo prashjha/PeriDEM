@@ -1,0 +1,22 @@
+<map id="util::io::removeExtensionFromFile" name="util::io::removeExtensionFromFile">
+<area shape="rect" id="Node000001" title="Remove extension from the filename Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="1084,72,1251,112"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen.html#ae60bdca385726662e396def3e46d7fa8" title="Build a reference&#45;particle mesh: file, uniform rectangle, or in&#45;process Gmsh." alt="" coords="611,15,813,40"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1127,66,1084,41,1035,22,970,11,903,8,839,11,784,18,784,12,839,6,903,3,970,6,1037,17,1087,36,1130,62"/>
+<area shape="rect" id="Node000011" href="$namespaceanonymous__namespace_02particleMesh_8cpp_03.html#a7a6428c6f3f4b6b712ad738092f93196" title=" " alt="" coords="867,32,1030,87"/>
+<area shape="poly" id="edge5_Node000001_Node000011" title=" " alt="" coords="1070,80,1030,74,1031,69,1071,75"/>
+<area shape="rect" id="Node000012" href="$namespacetest.html#a6934db7b63923b70a56ab8e9c7159202" title="Tests metis partitioning of graph from a 2&#45;D mesh with nonlocal interaction." alt="" coords="861,111,1036,136"/>
+<area shape="poly" id="edge7_Node000001_Node000012" title=" " alt="" coords="1071,108,1036,114,1035,108,1070,103"/>
+<area shape="rect" id="Node000014" href="$namespacetest.html#af0964e1ea010ded3d98df70e7d5326ca" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="899,160,998,186"/>
+<area shape="poly" id="edge9_Node000001_Node000014" title=" " alt="" coords="1113,120,1037,151,999,163,997,158,1035,146,1111,115"/>
+<area shape="rect" id="Node000003" href="$namespaceparticle.html#a2bdc7a5bc215c50bd3acf8c5fa4e56bd" title="Build reference meshes from the particle deck (no placement)." alt="" coords="395,8,563,48"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="597,30,563,30,563,25,597,25"/>
+<area shape="rect" id="Node000004" href="$namespaceparticle.html#a4186fa1cb451f637da0180294b5a253f" title="Build refs then place particles according to the generation method." alt="" coords="188,15,347,40"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="381,30,347,30,347,25,381,25"/>
+<area shape="rect" id="Node000005" href="$classPeriDEMModel.html#a17a80bcdbba1bdd6fc140e6c175e4f81" title=" " alt="" coords="5,15,140,40"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="174,30,140,30,140,25,174,25"/>
+<area shape="poly" id="edge6_Node000011_Node000002" title=" " alt="" coords="853,49,806,43,806,38,854,44"/>
+<area shape="rect" id="Node000013" href="$testMeshPartitioning_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="687,111,737,136"/>
+<area shape="poly" id="edge8_Node000012_Node000013" title=" " alt="" coords="847,126,738,126,738,121,847,121"/>
+<area shape="rect" id="Node000015" href="$testParallelComp_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="687,160,737,186"/>
+<area shape="poly" id="edge10_Node000014_Node000015" title=" " alt="" coords="885,176,737,176,737,170,885,170"/>
+</map>

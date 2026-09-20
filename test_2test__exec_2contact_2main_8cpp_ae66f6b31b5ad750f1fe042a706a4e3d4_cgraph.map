@@ -1,0 +1,32 @@
+<map id="main" name="main">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,271,56,297"/>
+<area shape="rect" id="Node000002" href="$namespacecontact.html#ac5c6d1a1499980eb5e04e7aefbac8e3b" title=" " alt="" coords="117,5,290,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="30,271,33,230,43,172,65,110,81,81,102,56,107,51,110,55,106,59,86,84,70,113,48,174,38,231,35,271"/>
+<area shape="rect" id="Node000004" href="$namespacecontact.html#a22cf0566f99aed81149c57097dab91a2" title="Build COM damping object, or nullptr when the law has no COM term." alt="" coords="125,70,282,95"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="31,271,36,237,48,192,69,145,84,123,102,105,111,98,114,103,106,109,88,127,74,148,53,194,41,238,36,271"/>
+<area shape="rect" id="Node000005" href="$namespacecontact.html#a8c2ce74548bc4917292d93afb8cf674e" title="Build pair&#45;force object from friction&#45;law name." alt="" coords="123,119,284,145"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="33,270,55,214,75,181,102,154,110,149,113,153,106,158,80,185,60,216,38,272"/>
+<area shape="rect" id="Node000006" href="$namespacepd.html#a69d6040cd1374cceb197075baab7f453" title="Build self&#45;contact law named by Model.Self_Contact." alt="" coords="131,169,276,194"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="38,270,64,236,82,218,103,203,116,196,119,201,105,208,85,222,68,240,42,273"/>
+<area shape="rect" id="Node000007" href="$namespacecontact.html#a965594af0fb6cbce1d9f193e2efa39e4" title=" " alt="" coords="115,242,291,267"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="56,277,115,267,115,272,57,282"/>
+<area shape="rect" id="Node000008" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a0cabebbfbab2d99c55a3608a29462116" title=" " alt="" coords="122,292,285,332"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="57,285,109,294,108,299,56,291"/>
+<area shape="rect" id="Node000009" href="$namespacecontact.html#ad45f5b5387cb48e0609cb3db357f7924" title="True for com / com_and_node." alt="" coords="113,357,294,382"/>
+<area shape="poly" id="edge9_Node000001_Node000009" title=" " alt="" coords="46,295,72,319,105,342,124,350,122,355,103,346,68,323,42,299"/>
+<area shape="rect" id="Node000010" href="$namespacecontact.html#ad00ca7bae36cee3681515d1b1a384951" title="True for node / com_and_node." alt="" coords="111,406,295,431"/>
+<area shape="poly" id="edge10_Node000001_Node000010" title=" " alt="" coords="39,295,63,343,82,369,106,391,117,398,114,403,102,395,78,373,58,346,34,298"/>
+<area shape="rect" id="Node000011" href="$classgeom_1_1Plane.html#afd0b5bb627b76cb0c9e60bdcff39bed7" title="Closest&#45;point / signed&#45;gap query for analytical wall contact. Default: unsupported (returns false,..." alt="" coords="117,456,289,496"/>
+<area shape="poly" id="edge11_Node000001_Node000011" title=" " alt="" coords="37,296,44,326,57,364,77,405,106,441,113,447,110,451,102,445,73,408,52,367,39,327,32,297"/>
+<area shape="rect" id="Node000013" href="$classgeom_1_1Rectangle.html#aa61314d1cab975d42d2b97a6f800e900" title=" " alt="" coords="104,520,303,560"/>
+<area shape="poly" id="edge13_Node000001_Node000013" title=" " alt="" coords="35,296,38,337,48,393,70,453,86,481,106,506,110,510,107,514,102,510,81,484,65,456,43,394,33,337,30,297"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="376,13,476,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="290,23,362,23,362,28,290,28"/>
+<area shape="poly" id="edge7_Node000007_Node000007" title=" " alt="" coords="175,243,169,234,172,224,184,218,203,215,227,219,237,227,233,231,224,224,203,221,185,223,176,227,174,233,179,240"/>
+<area shape="rect" id="Node000012" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="366,463,486,489"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="290,473,352,473,352,479,290,479"/>
+<area shape="poly" id="edge16_Node000013_Node000012" title=" " alt="" coords="273,517,367,490,368,495,274,522"/>
+<area shape="rect" id="Node000014" href="$classgeom_1_1Rectangle.html#a7dbc50605017553734fb641754b273a1" title="Computes the bounding box of object." alt="" coords="351,537,501,562"/>
+<area shape="poly" id="edge14_Node000013_Node000014" title=" " alt="" coords="303,542,337,543,337,548,303,547"/>
+<area shape="poly" id="edge15_Node000014_Node000014" title=" " alt="" coords="390,538,382,528,386,518,401,512,426,510,457,514,469,523,466,527,455,519,426,515,402,517,390,522,387,528,394,535"/>
+</map>
