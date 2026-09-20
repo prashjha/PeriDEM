@@ -123,9 +123,17 @@ json getInputJson() {
       true, 2, "Multi_Particle", 0);
 
   // Output deck
-  auto outputDeckJson = inp::OutputDeck::getExampleJson("vtu", output_dir,
-      std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage_Z", "Damage", "Particle_ID"}),
-      dt_out_n, 2, true, "zlib", true, 1, "");
+  auto outputDeckJson = inp::OutputDeck::getExampleJson(
+      json{{"File_Format", "vtu"},
+           {"Path", output_dir},
+           {"Tags", std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage_Z", "Damage", "Particle_ID"})},
+           {"Output_Interval", dt_out_n},
+           {"Debug", 2},
+           {"Perform_FE_Out", true},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", 1},
+           {"Tag_PP", ""}});
 
   // BC deck
   auto bcDeckJson = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0, -10, 0));
@@ -181,9 +189,16 @@ json getInputJson() {
   auto pContactJson = inp::ParticleDeck::getParticleContactExampleJson(2);
 
   // Base contact parameters
-  json contact_base = inp::ContactPairDeck::getExampleJson(R_contact_factor,
-      true, false, false,
-      Kn_11, beta_n_eps, friction_coeff, 1.0, beta_n_factor, 1.0, 0.0, 0.0);
+  json contact_base = inp::ContactPairDeck::getExampleJson(
+          json{{"Contact_Radius_Factor", R_contact_factor},
+               {"Kn", Kn_11},
+               {"Damping_On", false},
+               {"Epsilon", beta_n_eps},
+               {"Friction_On", false},
+               {"Friction_Coeff", friction_coeff},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", beta_n_factor},
+               {"K", 0.0}});
 
   // Contact pair 1-1 (bottom-bottom)
   pContactJson["Set_1_1"] = contact_base;

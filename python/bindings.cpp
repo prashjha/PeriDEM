@@ -255,10 +255,18 @@ std::string output_json(const std::string &out_format, const std::string &path,
                         bool perform_fe_out, const std::string &compress_type,
                         bool perform_out, size_t dt_test_out,
                         const std::string &tag_pp, bool pvd_collection) {
-  return inp::OutputDeck::getExampleJson(out_format, path, tags,
-                                         output_interval, debug, perform_fe_out,
-                                         compress_type, perform_out, dt_test_out,
-                                         tag_pp, pvd_collection)
+  return inp::OutputDeck::getExampleJson(
+      json{{"File_Format", out_format},
+           {"Path", path},
+           {"Tags", tags},
+           {"Output_Interval", output_interval},
+           {"Debug", debug},
+           {"Perform_FE_Out", perform_fe_out},
+           {"Compress_Type", compress_type},
+           {"Perform_Out", perform_out},
+           {"Test_Output_Interval", dt_test_out},
+           {"Tag_PP", tag_pp},
+           {"PVD_Collection", pvd_collection}})
       .dump();
 }
 
@@ -282,11 +290,27 @@ std::string contact_pair_json(double contact_r, bool compute_contact_r,
                               double eps, double mu, double Kn_factor,
                               double beta_n_factor, double delta_max,
                               double v_max, double K) {
-  return inp::ContactPairDeck::getExampleJson(contact_r, compute_contact_r,
-                                              damping_on, friction_on, Kn, eps,
-                                              mu, Kn_factor, beta_n_factor,
-                                              delta_max, v_max, K)
-      .dump();
+  json given = json{{"Damping_On", damping_on},
+                    {"Epsilon", eps},
+                    {"Friction_On", friction_on},
+                    {"Friction_Coeff", mu},
+                    {"Kn_Factor", Kn_factor},
+                    {"Beta_n_Factor", beta_n_factor},
+                    {"K", K}};
+
+  // A factor is applied to the mesh size, an absolute radius is not.
+  given[compute_contact_r ? "Contact_Radius_Factor" : "Contact_Radius"] =
+      contact_r;
+
+  // A stiffness is used as given; otherwise it is derived from the speed.
+  if (Kn > 1.E-10) {
+    given["Kn"] = Kn;
+  } else {
+    given["V_Max"] = v_max;
+    given["Delta_Max"] = delta_max;
+  }
+
+  return inp::ContactPairDeck::getExampleJson(given).dump();
 }
 
 std::string bc_json(size_t n_force_sets, size_t n_disp_sets, size_t n_ic_sets,

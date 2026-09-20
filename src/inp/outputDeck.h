@@ -142,32 +142,16 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(std::string outFormat = "vtu",
-        std::string path = "./",
-        std::vector<std::string> outTags = {"Displacement"},
-                size_t outputInterval = 1,
-                size_t debug = 2,
-                bool performFEOut = true,
-                std::string compressType = "zlib",
-                bool performOut = true,
-                size_t dtTestOut = 1,
-                std::string tagPPFile = "",
-                bool pvdCollection = false) {
-
-      json given = json{{"Path", path},
-                        {"Perform_Out", performOut},
-                        {"Tags", outTags},
-                        {"Output_Interval", outputInterval},
-                        {"Debug", debug},
-                        {"Perform_FE_Out", performFEOut},
-                        {"Compress_Type", compressType},
-                        {"File_Format", outFormat},
-                        {"Test_Output_Interval", dtTestOut},
-                        {"Tag_PP", tagPPFile}};
-      if (pvdCollection)
-        given["PVD_Collection"] = true;
-      return getExampleJson(given);
-    }
+    /*!
+     * @brief Rejects a value given where a set of named values is expected
+     *
+     * A format or path passed on its own would convert to a JSON string and
+     * be read as a block with no keys, so such a call is rejected when
+     * compiling.
+     */
+    static json getExampleJson(const std::string &) = delete;
+    /*! @copydoc getExampleJson(const std::string &) */
+    static json getExampleJson(const char *) = delete;
 
     /*!
      * @brief The fields of this deck, declared once
@@ -215,7 +199,7 @@ namespace inp {
      * @param given Field names and values to set, checked against the table
      * @return JSON object for this deck
      */
-    static json getExampleJson(const json &given) {
+    static json getExampleJson(const json &given = json::object()) {
       return applyGiven(given, fields(), {"Output_Criteria"});
     }
 

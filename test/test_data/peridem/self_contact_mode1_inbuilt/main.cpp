@@ -57,9 +57,17 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
   const double Gc = 5.0e6;
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Force", "Damage_Z", "Particle_ID"}),
-      num_steps, 1, false, "zlib", false, num_steps, "", false);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Force", "Damage_Z", "Particle_ID"})},
+           {"Output_Interval", num_steps},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", false},
+           {"Test_Output_Interval", num_steps},
+           {"Tag_PP", ""},
+           {"PVD_Collection", false}});
 
   const double strip = 0.2 * L;
   json bc = json::object();

@@ -168,8 +168,17 @@ json buildInputJson(const std::string &output_path_for_deck,
   std::vector<std::string> out_tags = {"Displacement", "Velocity", "Force", "Damage_Z",
                                        "Damage", "Particle_ID", "Contact_Nodes"};
   auto outputDeckJson = inp::OutputDeck::getExampleJson(
-      "vtu", output_path_for_deck, out_tags, dt_out_n, 1, true, "zlib", true,
-      test_dt_out_n, "0", true);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path_for_deck},
+           {"Tags", out_tags},
+           {"Output_Interval", dt_out_n},
+           {"Debug", 1},
+           {"Perform_FE_Out", true},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", test_dt_out_n},
+           {"Tag_PP", "0"},
+           {"PVD_Collection", true}});
 
   auto bcDeckJson =
       inp::BCDeck::getExampleJson(0, 2, 0, true, util::Point(0, -10, 0));
@@ -209,7 +218,15 @@ json buildInputJson(const std::string &output_path_for_deck,
   pDeckJson["Material"] = matRoot;
 
   json contact_base = inp::ContactPairDeck::getExampleJson(
-      0.95, true, true, false, Kn, 0.95, 0.0, 1.0, 100.0, 1.0, 0.0, K);
+          json{{"Contact_Radius_Factor", 0.95},
+               {"Kn", Kn},
+               {"Damping_On", true},
+               {"Epsilon", 0.95},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 100.0},
+               {"K", K}});
   json contactRoot = inp::ParticleDeck::getParticleContactExampleJson(2);
   contactRoot["Set_1_1"] = contact_base;
   contactRoot["Set_1_2"] = contact_base;

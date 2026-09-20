@@ -58,10 +58,17 @@ json buildInputJson(const std::string &output_path,
   }
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Force", "Particle_ID"}),
-      std::max<size_t>(1, num_steps / 5), 1, false, "zlib", false, num_steps, "",
-      false);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Force", "Particle_ID"})},
+           {"Output_Interval", std::max<size_t>(1, num_steps / 5)},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", false},
+           {"Test_Output_Interval", num_steps},
+           {"Tag_PP", ""},
+           {"PVD_Collection", false}});
 
   auto bc = inp::BCDeck::getExampleJson(0, 1, 0, false, util::Point());
   bc["Displacement_BC"]["Set_1"] = json{
@@ -107,8 +114,15 @@ json buildInputJson(const std::string &output_path,
                                         true, 1);
 
   json contact_base = inp::ContactPairDeck::getExampleJson(
-      Rc_factor, true, /*damping*/ false, /*friction*/ false, Kn, 1.0, 0.0, 1.0,
-      100.0, 1.0, 0.0, K);
+          json{{"Contact_Radius_Factor", Rc_factor},
+               {"Kn", Kn},
+               {"Damping_On", false},
+               {"Epsilon", 1.0},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 100.0},
+               {"K", K}});
   // Soften spring for a short stable settle (formula check uses this Kn too).
   contact_base["Kn"] = Kn;
   contact_base["Kn_Factor"] = 1.0;

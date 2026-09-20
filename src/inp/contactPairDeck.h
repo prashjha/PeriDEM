@@ -142,50 +142,57 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(double contactR = 0., bool computeContactR = true,
-        bool dampingOn = true, bool frictionOn = true,
-        double Kn = 0., double eps = 1., double mu = 0.,
-        double KnFactor = 1., double betanFactor = 1.,
-        double deltaMax = 1., double vMax = 0., double K = 0.) {
+    /*!
+     * @brief Returns the block with the given fields set
+     *
+     * The contact radius is given either as Contact_Radius, an absolute
+     * length, or as Contact_Radius_Factor, a multiple of the mesh size. The
+     * contact stiffness is given either as Kn, or as V_Max with an optional
+     * Delta_Max, the speed and overlap the stiffness is derived from. Naming
+     * one of each pair is what selects it; there is no flag and no value
+     * standing in for "not set".
+     *
+     * @param given Field names and values to set, checked against the table
+     * @return JSON object for this deck
+     */
+    static json getExampleJson(const json &given = json::object()) {
+      const std::vector<std::string> extra = {"Contact_Radius",
+                                              "Contact_Radius_Factor", "Kn",
+                                              "V_Max", "Delta_Max"};
+      checkKeys(given, fields(), extra);
+
+      json g = given;
 
       // Damping with no coefficient is no damping.
+      bool dampingOn = g.value("Damping_On", true);
+      double betanFactor = g.value("Beta_n_Factor", 1.);
       if (dampingOn and betanFactor < 1.E-10)
         dampingOn = false;
       if (!dampingOn)
         betanFactor = 0.;
+      g["Damping_On"] = dampingOn;
+      g["Beta_n_Factor"] = betanFactor;
 
-      if (frictionOn and mu < 1.E-10)
+      if (g.value("Friction_On", true) and
+          g.value("Friction_Coeff", 0.) < 1.E-10)
         throw std::runtime_error("Friction coefficient can not be zero.");
 
-      json j = applyGiven(json{{"Damping_On", dampingOn},
-                               {"Epsilon", eps},
-                               {"Friction_On", frictionOn},
-                               {"Friction_Coeff", mu},
-                               {"Kn_Factor", KnFactor},
-                               {"Beta_n_Factor", betanFactor},
-                               {"K", K}},
-                          fields(),
-                          {"Contact_Radius", "Contact_Radius_Factor", "Kn",
-                           "V_Max", "Delta_Max"});
+      if (g.find("Contact_Radius_Factor") != g.end() and
+          g.at("Contact_Radius_Factor").get<double>() < 1.E-10)
+        throw std::runtime_error("Contact radius factor can not be zero.");
 
-      // One of each group, chosen by which of the two values was supplied.
-      if (computeContactR) {
-        if (contactR < 1E-10)
-          throw std::runtime_error("Contact radius factor can not be zero.");
-        j["Contact_Radius_Factor"] = contactR;
-      } else {
-        j["Contact_Radius"] = contactR;
-      }
+      if (g.find("Kn") != g.end() and g.at("Kn").get<double>() < 1.E-10)
+        throw std::runtime_error(
+            "Kn can not be zero. Give V_Max instead to derive it.");
 
-      if (Kn < 1.E-10) {
-        if (vMax < 1.E-10)
-          throw std::runtime_error("Need V_Max parameter for contact force.");
-        j["V_Max"] = vMax;
-        j["Delta_Max"] = deltaMax < 1.E-10 ? 1. : deltaMax;
-      } else {
-        j["Kn"] = Kn;
-      }
+      // The speed is what the stiffness is derived from, so the overlap it
+      // is measured against goes with it.
+      if (g.find("V_Max") != g.end() and
+          (g.find("Delta_Max") == g.end() or
+           g.at("Delta_Max").get<double>() < 1.E-10))
+        g["Delta_Max"] = 1.;
 
+      json j = applyGiven(g, fields(), extra);
       checkGroups(j, groups());
       return j;
     }

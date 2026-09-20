@@ -362,8 +362,18 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   /* Perform_FE_Out must be true so VTU includes element connectivity (appendMesh). If false, only
    * points are written (appendNodes) and ParaView’s default “Surface” view looks empty — use
    * Representation → Points, or enable this flag. Large packs often leave FE out. */
-  auto outputDeckJson = inp::OutputDeck::getExampleJson("vtu", output_path_for_deck, out_tags, dt_out_n, 2,
-                                                          true, "zlib", true, test_dt_out_n, "0", true);
+  auto outputDeckJson = inp::OutputDeck::getExampleJson(
+      json{{"File_Format", "vtu"},
+           {"Path", output_path_for_deck},
+           {"Tags", out_tags},
+           {"Output_Interval", dt_out_n},
+           {"Debug", 2},
+           {"Perform_FE_Out", true},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", test_dt_out_n},
+           {"Tag_PP", "0"},
+           {"PVD_Collection", true}});
 
   auto bcDeckJson = inp::BCDeck::getExampleJson(0, 2, 0, true, util::Point(0, -10, 0));
 

@@ -80,8 +80,17 @@ void testModelDeck() {
 void testOutputDeck() {
   std::cout << "OutputDeck\n";
   auto j = inp::OutputDeck::getExampleJson(
-      "vtu", "out/", std::vector<std::string>({"Displacement", "Damage_Z"}),
-      25, 1, false, "zlib", true, 5, "3", true);
+      json{{"File_Format", "vtu"},
+           {"Path", "out/"},
+           {"Tags", std::vector<std::string>({"Displacement", "Damage_Z"})},
+           {"Output_Interval", 25},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", 5},
+           {"Tag_PP", "3"},
+           {"PVD_Collection", true}});
   inp::OutputDeck d;
   d.readFromJson(j);
   check(d.d_path == "out/", "Path round-trips");
@@ -153,9 +162,16 @@ void testMeshDeck() {
 
 void testContactPairDeck() {
   std::cout << "ContactPairDeck\n";
-  auto j = inp::ContactPairDeck::getExampleJson(0.95, true, true, true, 1.0e12,
-                                                0.9, 0.5, 2.0, 100., 1., 0.,
-                                                2.16e7);
+  auto j = inp::ContactPairDeck::getExampleJson(
+          json{{"Contact_Radius_Factor", 0.95},
+               {"Kn", 1.0e12},
+               {"Damping_On", true},
+               {"Epsilon", 0.9},
+               {"Friction_On", true},
+               {"Friction_Coeff", 0.5},
+               {"Kn_Factor", 2.0},
+               {"Beta_n_Factor", 100.},
+               {"K", 2.16e7}});
   inp::ContactPairDeck d;
   d.readFromJson(j);
   check(d.d_computeContactR, "Contact_Radius_Factor round-trips");
@@ -168,9 +184,16 @@ void testContactPairDeck() {
   checkClose(d.d_betanFactor, 100., "Beta_n_Factor round-trips");
 
   // Damping off must zero the damping factor, not carry it.
-  auto j2 = inp::ContactPairDeck::getExampleJson(0.95, true, false, false,
-                                                 1.0e12, 0.9, 0., 1., 100., 1.,
-                                                 0., 2.16e7);
+  auto j2 = inp::ContactPairDeck::getExampleJson(
+          json{{"Contact_Radius_Factor", 0.95},
+               {"Kn", 1.0e12},
+               {"Damping_On", false},
+               {"Epsilon", 0.9},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.},
+               {"Kn_Factor", 1.},
+               {"Beta_n_Factor", 100.},
+               {"K", 2.16e7}});
   inp::ContactPairDeck d2;
   d2.readFromJson(j2);
   check(!d2.d_dampingOn, "Damping_On false round-trips");

@@ -302,10 +302,18 @@ json buildTraskInputJson(const std::string &output_path,
   model["Bond_Break"] = "tension"; // literature PMB: break in tension only
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage", "Damage_Z",
-                                "Particle_ID", "Fixity"}),
-      std::max<size_t>(1, num_steps / 10), 1, false, "zlib", true, num_steps, "", false);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage", "Damage_Z",
+                                "Particle_ID", "Fixity"})},
+           {"Output_Interval", std::max<size_t>(1, num_steps / 10)},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", num_steps},
+           {"Tag_PP", ""},
+           {"PVD_Collection", false}});
 
   // Trask §6.2: top left/right of notches u=<0,0>; drive between notches
   // u=<0,-v t>; sides and bottom free (collar bond-break not yet implemented).
@@ -379,10 +387,18 @@ json buildImpactInputJson(const std::string &output_path,
       {json{{"Id", 1}, {"Mass", dim3 ? 1.57 : 1.57 / 0.009}}});
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage", "Damage_Bond",
-                                "Damage_Z", "Particle_ID"}),
-      std::max<size_t>(1, num_steps / 10), 1, false, "zlib", true, num_steps, "", false);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage", "Damage_Bond",
+                                "Damage_Z", "Particle_ID"})},
+           {"Output_Interval", std::max<size_t>(1, num_steps / 10)},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", num_steps},
+           {"Tag_PP", ""},
+           {"PVD_Collection", false}});
 
   json ic = {
       {"Sets", 1},
@@ -455,8 +471,15 @@ json buildImpactInputJson(const std::string &output_path,
   // Absolute Contact_Radius from the requested mesh size (not Factor×hMin).
   const double Rc_abs = Rc_factor * mesh_size;
   json contact_base = inp::ContactPairDeck::getExampleJson(
-      Rc_abs, /*computeContactR=*/false, /*damping*/ false, /*friction*/ false, Kn,
-      1.0, 0.0, 1.0, 0.0, 1.0, 0.0, K);
+          json{{"Contact_Radius", Rc_abs},
+               {"Kn", Kn},
+               {"Damping_On", false},
+               {"Epsilon", 1.0},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 0.0},
+               {"K", K}});
   contact_base["Kn"] = Kn;
   json contact = inp::ParticleDeck::getParticleContactExampleJson(2);
   contact["Set_1_1"] = contact_base;
@@ -519,10 +542,18 @@ json buildBhatInputJson(const std::string &output_path,
   model["Wall_Contact"] = "meshed";
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage", "Damage_Bond",
-                                "Damage_Z", "Particle_ID"}),
-      std::max<size_t>(1, num_steps / 10), 1, false, "zlib", true, num_steps, "", false);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage", "Damage_Bond",
+                                "Damage_Z", "Particle_ID"})},
+           {"Output_Interval", std::max<size_t>(1, num_steps / 10)},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", num_steps},
+           {"Tag_PP", ""},
+           {"PVD_Collection", false}});
 
   json ic = {
       {"Sets", 1},
@@ -570,8 +601,15 @@ json buildBhatInputJson(const std::string &output_path,
   const double Kn_bhat = 18.0 * K / (M_PI * std::pow(horizon, 4.0));
   const double Rc_abs = Rc_factor * mesh_size;
   json contact_base = inp::ContactPairDeck::getExampleJson(
-      Rc_abs, /*computeContactR=*/false, /*damping*/ false, /*friction*/ false, Kn_bhat,
-      1.0, 0.0, 1.0, 0.0, 1.0, 0.0, K);
+          json{{"Contact_Radius", Rc_abs},
+               {"Kn", Kn_bhat},
+               {"Damping_On", false},
+               {"Epsilon", 1.0},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 0.0},
+               {"K", K}});
   contact_base["Kn"] = Kn_bhat;
   json contact = inp::ParticleDeck::getParticleContactExampleJson(2);
   contact["Set_1_1"] = contact_base;

@@ -90,10 +90,18 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
   model["Self_Contact"] = "none";
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage_Z", "Damage",
-                                "Particle_ID", "Fixity"}),
-      dt_out_n, 1, true, "zlib", true, 1, "", true);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Velocity", "Force", "Damage_Z", "Damage",
+                                "Particle_ID", "Fixity"})},
+           {"Output_Interval", dt_out_n},
+           {"Debug", 1},
+           {"Perform_FE_Out", true},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", true},
+           {"Test_Output_Interval", 1},
+           {"Tag_PP", ""},
+           {"PVD_Collection", true}});
 
   auto bc = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0., -g, 0.));
   bc["Displacement_BC"]["Set_1"] = inp::BCBaseDeck::getExampleJson(
@@ -143,14 +151,37 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
   pDeck["Material"] = mat;
 
   auto contact = inp::ParticleDeck::getParticleContactExampleJson(2);
-  json cpair_wall = inp::ContactPairDeck::getExampleJson(R_contact_factor, true, true, false, Kn_tt, 0.95,
-                                                      0.0, 1.0, 100.0, 1.0, 0.0, K_t);
+  json cpair_wall = inp::ContactPairDeck::getExampleJson(
+          json{{"Contact_Radius_Factor", R_contact_factor},
+               {"Kn", Kn_tt},
+               {"Damping_On", true},
+               {"Epsilon", 0.95},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 100.0},
+               {"K", K_t}});
   // Tip contact: enough Beta_n to drive a crack, damping on to limit spray.
-  json cpair_tip = inp::ContactPairDeck::getExampleJson(0.90, true, true, false, Kn_te, 0.4,
-                                                     0.0, 1.0, 8.0, 1.0, 0.0,
-                                                     util::harmonicMean(K_t, K_e));
-  json cpair_ell = inp::ContactPairDeck::getExampleJson(R_contact_factor, true, true, false, Kn_ee, 0.95,
-                                                     0.0, 1.0, 100.0, 1.0, 0.0, K_e);
+  json cpair_tip = inp::ContactPairDeck::getExampleJson(
+          json{{"Contact_Radius_Factor", 0.90},
+               {"Kn", Kn_te},
+               {"Damping_On", true},
+               {"Epsilon", 0.4},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 8.0},
+               {"K", util::harmonicMean(K_t, K_e)}});
+  json cpair_ell = inp::ContactPairDeck::getExampleJson(
+          json{{"Contact_Radius_Factor", R_contact_factor},
+               {"Kn", Kn_ee},
+               {"Damping_On", true},
+               {"Epsilon", 0.95},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 100.0},
+               {"K", K_e}});
   contact["Set_1_1"] = cpair_wall;
   contact["Set_1_1"]["Kn"] = Kn_tt;
   contact["Set_1_1"]["K"] = K_t;

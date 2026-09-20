@@ -242,11 +242,18 @@ json buildInputJson(const std::string &output_path,
   model["Wall_Contact"] = "meshed";
 
   auto output = inp::OutputDeck::getExampleJson(
-      "vtu", output_path,
-      std::vector<std::string>({"Displacement", "Velocity", "Force",
-                                "Particle_ID"}),
-      std::max<size_t>(1, num_steps), 1, false, "zlib", false, num_steps, "",
-      false);
+      json{{"File_Format", "vtu"},
+           {"Path", output_path},
+           {"Tags", std::vector<std::string>({"Displacement", "Velocity", "Force",
+                                "Particle_ID"})},
+           {"Output_Interval", std::max<size_t>(1, num_steps)},
+           {"Debug", 1},
+           {"Perform_FE_Out", false},
+           {"Compress_Type", "zlib"},
+           {"Perform_Out", false},
+           {"Test_Output_Interval", num_steps},
+           {"Tag_PP", ""},
+           {"PVD_Collection", false}});
 
   // Wall (particle index 2) fully fixed; downward IC on both grains.
   auto bc = inp::BCDeck::getExampleJson(0, 1, 1, true, util::Point(0, -10, 0));
@@ -281,8 +288,15 @@ json buildInputJson(const std::string &output_path,
       "PDState", false, horizon, 0, rho, K, G, Gc, true, 1);
 
   json contact_base = inp::ContactPairDeck::getExampleJson(
-      0.95, true, /*damping*/ false, /*friction*/ false, Kn, 0.95, 0.0, 1.0,
-      100.0, 1.0, 0.0, K);
+          json{{"Contact_Radius_Factor", 0.95},
+               {"Kn", Kn},
+               {"Damping_On", false},
+               {"Epsilon", 0.95},
+               {"Friction_On", false},
+               {"Friction_Coeff", 0.0},
+               {"Kn_Factor", 1.0},
+               {"Beta_n_Factor", 100.0},
+               {"K", K}});
   // Soften contact spring so short MPI identity runs stay stable and bit-reproducible.
   contact_base["Kn_Factor"] = 1.0e-4;
   json contact = inp::ParticleDeck::getParticleContactExampleJson(2);
