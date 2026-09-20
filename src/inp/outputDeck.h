@@ -49,12 +49,11 @@ namespace inp {
     size_t d_dtOutOld;
 
     /*!
-     * @brief Flag specifying debug level
-     * TODO verify below value-description text
-     * value = 0: code is almost completely silent
-     * value = 1: some information are printed and logged
-     * value = 2: more verbosity
-     * value = 3: highest verbosity
+     * @brief Level below which a message is logged
+     *
+     * util::io::log(priority, ...) writes when this value is greater than
+     * priority, so a level of n writes the messages of priority 0 to n-1.
+     * Priorities 0 to 3 are in use, so 0 writes nothing and 4 writes all.
      */
     size_t d_debug;
 

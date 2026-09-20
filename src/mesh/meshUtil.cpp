@@ -127,8 +127,7 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
 
     // compute element-node connectivity
     for (size_t i = 0; i < nGrid[0]; i++) {
-      // element node connectivity
-      // TODO Check if ordering is conforming to the standard
+      // element node connectivity, in the VTK line order
       mesh_p->d_enc[2 * i + 0] = i;
       mesh_p->d_enc[2 * i + 1] = i + 1;
     } // loop over i
@@ -190,8 +189,9 @@ void createUniformMesh(mesh::Mesh *mesh_p, size_t dim, std::pair<std::vector<dou
           // element number
           auto n = k * nGrid[1] * nGrid[0] + j * nGrid[0] + i;
 
-          // element node connectivity
-          // TODO Check if ordering is conforming to the standard
+          // element node connectivity, in the VTK hexahedron order: the
+          // face at k counterclockwise, then the face at k+1 with node 4
+          // above node 0
           mesh_p->d_enc[8 * n + 0] =   k * (nGrid[1] + 1) * (nGrid[0] + 1)
                                      + j * (nGrid[0] + 1) + i;
           mesh_p->d_enc[8 * n + 1] =   k * (nGrid[1] + 1) * (nGrid[0] + 1)

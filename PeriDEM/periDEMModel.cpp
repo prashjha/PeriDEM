@@ -237,11 +237,8 @@ void PeriDEMModel::init() {
   d_fLoading_p =
       std::make_unique<loading::ParticleFLoading>(d_bcDeck_p->d_forceDeck);
 
-  // if all dofs of particle is fixed, then mark it so that we do not
-  // compute force
-  // MAYBE NOT as we may be interested in reaction forces
-  //  for (auto &p : d_particlesListTypeAll)
-  //    p->checkFixityForForce(); // TODO implement
+  // A particle with every degree of freedom fixed still has its force
+  // computed, because the reaction force on it is wanted.
 
   // if this is a two-particle test, we set the force calculation off in
   // first particle
