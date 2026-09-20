@@ -200,10 +200,14 @@ json getInputJson() {
   pDeckJson["Contact"] = pContactJson;
 
   // Neighbor settings
-  pDeckJson["Neighbor"] = inp::PNeighborDeck::getExampleJson("simple_all", 10.0, 40, 0.5);
+  pDeckJson["Neighbor"] = inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 10.0},
+               {"Search_Interval", 40},
+               {"Near_Bd_Nodes_Tol", 0.5}});
 
   // Particle generation settings
-  auto pGenJson = inp::PGenDeck::getExampleJson("From_File");
+  auto pGenJson = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
 
   // Add data that will be used to create particles
   pGenJson["Data"]["N"] = 2;  // two particles

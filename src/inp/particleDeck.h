@@ -265,12 +265,13 @@ struct ParticleDeck {
   }
 
   /*!
-   * @brief Returns example JSON object for ModelDeck configuration
-   * @return JSON object with example configuration
+   * @brief Returns the neighbor block with the given fields set
+   * @param given Field names and values to set, checked against the table
+   * @return JSON object for the neighbor block
    */
-  static json getParticleNeighborExampleJson(std::string updateCriteria = "simple_all", double sFactor = 1.,
-                                             size_t neighUpdateInterval = 1) {
-    return inp::PNeighborDeck::getExampleJson(updateCriteria, sFactor, neighUpdateInterval);
+  static json getParticleNeighborExampleJson(
+      const json &given = json::object()) {
+    return inp::PNeighborDeck::getExampleJson(given);
   }
 
   void readParticleNeighborFromJson(const json &j) {
@@ -278,11 +279,12 @@ struct ParticleDeck {
   }
 
   /*!
-   * @brief Returns example JSON object for ModelDeck configuration
-   * @return JSON object with example configuration
+   * @brief Returns the particle generation block with the given fields set
+   * @param given Field names and values to set, checked against the table
+   * @return JSON object for the particle generation block
    */
-  static json getParticleGenExampleJson(std::string genMethod = "From_File") {
-    return inp::PGenDeck::getExampleJson(genMethod);
+  static json getParticleGenExampleJson(const json &given = json::object()) {
+    return inp::PGenDeck::getExampleJson(given);
   }
 
   void readParticleGenFromJson(const json &j) {

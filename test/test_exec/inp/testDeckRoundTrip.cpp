@@ -185,7 +185,11 @@ void testContactDeck() {
 
 void testNeighborAndGenDecks() {
   std::cout << "PNeighborDeck / PGenDeck\n";
-  auto j = inp::PNeighborDeck::getExampleJson("simple_all", 8., 5, 0.25);
+  auto j = inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 8.},
+               {"Search_Interval", 5},
+               {"Near_Bd_Nodes_Tol", 0.25}});
   inp::PNeighborDeck d;
   d.readFromJson(j);
   check(d.d_updateCriteria == "simple_all", "Update_Criteria round-trips");
@@ -193,7 +197,7 @@ void testNeighborAndGenDecks() {
   check(d.d_neighUpdateInterval == 5, "Search_Interval round-trips");
   checkClose(d.d_nearBdNodesTol, 0.25, "Near_Bd_Nodes_Tol round-trips");
 
-  auto jg = inp::PGenDeck::getExampleJson("From_File");
+  auto jg = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   check(jg.at("Method") == "From_File", "Method present");
 }
 

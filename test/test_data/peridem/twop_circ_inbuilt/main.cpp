@@ -246,10 +246,18 @@ json buildInputJson(const std::string &output_path_for_deck,
   pDeckJson["Contact"] = pContactJson;
 
   pDeckJson["Neighbor"] = two_particle_test
-      ? inp::PNeighborDeck::getExampleJson("simple_all", 5.0, 1, 0.5)
-      : inp::PNeighborDeck::getExampleJson("simple_all", 10.0, 40, 0.5);
+      ? inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 5.0},
+               {"Search_Interval", 1},
+               {"Near_Bd_Nodes_Tol", 0.5}})
+      : inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 10.0},
+               {"Search_Interval", 40},
+               {"Near_Bd_Nodes_Tol", 0.5}});
 
-  auto pGenJson = inp::PGenDeck::getExampleJson("From_File");
+  auto pGenJson = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   pGenJson["Random_Rotation"] = false;
   pGenJson["Data"]["N"] = 2;
   pGenJson["Data"]["0"] = {

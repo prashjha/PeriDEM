@@ -430,9 +430,13 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   contactRoot["Set_2_2"] = j_contact_ww;
   pDeckJson["Contact"] = contactRoot;
 
-  pDeckJson["Neighbor"] = inp::PNeighborDeck::getExampleJson("simple_all", 10.0, 100, 0.5);
+  pDeckJson["Neighbor"] = inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 10.0},
+               {"Search_Interval", 100},
+               {"Near_Bd_Nodes_Tol", 0.5}});
 
-  auto pGenJson = inp::PGenDeck::getExampleJson("From_File");
+  auto pGenJson = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   pGenJson["Random_Rotation"] = false;
   pGenJson["Data"]["N"] = n_total;
 

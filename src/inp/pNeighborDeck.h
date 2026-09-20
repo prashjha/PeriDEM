@@ -87,25 +87,16 @@ struct PNeighborDeck {
   }
 
   /*!
-   * @brief Returns the block with the given fields set
+   * @brief Rejects a value given where a set of named values is expected
    *
-   * Kept so that existing callers continue to compile. Prefer the form that
-   * names each field.
-   *
-   * @param updateCriteria When the neighbor list is rebuilt
-   * @param sFactor Search length factor
-   * @param neighUpdateInterval Steps between updates
-   * @param nearBdNodesTol Near boundary depth
-   * @return JSON object for this deck
+   * A string converts to a JSON string, which would otherwise bind to the
+   * overload above and be read as a block with no keys. Deleting these
+   * makes that a compile error rather than a failure when the deck is
+   * built.
    */
-  static json getExampleJson(std::string updateCriteria, double sFactor = 1.,
-                             size_t neighUpdateInterval = 1,
-                             double nearBdNodesTol = 0.5) {
-    return getExampleJson(json{{"Update_Criteria", updateCriteria},
-                               {"Search_Factor", sFactor},
-                               {"Search_Interval", neighUpdateInterval},
-                               {"Near_Bd_Nodes_Tol", nearBdNodesTol}});
-  }
+  static json getExampleJson(const std::string &) = delete;
+  /*! @copydoc getExampleJson(const std::string &) */
+  static json getExampleJson(const char *) = delete;
 
   /*!
    * @brief Reads from json object

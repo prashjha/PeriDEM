@@ -466,7 +466,7 @@ json buildImpactInputJson(const std::string &output_path,
   contact["Friction_Law"] = "coulomb_simple";
 
   const double cy_imp = 0.5 * H + 0.5 * Ih + gap; // flat face `gap` above the edge
-  auto pgen = inp::PGenDeck::getExampleJson("From_File");
+  auto pgen = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   pgen["Random_Rotation"] = false;
   pgen["Data"]["N"] = 2;
   pgen["Data"]["0"] = json{{"x", 0.},
@@ -496,7 +496,11 @@ json buildImpactInputJson(const std::string &output_path,
               {"Mesh", mesh},
               {"Material", material},
               {"Contact", contact},
-              {"Neighbor", inp::PNeighborDeck::getExampleJson("simple_all", 5.0, 1, 0.5)},
+              {"Neighbor", inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 5.0},
+               {"Search_Interval", 1},
+               {"Near_Bd_Nodes_Tol", 0.5}})},
               {"Particle_Generation", pgen}};
 }
 
@@ -580,7 +584,7 @@ json buildBhatInputJson(const std::string &output_path,
   contact["Set_2_2"]["Friction_Coefficient"] = 0.;
 
   const double cy_imp = 0.5 * H + 0.5 * Ih + gap;
-  auto pgen = inp::PGenDeck::getExampleJson("From_File");
+  auto pgen = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   pgen["Random_Rotation"] = false;
   pgen["Data"]["N"] = 2;
   pgen["Data"]["0"] = json{{"x", 0.},     {"y", 0.},     {"z", 0.},
@@ -598,7 +602,11 @@ json buildBhatInputJson(const std::string &output_path,
               {"Mesh", mesh},
               {"Material", material},
               {"Contact", contact},
-              {"Neighbor", inp::PNeighborDeck::getExampleJson("simple_all", 5.0, 1, 0.5)},
+              {"Neighbor", inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 5.0},
+               {"Search_Interval", 1},
+               {"Near_Bd_Nodes_Tol", 0.5}})},
               {"Particle_Generation", pgen}};
 }
 

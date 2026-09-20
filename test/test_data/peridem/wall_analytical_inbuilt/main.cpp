@@ -121,7 +121,7 @@ json buildInputJson(const std::string &output_path,
 
   // Bottom of grain near the floor (y=0): slight overlap into Rc after setup.
   const double cy = R + 0.25 * mesh_size;
-  auto pgen = inp::PGenDeck::getExampleJson("From_File");
+  auto pgen = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   pgen["Random_Rotation"] = false;
   pgen["Data"]["N"] = 2;
   pgen["Data"]["0"] = json{{"x", 0.},
@@ -150,7 +150,11 @@ json buildInputJson(const std::string &output_path,
               {"Material", material},
               {"Contact", contact},
               {"Neighbor",
-               inp::PNeighborDeck::getExampleJson("simple_all", 5.0, 1, 0.5)},
+               inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 5.0},
+               {"Search_Interval", 1},
+               {"Near_Bd_Nodes_Tol", 0.5}})},
               {"Particle_Generation", pgen}};
 }
 

@@ -336,13 +336,16 @@ std::string mesh_json(const std::string &filename, double h, bool create_mesh,
 
 std::string neighbor_json(const std::string &update_criteria, double s_factor,
                           size_t update_interval, double near_bd_nodes_tol) {
-  return inp::PNeighborDeck::getExampleJson(update_criteria, s_factor,
-                                            update_interval, near_bd_nodes_tol)
+  return inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", update_criteria},
+               {"Search_Factor", s_factor},
+               {"Search_Interval", update_interval},
+               {"Near_Bd_Nodes_Tol", near_bd_nodes_tol}})
       .dump();
 }
 
 std::string particle_gen_json(const std::string &method) {
-  return inp::PGenDeck::getExampleJson(method).dump();
+  return inp::PGenDeck::getExampleJson(json{{"Method", method}}).dump();
 }
 
 std::string particle_geom_json(const std::vector<Geometry *> &geoms) {

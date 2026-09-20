@@ -164,9 +164,13 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
   contact["Friction_Law"] = "coulomb_simple";
   pDeck["Contact"] = contact;
 
-  pDeck["Neighbor"] = inp::PNeighborDeck::getExampleJson("simple_all", 8.0, 5, 0.5);
+  pDeck["Neighbor"] = inp::PNeighborDeck::getExampleJson(
+          json{{"Update_Criteria", "simple_all"},
+               {"Search_Factor", 8.0},
+               {"Search_Interval", 5},
+               {"Near_Bd_Nodes_Tol", 0.5}});
 
-  auto gen = inp::PGenDeck::getExampleJson("From_File");
+  auto gen = inp::PGenDeck::getExampleJson(json{{"Method", "From_File"}});
   gen["Random_Rotation"] = false;
   gen["Data"]["N"] = 2;
   gen["Data"]["0"] = {{"x", c_tri.d_x}, {"y", c_tri.d_y}, {"z", 0.0},

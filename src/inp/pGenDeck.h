@@ -84,30 +84,16 @@ namespace inp {
     }
 
     /*!
-     * @brief Returns the block with the given fields set
+     * @brief Rejects a value given where a set of named values is expected
      *
-     * Kept so that existing callers continue to compile. Prefer the form that
-     * names each field.
-     *
-     * @param genMethod Where the particle positions come from
-     * @return JSON object for this deck
+     * A string converts to a JSON string, which would otherwise bind to the
+     * overload above and be read as a block with no keys. Deleting these
+     * makes that a compile error rather than a failure when the deck is
+     * built.
      */
-    static json getExampleJson(std::string genMethod) {
-      return getExampleJson(json{{"Method", genMethod}});
-    }
-
-    /*!
-     * @brief Returns the block with the generation method set
-     *
-     * A string literal converts to both std::string and json, so this
-     * overload is needed to make getExampleJson("From_File") unambiguous.
-     *
-     * @param genMethod Where the particle positions come from
-     * @return JSON object for this deck
-     */
-    static json getExampleJson(const char *genMethod) {
-      return getExampleJson(std::string(genMethod));
-    }
+    static json getExampleJson(const std::string &) = delete;
+    /*! @copydoc getExampleJson(const std::string &) */
+    static json getExampleJson(const char *) = delete;
 
     /*!
      * @brief Reads from json object
