@@ -467,6 +467,24 @@ near-duplicate notch routines in the notched-impact driver.
 `getExampleJson` output is read back by its own `readFromJson` and the values
 checked, which is the gap that had let three writer/reader mismatches through.
 
+Deck values are given by name, on both sides. `Deck(2, 1.0, 10)` and
+`decks.model(2, 1.0, 10)` are rejected; the call states what it sets:
+
+```python
+d = Deck(dim=2, t_final=1.0, n_steps=10)
+```
+
+Each deck declares its fields once, as a table of key, type, default and
+description, and its reader, writer, printer and schema are generated from
+that table. A key the table does not declare is rejected where the deck is
+built, with the closest declared name suggested, rather than being dropped
+and leaving the run on a default. Quantities that can be given in more than
+one way, such as a horizon as a length or as a multiple of the mesh size, are
+declared as a group and chosen by naming the key that applies, instead of by
+giving the unused one a value outside its range. `decks.schema(name="model")`
+returns that table, so a field added in `src/inp` is visible from Python
+without a change to the bindings.
+
 ### Two-particle contact
 
 JSON via `bin/PeriDEM`: start from a compressive or attrition short deck.
