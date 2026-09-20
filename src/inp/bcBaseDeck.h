@@ -11,6 +11,7 @@
 #ifndef INP_BCBASEDECK_H
 #define INP_BCBASEDECK_H
 
+#include "deckField.h"
 #include "geom/geomIncludes.h"
 #include "util/json.h"
 
@@ -151,6 +152,68 @@ namespace inp {
 
 
     /*!
+     * @brief The fields of the block itself
+     *
+     * A list that is empty and a displacement that is not held are left out
+     * of the block, which is how the decks in the repository are written.
+     *
+     * @return fields The field table
+     */
+    static const std::vector<Field<BCBaseDeck>> &fields() {
+      static const std::vector<Field<BCBaseDeck>> f = {
+          field<BCBaseDeck, std::vector<size_t>>(
+              &BCBaseDeck::d_pList, "Particle_List", {},
+              "Particles the condition applies to", {},
+              [](const std::vector<size_t> &v) { return !v.empty(); }),
+          field<BCBaseDeck, std::vector<size_t>>(
+              &BCBaseDeck::d_pNotList, "Particle_Exclude_List", {},
+              "Particles the condition does not apply to", {},
+              [](const std::vector<size_t> &v) { return !v.empty(); }),
+          field<BCBaseDeck, std::vector<size_t>>(
+              &BCBaseDeck::d_direction, "Direction", {},
+              "Components the condition acts on, counted from one", {},
+              [](const std::vector<size_t> &v) { return !v.empty(); }),
+          field<BCBaseDeck, bool>(
+              &BCBaseDeck::d_isDisplacementZero, "Zero_Displacement", false,
+              "Hold the displacement at zero", {},
+              [](const bool &v) { return v; }),
+      };
+      return f;
+    }
+
+    /*!
+     * @brief The fields of the Time_Function sub-block
+     * @return fields The field table
+     */
+    static const std::vector<Field<BCBaseDeck>> &timeFunctionFields() {
+      static const std::vector<Field<BCBaseDeck>> f = {
+          field(&BCBaseDeck::d_timeFnType, "Type", std::string(),
+                "Time dependence of the condition"),
+          field<BCBaseDeck, std::vector<double>>(
+              &BCBaseDeck::d_timeFnParams, "Parameters", {},
+              "Parameters of the time dependence", {},
+              [](const std::vector<double> &v) { return !v.empty(); }),
+      };
+      return f;
+    }
+
+    /*!
+     * @brief The fields of the Spatial_Function sub-block
+     * @return fields The field table
+     */
+    static const std::vector<Field<BCBaseDeck>> &spatialFunctionFields() {
+      static const std::vector<Field<BCBaseDeck>> f = {
+          field(&BCBaseDeck::d_spatialFnType, "Type", std::string(),
+                "Spatial dependence of the condition"),
+          field<BCBaseDeck, std::vector<double>>(
+              &BCBaseDeck::d_spatialFnParams, "Parameters", {},
+              "Parameters of the spatial dependence", {},
+              [](const std::vector<double> &v) { return !v.empty(); }),
+      };
+      return f;
+    }
+
+    /*!
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
@@ -178,32 +241,23 @@ namespace inp {
         j["Region"] = json{{"Geometry", j_geom}};
       }
 
-      if (pList.size() > 0) j["Particle_List"] = pList;
-
-      if (pNotList.size() > 0) j["Particle_Exclude_List"] = pNotList;
-
-      // Objects, not arrays, and Parameters must not overwrite Type:
-      // readFromJson does j.at("Time_Function").value("Type", ...).
-      if (timeFnType != "") {
-        j["Time_Function"] = json{{"Type", timeFnType}};
-        if (timeFnParams.size() > 0)
-          j["Time_Function"]["Parameters"] = timeFnParams;
-      }
-
-      if (spatialFnType != "") {
-        j["Spatial_Function"] = json{{"Type", spatialFnType}};
-        if (spatialFnParams.size() > 0)
-          j["Spatial_Function"]["Parameters"] = spatialFnParams;
-      }
-
+      json given = json{{"Particle_List", pList},
+                        {"Particle_Exclude_List", pNotList}};
       if (type != "IC") {
-        if (direction.size() > 0)
-          j["Direction"] = direction;
-
-        if (isDisplacementZero) {
-          j["Zero_Displacement"] = true;
-        }
+        given["Direction"] = direction;
+        given["Zero_Displacement"] = isDisplacementZero;
       }
+      j.update(applyGiven(given, fields()));
+
+      if (timeFnType != "")
+        j["Time_Function"] = applyGiven(
+            json{{"Type", timeFnType}, {"Parameters", timeFnParams}},
+            timeFunctionFields());
+
+      if (spatialFnType != "")
+        j["Spatial_Function"] = applyGiven(
+            json{{"Type", spatialFnType}, {"Parameters", spatialFnParams}},
+            spatialFunctionFields());
 
       if (type == "IC") {
         if (icType == "Constant_Velocity") {
@@ -242,34 +296,17 @@ namespace inp {
         geom::createGeomObject(d_regionGeomData);
       }
 
-      if (j.find("Particle_List") != j.end()) d_pList = j.value("Particle_List", std::vector<size_t>());
+      readFields(*this, j, fields());
 
-      if (j.find("Particle_Exclude_List") != j.end())
-        d_pNotList = j.value("Particle_Exclude_List", std::vector<size_t>());
+      if (j.find("Time_Function") != j.end())
+        readFields(*this, j.at("Time_Function"), timeFunctionFields());
 
-      if (j.find("Time_Function") != j.end()) {
-        d_timeFnType = j.at("Time_Function").value("Type", "");
-        if (j.at("Time_Function").find("Parameters") != j.at("Time_Function").end())
-          d_timeFnParams = j.at("Time_Function").value("Parameters", std::vector<double>());
-      }
+      if (j.find("Spatial_Function") != j.end())
+        readFields(*this, j.at("Spatial_Function"), spatialFunctionFields());
 
-      if (j.find("Spatial_Function") != j.end()) {
-        d_spatialFnType = j.at("Spatial_Function").value("Type", "");
-        if (j.at("Spatial_Function").find("Parameters") != j.at("Spatial_Function").end())
-          d_spatialFnParams = j.at("Spatial_Function").value("Parameters", std::vector<double>());
-      }
-
-      if (type != "IC") {
-        if (j.find("Direction") == j.end()) {
-          throw std::runtime_error("Direction must be specified for boundary condition");
-          return;
-        }
-
-        d_direction = j.value("Direction", std::vector<size_t>());
-
-        if (j.find("Zero_Displacement") != j.end())
-          d_isDisplacementZero = j.at("Zero_Displacement");
-      }
+      if (type != "IC" && j.find("Direction") == j.end())
+        throw std::runtime_error(
+            "Direction must be specified for boundary condition");
 
       // if it is initial condition
       if (type == "IC") {

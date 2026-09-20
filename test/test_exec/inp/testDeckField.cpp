@@ -170,6 +170,13 @@ void testValuesCheckedWhenBuilt() {
 
   json ok = inp::applyGiven(json{{"Count", 3}}, SampleDeck::fields());
   check(ok.at("Count") == 3, "an accepted value is kept");
+
+  // Naming a field must not change whether it appears in the block.
+  json given = inp::applyGiven(json{{"Optional", -1.}}, SampleDeck::fields());
+  check(given.find("Optional") == given.end(),
+        "giving a value the field does not write leaves it out");
+  json set = inp::applyGiven(json{{"Optional", 2.5}}, SampleDeck::fields());
+  check(set.at("Optional") == 2.5, "giving a value the field writes keeps it");
 }
 
 void testPrint() {

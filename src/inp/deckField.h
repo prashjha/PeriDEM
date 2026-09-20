@@ -66,6 +66,9 @@ template <class Deck> struct Field {
 
   /*! @brief Throws if the value is one the field does not accept */
   std::function<void(const json &)> check;
+
+  /*! @brief Whether a value is written rather than left out of the block */
+  std::function<bool(const json &)> emit;
 };
 
 /*! @brief Name of the type of a field, reported by the schema */
@@ -195,7 +198,8 @@ Field<Deck> field(
         printValue(oss, d.*m);
         oss << std::endl;
       },
-      [check](const json &v) { check(v.get<T>()); }};
+      [check](const json &v) { check(v.get<T>()); },
+      [emitIf](const json &v) { return emitIf(v.get<T>()); }};
 }
 
 /*!
@@ -432,10 +436,19 @@ json applyGiven(const json &given, const std::vector<Field<Deck>> &fs,
     return j;
 
   for (const auto &item : given.items()) {
+    bool emit = true;
     for (const auto &f : fs)
-      if (f.key == item.key())
+      if (f.key == item.key()) {
         f.check(item.value());
-    j[item.key()] = item.value();
+        emit = f.emit(item.value());
+      }
+    // A field that is not written at its default is not written when the
+    // same value is given, so that the block does not depend on whether the
+    // caller named the field.
+    if (emit)
+      j[item.key()] = item.value();
+    else
+      j.erase(item.key());
   }
   return j;
 }

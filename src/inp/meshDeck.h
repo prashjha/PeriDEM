@@ -11,6 +11,7 @@
 #ifndef INP_MESHDECK_H
 #define INP_MESHDECK_H
 
+#include "deckField.h"
 #include "util/io.h"
 #include <stdexcept>
 #include "util/json.h"
@@ -97,10 +98,11 @@ struct MeshDeck {
         throw std::runtime_error(
             "MeshDeck::getExampleJson: mesh creation needs a positive "
             "Mesh_Size.");
-      auto cm = json{{"Flag", true},
-                     {"Info", createMeshInfo},
-                     {"Mesh_Size", h_meshing},
-                     {"Write_Mesh_File", writeMeshFile}};
+      auto cm = applyGiven(json{{"Flag", true},
+                                {"Info", createMeshInfo},
+                                {"Mesh_Size", h_meshing},
+                                {"Write_Mesh_File", writeMeshFile}},
+                           createMeshFields(), {"Void_Regions"});
       for (const auto &r : voidRegions) {
         if (r.size() != 6)
           throw std::runtime_error(
@@ -120,24 +122,56 @@ struct MeshDeck {
   /*!
    * @brief Reads from json object
    */
+  /*!
+   * @brief The fields of the block itself
+   * @return fields The field table
+   */
+  static const std::vector<Field<MeshDeck>> &fields() {
+    static const std::vector<Field<MeshDeck>> f = {
+        field(&MeshDeck::d_filename, "File", std::string(),
+              "Mesh file read, or written when one is generated"),
+    };
+    return f;
+  }
+
+  /*!
+   * @brief The fields of the CreateMesh sub-block
+   *
+   * The sub-block has a table of its own. Its members are members of this
+   * deck, so the two tables write into the same object.
+   *
+   * @return fields The field table
+   */
+  static const std::vector<Field<MeshDeck>> &createMeshFields() {
+    static const std::vector<Field<MeshDeck>> f = {
+        field(&MeshDeck::d_createMesh, "Flag", false,
+              "Generate the mesh rather than read it"),
+        field(&MeshDeck::d_createMeshInfo, "Info", std::string("uniform"),
+              "Mesh generator used",
+              {{"uniform", "gmsh_builtin_mesh"}, {}, {}}),
+        field(&MeshDeck::d_hMeshing, "Mesh_Size", 0.,
+              "Element size the generator is asked for"),
+        field(&MeshDeck::d_writeMeshFile, "Write_Mesh_File", true,
+              "Write the generated mesh to File"),
+    };
+    return f;
+  }
+
   void readFromJson(const json &j) {
     if (j.empty())
       return;
 
-    d_filename = j.value("File", std::string());
-    d_hMeshing = 0.;
-    d_createMesh = false;
-    d_createMeshInfo = "uniform";
-    d_writeMeshFile = true;
+    readFields(*this, j, fields());
+    // Defaults of the sub-block apply whether or not it is present.
+    readFields(*this, json::object(), createMeshFields());
 
     if (j.find("CreateMesh") != j.end()) {
       const auto &cm = j.at("CreateMesh");
-      d_createMesh = cm.value("Flag", false);
-      d_createMeshInfo = cm.value("Info", std::string("uniform"));
-      d_writeMeshFile = cm.value("Write_Mesh_File", true);
-      if (cm.find("Mesh_Size") != cm.end())
-        d_hMeshing = cm.at("Mesh_Size").get<double>();
-      else if (d_createMesh && j.find("Mesh_Size") != j.end())
+      readFields(*this, cm, createMeshFields());
+
+      // A mesh size written beside the block rather than inside it.
+      if (cm.find("Mesh_Size") == cm.end() && d_createMesh &&
+          j.find("Mesh_Size") != j.end())
         d_hMeshing = j.at("Mesh_Size").get<double>();
 
       d_voidRegions.clear();
@@ -173,12 +207,11 @@ struct MeshDeck {
     auto tabS = util::io::getTabS(nt);
     std::ostringstream oss;
     oss << tabS << "------- MeshDeck --------" << std::endl << std::endl;
-    oss << tabS << "Filename = " << d_filename << std::endl;
-    oss << tabS << "Meshing size (in-built only) = " << d_hMeshing << std::endl;
-    oss << tabS << "Create mesh = " << d_createMesh << std::endl;
-    oss << tabS << "Create mesh info = " << d_createMeshInfo << std::endl;
-    oss << tabS << "Write mesh file (Gmsh) = " << d_writeMeshFile << std::endl;
-    oss << tabS << "(Built-in mesh geometry comes from Particle.Set_i for the same index.)" << std::endl;
+    printFields(*this, oss, fields(), tabS);
+    printFields(*this, oss, createMeshFields(), tabS + "  ");
+    oss << tabS << "Void_Regions count = " << d_voidRegions.size() << std::endl;
+    oss << tabS << "The geometry of a generated mesh is Particle.Set_i at the "
+        << "same index." << std::endl;
     oss << tabS << std::endl;
 
     return oss.str();
