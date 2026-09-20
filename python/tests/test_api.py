@@ -356,3 +356,45 @@ def test_deck_runs_end_to_end(tmp_path):
     assert np.isfinite(sim.displacement).all()
     assert np.isfinite(sim.velocity).all()
     assert peridem.last_vtu(tmp_path / "out").is_file()
+
+
+def test_deck_values_must_be_named():
+    """A deck value is given by name, so that a call says what it sets.
+
+    Deck(2, 1.0, 10) says nothing about what the three numbers are, and a
+    value inserted or reordered in the signature would silently change
+    meaning at every call site. Each of these takes its values by name.
+    """
+    for call in (lambda: Deck(2, 1.0, 10),
+                 lambda: MeshSpec("mesh.msh"),
+                 lambda: Deck(dim=2).set_neighbor("simple_all"),
+                 lambda: peridem.decks.model(2, 1.0, 10),
+                 lambda: peridem.decks.material("PDState"),
+                 lambda: peridem.decks.contact_pair(0.95)):
+        try:
+            call()
+        except TypeError:
+            continue
+        raise AssertionError("a positional value was accepted")
+
+    # The named form of each of those works.
+    assert Deck(dim=2, t_final=1.0, n_steps=10).dim == 2
+    assert MeshSpec(file="mesh.msh").file == "mesh.msh"
+    assert json.loads(peridem.decks.model(dim=3))["Dimension"] == 3
+
+
+def test_deck_schema_describes_every_field():
+    """Each deck reports the fields it declares, with type and default."""
+    schema = json.loads(peridem.decks.schema(name="model"))
+    by_key = {f["key"]: f for f in schema}
+    assert by_key["Dimension"]["type"] == "size_t"
+    assert by_key["Dimension"]["default"] == 2
+    assert by_key["Final_Time"]["doc"]
+
+    # A name that no deck carries is reported rather than returning nothing.
+    try:
+        peridem.decks.schema(name="not_a_deck")
+    except Exception as exc:
+        assert "no deck named" in str(exc)
+    else:
+        raise AssertionError("an unknown deck name was accepted")
