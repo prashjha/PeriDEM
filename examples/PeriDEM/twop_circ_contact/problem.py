@@ -73,7 +73,7 @@ def build_deck(output_path: str | os.PathLike[str] = "out/", *,
     d.set_output(output_path, tags=TAGS, interval=num_steps // 10, debug=2,
                  pvd_collection=True)
     d.set_gravity(0.0, -GRAVITY)
-    d.set_neighbor("simple_all", s_factor=10.0, update_interval=40,
+    d.set_neighbor(update_criteria="simple_all", s_factor=10.0, update_interval=40,
                    near_bd_nodes_tol=0.5)
 
     if in_process_mesh:

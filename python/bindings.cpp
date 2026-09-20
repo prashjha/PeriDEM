@@ -400,6 +400,40 @@ std::string mesh_json(const std::string &filename, double h, bool create_mesh,
       .dump();
 }
 
+// The key, type, default and description of every field of a deck, so that a
+// field added to a table in src/inp is visible from Python without a change
+// here.
+std::string deck_schema_json(const std::string &name) {
+  if (name == "model")
+    return inp::schemaJson(inp::ModelDeck::fields()).dump();
+  if (name == "output")
+    return inp::schemaJson(inp::OutputDeck::fields()).dump();
+  if (name == "material")
+    return inp::schemaJson(inp::MaterialDeck::fields()).dump();
+  if (name == "contact")
+    return inp::schemaJson(inp::ContactDeck::fields()).dump();
+  if (name == "contact_pair")
+    return inp::schemaJson(inp::ContactPairDeck::fields()).dump();
+  if (name == "bc_set")
+    return inp::schemaJson(inp::BCBaseDeck::fields()).dump();
+  if (name == "mesh")
+    return inp::schemaJson(inp::MeshDeck::fields()).dump();
+  if (name == "test")
+    return inp::schemaJson(inp::TestDeck::fields()).dump();
+  if (name == "neighbor")
+    return inp::schemaJson(inp::PNeighborDeck::fields()).dump();
+  if (name == "particle_gen")
+    return inp::schemaJson(inp::PGenDeck::fields()).dump();
+  if (name == "restart")
+    return inp::schemaJson(inp::RestartDeck::fields()).dump();
+
+  throw std::runtime_error(
+      util::io::Msg()
+      << "Error: no deck named " << name
+      << ". Names are model, output, material, contact, contact_pair, "
+         "bc_set, mesh, test, neighbor, particle_gen, restart.\n");
+}
+
 std::string neighbor_json(const std::string &update_criteria, double s_factor,
                           size_t update_interval, double near_bd_nodes_tol) {
   return inp::PNeighborDeck::getExampleJson(
@@ -829,37 +863,39 @@ NB_MODULE(_core, m) {
   // --- deck factories (thin forwards to inp::*Deck::getExampleJson)
   auto d = m.def_submodule("decks",
                            "inp::*Deck::getExampleJson, as JSON text");
-  d.def("model", &model_json, nb::arg("dim") = 2, nb::arg("t_final") = 1.0,
+  d.def("schema", &deck_schema_json, nb::kw_only(), nb::arg("name"),
+        "Key, type, default and description of every field of a deck");
+  d.def("model", &model_json, nb::kw_only(), nb::arg("dim") = 2, nb::arg("t_final") = 1.0,
         nb::arg("n_steps") = 10,
         nb::arg("spatial") = "finite_difference",
         nb::arg("time") = "central_difference",
         nb::arg("populate_element_node_connectivity") = true,
         nb::arg("quad_order") = 2,
         nb::arg("particle_sim_type") = "Multi_Particle", nb::arg("seed") = 0);
-  d.def("output", &output_json, nb::arg("out_format") = "vtu",
+  d.def("output", &output_json, nb::kw_only(), nb::arg("out_format") = "vtu",
         nb::arg("path") = "./",
         nb::arg("tags") = std::vector<std::string>{"Displacement"},
         nb::arg("output_interval") = 1, nb::arg("debug") = 2,
         nb::arg("perform_fe_out") = true, nb::arg("compress_type") = "zlib",
         nb::arg("perform_out") = true, nb::arg("dt_test_out") = 1,
         nb::arg("tag_pp") = "", nb::arg("pvd_collection") = false);
-  d.def("material", &material_json, nb::arg("material_type") = "PDState",
+  d.def("material", &material_json, nb::kw_only(), nb::arg("material_type") = "PDState",
         nb::arg("is_plane_strain") = false, nb::arg("horizon") = -1.,
         nb::arg("horizon_mesh_ratio") = -1., nb::arg("density") = 1.,
         nb::arg("K") = 0., nb::arg("G") = 0., nb::arg("Gc") = 0.,
         nb::arg("compute_from_classical") = true,
         nb::arg("influence_fn_type") = 0, nb::arg("E") = -1.);
-  d.def("contact", &contact_json, nb::arg("n_sets") = 0);
-  d.def("contact_pair", &contact_pair_json, nb::arg("contact_r") = 0.,
+  d.def("contact", &contact_json, nb::kw_only(), nb::arg("n_sets") = 0);
+  d.def("contact_pair", &contact_pair_json, nb::kw_only(), nb::arg("contact_r") = 0.,
         nb::arg("compute_contact_r") = true, nb::arg("damping_on") = true,
         nb::arg("friction_on") = true, nb::arg("Kn") = 0., nb::arg("eps") = 1.,
         nb::arg("mu") = 0., nb::arg("Kn_factor") = 1.,
         nb::arg("beta_n_factor") = 1., nb::arg("delta_max") = 1.,
         nb::arg("v_max") = 0., nb::arg("K") = 0.);
-  d.def("bc", &bc_json, nb::arg("n_force_sets") = 0, nb::arg("n_disp_sets") = 0,
+  d.def("bc", &bc_json, nb::kw_only(), nb::arg("n_force_sets") = 0, nb::arg("n_disp_sets") = 0,
         nb::arg("n_ic_sets") = 0, nb::arg("gravity_active") = false,
         nb::arg("gravity") = std::vector<double>{0., 0., 0.});
-  d.def("bc_set", &bc_set_json, nb::arg("type") = "Force_BC",
+  d.def("bc_set", &bc_set_json, nb::kw_only(), nb::arg("type") = "Force_BC",
         nb::arg("region").none() = nb::none(),
         nb::arg("particle_list") = std::vector<size_t>(),
         nb::arg("particle_exclude_list") = std::vector<size_t>(),
@@ -870,21 +906,21 @@ NB_MODULE(_core, m) {
         nb::arg("direction") = std::vector<size_t>(),
         nb::arg("zero_displacement") = false, nb::arg("ic_type") = "",
         nb::arg("ic_vec") = std::vector<double>());
-  d.def("mesh", &mesh_json, nb::arg("filename") = "", nb::arg("h") = -1.,
+  d.def("mesh", &mesh_json, nb::kw_only(), nb::arg("filename") = "", nb::arg("h") = -1.,
         nb::arg("create_mesh") = false,
         nb::arg("create_mesh_info") = "gmsh_builtin_mesh",
         nb::arg("write_mesh_file") = true,
         nb::arg("void_regions") = std::vector<std::vector<double>>());
-  d.def("test", &test_json, nb::arg("test_name") = "",
+  d.def("test", &test_json, nb::kw_only(), nb::arg("test_name") = "",
         nb::arg("particle_id_compressive_test") = 0,
         nb::arg("particle_force_direction_compressive_test") = 0);
-  d.def("neighbor", &neighbor_json, nb::arg("update_criteria") = "simple_all",
+  d.def("neighbor", &neighbor_json, nb::kw_only(), nb::arg("update_criteria") = "simple_all",
         nb::arg("s_factor") = 1., nb::arg("update_interval") = 1,
         nb::arg("near_bd_nodes_tol") = 0.5);
-  d.def("particle_gen", &particle_gen_json, nb::arg("method") = "From_File");
-  d.def("particle_geom", &particle_geom_json, nb::arg("geometries"));
-  d.def("particle_material", &particle_material_json, nb::arg("n_sets") = 0);
-  d.def("particle_mesh", &particle_mesh_json, nb::arg("files"),
+  d.def("particle_gen", &particle_gen_json, nb::kw_only(), nb::arg("method") = "From_File");
+  d.def("particle_geom", &particle_geom_json, nb::kw_only(), nb::arg("geometries"));
+  d.def("particle_material", &particle_material_json, nb::kw_only(), nb::arg("n_sets") = 0);
+  d.def("particle_mesh", &particle_mesh_json, nb::kw_only(), nb::arg("files"),
         nb::arg("sizes") = std::vector<double>());
 
   // --- particle view

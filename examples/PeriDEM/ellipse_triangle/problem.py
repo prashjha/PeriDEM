@@ -98,7 +98,7 @@ def build_deck(output_path: str | os.PathLike[str] = "runs/",
                  interval=dt_out_n, debug=1, pvd_collection=True)
 
     d.set_gravity(0.0, -GRAVITY)
-    d.set_neighbor("simple_all", s_factor=8.0, update_interval=5,
+    d.set_neighbor(update_criteria="simple_all", s_factor=8.0, update_interval=5,
                    near_bd_nodes_tol=0.5)
 
     # --- particle types

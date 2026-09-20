@@ -126,8 +126,8 @@ class MeshSpec:
         MeshSpec(size=1.0e-4, file="mesh_cir.msh")  # also writes the .msh
     """
 
-    def __init__(self, file: str | os.PathLike[str] | None = None,
-                 size: float | None = None, *, write: bool | None = None,
+    def __init__(self, *, file: str | os.PathLike[str] | None = None,
+                 size: float | None = None, write: bool | None = None,
                  info: str = "gmsh_builtin_mesh",
                  voids: Sequence[Sequence[float]] | None = None):
         if file is None and size is None:
@@ -186,8 +186,8 @@ class Deck:
     never disagree with the contents.
     """
 
-    def __init__(self, dim: int = 2, t_final: float = 1.0, n_steps: int = 10,
-                 *, spatial: str = "finite_difference",
+    def __init__(self, *, dim: int = 2, t_final: float = 1.0,
+                 n_steps: int = 10, spatial: str = "finite_difference",
                  time: str = "central_difference",
                  particle_sim_type: str = "Multi_Particle",
                  populate_element_node_connectivity: bool = True,
@@ -260,9 +260,9 @@ class Deck:
     def dim(self) -> int:
         return int(self.model["Dimension"])
 
-    def set_output(self, path: str | os.PathLike[str] = "./",
+    def set_output(self, path: str | os.PathLike[str] = "./", *,
                    tags: Sequence[str] = ("Displacement",),
-                   interval: int = 1, *, out_format: str = "vtu",
+                   interval: int = 1, out_format: str = "vtu",
                    debug: int = 2, perform_fe_out: bool = True,
                    compress_type: str = "zlib", perform_out: bool = True,
                    dt_test_out: int = 1, tag_pp: str = "",
@@ -278,7 +278,7 @@ class Deck:
             perform_out=perform_out, dt_test_out=dt_test_out, tag_pp=tag_pp,
             pvd_collection=pvd_collection))
 
-    def set_neighbor(self, update_criteria: str = "simple_all",
+    def set_neighbor(self, *, update_criteria: str = "simple_all",
                      s_factor: float = 1.0, update_interval: int = 1,
                      near_bd_nodes_tol: float = 0.5) -> None:
         self.neighbor = _load(_decks.neighbor(

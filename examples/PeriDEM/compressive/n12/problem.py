@@ -113,7 +113,7 @@ def build_deck(output_path: str | os.PathLike[str] = "runs/", *,
                  dt_test_out=max(1, dt_out // 10), tag_pp="0",
                  pvd_collection=True)
     d.set_gravity(0.0, -GRAVITY)
-    d.set_neighbor("simple_all", s_factor=5.0, update_interval=search_interval,
+    d.set_neighbor(update_criteria="simple_all", s_factor=5.0, update_interval=search_interval,
                    near_bd_nodes_tol=0.5)
 
     grain = Geometry("circle", [R, 0.0, 0.0, 0.0])

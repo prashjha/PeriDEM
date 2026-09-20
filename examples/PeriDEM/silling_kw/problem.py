@@ -136,7 +136,7 @@ def build_deck(output_path: str | os.PathLike[str] = "runs/out/", *,
     d.set_output(output_path, tags=TAGS, interval=max(1, n_steps // 10),
                  debug=1, perform_fe_out=False, dt_test_out=n_steps,
                  pvd_collection=False)
-    d.set_neighbor("simple_all", s_factor=5.0, update_interval=1,
+    d.set_neighbor(update_criteria="simple_all", s_factor=5.0, update_interval=1,
                    near_bd_nodes_tol=0.5)
 
     # --- bodies

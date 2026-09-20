@@ -142,7 +142,7 @@ def build_deck(output_path: str | os.PathLike[str] = "runs/out/", *,
                  dt_test_out=max(1, output_interval // 10), tag_pp="0",
                  pvd_collection=True)
     d.set_gravity(0.0, -GRAVITY)
-    d.set_neighbor("simple_all", s_factor=10.0, update_interval=40,
+    d.set_neighbor(update_criteria="simple_all", s_factor=10.0, update_interval=40,
                    near_bd_nodes_tol=0.5)
 
     base = Path(mesh_dir)

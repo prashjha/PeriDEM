@@ -187,10 +187,14 @@ namespace inp {
 
       // The speed is what the stiffness is derived from, so the overlap it
       // is measured against goes with it.
-      if (g.find("V_Max") != g.end() and
-          (g.find("Delta_Max") == g.end() or
-           g.at("Delta_Max").get<double>() < 1.E-10))
-        g["Delta_Max"] = 1.;
+      if (g.find("V_Max") != g.end()) {
+        if (g.at("V_Max").get<double>() < 1.E-10)
+          throw std::runtime_error(
+              "Need V_Max parameter for contact force.");
+        if (g.find("Delta_Max") == g.end() or
+            g.at("Delta_Max").get<double>() < 1.E-10)
+          g["Delta_Max"] = 1.;
+      }
 
       json j = applyGiven(g, fields(), extra);
       checkGroups(j, groups());
