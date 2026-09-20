@@ -77,13 +77,8 @@ sites, and `src/fracture/prenotch.h` replaced three near-duplicate notch
 routines in the notched-impact driver, so the driver and the Python interface
 break the same bonds.
 
-`test/test_exec/inp/testDeckRoundTrip.cpp` keeps the deck layer honest: for
-each deck it writes a block with values other than the defaults, reads it back,
-and compares the values. That closes the gap that had let three writer/reader
-mismatches through.
-
-That is what makes the parity numbers below mean something: the Python deck is
-built independently, then checked against the deck the C++ driver writes.
+`test/test_exec/inp/testDeckRoundTrip.cpp` writes a block for each deck with
+values other than the defaults, reads it back, and compares the values.
 
 ## API
 
@@ -238,7 +233,7 @@ in-memory deck and an optional `workdir`.
 under `mpirun` as you would the executable; both `MPI_Strategy: "particle"`
 and `"dof"` work. Node fields are the calling rank's local data.
 
-## Parity with the C++ executable
+## Comparing against the C++ executable
 
 `python/tests/test_example_parity.py` checks two separate things for each
 example, and neither reuses a deck the other side produced:
@@ -247,33 +242,17 @@ example, and neither reuses a deck the other side produced:
   writes, key by key, including every floating-point value;
 * **run**: that deck run through `bin/PeriDEM` in a separate process and
   through the in-process interface, into separate directories, compared node by
-  node.
+  node on `Displacement`, `Velocity`, `Force`, `Damage_Z` and `Damage`.
+
+The cases run at reduced step counts. Two full-size Silling plate cases are
+left out unless `--full` is passed or `PERIDEM_PARITY_FULL=1` is set, because
+the C++ driver's neighbour search on the full plate takes about 20 minutes.
 
 ```sh
 PYTHONPATH=build/python python3 python/tests/test_example_parity.py
 PYTHONPATH=build/python python3 python/tests/test_example_parity.py -k attrition
-PERIDEM_PARITY_FULL=1 ... # include the full-size Silling plate
+PYTHONPATH=build/python python3 python/tests/test_example_parity.py --full
 ```
-
-Current result on Linux, 1–8 threads. The last two are skipped by default
-(`PERIDEM_PARITY_FULL=1` includes them) only because the C++ driver's neighbour
-search on the full plate is slow, not because they are unverified:
-
-| case | deck vs C++ | nodes | max L∞ |
-|------|-------------|-------|--------|
-| `twop_circ_contact` | identical | 246 | 0 |
-| `ellipse_triangle` | identical | 402 | 0 |
-| `compressive_n12` | identical | 2274 | 0 |
-| `peridynamics_circle` | no C++ driver | 123 | 0 |
-| `peridynamics_rectangle` | no C++ driver | 2601 | 0 |
-| `attrition_sim1` | no C++ driver | 13553 | 0 |
-| `attrition_sim2` | no C++ driver | 15367 | 0 |
-| `silling_kw_quick` | identical (+170 pre-notch bonds) | 571 | 0 |
-| `silling_kw_2d` | identical (+1012 pre-notch bonds) | 25350 | 0 |
-| `silling_kw_3d` | identical (+26064 pre-notch bonds) | 354330 | 0 |
-
-"no C++ driver" means the example ships a hand-written JSON deck rather than a
-C++ program, so only the run comparison applies.
 
 ## Tests
 

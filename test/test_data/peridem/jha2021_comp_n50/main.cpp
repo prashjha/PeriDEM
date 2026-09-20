@@ -6,7 +6,7 @@
  *
  * Short multi-particle compression example derived from Jha et al. JMPS 2021
  * §4.3 (same M1, lc=R/5, horizon 3 lc, Rc=0.95 h, C-bar=100, plate vy=-0.06).
- * Not the paper’s 502-grain run: 4×3 equal circles, gaps just outside Rc so a
+ * Not the paper’s 502-grain run: 4×3 equal circles, gaps slightly outside Rc so a
  * few grains enter contact under a stable Δt (≈ 0.25 h/c, same 0.2 μs as Table 2).
  *
  * -inbuiltMesh     Gmsh in-process (default; cup size follows the tight pack)
@@ -96,8 +96,8 @@ json buildInputJson(const std::string &output_path_for_deck,
   const double R = 0.001;
   const double mesh_size = R / 5.0;
   const double horizon = 3.0 * mesh_size;
-  // Realized hmin on this disk is ~0.7 lc. Start just outside Rc so contact
-  // is not present at t=0; plate + gravity pull a few pairs into Rc.
+  // Realized hmin on this disk is 0.7 lc. Start slightly outside Rc so contact
+  // is not present at t=0; plate and gravity pull pairs into Rc.
   const double h_est = 0.7 * mesh_size;
   const double Rc_est = 0.95 * h_est;
   const double particle_padding = 1.15 * Rc_est;

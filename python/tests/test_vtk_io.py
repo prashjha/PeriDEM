@@ -22,7 +22,7 @@ from peridem.deck import MeshSpec
 
 
 def _make_vtu(out_dir: Path) -> Path:
-    """Run a few steps of a tiny two-grain problem and return its last VTU."""
+    """Run ten steps of a tiny two-grain problem and return its last VTU."""
     peridem.init(n_threads=1)
     d = Deck(dim=2, t_final=1.0e-5, n_steps=10)
     d.set_output(out_dir, interval=5,

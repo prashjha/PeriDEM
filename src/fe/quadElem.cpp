@@ -113,7 +113,7 @@ void fe::QuadElem::init() {
   //  Let [-1,1] is the 1-d reference element and {x1, x2, x3,.., xN} are N
   //  quad points for 1-d domain and {w1, w2, w3,..., wN} are respective
   //  weights. Then, the Nth order quad points in Quadrangle [-1,1]x[-1,1] is
-  //  simply given by N^2 points and
+  //  given by N^2 points and
   //
   //  (i,j) point is (xi, xj) and weight is wi \times wj
   //

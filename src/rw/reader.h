@@ -29,7 +29,7 @@ namespace rw {
  * @brief Collection of methods and database related to reading
  *
  * This namespace provides methods and data members specific to reading of
- * the mesh data. Currently, .csv, .vtu and .msh files are supported.
+ * the mesh data. The .csv, .vtu and .msh formats are read.
  */
 namespace reader {
 

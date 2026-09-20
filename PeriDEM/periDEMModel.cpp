@@ -260,10 +260,9 @@ void PeriDEMModel::init() {
   pd::setupDofPartition(*this);
 
   log(d_name + ": Creating list of nodes on which force is to be computed.\n");
-  // TODO for now we simply look at particle/wall and check if we compute
-  //  force on any of its node. Later, one can have control on individual
-  //  nodes of particle/wall and remove from d_fCompNodes if no force is to
-  //  be computed on them
+  // Selection is per particle or wall: a node enters d_fCompNodes if force is
+  // computed on any node of its body. Selecting individual nodes is not
+  // implemented.
   const int mpi_rank = util::parallel::mpiRank();
   for (size_t i = 0; i < d_x.size(); i++) {
     const auto &ptId = d_ptId[i];

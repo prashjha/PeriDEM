@@ -20,7 +20,7 @@
 namespace geom {
 
 /*! @brief A struct that stores transformation parameters and provides method
- * to transform the particle. Basically, given a reference particle, this
+ * to transform the particle. Given a reference particle, this
  * provides method to translate, rotate, and scale the reference particle.
  */
 struct ParticleTransform {
@@ -63,7 +63,7 @@ struct ParticleTransform {
         d_scale(scale), d_rotationPoint(util::Point()){};
 
   /*!
-   * @brief Constructor with explicit rotation pivot (consistent with `GeomObject::transform`).
+   * @brief Constructor with explicit rotation pivot, as in `GeomObject::transform`.
    */
   ParticleTransform(util::Point translate, util::Point axis, double theta, double scale,
                     util::Point rotation_point)

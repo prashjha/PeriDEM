@@ -148,7 +148,7 @@ void testKeysAreNamed() {
               "name and value pairs",
               "a list of values without names is rejected");
 
-  // A key the deck handles outside the table is accepted when declared.
+  // A key the deck reads outside the table is accepted when declared.
   json j = inp::applyGiven(json{{"Nested", json::object()}},
                            SampleDeck::fields(), {"Nested"});
   check(j.find("Nested") != j.end(), "a key named in extra is kept");

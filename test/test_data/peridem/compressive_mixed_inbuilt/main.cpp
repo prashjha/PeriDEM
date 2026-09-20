@@ -283,7 +283,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const double plate_bottom_y = bb.max_y + m + geom_pad;
   double plate_top_y = plate_bottom_y + plate_thickness;
 
-  /* Outer solid: wrap void with wall thickness; extend upward just past the plate (no huge empty band). */
+  /* Outer solid: wrap void with wall thickness; extend upward slightly past the plate. */
   const double side = std::max(1.5 * horizon, 2.0 * mesh_size);
   const double out_lox = void_lox - side;
   const double out_hix = void_hix + side;

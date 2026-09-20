@@ -180,7 +180,7 @@ std::vector<double> &radius_vec, unsigned int dim, double &d);
 /** @}*/
 
 /**
-   * @name Methods to check intersection of various objects
+   * @name Methods to check intersection of geometric objects
    */
 /**@{*/
 

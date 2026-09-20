@@ -51,7 +51,7 @@ namespace fe {
  * \f[ det(J) = \frac{dx}{d\xi} \times \frac{dy}{d\eta} -
  * \frac{dy}{d\xi}\times \frac{dx}{d\eta}. \f]
  * For linear triangle element, Jacobian (and so \f$ det(J) \f$) is
- * constant. For linear triangle elements, we simply have
+ * constant. For linear triangle elements,
  * \f[ \frac{dx}{d\xi} = v^2_x - v^1_x, \quad \frac{dx}{d\eta} = v^3_x -
  * v^1_x, \f]
  * \f[ \frac{dy}{d\xi} = v^2_y - v^1_y, \quad \frac{dy}{d\eta} = v^3_y -
@@ -59,7 +59,7 @@ namespace fe {
  * and \f$ det(J) = \frac{area(T)}{area(T^0)} = 2\times area(T) \f$.
  *
  * 5. Inverse map \f$ \Phi^{-1} : T \to T^9 \f$ for linear triangle element can
- * be easily derived. The derivation of the map is provided below:
+ * be derived as follows:
  *
  * From map \f$ (\xi, \eta )\in T^0 \to (x,y) \in T \f$ we have
  * \f[ x = \sum_{i=1}^3 N^0_i(\xi, \eta) v^i_x, \quad y = \sum_{i=1}^3
@@ -156,7 +156,7 @@ public:
    * \end{array}}\right] \, \left[ {\begin{array}{c} \frac{\partial
    * N_i}{\partial x} \\
    * \frac{\partial N_i}{\partial y} \end{array}}\right]. \f]
-   * The matrix is the Jacobian matrix \f$ J \f$ and can be computed easily
+   * The matrix is the Jacobian matrix \f$ J \f$ and follows
    * if vertices of elements are known. Inverse \f$ J^{-1} \f$ is given by
    * \f[ J^{-1} = \frac{1}{det(J)} \left[ {\begin{array}{cc} \frac{\partial
    * y}{\partial \eta} & -\frac{\partial y}{\partial \xi} \\

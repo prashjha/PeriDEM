@@ -63,7 +63,7 @@ for runs compared against archived output, `problem.py` reads the committed
 `.msh`. Those files, the particle-location CSVs and the setup scripts are what
 is checked in. `runs/` and generated `input*.json` are gitignored.
 
-## Parity
+## Comparing the Python and C++ decks
 
 `python/tests/test_example_parity.py` rebuilds each example's deck in Python,
 compares it against the deck its C++ driver writes, then runs that deck through

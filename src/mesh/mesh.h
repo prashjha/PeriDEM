@@ -39,7 +39,7 @@ namespace mesh {
  * node-element connectivity are stored. The class also stores fixity mask of
  * nodes which indicates if x-, y-, or z-dof of the node is fixed or free.
  *
- * We currently only support mesh with only one type of elements, i.e. mesh
+ * Only a mesh with one element type is supported, i.e. mesh
  * can not have mix of two types of elements. For example, we can not have
  * mesh with triangle and quadrangle elements together.
  *
@@ -335,7 +335,7 @@ public:
    * @brief Populate mesh from 2D triangle data (0-based node indices in enc) without reading a file.
    *
    * Used after Gmsh generates a mesh in memory. Requires finite_difference or
-   * populated element connectivity consistent with the model deck.
+   * populated element connectivity as set by the model deck.
    */
   void loadFromTriangleElements2D(std::vector<util::Point> nodes,
                                   std::vector<size_t> enc,
@@ -438,7 +438,7 @@ public:
    *
    * Structure: First d_eNumVertex data gives the connectivity of first
    * element, and next d_eNumVertex data gives the connectivity of second
-   * element and so on and so fourth.
+   * element, and so for each remaining node.
    */
   std::vector<size_t> d_enc;
 
@@ -460,7 +460,7 @@ public:
 
   /*! @brief Vector of volume of each node
    *
-   * For uniform square mesh, the volume is simply \f$ h^2 \f$ in 2-d and \f$
+   * For uniform square mesh, the volume is \f$ h^2 \f$ in 2-d and \f$
    * h^3\f$ in 3-d, where \f$ h\f$ is the mesh size. For general mesh, the
    * volume is computed using the element-node connectivity of the mesh.
    */
@@ -484,7 +484,7 @@ public:
   /*! @brief Node partition information.
    * For each node i, d_nodePartition[i] specifies the partition number, i.e., the processor that owns the node in MPI application.
    *
-   * For uniform square mesh, the volume is simply \f$ h^2 \f$ in 2-d and \f$
+   * For uniform square mesh, the volume is \f$ h^2 \f$ in 2-d and \f$
    * h^3\f$ in 3-d, where \f$ h\f$ is the mesh size. For general mesh, the
    * volume is computed using the element-node connectivity of the mesh.
    */
@@ -546,7 +546,7 @@ public:
 private:
   /*!
    * @brief After nodes, enc, nec, and dof-related fields are set: 2D z clear, bbox, optional nodal volume,
-   *        mesh size h, volume sanity check, and optional connectivity read from file.
+   *        mesh size h, nodal volume check, and optional connectivity read from file.
    * @param volume_error_note Optional extra line for the volume check failure message (e.g. filename or in-memory hint).
    */
   void finalizeMeshDerivedFieldsFromCurrentNodes(bool compute_vol_from_elements,

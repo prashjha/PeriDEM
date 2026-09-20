@@ -588,7 +588,7 @@ void rw::writer::VtkParticleWriter::close() {
   d_writer_p->SetInputData(d_grid_p);
   // VTK 9.1 (linked by PeriDEM) cannot parse AppendedData VTUs from this
   // writer as Restart.File (base64 → "junk after document element"; raw →
-  // "invalid token"). Ascii matches working restart files and reloads cleanly.
+  // "invalid token"). Ascii is read back by Restart.File without error.
   d_writer_p->SetDataModeToAscii();
   d_writer_p->SetCompressor(0);
   d_writer_p->Write();

@@ -72,7 +72,7 @@ void util::parallel::initMpiStatus() {
 
 bool util::parallel::isMpiEnabled() {
 
-  // for now, we do not call assert and rather create MpiStatus if it is not instantiated
+  // MpiStatus is created if it is not instantiated rather than asserting.
   /*
   //assert((mpistatus_p != nullptr) && "mpistatus_p "
   //                                   "(pointer of struct type util::parallel::MpiStatus) is not initialized. "

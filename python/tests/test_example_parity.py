@@ -7,7 +7,7 @@
 # Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE)
 
-"""Python-vs-C++ parity for the example problems.
+"""Compare the Python and C++ decks and runs for the example problems.
 
 Each example under ``examples/`` has a ``problem.py`` that builds its deck with
 :class:`peridem.Deck`. Two independent things are checked here:
@@ -89,7 +89,7 @@ class Case:
 
     name: str
     example: str
-    #: kwargs for problem.build_deck for the short parity run
+    #: kwargs for problem.build_deck for the shortened comparison run
     short: dict[str, Any] = field(default_factory=dict)
     #: C++ driver relative to the build dir, and the args that make it write
     #: the same deck. ``{out}`` / ``{inp}`` are filled in.

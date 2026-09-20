@@ -130,7 +130,7 @@ public:
   }
 
   /*!
-  * @brief Get the size of currently stored (found so far) indices
+  * @brief Get the number of indices found so far
   *
   * @return size Size of indices data
   */
@@ -167,7 +167,7 @@ public:
   * @brief Find the worst result (furtherest neighbor) without copying or sorting
    * Pre-conditions: size() > 0
    *
-   * Currently, we return pair(0, 0.)
+   * Returns pair(0, 0.)
    *
    * @return Pair Pair of id and max distanced point
   */
@@ -250,7 +250,7 @@ public:
     }
 
     /*!
-    * @brief Get the size of currently stored (found so far) indices
+    * @brief Get the number of indices found so far
     *
     * @return size Size of indices data
     */
@@ -289,7 +289,7 @@ public:
     * @brief Find the worst result (furtherest neighbor) without copying or sorting
      * Pre-conditions: size() > 0
      *
-     * Currently, we return pair(0, 0.)
+     * Returns pair(0, 0.)
      *
      * @return Pair Pair of id and max distanced point
     */
@@ -372,7 +372,7 @@ public:
     }
 
     /*!
-    * @brief Get the size of currently stored (found so far) indices
+    * @brief Get the number of indices found so far
     *
     * @return size Size of indices data
     */
@@ -411,7 +411,7 @@ public:
     * @brief Find the worst result (furtherest neighbor) without copying or sorting
      * Pre-conditions: size() > 0
      *
-     * Currently, we return pair(0, 0.)
+     * Returns pair(0, 0.)
      *
      * @return Pair Pair of id and max distanced point
     */

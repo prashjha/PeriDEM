@@ -128,7 +128,7 @@ public:
    *
    * The map from any element \f$ T \f$ to reference element is \f$ T^0 \f$
    * gets complex for elements like fe::QuadElem. For elements fe:LineElem
-   * and fe::TriElem, this is simple to compute. Therefore, this method is
+   * and fe::TriElem, this follows in closed form. Therefore, this method is
    * only implemented for fe::TriElem and fe::LineElem.
    *
    * @param p Location of point

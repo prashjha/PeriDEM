@@ -87,7 +87,7 @@ public:
   /*!
    * @brief Destructor
    *
-   * Make it virtual so that class inheriting from it are destroyed properly.
+   * Make it virtual so that a derived object deletes through a base pointer.
    */
   virtual ~Material() {}
 

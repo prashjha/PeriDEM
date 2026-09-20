@@ -68,7 +68,7 @@ namespace fe {
  * (\frac{dx}{d\eta} \times \frac{dy}{d\zeta} -
  * \frac{dx}{d\zeta}\times \frac{dy}{d\eta}). \f]
  * For linear triangle element, Jacobian (and so \f$ det(J) \f$) is
- * constant. For linear tetrahedron elements, we simply have
+ * constant. For linear tetrahedron elements,
  * \f[ \frac{dx}{d\xi} = v^2_x - v^1_x, \quad \frac{dx}{d\eta} = v^3_x -
  * v^1_x, \quad \frac{dx}{d\zeta} = v^4_x -
  * v^1_x, \f]
@@ -81,7 +81,7 @@ namespace fe {
  * and \f$ det(J) = \frac{volume(T)}{volume(T^0)} = 6\times volume(T) \f$.
  *
  * 5. Inverse map \f$ \Phi^{-1} : T \to T^0 \f$ for linear tetrahedron element can
- * be easily derived. The derivation of the map is provided below:
+ * be derived as follows:
  *
  * From map \f$ (\xi, \eta, \zeta)\in T^0 \to (x,y,z) \in T \f$ we have
  * \f[ x = \sum_{i=1}^4 N^0_i(\xi, \eta, \zeta) v^i_x, \quad y = \sum_{i=1}^4
@@ -225,7 +225,7 @@ public:
    * N_i}{\partial x} \\
    * \frac{\partial N_i}{\partial y} \\
    * \frac{\partial N_i}{\partial z}\end{array}}\right]. \f]
-   * The matrix is the Jacobian matrix \f$ J \f$ and can be computed easily
+   * The matrix is the Jacobian matrix \f$ J \f$ and follows
    * if vertices of elements are known. Using \f$ J^{-1} \f$ we have following
    * formula for derivatives of the shape function \f[ \left[ {\begin{array}{c}
    * \frac{\partial

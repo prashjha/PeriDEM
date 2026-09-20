@@ -1,7 +1,7 @@
 # Attrition input defaults audit (modular vs main sim2)
 
 **Rule:** do not rely on omitted keys. Modular defaults differ from main in
-several places; if a key is missing you silently get different physics.
+more than one place; if a key is missing you silently get different physics.
 
 ## Trap defaults (will bite if omitted)
 
@@ -50,7 +50,7 @@ Also: `is_wall: true` already **excludes the wall from PD force**
 So wall kinematics are input-controlled. Grain tunneling through a thin fixed
 wall is a **contact** issue, not missing all-dofs in the deck.
 
-## Still not exposable / optional plumbing
+## Not exposed, or optional
 
 1. **`Contact.Correct_Volume`** (added): default `true` (current modular).
    Set `false` for full `Vj` like main DEM contact. Attrition deck sets false.

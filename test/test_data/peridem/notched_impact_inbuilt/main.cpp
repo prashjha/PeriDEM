@@ -322,7 +322,7 @@ json buildTraskInputJson(const std::string &output_path,
            {"PVD_Collection", false}});
 
   // Trask §6.2: top left/right of notches u=<0,0>; drive between notches
-  // u=<0,-v t>; sides and bottom free (collar bond-break not yet implemented).
+  // u=<0,-v t>; sides and bottom free (collar bond-break is not implemented).
   const double drive_h = std::max(2.0 * mesh_size, 0.002);
   const std::vector<double> drive_strip{-notch_half, 0.5 * H - drive_h, 0., notch_half,
                                         0.55 * H, 0.};
@@ -441,7 +441,7 @@ json buildImpactInputJson(const std::string &output_path,
 
   // Plate is the full box on a structured grid with the two 1.5 mm notch slots
   // removed from the mesh, so they are real gaps (Fig. 2) rather than material
-  // whose bonds have merely been cut.
+  // whose bonds have been cut.
   geom::GeomData plate;
   geom::GeomData impactor;
   if (dim3) {
@@ -753,7 +753,7 @@ int main(int argc, char *argv[]) {
   // Impactor: Silling Fig. 2/4 give a cylinder of 1.57 kg striking edge-on, as
   // wide as the 50 mm ligament between the notches. At ρ = 8000 that mass fixes
   // its length: 1.57/(8000·π·0.025²) = 0.100 m. Bhat Fig. 4(b) draws exactly
-  // this 50 × 100 mm section, which confirms both numbers.
+  // this 50 × 100 mm section, giving the same width and length.
   double Iw = 0.050;
   double Ih = 0.100;
   // Silling 2003 EMU grid 200×100×9 on the mm plate → h ≈ 1 mm; Trask KW: δ = 3h.

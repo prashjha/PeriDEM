@@ -52,7 +52,7 @@ For more details about the model and results, we refer to the paper:
 > *Journal of Open Source Software*, vol. 10, 116, p.7525, DOI 10.21105/joss.07525.
 > Download pdf [here](https://doi.org/10.21105/joss.07525).
 
-We have created channels on various platforms: 
+We have created these channels: 
 - [PeriDEM on Gitter](https://gitter.im/PeriDEM/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link)
   * Gitter is absolutely open and easy to join.
 - [PeriDEM on slack](peridem.slack.com)
@@ -155,7 +155,7 @@ void PeriDEMModel::computeForces() {
 }
 ```
 
-`Contact::computeForces` walks neighbors. The node-node relation is `contact::PairForce`; damping is `contact::Damping`. A different pair law is a `PairForce` subclass set with `Contact::setPairForce`. Do not copy `contact.cpp`.
+`Contact::computeForces` loops over the contact neighbour list. The node-node relation is `contact::PairForce`; damping is `contact::Damping`. A different pair law is a `PairForce` subclass set with `Contact::setPairForce`. Do not copy `contact.cpp`.
 
 ### Further reading
 
@@ -223,7 +223,7 @@ repository.
 ### Python
 
 `-DEnable_Python=ON` builds an in-process `import peridem` (nanobind). It is a
-library interface, not a wrapper that shells out to `bin/PeriDEM`: you build the
+library interface and does not call `bin/PeriDEM` as a subprocess: you build the
 problem, run it, and read the node fields as numpy arrays in the same process.
 
 ```sh

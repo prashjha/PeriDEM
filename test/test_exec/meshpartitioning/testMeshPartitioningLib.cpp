@@ -129,7 +129,7 @@ void test::testGraphPartitioningSimple() {
   printf("METIS_TEST\n");
   printf("  Test the METIS library for graph partitioning (simple).\n");
 
-  // perform basic test that shows metis is linked correctly with the code
+  // check that metis is linked and returns a partition
   partGraphKwayTestSimple();
   partGraphRecursiveTestSimple();
 }

@@ -552,7 +552,7 @@ void test::testTriElemTime(size_t n, size_t N) {
     elements.emplace_back(std::vector<size_t>{0, 1, 2});
 
   auto t11 = steady_clock::now();
-  // method 1: Compute quad points on the fly
+  // method 1: Compute quad points at each call
   // loop over elements and compute I_approx
   double sum = 0.;
   for (size_t e = 0; e < N; e++) {

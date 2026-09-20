@@ -105,7 +105,7 @@ std::string postprocess::Postprocess::compressive(data::ModelData &data) {
   auto dx = wall->getXLocal(0) - wall->getXRefLocal(0);
   double wall_penetration = dx[f_dir];
 
-  // Local wall reaction; under particle-MPI each rank only sees contact from
+  // Local wall reaction; under particle-MPI each rank holds contact from
   // owned grains, so sum across ranks before recording.
   double tot_reaction_force = 0.;
   for (size_t i = 0; i < wall->getNumNodes(); i++) {
@@ -166,13 +166,6 @@ void postprocess::Postprocess::checkStop(data::ModelData &data) {
   }
   else if (data.d_outputDeck_p->d_outCriteria == "max_node_dist") {
 
-    //    static int msg_printed = 0;
-    //    if (msg_printed == 0) {
-    //      std::cout << "Check = " << data.d_outputDeck_p->d_outCriteria
-    //              << " is no longer supported. In future, this test will be implemented when function util::methods::maxLength() is defined." << std::endl;
-    //      msg_printed = 1;
-    //    }
-    //exit(EXIT_FAILURE);
     auto max_pt_and_index = util::methods::maxLengthAndMaxLengthIndex(data.d_x);
     auto max_x = data.d_x[max_pt_and_index.second];
 

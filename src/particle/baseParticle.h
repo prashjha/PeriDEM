@@ -49,7 +49,7 @@ public:
    * @param zone_id Zone id this object belongs to
    * @param dim Spatial dimension
    * @param particle_description Description of particle if there is (e.g., 'rigid')
-   * @param is_particle_a_wall Is this particle actually a wall?
+   * @param is_particle_a_wall Is this particle a wall?
    * @param are_all_dofs_constrained True means all dofs are constrained
    * so we do not need to compute forces
    * @param num_nodes Number of nodes

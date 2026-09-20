@@ -261,8 +261,8 @@ json buildInputJson(const std::string &output_path_for_deck,
 
   auto pContactJson = inp::ParticleDeck::getParticleContactExampleJson(2);
   // v0.1.0 circ_damp: Friction_On: false leaves μ = 0 (coeff is not read).
-  // Nonzero μ with the flag off still applies a tangential force in PairForce
-  // and walks the falling particle sideways (Table 2 test 4).
+  // Nonzero μ with the flag off still applies a tangential force in PairForce,
+  // which gives the falling particle a lateral velocity (Table 2 test 4).
   const double mu =
       (friction_mu >= 0.) ? friction_mu
                           : (two_particle_test ? 0. : friction_coeff);

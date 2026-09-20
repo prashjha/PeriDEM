@@ -370,8 +370,8 @@ inline std::size_t editDistance(const std::string &a, const std::string &b) {
  *
  * A deck is built by naming keys. A key that is not declared would otherwise
  * be dropped without a message, and the run would proceed with the default in
- * place of the value the caller asked for. A key close to a declared one is
- * reported with the name it was probably meant to be.
+ * place of the value the caller asked for. A key within an edit distance of
+ * three of a declared one is reported together with that name.
  *
  * @param given Keys the caller supplied
  * @param names Every key the deck accepts
@@ -415,7 +415,7 @@ inline void checkNames(const json &given,
  *
  * @param given Keys the caller supplied
  * @param fs Field table of the deck
- * @param extra Keys the deck handles outside the table
+ * @param extra Keys the deck reads outside the table
  */
 template <class Deck>
 void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
@@ -436,7 +436,7 @@ void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
  *
  * @param given Keys and values to replace, checked against the table
  * @param fs Field table of the deck
- * @param extra Keys the deck handles outside the table
+ * @param extra Keys the deck reads outside the table
  * @return j The block
  */
 template <class Deck>

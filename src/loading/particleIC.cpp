@@ -37,7 +37,7 @@ void loading::applyIC(particle::BaseParticle *particle, const std::vector<inp::B
         (std::size_t) 0, particle->getNumNodes(), (std::size_t) 1,
         [&particle, bc, reg_box] (std::size_t i) {
 
-          // currently, IC is implemented using particle list only
+          // The initial condition is applied by particle list only.
           // apply velocity condition
           particle->setVLocal(i, bc.d_icVec);
         }

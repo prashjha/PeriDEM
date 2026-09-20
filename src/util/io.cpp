@@ -26,7 +26,7 @@ void util::io::initLogger(int debug_level, std::string filename) {
 
 void util::io::log(const std::string & str, bool screen_out, int printMpiRank) {
 
-  // for now, we do not call assert and rather create a logger if it does not exist
+  // The logger is created if it does not exist rather than asserting.
   /*
   //assert((logger_p != nullptr) && "logger_p "
   //                                   "(pointer of type util::io::Logger) is not initialized. "
@@ -40,7 +40,7 @@ void util::io::log(const std::string & str, bool screen_out, int printMpiRank) {
 
 void util::io::log(std::ostringstream &oss, bool screen_out, int printMpiRank) {
 
-  // for now, we do not call assert and rather create a logger if it does not exist
+  // The logger is created if it does not exist rather than asserting.
   /*
   //assert((logger_p != nullptr) && "logger_p "
   //                                   "(pointer of type util::io::Logger) is not initialized. "

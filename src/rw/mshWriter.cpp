@@ -226,7 +226,7 @@ void rw::writer::MshWriter::appendCellData(
 }
 
 void rw::writer::MshWriter::addTimeStep(const double &timestep) {
-  // we add field data as simply node data
+  // we add field data as node data
 
   // Write metadata
   writeMshDataHeader("time", 1, 1, true);
@@ -243,7 +243,7 @@ void rw::writer::MshWriter::close() {
 
 void rw::writer::MshWriter::appendFieldData(const std::string &name,
                                             const double &data) {
-  // we add field data as simply node data
+  // we add field data as node data
 
   // Write metadata
   writeMshDataHeader(name, 1, 1, true);
@@ -253,7 +253,7 @@ void rw::writer::MshWriter::appendFieldData(const std::string &name,
 
 void rw::writer::MshWriter::appendFieldData(const std::string &name,
                                             const float &data) {
-  // we add field data as simply node data
+  // we add field data as node data
 
   // Write metadata
   writeMshDataHeader(name, 1, 1, true);

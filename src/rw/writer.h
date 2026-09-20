@@ -32,7 +32,7 @@ namespace rw {
  * @brief Collection of methods and database related to writing
  *
  * This namespace provides methods and data members specific to writing of
- * the mesh data and simulation data. Currently, .vtu and .msh is supported.
+ * the mesh data and simulation data. The .vtu and .msh formats are written.
  */
 namespace writer {
 

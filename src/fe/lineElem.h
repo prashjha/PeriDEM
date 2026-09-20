@@ -31,7 +31,7 @@ namespace fe {
  * 3. Map \f$ \Phi: T^0 \to T \f$ is given by
  * \f[ x(\xi) = \sum_{i=1}^2 N^0_i(\xi) v^i_x, \f]
  * where \f$ v^1, v^2\f$ are vertices of element \f$ T \f$. For 1-d
- * points, we simply have \f$ v^i_x = v^i \f$.
+ * points, \f$ v^i_x = v^i \f$.
  *
  * 4. The Jacobian of the map \f$ \Phi: T^0 \to T \f$ is given by
  * \f[ J = \frac{dx}{d\xi}. \f]
@@ -59,7 +59,7 @@ public:
    * @brief Returns the length of element
    *
    * If line \f$ T \f$ is given by points \f$ v^1, v^2\f$ then the length is
-   * simply \f[ length(T) = v^2_x - v^1_x. \f]
+   * \f[ length(T) = v^2_x - v^1_x. \f]
    *
    * @param nodes Vertices of element
    * @return vector Vector of shape functions at point p
@@ -96,7 +96,7 @@ public:
    * \f[ \frac{\partial N^0_i(\xi)}{\partial \xi} = \frac{\partial
    * N_i}{\partial x} \frac{\partial x}{\partial \xi}. \f]
    * Since \f$ \frac{\partial x}{\partial \xi} = J \f$ is a Jacobian of map
-   * which can be computed easily if \f$ v^1, v^2 \f$ are known, we can
+   * which follows from \f$ v^1, v^2 \f$, we can
    * invert and obtain the formula
    * \f[ \frac{\partial N_i(\xi)}{\partial x} = \frac{1}{J} \frac{\partial
    * N^0_i(\xi)}{\partial \xi}. \f]

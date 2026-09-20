@@ -19,7 +19,7 @@ namespace test {
  * @brief Perform test on taskflow
  * @param N size of vector to profile taskflow
  * @param seed Seed
- * @return str String containing various information
+ * @return str Description of the test and its result
  */
 std::string testTaskflow(size_t N, int seed);
 

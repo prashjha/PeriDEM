@@ -37,7 +37,7 @@ struct testNSearchData {
  * @param dL Perturbation of lattice sites
  * @param seed Seed
  * @param dim Dimension
- * @return str String containing various information
+ * @return str Description of the search and its result
  */
 template <int dim = 3>
 std::string testNanoflann(size_t N, double L, double dL, int seed);
@@ -50,7 +50,7 @@ std::string testNanoflann(size_t N, double L, double dL, int seed);
  * @param seed Seed
  * @param dim Dimension
  * @param data Search data
- * @return str String containing various information
+ * @return str Description of the search and its result
  */
 template <int dim = 3>
 std::string testNanoflannExcludeInclude(size_t N, double L,
@@ -63,7 +63,7 @@ std::string testNanoflannExcludeInclude(size_t N, double L,
  * @param L Size of unit cell to create crystal lattice point cloud
  * @param dL Perturbation of lattice sites
  * @param seed Seed
- * @return str String containing various information
+ * @return str Description of the search and its result
  */
 std::string testNanoflannClosestPoint(size_t N, double L, double dL, int seed);
 

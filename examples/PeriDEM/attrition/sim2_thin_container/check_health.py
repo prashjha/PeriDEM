@@ -33,7 +33,7 @@ def frame_key(p: Path) -> int:
 
 
 def wall_id_and_T(here: Path, deck_name: str | None) -> tuple[int, float]:
-    """Pick wall id / Final_Time from the deck that was actually run."""
+    """Pick wall id / Final_Time from the deck that was run."""
     names = []
     if deck_name:
         names.append(Path(deck_name).name)

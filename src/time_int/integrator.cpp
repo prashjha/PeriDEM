@@ -23,7 +23,7 @@ void time_int::applyRigidBodyConstraint(data::ModelData &data) {
 
   // Nodal force in the integrators is a force density (acceleration = f/rho).
   // A rigid translating body of mass M has acceleration a = sum(f_i V_i) / M,
-  // so replacing each nodal force density by rho * a reproduces that motion
+  // so replacing each nodal force density by rho * a gives that motion
   // without touching the integrators themselves.
   for (const auto &[pid, mass] : rigid) {
     util::Point net(0., 0., 0.);

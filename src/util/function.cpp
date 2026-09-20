@@ -33,7 +33,7 @@ double util::hatFunction(const double &x, const double &x_min,
     double x_mid = 0.5 * (x_min + x_max);
     double l = x_mid - x_min;
 
-    // check if this is essentially a point load (dirac)
+    // support below this width is treated as a point load (dirac)
     if (l < 1.0E-12)
       return 1.0;
 
@@ -51,7 +51,7 @@ double util::hatFunctionQuick(const double &x, const double &x_min,
   double x_mid = 0.5 * (x_min + x_max);
   double l = x_mid - x_min;
 
-  // check if this is essentially a point load (dirac)
+  // support below this width is treated as a point load (dirac)
   if (l < 1.0E-12)
     return 1.0;
 

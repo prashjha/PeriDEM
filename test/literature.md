@@ -41,10 +41,10 @@ CR falls as \(\bar C\) rises; zero damping is not above 1. Flag `-inbuiltMesh` a
 
 | Case | Where | Metric | Reference | In repo |
 |------|--------|--------|-----------|---------|
-| Table 3 | mixed radius / M1–M2 | CR | 0.716 … 1 | not yet |
-| Table 4 | mesh refinement, \(\bar\varepsilon_n=0.95\) | CR vs \(h\) | 0.946 … 0.977 | not yet |
-| Fig. 7–10 | impact \(v_0\) | damage \(Z\) | qualitative | not yet |
-| Section 4.2 | two-particle + wall | damage | qualitative | not yet |
+| Table 3 | mixed radius / M1–M2 | CR | 0.716 … 1 | not compared |
+| Table 4 | mesh refinement, \(\bar\varepsilon_n=0.95\) | CR vs \(h\) | 0.946 … 0.977 | not compared |
+| Fig. 7–10 | impact \(v_0\) | damage \(Z\) | qualitative | not compared |
+| Section 4.2 | two-particle + wall | damage | qualitative | not compared |
 | Compression | 500 mixed grains (paper) | wall reaction vs δ | Fig. 12-ish | reduced n50 below |
 
 Paper §4.3 is 502 mixed circles/hexes, \(T=0.06\,\mathrm{s}\), \(\Delta t=0.1\,\mu\mathrm{s}\). Too slow as a ctest. The in-repo case is a **short contacting example**: 12 equal circles (\(4\times 3\)), same M1 / \(l_c=R/5\) / horizon \(0.6\,\mathrm{mm}\) / \(R_c=0.95h\) / \(\bar C=100\) / plate \(v_y=-0.06\). Cup is an `open_rect_channel_2d` (not a boolean annulus). Container and plate are tagged `is_wall` so they are not evolved as PD bodies. Surface gap starts at \(1.15 R_c\) (outside contact). \(\Delta t=0.2\,\mu\mathrm{s}\) (Table 2; \(\approx 0.25\,h/c\)). \(T=0.004\,\mathrm{s}\), 20000 steps. Driver `Test_PeriDEM_jha2021_comp_n50` fails unless grain–grain contact occurs. This does not reproduce the paper’s 502-grain reaction curve.

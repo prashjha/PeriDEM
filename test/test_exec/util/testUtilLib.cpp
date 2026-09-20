@@ -114,7 +114,7 @@ void test::testUtilMethods() {
 
 void test::testContactStiffness() {
 
-  // Bulk moduli and horizons that actually appear in the examples and tests.
+  // Bulk moduli and horizons that appear in the examples and tests.
   const std::vector<double> Ks = {2.16e7, 1.0e4,     1.0e5,
                                   159.2e9, 216000.0, 2.0e9, 1.23e9};
   const std::vector<double> hs = {6.0e-4, 2.0e-4, 4.0e-4,

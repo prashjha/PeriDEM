@@ -30,7 +30,7 @@
  * mesh::Mesh is initialized by inp::MeshDeck.
  *
  * The namespace consists of Input and Policy member classes. Input class is
- * the main class responsible of reading input data into various decks.
+ * the main class responsible of reading input data into the decks.
  */
 namespace inp {
 
@@ -58,7 +58,7 @@ namespace inp {
 /*!
  * @brief A class to read input file
  *
- * In this class we read input file and read the data into various decks.
+ * In this class we read input file and read the data into the decks.
  * Input file is a JSON file.
  */
 class Input {

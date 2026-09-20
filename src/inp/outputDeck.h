@@ -27,7 +27,7 @@ namespace inp {
 
   /*! @brief Structure to read input data for performing simulation output */
   struct OutputDeck {
-    /*! @brief Output format: currently supports vtu, msh, legacy_vtk output
+    /*! @brief Output format. Allowed values are vtu, msh, legacy_vtk
      *
      * Default is vtu format.
      */
