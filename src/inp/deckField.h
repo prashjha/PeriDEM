@@ -282,6 +282,62 @@ template <class Deck> json schemaJson(const std::vector<Field<Deck>> &fs) {
 }
 
 /*!
+ * @brief A quantity that can be given in more than one way
+ *
+ * The horizon is given either as Horizon or as Horizon_Mesh_Ratio. The contact
+ * stiffness is given either as Kn or as V_Max with Delta_Max. Before these
+ * groups were declared, the choice was recorded by giving the unused key a
+ * value outside its range, -1 or a number below 1e-10, and the reader decided
+ * which had been meant by comparing against that. A value outside the range is
+ * then not available as a value, and a deck that sets neither key or both is
+ * accepted.
+ */
+struct OneOf {
+
+  /*! @brief What the group gives, named in the error message */
+  std::string what;
+
+  /*! @brief Keys of the group */
+  std::vector<std::string> keys;
+
+  /*! @brief Whether one of the keys has to be given */
+  bool required = true;
+};
+
+/*!
+ * @brief Checks that each group has exactly one of its keys
+ *
+ * @param block The block to check
+ * @param groups Groups of the deck
+ */
+inline void checkGroups(const json &block, const std::vector<OneOf> &groups) {
+  for (const auto &g : groups) {
+    std::vector<std::string> present;
+    for (const auto &k : g.keys)
+      if (block.find(k) != block.end())
+        present.push_back(k);
+
+    if (present.size() == 1 || (present.empty() && !g.required))
+      continue;
+
+    std::ostringstream oss;
+    oss << "Error: give exactly one of";
+    for (const auto &k : g.keys)
+      oss << " " << k;
+    oss << " for " << g.what << ". ";
+    if (present.empty())
+      oss << "None was given.\n";
+    else {
+      oss << "These were given:";
+      for (const auto &k : present)
+        oss << " " << k;
+      oss << ".\n";
+    }
+    throw std::runtime_error(oss.str());
+  }
+}
+
+/*!
  * @brief Number of single character edits between two strings
  *
  * Used to name the closest key when a caller supplies one that is not

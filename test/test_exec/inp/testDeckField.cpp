@@ -184,6 +184,29 @@ void testPrint() {
         "the printed form has Method after the tab prefix");
 }
 
+void testGroups() {
+  std::cout << "quantities given in more than one way\n";
+  const std::vector<inp::OneOf> groups = {
+      {"the horizon", {"Horizon", "Horizon_Mesh_Ratio"}},
+      {"the contact stiffness", {"Kn", "V_Max"}, false},
+  };
+
+  inp::checkGroups(json{{"Horizon", 6.0e-4}, {"Kn", 1.0e12}}, groups);
+  // The second group is not required, so leaving it out is accepted.
+  inp::checkGroups(json{{"Horizon_Mesh_Ratio", 3.0}}, groups);
+
+  checkThrows([&] { inp::checkGroups(json{{"Kn", 1.0e12}}, groups); },
+              "None was given",
+              "a required group with neither key is rejected");
+  checkThrows(
+      [&] {
+        inp::checkGroups(
+            json{{"Horizon", 6.0e-4}, {"Horizon_Mesh_Ratio", 3.0}}, groups);
+      },
+      "These were given: Horizon Horizon_Mesh_Ratio",
+      "a group with both keys is rejected and names them");
+}
+
 void testEditDistance() {
   std::cout << "edit distance\n";
   check(inp::editDistance("Count", "Count") == 0, "equal strings");
@@ -211,6 +234,7 @@ int main() {
   run(testAccepted, "accepted values");
   run(testKeysAreNamed, "keys are named");
   run(testValuesCheckedWhenBuilt, "values checked when built");
+  run(testGroups, "exclusive groups");
   run(testPrint, "printed form");
   run(testEditDistance, "edit distance");
 
