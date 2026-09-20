@@ -155,7 +155,7 @@ void PeriDEMModel::computeForces() {
 }
 ```
 
-`Contact::computeForces` walks neighbors. The node-node relation is `contact::PairForce`; damping is `contact::Damping`. A different pair law is a `PairForce` subclass set with `Contact::setPairForce` — do not copy `contact.cpp`.
+`Contact::computeForces` walks neighbors. The node-node relation is `contact::PairForce`; damping is `contact::Damping`. A different pair law is a `PairForce` subclass set with `Contact::setPairForce`. Do not copy `contact.cpp`.
 
 ### Further reading
 
@@ -239,7 +239,7 @@ See [Setting up a problem in Python](#setting-up-a-problem-in-python) below and
 [python/README.md](./python/README.md) for the full API.
 
 ### Install & use as a CMake package
-- Build and install (starting from a fresh clone, e.g., `git clone ... && cd PeriDEM`; create a build dir wherever you like—`build` inside the source is assumed below):
+- Build and install (starting from a fresh clone, e.g., `git clone ... && cd PeriDEM`; create a build directory wherever you like, `build` inside the source is assumed below):
   ```sh
   # from the source root
   mkdir -p build
@@ -421,69 +421,41 @@ for runs compared against archived C++ output, `problem.py` reads the committed
 `.msh`. Otherwise it generates the mesh in the calling process and writes no
 file.
 
-#### Does it give the same answer?
+#### Checking that both paths agree
 
-`python/tests/test_example_parity.py` checks two independent things per
-example. Neither side is allowed to read a deck the other produced:
+The Python side is a binding, not a second implementation. `peridem.decks.*`
+calls the same `inp::*Deck::getExampleJson` factories as the C++ drivers, and
+`peridem.to_E`, `peridem.contact_stiffness`, `Geometry` and the bond-cutting
+calls are the C++ `material::`, `util::`, `geom::` and `geometry::` functions.
 
-* **deck**: the Python deck against the deck the matching C++ driver writes,
-  key by key, including every floating-point value;
-* **run**: that deck run through `bin/PeriDEM` in a separate process and
-  through the in-process interface, into separate directories, compared node by
-  node on `Displacement`, `Velocity`, `Force`, `Damage_Z` and `Damage`.
-
-| case | deck vs C++ | nodes | max L∞ |
-|------|-------------|-------|--------|
-| `twop_circ_contact` | identical | 246 | 0 |
-| `ellipse_triangle` | identical | 402 | 0 |
-| `compressive_n12` | identical | 2274 | 0 |
-| `peridynamics_circle` | no C++ driver | 123 | 0 |
-| `peridynamics_rectangle` | no C++ driver | 2601 | 0 |
-| `attrition_sim1` | no C++ driver | 13553 | 0 |
-| `attrition_sim2` | no C++ driver | 15367 | 0 |
-| `silling_kw_quick` | identical (+170 pre-notch bonds) | 571 | 0 |
-| `silling_kw_2d` | identical (+1012 pre-notch bonds) | 25350 | 0 |
-| `silling_kw_3d` | identical (+26064 pre-notch bonds) | 354330 | 0 |
-
-"no C++ driver" means the example ships a hand-written JSON deck rather than a
-C++ program, so only the run comparison applies there.
+`python/tests/test_example_parity.py` builds each example's deck in Python and
+compares it key by key against the deck the matching C++ driver writes, then
+runs that deck through `bin/PeriDEM` and through the in-process interface and
+compares `Displacement`, `Velocity`, `Force`, `Damage_Z` and `Damage` node by
+node. Neither side reads a deck the other produced. The cases run at reduced
+step counts; pass `--full` to include the two largest.
 
 ```sh
 PYTHONPATH=build/python python3 python/tests/test_example_parity.py
 ctest --test-dir build -R Test_Python -V
 ```
 
-This is possible because the Python side is a binding, not a second
-implementation: `peridem.decks.*` forwards to the same
-`inp::*Deck::getExampleJson` factories the C++ drivers call, and `peridem.to_E`,
-`peridem.contact_stiffness`, `Geometry` and the bond-cutting calls are the C++
-`material::`, `util::`, `geom::` and `geometry::` functions. Where a helper did
-not exist it was added to `src/` rather than written in Python:
-`util::normalContactStiffness` now replaces the same expression that was
-copy-pasted at nine sites, and `src/fracture/prenotch.h` replaces three
-near-duplicate notch routines in the notched-impact driver.
+#### Naming deck values
 
-`test/test_exec/inp/testDeckRoundTrip.cpp` keeps that layer honest: each deck's
-`getExampleJson` output is read back by its own `readFromJson` and the values
-checked, which is the gap that had let three writer/reader mismatches through.
-
-Deck values are given by name, on both sides. `Deck(2, 1.0, 10)` and
-`decks.model(2, 1.0, 10)` are rejected; the call states what it sets:
+Deck values are given by name on both sides. `Deck(2, 1.0, 10)` and
+`decks.model(2, 1.0, 10)` are rejected:
 
 ```python
 d = Deck(dim=2, t_final=1.0, n_steps=10)
 ```
 
 Each deck declares its fields once, as a table of key, type, default and
-description, and its reader, writer, printer and schema are generated from
-that table. A key the table does not declare is rejected where the deck is
-built, with the closest declared name suggested, rather than being dropped
-and leaving the run on a default. Quantities that can be given in more than
-one way, such as a horizon as a length or as a multiple of the mesh size, are
-declared as a group and chosen by naming the key that applies, instead of by
-giving the unused one a value outside its range. `decks.schema(name="model")`
-returns that table, so a field added in `src/inp` is visible from Python
-without a change to the bindings.
+description, from which its reader, writer, printer and schema are generated.
+A key the table does not declare is rejected where the deck is built, with the
+closest declared name given. A quantity that can be given in more than one way,
+such as a horizon as a length or as a multiple of the mesh size, is selected by
+naming the key that applies. `decks.schema(name="model")` returns the table for
+one deck.
 
 ### Two-particle contact
 
