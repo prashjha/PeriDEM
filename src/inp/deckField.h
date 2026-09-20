@@ -366,19 +366,18 @@ inline std::size_t editDistance(const std::string &a, const std::string &b) {
 }
 
 /*!
- * @brief Rejects a key that no field declares
+ * @brief Rejects a key that is not among those named
  *
  * A deck is built by naming keys. A key that is not declared would otherwise
  * be dropped without a message, and the run would proceed with the default in
- * place of the value the caller asked for.
+ * place of the value the caller asked for. A key close to a declared one is
+ * reported with the name it was probably meant to be.
  *
  * @param given Keys the caller supplied
- * @param fs Field table of the deck
- * @param extra Keys the deck handles outside the table
+ * @param names Every key the deck accepts
  */
-template <class Deck>
-void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
-               const std::vector<std::string> &extra = {}) {
+inline void checkNames(const json &given,
+                       const std::vector<std::string> &names) {
   if (given.is_null() || given.empty())
     return;
   if (!given.is_object())
@@ -387,19 +386,16 @@ void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
 
   for (const auto &item : given.items()) {
     const std::string key = item.key();
-    bool known = std::any_of(fs.begin(), fs.end(),
-                             [&key](const Field<Deck> &f) { return f.key == key; }) ||
-                 std::find(extra.begin(), extra.end(), key) != extra.end();
-    if (known)
+    if (std::find(names.begin(), names.end(), key) != names.end())
       continue;
 
     std::string closest;
     std::size_t best = std::string::npos;
-    for (const auto &f : fs) {
-      const std::size_t d = editDistance(key, f.key);
+    for (const auto &n : names) {
+      const std::size_t d = editDistance(key, n);
       if (d < best) {
         best = d;
-        closest = f.key;
+        closest = n;
       }
     }
     std::ostringstream oss;
@@ -407,13 +403,29 @@ void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
     if (best <= 3)
       oss << " Closest declared field is " << closest << ".";
     oss << "\nDeclared fields are:";
-    for (const auto &f : fs)
-      oss << " " << f.key;
-    for (const auto &e : extra)
-      oss << " " << e;
+    for (const auto &n : names)
+      oss << " " << n;
     oss << "\n";
     throw std::runtime_error(oss.str());
   }
+}
+
+/*!
+ * @brief Rejects a key that no field declares
+ *
+ * @param given Keys the caller supplied
+ * @param fs Field table of the deck
+ * @param extra Keys the deck handles outside the table
+ */
+template <class Deck>
+void checkKeys(const json &given, const std::vector<Field<Deck>> &fs,
+               const std::vector<std::string> &extra = {}) {
+  std::vector<std::string> names;
+  names.reserve(fs.size() + extra.size());
+  for (const auto &f : fs)
+    names.push_back(f.key);
+  names.insert(names.end(), extra.begin(), extra.end());
+  checkNames(given, names);
 }
 
 /*!

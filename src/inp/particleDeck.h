@@ -161,7 +161,8 @@ struct ParticleDeck {
     auto j = json({{"Sets", nSets}});
     for (size_t i = 0; i < nSets; i++) {
       double h = meshSizesVec.size() > i ? meshSizesVec[i] : -1.;
-      auto js = inp::MeshDeck::getExampleJson(filenameVec[i], h);
+      auto js = inp::MeshDeck::getExampleJson(
+          json{{"File", filenameVec[i]}, {"Mesh_Size", h}});
 
       std::string set_name = "Set_" + std::to_string(i+1);
       j[set_name] = js;
@@ -257,7 +258,7 @@ struct ParticleDeck {
    * @return JSON object with example configuration
    */
   static json getParticleContactExampleJson(size_t nSets = 0) {
-    return inp::ContactDeck::getExampleJson(nSets);
+    return inp::ContactDeck::getExampleJson(json{{"Sets", nSets}});
   }
 
   void readParticleContactFromJson(const json &j) {

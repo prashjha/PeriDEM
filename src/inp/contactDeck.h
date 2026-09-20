@@ -96,17 +96,16 @@ struct ContactDeck {
    * One pair block is written for each pair of contact groups. Without any
    * groups the block is empty.
    *
-   * @param nSets Number of contact groups
-   * @param given Field names and values to set, checked against the table
+   * @param given Field names and values to set, checked against the table,
+   * and Sets, the number of contact groups
    * @return JSON object for this deck
    */
-  static json getExampleJson(size_t nSets = 0,
-                             const json &given = json::object()) {
+  static json getExampleJson(const json &given = json::object()) {
+    json j = applyGiven(given, fields(), {"Sets"});
+    const auto nSets = j.value("Sets", size_t(0));
     if (nSets == 0)
       return json({});
 
-    json j = applyGiven(given, fields());
-    j["Sets"] = nSets;
     for (size_t i = 0; i < nSets; i++)
       for (size_t k = i; k < nSets; k++)
         j["Set_" + std::to_string(i + 1) + "_" + std::to_string(k + 1)] = {};

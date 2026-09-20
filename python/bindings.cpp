@@ -274,7 +274,7 @@ std::string material_json(const std::string &material_type, bool is_plane_strain
 }
 
 std::string contact_json(size_t n_sets) {
-  return inp::ContactDeck::getExampleJson(n_sets).dump();
+  return inp::ContactDeck::getExampleJson(json{{"Sets", n_sets}}).dump();
 }
 
 std::string contact_pair_json(double contact_r, bool compute_contact_r,
@@ -319,18 +319,24 @@ std::string bc_set_json(const std::string &type, const Geometry *region,
 std::string test_json(const std::string &test_name,
                       size_t particle_id_compressive_test,
                       size_t particle_force_direction_compressive_test) {
-  return inp::TestDeck::getExampleJson(
-             test_name, particle_id_compressive_test,
-             particle_force_direction_compressive_test)
-      .dump();
+  json given = json{{"Test_Name", test_name}};
+  if (inp::TestDeck::isCompressive(test_name))
+    given["Compressive_Test"] =
+        json{{"Wall_Id", particle_id_compressive_test},
+             {"Wall_Force_Direction", particle_force_direction_compressive_test}};
+  return inp::TestDeck::getExampleJson(given).dump();
 }
 
 std::string mesh_json(const std::string &filename, double h, bool create_mesh,
                       const std::string &create_mesh_info, bool write_mesh_file,
                       const std::vector<std::vector<double>> &void_regions) {
-  return inp::MeshDeck::getExampleJson(filename, h, create_mesh,
-                                       create_mesh_info, write_mesh_file,
-                                       void_regions)
+  return inp::MeshDeck::getExampleJson(
+             json{{"File", filename},
+                  {"Mesh_Size", h},
+                  {"Create_Mesh", create_mesh},
+                  {"Info", create_mesh_info},
+                  {"Write_Mesh_File", write_mesh_file},
+                  {"Void_Regions", void_regions}})
       .dump();
 }
 

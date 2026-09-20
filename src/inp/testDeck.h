@@ -104,21 +104,16 @@ namespace inp {
      * @param particleForceDirectionCompressiveTest Direction of that reaction
      * @return JSON object for this deck
      */
-    static json getExampleJson(std::string testName,
-                               size_t particleIdCompressiveTest = 0,
-                               size_t particleForceDirectionCompressiveTest = 0) {
-      json given = json{{"Test_Name", testName}};
-      if (isCompressive(testName))
-        given["Compressive_Test"] =
-            json{{"Wall_Id", particleIdCompressiveTest},
-                 {"Wall_Force_Direction", particleForceDirectionCompressiveTest}};
-      return getExampleJson(given);
-    }
-
-    /*! @copydoc getExampleJson(std::string, size_t, size_t) */
-    static json getExampleJson(const char *testName) {
-      return getExampleJson(std::string(testName));
-    }
+    /*!
+     * @brief Rejects a value given where a set of named values is expected
+     *
+     * A test name passed on its own would convert to a JSON string and be
+     * read as a block with no keys, so such a call is rejected when
+     * compiling.
+     */
+    static json getExampleJson(const std::string &) = delete;
+    /*! @copydoc getExampleJson(const std::string &) */
+    static json getExampleJson(const char *) = delete;
 
     /*!
      * @brief Reads from json object

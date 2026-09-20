@@ -78,21 +78,29 @@ struct MeshDeck {
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
-  static json getExampleJson(std::string filename = "", double h_meshing = -1.,
-                             bool createMesh = false,
-                             std::string createMeshInfo = "gmsh_builtin_mesh",
-                             bool writeMeshFile = true,
-                             std::vector<std::vector<double>> voidRegions =
-                                 std::vector<std::vector<double>>()) {
+  static json getExampleJson(const json &given = json::object()) {
+    const std::vector<std::string> names = {
+        "File",  "Mesh_Size",       "Create_Mesh",
+        "Info",  "Write_Mesh_File", "Void_Regions"};
+    checkNames(given, names);
+
+    const auto filename = given.value("File", std::string());
+    const auto h_meshing = given.value("Mesh_Size", -1.);
+    const auto createMeshInfo =
+        given.value("Info", std::string("gmsh_builtin_mesh"));
+    const auto writeMeshFile = given.value("Write_Mesh_File", true);
+    const auto voidRegions = given.value(
+        "Void_Regions", std::vector<std::vector<double>>());
 
     auto j = json({});
     if (!filename.empty())
       j["File"] = filename;
 
-    // A mesh size with no filename requests generation. This call shape is
-    // kept for the existing callers. The createMesh argument lets a set both
-    // generate a mesh and name the file it is written to or read back from.
-    const bool create = createMesh || (filename.empty() && h_meshing > 0.);
+    // A mesh size with no filename requests generation. Create_Mesh lets a
+    // set both generate a mesh and name the file it is written to or read
+    // back from.
+    const bool create = given.value("Create_Mesh", false) ||
+                        (filename.empty() && h_meshing > 0.);
     if (create) {
       if (!(h_meshing > 0.))
         throw std::runtime_error(
@@ -118,6 +126,16 @@ struct MeshDeck {
     }
     return j;
   }
+
+  /*!
+   * @brief Rejects a value given where a set of named values is expected
+   *
+   * A file name passed on its own would convert to a JSON string and be read
+   * as a set with no keys, so such a call is rejected when compiling.
+   */
+  static json getExampleJson(const std::string &) = delete;
+  /*! @copydoc getExampleJson(const std::string &) */
+  static json getExampleJson(const char *) = delete;
 
   /*!
    * @brief Reads from json object

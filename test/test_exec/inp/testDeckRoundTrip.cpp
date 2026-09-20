@@ -120,23 +120,27 @@ void testMaterialDeck() {
 void testMeshDeck() {
   std::cout << "MeshDeck\n";
   // A mesh size with no filename requests generation.
-  auto j = inp::MeshDeck::getExampleJson("", 1.0e-4);
+  auto j = inp::MeshDeck::getExampleJson(json{{"Mesh_Size", 1.0e-4}});
   inp::MeshDeck d;
   d.readFromJson(j);
   check(d.d_createMesh, "bare Mesh_Size still means CreateMesh");
   checkClose(d.d_hMeshing, 1.0e-4, "Mesh_Size round-trips");
 
   // File only.
-  auto j2 = inp::MeshDeck::getExampleJson("mesh.msh");
+  auto j2 = inp::MeshDeck::getExampleJson(json{{"File", "mesh.msh"}});
   inp::MeshDeck d2;
   d2.readFromJson(j2);
   check(d2.d_filename == "mesh.msh", "File round-trips");
   check(!d2.d_createMesh, "a plain File does not request mesh creation");
 
   // File plus generation, which is what the examples need.
-  auto j3 = inp::MeshDeck::getExampleJson("mesh.msh", 2.0e-4, true, "uniform",
-                                          false,
-                                          {{0., 0., 0., 1., 1., 1.}});
+  auto j3 = inp::MeshDeck::getExampleJson(
+      json{{"File", "mesh.msh"},
+           {"Mesh_Size", 2.0e-4},
+           {"Create_Mesh", true},
+           {"Info", "uniform"},
+           {"Write_Mesh_File", false},
+           {"Void_Regions", {{0., 0., 0., 1., 1., 1.}}}});
   inp::MeshDeck d3;
   d3.readFromJson(j3);
   check(d3.d_filename == "mesh.msh", "File round-trips with CreateMesh");
@@ -175,7 +179,7 @@ void testContactPairDeck() {
 
 void testContactDeck() {
   std::cout << "ContactDeck\n";
-  auto j = inp::ContactDeck::getExampleJson(2);
+  auto j = inp::ContactDeck::getExampleJson(json{{"Sets", 2}});
   check(j.at("Sets") == 2, "Sets count");
   for (const auto &key : {"Set_1_1", "Set_1_2", "Set_2_2"})
     check(j.contains(key), std::string("pair ") + key + " present");
@@ -204,11 +208,11 @@ void testNeighborAndGenDecks() {
 void testTestDeck() {
   std::cout << "TestDeck\n";
   // An empty name yields an empty block, which the reader ignores.
-  auto empty = inp::TestDeck::getExampleJson("");
+  auto empty = inp::TestDeck::getExampleJson(json{{"Test_Name", ""}});
   check(empty.empty(), "an unnamed test yields an empty block");
 
   // A plain test name. This used to be emitted as a JSON array.
-  auto j = inp::TestDeck::getExampleJson("two_particle");
+  auto j = inp::TestDeck::getExampleJson(json{{"Test_Name", "two_particle"}});
   check(j.is_object(), "Test block is an object, not an array");
   inp::TestDeck d;
   d.readFromJson(j);
@@ -216,7 +220,10 @@ void testTestDeck() {
 
   // readFromJson requires the sub-block for both spellings of the name.
   for (const std::string name : {"Compressive_Test", "compressive_test"}) {
-    auto jc = inp::TestDeck::getExampleJson(name, 13, 2);
+    auto jc = inp::TestDeck::getExampleJson(
+        json{{"Test_Name", name},
+             {"Compressive_Test",
+              json{{"Wall_Id", 13}, {"Wall_Force_Direction", 2}}}});
     checkIsObject(jc, "Compressive_Test");
     inp::TestDeck dc;
     dc.readFromJson(jc);

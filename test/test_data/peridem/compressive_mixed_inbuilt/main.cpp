@@ -424,7 +424,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
       contactPairJson(R_contact_factor, damping_on, friction_on, Kn_ww, beta_n_eps, friction_coeff, Kn_factor,
                       beta_n_factor);
 
-  json contactRoot = inp::ContactDeck::getExampleJson(2);
+  json contactRoot = inp::ContactDeck::getExampleJson(json{{"Sets", 2}});
   contactRoot["Set_1_1"] = j_contact_pp;
   contactRoot["Set_1_2"] = j_contact_pw;
   contactRoot["Set_2_2"] = j_contact_ww;
