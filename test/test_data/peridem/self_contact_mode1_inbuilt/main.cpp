@@ -44,9 +44,15 @@ std::string directoryPathWithTrailingSep(const std::filesystem::path &dir) {
 json buildInputJson(const std::string &output_path, const std::filesystem::path &mesh_file,
                     double L, double mesh_size, double horizon, double final_time,
                     size_t num_steps, const std::string &self_contact) {
-  auto model = inp::ModelDeck::getExampleJson(2, final_time, num_steps, "finite_difference",
-                                              "central_difference", true, 2, "Single_Particle",
-                                              0);
+  auto model = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Single_Particle"},
+           {"Seed", 0}});
   model["Self_Contact"] = self_contact;
   model["Bond_Break"] = "tension";
 
@@ -108,7 +114,16 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
 
   auto material = inp::ParticleDeck::getParticleMaterialExampleJson(1);
   material["Set_1"] =
-      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho, K, G, Gc, true, 1);
+      inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
 
   json root = {{"Model", model},
                {"Output", output},

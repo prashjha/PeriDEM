@@ -236,8 +236,14 @@ json buildInputJson(const std::string &output_path,
       util::normalContactStiffness(K, K, horizon);
 
   auto model = inp::ModelDeck::getExampleJson(
-      2, final_time, num_steps, "finite_difference", "central_difference", true,
-      2, "Multi_Particle", 0);
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
   model["MPI_Strategy"] = mpi_strategy;
   model["Wall_Contact"] = "meshed";
 
@@ -288,9 +294,25 @@ json buildInputJson(const std::string &output_path,
 
   json material = inp::ParticleDeck::getParticleMaterialExampleJson(2);
   material["Set_1"] = inp::MaterialDeck::getExampleJson(
-      "PDState", false, horizon, 0, rho, K, G, Gc, true, 1);
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   material["Set_2"] = inp::MaterialDeck::getExampleJson(
-      "PDState", false, horizon, 0, rho, K, G, Gc, true, 1);
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
 
   json contact_base = inp::ContactPairDeck::getExampleJson(
           json{{"Contact_Radius_Factor", 0.95},

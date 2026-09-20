@@ -83,8 +83,15 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
 
   const size_t dt_out_n = std::max<size_t>(1, num_steps / 40);
 
-  auto model = inp::ModelDeck::getExampleJson(2, final_time, num_steps, "finite_difference",
-                                              "central_difference", true, 2, "Multi_Particle", 0);
+  auto model = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
   model["Bond_Break"] = "tension";
   // No self-contact across broken bonds — otherwise the crack stays glued.
   model["Self_Contact"] = "none";
@@ -151,9 +158,27 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
 
   auto mat = inp::ParticleDeck::getParticleMaterialExampleJson(2);
   mat["Set_1"] =
-      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_t, K_t, G_t, Gc_t, true, 1);
+      inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho_t},
+           {"K", K_t},
+           {"G", G_t},
+           {"Gc", Gc_t},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   mat["Set_2"] =
-      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_e, K_e, G_e, Gc_e, true, 1);
+      inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho_e},
+           {"K", K_e},
+           {"G", G_e},
+           {"Gc", Gc_e},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   pDeck["Material"] = mat;
 
   auto contact = inp::ParticleDeck::getParticleContactExampleJson(2);

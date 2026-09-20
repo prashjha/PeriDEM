@@ -118,9 +118,15 @@ json getInputJson() {
   const double final_time = 0.0001;
   const size_t num_steps = 1000;
   const size_t dt_out_n = num_steps / 4;
-  auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps, 
-      "finite_difference", "central_difference",
-      true, 2, "Multi_Particle", 0);
+  auto modelDeckJson = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
 
   // Output deck
   auto outputDeckJson = inp::OutputDeck::getExampleJson(
@@ -183,12 +189,28 @@ json getInputJson() {
   auto pMatJson = inp::ParticleDeck::getParticleMaterialExampleJson(2);
 
   // Material 1 (bottom particle)
-  pMatJson["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon,
-      0, rho1, K1, G1, Gc1, true, 1);
+  pMatJson["Set_1"] = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho1},
+           {"K", K1},
+           {"G", G1},
+           {"Gc", Gc1},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
 
   // Material 2 (top particle)
-  pMatJson["Set_2"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon,
-      0, rho2, K2, G2, Gc2, true, 1);
+  pMatJson["Set_2"] = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho2},
+           {"K", K2},
+           {"G", G2},
+           {"Gc", Gc2},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
 
   pDeckJson["Material"] = pMatJson;
 

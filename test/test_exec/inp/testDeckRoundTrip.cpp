@@ -60,9 +60,15 @@ void checkIsObject(const json &j, const std::string &key) {
 
 void testModelDeck() {
   std::cout << "ModelDeck\n";
-  auto j = inp::ModelDeck::getExampleJson(3, 0.25, 500, "finite_difference",
-                                          "central_difference", false, 3,
-                                          "Single_Particle", 7);
+  auto j = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 3},
+           {"Final_Time", 0.25},
+           {"Time_Steps", 500},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", false},
+           {"Quad_Approximation_Order", 3},
+           {"Particle_Sim_Type", "Single_Particle"},
+           {"Seed", 7}});
   inp::ModelDeck d;
   d.readFromJson(j);
   check(d.d_dim == 3, "Dimension round-trips");
@@ -106,9 +112,17 @@ void testOutputDeck() {
 void testMaterialDeck() {
   std::cout << "MaterialDeck\n";
   // Plane strain on: the writer key and the reader key must agree.
-  auto j = inp::MaterialDeck::getExampleJson("PMBBond", true, 6.0e-4, 0, 1200.,
-                                             2.16e7, 1.296e7, 50., true, 1,
-                                             3.24e7);
+  auto j = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PMBBond"},
+           {"Is_Plane_Strain", true},
+           {"Horizon", 6.0e-4},
+           {"Density", 1200.},
+           {"K", 2.16e7},
+           {"G", 1.296e7},
+           {"Gc", 50.},
+           {"E", 3.24e7},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   inp::MaterialDeck d;
   d.readFromJson(j);
   check(d.d_materialType == "PMBBond", "Type round-trips");
@@ -118,9 +132,16 @@ void testMaterialDeck() {
   check(d.d_influenceFnType == 1, "Influence_Function.Type round-trips");
 
   // Plane strain off must also survive.
-  auto j2 = inp::MaterialDeck::getExampleJson("PDState", false, 6.0e-4, 0,
-                                              1200., 2.16e7, 1.296e7, 50.,
-                                              true, 0);
+  auto j2 = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", 6.0e-4},
+           {"Density", 1200.},
+           {"K", 2.16e7},
+           {"G", 1.296e7},
+           {"Gc", 50.},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 0}}}});
   inp::MaterialDeck d2;
   d2.readFromJson(j2);
   check(!d2.d_isPlaneStrain, "Is_Plane_Strain false round-trips");

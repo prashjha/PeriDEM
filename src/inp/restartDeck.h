@@ -84,23 +84,15 @@ namespace inp {
     }
 
     /*!
-     * @brief Returns the block with the given fields set
+     * @brief Rejects a value given where a set of named values is expected
      *
-     * Kept so that existing callers continue to compile. Prefer the form that
-     * names each field.
-     *
-     * @param file File the state is read from
-     * @param step Step the state was written at
-     * @param changeRefFreeDofs Move only bodies with a free degree of freedom
-     * @return JSON object for this deck
+     * A file name passed on its own would convert to a JSON string and be
+     * read as a block with no keys, so such a call is rejected when
+     * compiling.
      */
-    static json getExampleJson(std::string file, size_t step = 0,
-                               bool changeRefFreeDofs = false) {
-      return getExampleJson(json{{"File", file},
-                                 {"Step", step},
-                                 {"Change_Reference_Free_Dofs",
-                                  changeRefFreeDofs}});
-    }
+    static json getExampleJson(const std::string &) = delete;
+    /*! @copydoc getExampleJson(const std::string &) */
+    static json getExampleJson(const char *) = delete;
 
     /*!
      * @brief Reads from json object

@@ -448,34 +448,35 @@ struct MaterialDeck {
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
-  static json getExampleJson(std::string materialType = "PDState", bool isPlainStrain = false,
-    double horizon = -1., double horizonMeshRatio = -1., double density = 1.,
-    double K = 0., double G = 0., double Gc = 0., bool computeParamsFromElastic = true,
-    size_t influenceFnType = 0, double E = -1.) {
-
-    json j = applyGiven(json{{"Type", materialType},
-                             {"Density", density},
-                             {"Compute_From_Classical", computeParamsFromElastic},
-                             {"Is_Plane_Strain", isPlainStrain},
-                             {"Horizon", horizon},
-                             {"Horizon_Mesh_Ratio", horizonMeshRatio}},
-                        fields(), {"E", "K", "G", "Gc", "Influence_Function"});
-
-    // The elastic constants are written whatever their value, because a
-    // material that states none of them cannot be built. E is the exception:
-    // it is derived from K when it is absent.
-    if (E > 0.)
-      j["E"] = E;
-    j["K"] = K;
-    j["G"] = G;
-    j["Gc"] = Gc;
-
-    j["Influence_Function"] =
-        json{{"Type", influenceFnType}};
-
+  /*!
+   * @brief Returns the block with the given fields set
+   *
+   * The extent of a bond is given either as Horizon, a length, or as
+   * Horizon_Mesh_Ratio, a multiple of the mesh size; naming one of the two
+   * is what selects it. The elastic constants K, G and Gc are written as
+   * given, since a material that states none of them cannot be built, and E
+   * is derived from K when it is not named.
+   *
+   * @param given Field names and values to set, checked against the table
+   * @return JSON object for this deck
+   */
+  static json getExampleJson(const json &given = json::object()) {
+    const std::vector<std::string> extra = {"E", "K", "G", "Gc",
+                                            "Influence_Function"};
+    json j = applyGiven(given, fields(), extra);
     checkGroups(j, groups());
     return j;
   }
+
+  /*!
+   * @brief Rejects a value given where a set of named values is expected
+   *
+   * A material type passed on its own would convert to a JSON string and be
+   * read as a block with no keys, so such a call is rejected when compiling.
+   */
+  static json getExampleJson(const std::string &) = delete;
+  /*! @copydoc getExampleJson(const std::string &) */
+  static json getExampleJson(const char *) = delete;
 
   /*!
    * @brief Reads from json object

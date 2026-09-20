@@ -294,9 +294,15 @@ json buildTraskInputJson(const std::string &output_path,
                          double notch_half, double notch_w, double notch_depth, double mesh_size,
                          double horizon, double rho, double E, double K, double G, double Gc,
                          double v_impact, double final_time, size_t num_steps) {
-  auto model = inp::ModelDeck::getExampleJson(2, final_time, num_steps, "finite_difference",
-                                              "central_difference", true, 2, "Single_Particle",
-                                              0);
+  auto model = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Single_Particle"},
+           {"Seed", 0}});
   // Trask §5: broken bond → weight 0 (no force). No self-contact.
   model["Self_Contact"] = "none";
   model["Bond_Break"] = "tension"; // literature PMB: break in tension only
@@ -346,7 +352,16 @@ json buildTraskInputJson(const std::string &output_path,
   json mesh = {{"Sets", 1}, {"Set_1", meshSetJson(mesh_plate, mesh_size)}};
   auto material = inp::ParticleDeck::getParticleMaterialExampleJson(1);
   material["Set_1"] = inp::MaterialDeck::getExampleJson(
-      "PMBBond", false, horizon, 0, rho, K, G, Gc, true, 0, E);
+      json{{"Type", "PMBBond"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"E", E},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 0}}}});
   // Trask/Silling ω≡1 (ConstInfluence default a0=dim+1 would mis-scale c)
   material["Set_1"]["Influence_Function"] = {
       {"Type", 0}, {"Parameters", std::vector<double>{1.0}}};
@@ -375,9 +390,15 @@ json buildImpactInputJson(const std::string &output_path,
   const size_t dim = dim3 ? 3 : 2;
   // Element-node connectivity is only used for strain/stress output and does not
   // support hexahedra, which is what the 3D structured grid produces.
-  auto model = inp::ModelDeck::getExampleJson(dim, final_time, num_steps, "finite_difference",
-                                              "central_difference", !dim3, 2, "Multi_Particle",
-                                              0);
+  auto model = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", dim},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", !dim3},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
   model["Self_Contact"] = "none";
   model["Bond_Break"] = "tension";
   model["Wall_Contact"] = "meshed";
@@ -460,9 +481,27 @@ json buildImpactInputJson(const std::string &output_path,
   // never enters the solution.
   auto material = inp::ParticleDeck::getParticleMaterialExampleJson(2);
   material["Set_1"] = inp::MaterialDeck::getExampleJson(
-      "PMBBond", false, horizon, 0, rho, K, G, Gc, true, 0, E);
+      json{{"Type", "PMBBond"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"E", E},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 0}}}});
   material["Set_2"] = inp::MaterialDeck::getExampleJson(
-      "PDElasticBond", false, horizon, 0, rho, K, G, 0., true, 0, E);
+      json{{"Type", "PDElasticBond"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", 0.},
+           {"E", E},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 0}}}});
   material["Set_1"]["Influence_Function"] = {
       {"Type", 0}, {"Parameters", std::vector<double>{1.0}}};
   material["Set_2"]["Influence_Function"] = {
@@ -535,8 +574,15 @@ json buildBhatInputJson(const std::string &output_path,
                         double Ih, double gap, double mesh_size, double horizon,
                         double Rc_factor, double rho, double E, double K, double G, double Gc,
                         double v_impact, double final_time, size_t num_steps) {
-  auto model = inp::ModelDeck::getExampleJson(2, final_time, num_steps, "finite_difference",
-                                              "velocity_verlet", true, 2, "Multi_Particle", 0);
+  auto model = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "velocity_verlet"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
   model["Self_Contact"] = "reference_gap"; // Bhat 2023 §4.4
   model["Bond_Break"] = "absolute_stretch";  // Bhat §3.1: |s| > |s0|
   model["Wall_Contact"] = "meshed";
@@ -585,15 +631,33 @@ json buildBhatInputJson(const std::string &output_path,
   const double s0_bhat = std::sqrt(4.0 * M_PI * Gc / (9.0 * E * horizon));
 
   auto material = inp::ParticleDeck::getParticleMaterialExampleJson(2);
-  auto mat_bhat = inp::MaterialDeck::getExampleJson("PMBBond", false, horizon, 0, rho, K, G, Gc,
-                                                    /*computeParamsFromElastic=*/false, 0, E);
+  auto mat_bhat = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PMBBond"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"E", E},
+           {"Compute_From_Classical", false},
+           {"Influence_Function", json{{"Type", 0}}}});
   mat_bhat["Bond_Potential_Params"] = std::vector<double>{c_bhat, s0_bhat};
   mat_bhat["Influence_Function"] = {{"Type", 0}, {"Parameters", std::vector<double>{1.0}}};
   material["Set_1"] = mat_bhat;
   // Free deformable striker (paper). Unbreakable elastic so the contact face
   // delivers bulk impulse; plate remains PMB with paper (c, s0).
-  auto mat_strike = inp::MaterialDeck::getExampleJson("PDElasticBond", false, horizon, 0, rho, K, G,
-                                                      0., true, 0, E);
+  auto mat_strike = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDElasticBond"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", 0.},
+           {"E", E},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 0}}}});
   mat_strike["Influence_Function"] = {{"Type", 0}, {"Parameters", std::vector<double>{1.0}}};
   material["Set_2"] = mat_strike;
 

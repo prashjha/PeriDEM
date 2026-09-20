@@ -164,26 +164,6 @@ namespace inp {
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
-    static json getExampleJson(size_t dim = 2, double tFinal = 1.0, size_t Nt = 10,
-                               std::string spatialDiscretization = "finite_difference",
-                               std::string timeDiscretization = "central_difference",
-                               bool populateElementNodeConnectivity = true,
-                               size_t quadOrder = 2,
-                               std::string particleSimType = "Multi_Particle",
-                               int seed = 0) {
-      return getExampleJson(
-          json{{"Dimension", dim},
-               {"Final_Time", tFinal},
-               {"Time_Steps", Nt},
-               {"Discretization_Type",
-                json{{"Spatial", spatialDiscretization},
-                     {"Time", timeDiscretization}}},
-               {"Populate_ElementNodeConnectivity",
-                populateElementNodeConnectivity},
-               {"Quad_Approximation_Order", quadOrder},
-               {"Particle_Sim_Type", particleSimType},
-               {"Seed", seed}});
-    }
 
     /*!
      * @brief The fields of this deck, declared once
@@ -234,7 +214,7 @@ namespace inp {
      * @param given Field names and values to set, checked against the table
      * @return JSON object for this deck
      */
-    static json getExampleJson(const json &given) {
+    static json getExampleJson(const json &given = json::object()) {
       json j = applyGiven(given, fields(),
                           {"Discretization_Type", "Rigid_Particles"});
       if (j.find("Discretization_Type") == j.end())

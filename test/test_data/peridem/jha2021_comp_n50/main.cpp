@@ -161,8 +161,14 @@ json buildInputJson(const std::string &output_path_for_deck,
   const size_t n_total = n_pack + 2;
 
   auto modelDeckJson = inp::ModelDeck::getExampleJson(
-      2, final_time, num_steps, "finite_difference", "central_difference", true, 2,
-      "Multi_Particle", 0);
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
   modelDeckJson["MPI_Strategy"] = mpi_strategy;
 
   std::vector<std::string> out_tags = {"Displacement", "Velocity", "Force", "Damage_Z",
@@ -216,9 +222,27 @@ json buildInputJson(const std::string &output_path_for_deck,
 
   json matRoot = json{{"Sets", 2}};
   matRoot["Set_1"] =
-      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho, K, G, Gc, true, 1);
+      inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   matRoot["Set_2"] =
-      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho, K, G, Gc, true, 1);
+      inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho},
+           {"K", K},
+           {"G", G},
+           {"Gc", Gc},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   pDeckJson["Material"] = matRoot;
 
   json contact_base = inp::ContactPairDeck::getExampleJson(

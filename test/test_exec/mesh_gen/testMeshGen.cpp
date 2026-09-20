@@ -89,8 +89,15 @@ bool builtinMeshCheckForGeometry(const std::string &geomName, double s) {
 
     const size_t dim = meshDimForBuiltin(geomName, geom);
     const auto modelJson =
-        inp::ModelDeck::getExampleJson(dim, 0.001, 10, "finite_difference", "central_difference", true,
-                                       2, "Multi_Particle", 0);
+        inp::ModelDeck::getExampleJson(
+      json{{"Dimension", dim},
+           {"Final_Time", 0.001},
+           {"Time_Steps", 10},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
     inp::ModelDeck modelDeck(modelJson);
 
     mesh::Mesh mesh;

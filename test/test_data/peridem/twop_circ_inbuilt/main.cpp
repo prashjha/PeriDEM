@@ -139,9 +139,15 @@ json buildInputJson(const std::string &output_path_for_deck,
   const double top_gap = two_particle_test ? horizon : particle_dist;
 
   const size_t dt_out_n = num_steps / 10;
-  auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps,
-                                                        "finite_difference", "central_difference",
-                                                        true, 2, "Multi_Particle", 0);
+  auto modelDeckJson = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
   modelDeckJson["MPI_Strategy"] = mpi_strategy;
 
   auto outputDeckJson = inp::OutputDeck::getExampleJson(
@@ -231,10 +237,26 @@ json buildInputJson(const std::string &output_path_for_deck,
   pDeckJson["Mesh"] = json({{"Sets", 2}, {"Set_1", meshSet1}, {"Set_2", meshSet2}});
 
   auto pMatJson = inp::ParticleDeck::getParticleMaterialExampleJson(2);
-  pMatJson["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon,
-      0, rho1, K1, G1, Gc1, true, 1);
-  pMatJson["Set_2"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon,
-      0, rho2, K2, G2, Gc2, true, 1);
+  pMatJson["Set_1"] = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho1},
+           {"K", K1},
+           {"G", G1},
+           {"Gc", Gc1},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
+  pMatJson["Set_2"] = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho2},
+           {"K", K2},
+           {"G", G2},
+           {"Gc", Gc2},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   pDeckJson["Material"] = pMatJson;
 
   auto pContactJson = inp::ParticleDeck::getParticleContactExampleJson(2);

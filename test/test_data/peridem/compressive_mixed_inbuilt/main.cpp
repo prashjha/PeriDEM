@@ -353,8 +353,15 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
   const util::Point site_wall_fixed(cfix.d_x, cfix.d_y, 0.0);
   const util::Point site_wall_moving(cmov.d_x, cmov.d_y, 0.0);
 
-  auto modelDeckJson = inp::ModelDeck::getExampleJson(2, final_time, num_steps, "finite_difference",
-                                                        "central_difference", true, 2, "Multi_Particle", 0);
+  auto modelDeckJson = inp::ModelDeck::getExampleJson(
+      json{{"Dimension", 2},
+           {"Final_Time", final_time},
+           {"Time_Steps", num_steps},
+           {"Discretization_Type", json{{"Spatial", "finite_difference"}, {"Time", "central_difference"}}},
+           {"Populate_ElementNodeConnectivity", true},
+           {"Quad_Approximation_Order", 2},
+           {"Particle_Sim_Type", "Multi_Particle"},
+           {"Seed", 0}});
 
   std::vector<std::string> out_tags = {"Displacement", "Velocity", "Force", "Force_Density", "Damage_Z",
                                          "Damage",      "Nodal_Volume", "Zone_ID", "Particle_ID", "Fixity",
@@ -411,9 +418,27 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
 
   /* Two material laws: 0 = particle, 1 = wall (fixed + moving). geom_id still selects mesh shape (10 meshes). */
   json matRoot = json{{"Sets", 2}};
-  matRoot["Set_1"] = inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_p, K_p, G_p, Gc_p, true, 1);
+  matRoot["Set_1"] = inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho_p},
+           {"K", K_p},
+           {"G", G_p},
+           {"Gc", Gc_p},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   matRoot["Set_2"] =
-      inp::MaterialDeck::getExampleJson("PDState", false, horizon, 0, rho_wall, K_wall, G_wall, Gc_wall, true, 1);
+      inp::MaterialDeck::getExampleJson(
+      json{{"Type", "PDState"},
+           {"Is_Plane_Strain", false},
+           {"Horizon", horizon},
+           {"Density", rho_wall},
+           {"K", K_wall},
+           {"G", G_wall},
+           {"Gc", Gc_wall},
+           {"Compute_From_Classical", true},
+           {"Influence_Function", json{{"Type", 1}}}});
   pDeckJson["Material"] = matRoot;
 
   const double Kn_pp = KnFromBulk(K_p, K_p, horizon);

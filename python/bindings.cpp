@@ -243,9 +243,15 @@ std::string model_json(size_t dim, double t_final, size_t n_steps,
                        const std::string &spatial, const std::string &time,
                        bool populate_enc, size_t quad_order,
                        const std::string &particle_sim_type, int seed) {
-  return inp::ModelDeck::getExampleJson(dim, t_final, n_steps, spatial, time,
-                                        populate_enc, quad_order,
-                                        particle_sim_type, seed)
+  return inp::ModelDeck::getExampleJson(
+      json{{"Dimension", dim},
+           {"Final_Time", t_final},
+           {"Time_Steps", n_steps},
+           {"Discretization_Type", json{{"Spatial", spatial}, {"Time", time}}},
+           {"Populate_ElementNodeConnectivity", populate_enc},
+           {"Quad_Approximation_Order", quad_order},
+           {"Particle_Sim_Type", particle_sim_type},
+           {"Seed", seed}})
       .dump();
 }
 
@@ -275,10 +281,26 @@ std::string material_json(const std::string &material_type, bool is_plane_strain
                           double density, double K, double G, double Gc,
                           bool compute_from_classical, size_t influence_fn_type,
                           double E) {
-  return inp::MaterialDeck::getExampleJson(
-             material_type, is_plane_strain, horizon, horizon_mesh_ratio,
-             density, K, G, Gc, compute_from_classical, influence_fn_type, E)
-      .dump();
+  json given = json{{"Type", material_type},
+                    {"Is_Plane_Strain", is_plane_strain},
+                    {"Density", density},
+                    {"K", K},
+                    {"G", G},
+                    {"Gc", Gc},
+                    {"Compute_From_Classical", compute_from_classical},
+                    {"Influence_Function", json{{"Type", influence_fn_type}}}};
+
+  // One of the two says how far a bond reaches.
+  if (horizon_mesh_ratio > 0.)
+    given["Horizon_Mesh_Ratio"] = horizon_mesh_ratio;
+  else
+    given["Horizon"] = horizon;
+
+  // Otherwise it is derived from K.
+  if (E > 0.)
+    given["E"] = E;
+
+  return inp::MaterialDeck::getExampleJson(given).dump();
 }
 
 std::string contact_json(size_t n_sets) {
