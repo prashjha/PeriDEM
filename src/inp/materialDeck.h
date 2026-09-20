@@ -11,6 +11,7 @@
 #ifndef INP_MATERIALDECK_H
 #define INP_MATERIALDECK_H
 
+#include "deckField.h"
 #include "util/io.h"
 #include "util/json.h"
 #include <cmath>
@@ -79,18 +80,33 @@ struct MatData {
   /*!
    * @brief Reads from json object
    */
+  /*!
+   * @brief The elastic constants, declared once
+   *
+   * Each is read from the material block itself rather than a sub-block. A
+   * constant that is not given keeps -1, which the material classes read as
+   * absent and derive from the others.
+   *
+   * @return fields The field table
+   */
+  static const std::vector<Field<MatData>> &fields() {
+    static const std::vector<Field<MatData>> f = {
+        field(&MatData::d_E, "E", -1., "Young's modulus"),
+        field(&MatData::d_G, "G", -1., "Shear modulus"),
+        field(&MatData::d_K, "K", -1., "Bulk modulus"),
+        field(&MatData::d_lambda, "Lambda", -1., "First Lame parameter"),
+        field(&MatData::d_mu, "Mu", -1., "Second Lame parameter"),
+        field(&MatData::d_nu, "Poisson_Ratio", -1., "Poisson ratio"),
+        field(&MatData::d_Gc, "Gc", -1., "Critical energy release rate"),
+        field(&MatData::d_KIc, "KIc", -1., "Critical stress intensity factor"),
+    };
+    return f;
+  }
+
   void readFromJson(const json &j) {
     if (j.empty())
       return;
-
-    d_E = j.value("E", -1.);
-    d_G = j.value("G", -1.);
-    d_K = j.value("K", -1.);
-    d_lambda = j.value("Lambda", -1.);
-    d_mu = j.value("Mu", -1.);
-    d_nu = j.value("Poisson_Ratio", -1.);
-    d_Gc = j.value("Gc", -1.);
-    d_KIc = j.value("KIc", -1.);
+    readFields(*this, j, fields());
   }
 
   /*!
@@ -362,6 +378,73 @@ struct MaterialDeck {
         d_horizon(md.d_horizon), d_horizonMeshRatio(md.d_horizonMeshRatio){};
 
   /*!
+   * @brief The fields of the block itself
+   *
+   * A horizon or a ratio that is not given keeps -1 and is left out of the
+   * block, which is how the material classes read it as absent.
+   *
+   * @return fields The field table
+   */
+  static const std::vector<Field<MaterialDeck>> &fields() {
+    static const std::vector<Field<MaterialDeck>> f = {
+        field(&MaterialDeck::d_materialType, "Type", std::string(),
+              "Peridynamic material model"),
+        field(&MaterialDeck::d_density, "Density", 1., "Mass density"),
+        field(&MaterialDeck::d_computeParamsFromElastic,
+              "Compute_From_Classical", true,
+              "Derive the bond parameters from the elastic constants"),
+        field<MaterialDeck, bool>(&MaterialDeck::d_isPlaneStrain,
+                                  "Is_Plane_Strain", false,
+                                  "Plane strain rather than plane stress", {},
+                                  [](const bool &v) { return v; }),
+        field<MaterialDeck, double>(&MaterialDeck::d_horizon, "Horizon", -1.,
+                                    "Peridynamic horizon", {},
+                                    [](const double &v) { return v > 0.; }),
+        field<MaterialDeck, double>(&MaterialDeck::d_horizonMeshRatio,
+                                    "Horizon_Mesh_Ratio", -1.,
+                                    "Horizon as a multiple of the mesh size",
+                                    {},
+                                    [](const double &v) { return v > 0.; }),
+        field<MaterialDeck, std::vector<double>>(
+            &MaterialDeck::d_bondPotentialParams, "Bond_Potential_Params", {},
+            "Bond parameters given directly rather than derived", {},
+            [](const std::vector<double> &v) { return !v.empty(); }),
+        field<MaterialDeck, std::vector<double>>(
+            &MaterialDeck::d_statePotentialParams, "State_Potential_Params",
+            {}, "State parameters given directly rather than derived", {},
+            [](const std::vector<double> &v) { return !v.empty(); }),
+    };
+    return f;
+  }
+
+  /*!
+   * @brief The fields of the Influence_Function sub-block
+   * @return fields The field table
+   */
+  static const std::vector<Field<MaterialDeck>> &influenceFields() {
+    static const std::vector<Field<MaterialDeck>> f = {
+        field(&MaterialDeck::d_influenceFnType, "Type", size_t(0),
+              "Influence function used in the bond force"),
+        field<MaterialDeck, std::vector<double>>(
+            &MaterialDeck::d_influenceFnParams, "Parameters", {},
+            "Parameters of the influence function", {},
+            [](const std::vector<double> &v) { return !v.empty(); }),
+    };
+    return f;
+  }
+
+  /*!
+   * @brief Quantities this deck accepts in more than one form
+   * @return groups The groups
+   */
+  static const std::vector<OneOf> &groups() {
+    static const std::vector<OneOf> g = {
+        {"the horizon", {"Horizon", "Horizon_Mesh_Ratio"}},
+    };
+    return g;
+  }
+
+  /*!
    * @brief Returns example JSON object for ModelDeck configuration
    * @return JSON object with example configuration
    */
@@ -370,27 +453,27 @@ struct MaterialDeck {
     double K = 0., double G = 0., double Gc = 0., bool computeParamsFromElastic = true,
     size_t influenceFnType = 0, double E = -1.) {
 
-    auto j = json({});
+    json j = applyGiven(json{{"Type", materialType},
+                             {"Density", density},
+                             {"Compute_From_Classical", computeParamsFromElastic},
+                             {"Is_Plane_Strain", isPlainStrain},
+                             {"Horizon", horizon},
+                             {"Horizon_Mesh_Ratio", horizonMeshRatio}},
+                        fields(), {"E", "K", "G", "Gc", "Influence_Function"});
 
-    if (isPlainStrain)
-      j["Is_Plane_Strain"] = isPlainStrain;
-
-    j["Type"] = materialType;
-    j["Density"] = density;
-    if (horizon > 0.)
-      j["Horizon"] = horizon;
-    if (horizonMeshRatio > 0)
-      j["Horizon_Mesh_Ratio"] = horizonMeshRatio;
-
-    j["Compute_From_Classical"] = computeParamsFromElastic;
+    // The elastic constants are written whatever their value, because a
+    // material that states none of them cannot be built. E is the exception:
+    // it is derived from K when it is absent.
     if (E > 0.)
       j["E"] = E;
     j["K"] = K;
     j["G"] = G;
     j["Gc"] = Gc;
 
-    j["Influence_Function"] = {{"Type", influenceFnType}};
+    j["Influence_Function"] =
+        json{{"Type", influenceFnType}};
 
+    checkGroups(j, groups());
     return j;
   }
 
@@ -404,30 +487,18 @@ struct MaterialDeck {
     // read mat data
     d_matData.readFromJson(j);
 
-    d_computeParamsFromElastic = j.value("Compute_From_Classical", true);
-    // getExampleJson writes "Is_Plane_Strain"; older decks use the
-    // misspelled "Is_Plain_Strain". Accept both.
-    d_isPlaneStrain = j.value("Is_Plane_Strain",
-                              j.value("Is_Plain_Strain", false));
-    d_materialType = j.value("Type", "");
-    d_density = j.value("Density", 1.);
-    d_horizon = j.value("Horizon", -1.);
-    d_horizonMeshRatio = j.value("Horizon_Mesh_Ratio", -1.);
-    if (d_horizon < 0. and d_horizonMeshRatio < 0.) {
-      throw std::runtime_error("Horizon and Horizon Mesh Ratio both are invalid.");
-      return;
-    }
-    if (j.find("Influence_Function") != j.end()) {
-      d_influenceFnType = j.at("Influence_Function").value("Type", 0);
-      d_influenceFnParams = j.at("Influence_Function").value("Parameters", std::vector<double>());
-    }
+    readFields(*this, j, fields());
 
-    // Explicit micromodulus / critical stretch, used when Compute_From_Classical
-    // is false (e.g. to follow a specific paper's calibration convention).
-    d_bondPotentialParams =
-        j.value("Bond_Potential_Params", std::vector<double>());
-    d_statePotentialParams =
-        j.value("State_Potential_Params", std::vector<double>());
+    // Older decks spell this Is_Plain_Strain. The table reads the current
+    // spelling, so the older one is applied when it alone is present.
+    if (j.find("Is_Plane_Strain") == j.end() &&
+        j.find("Is_Plain_Strain") != j.end())
+      d_isPlaneStrain = j.at("Is_Plain_Strain").get<bool>();
+
+    checkGroups(j, groups());
+
+    if (j.find("Influence_Function") != j.end())
+      readFields(*this, j.at("Influence_Function"), influenceFields());
     if (!d_computeParamsFromElastic && d_bondPotentialParams.empty())
       throw std::runtime_error(
           "Compute_From_Classical is false but Bond_Potential_Params is missing.");

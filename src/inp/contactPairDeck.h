@@ -12,6 +12,7 @@
 #define INP_CONTACTPAIRDECK_H
 
 
+#include "deckField.h"
 #include "util/io.h"
 #include "util/json.h"
 
@@ -92,6 +93,52 @@ namespace inp {
     };
 
     /*!
+     * @brief The fields of this deck, declared once
+     *
+     * The contact radius and the contact stiffness are each given in one of
+     * two ways and are resolved in readFromJson. What remains maps one key to
+     * one member.
+     *
+     * @return fields The field table
+     */
+    static const std::vector<Field<ContactPairDeck>> &fields() {
+      static const std::vector<Field<ContactPairDeck>> f = {
+          field(&ContactPairDeck::d_KnFactor, "Kn_Factor", 1.,
+                "Normal stiffness is scaled by this"),
+          field(&ContactPairDeck::d_dampingOn, "Damping_On", true,
+                "Apply the normal damping force"),
+          field(&ContactPairDeck::d_eps, "Epsilon", 1.,
+                "Coefficient of restitution", {{}, 0., 1.}),
+          field(&ContactPairDeck::d_betanFactor, "Beta_n_Factor", 1.,
+                "Damping coefficient is scaled by this"),
+          field(&ContactPairDeck::d_frictionOn, "Friction_On", true,
+                "Apply the tangential friction force"),
+          field(&ContactPairDeck::d_mu, "Friction_Coeff", 0.,
+                "Coefficient of friction"),
+          // Left out when it is not set, because a pair without friction
+          // does not use it.
+          field<ContactPairDeck, double>(
+              &ContactPairDeck::d_K, "K", 0.,
+              "Bulk modulus the tangential force is built from", {},
+              [](const double &v) { return v > 1.E-10; }),
+      };
+      return f;
+    }
+
+    /*!
+     * @brief Quantities this deck accepts in more than one form
+     * @return groups The groups
+     */
+    static const std::vector<OneOf> &groups() {
+      static const std::vector<OneOf> g = {
+          {"the contact radius",
+           {"Contact_Radius", "Contact_Radius_Factor"}},
+          {"the contact stiffness", {"Kn", "V_Max"}},
+      };
+      return g;
+    }
+
+    /*!
      * @brief Returns example JSON object for ModelDeck configuration
      * @return JSON object with example configuration
      */
@@ -101,46 +148,45 @@ namespace inp {
         double KnFactor = 1., double betanFactor = 1.,
         double deltaMax = 1., double vMax = 0., double K = 0.) {
 
-      auto j = json({});
+      // Damping with no coefficient is no damping.
+      if (dampingOn and betanFactor < 1.E-10)
+        dampingOn = false;
+      if (!dampingOn)
+        betanFactor = 0.;
 
+      if (frictionOn and mu < 1.E-10)
+        throw std::runtime_error("Friction coefficient can not be zero.");
+
+      json j = applyGiven(json{{"Damping_On", dampingOn},
+                               {"Epsilon", eps},
+                               {"Friction_On", frictionOn},
+                               {"Friction_Coeff", mu},
+                               {"Kn_Factor", KnFactor},
+                               {"Beta_n_Factor", betanFactor},
+                               {"K", K}},
+                          fields(),
+                          {"Contact_Radius", "Contact_Radius_Factor", "Kn",
+                           "V_Max", "Delta_Max"});
+
+      // One of each group, chosen by which of the two values was supplied.
       if (computeContactR) {
-        if (contactR < 1E-10) {
-          throw std::runtime_error("Conctar radius factor can not be zero.");
-        }
+        if (contactR < 1E-10)
+          throw std::runtime_error("Contact radius factor can not be zero.");
         j["Contact_Radius_Factor"] = contactR;
       } else {
         j["Contact_Radius"] = contactR;
       }
 
       if (Kn < 1.E-10) {
-        if (vMax < 1.E-10) throw std::runtime_error("Need V_Max parameter for contact force.");
-        else j["V_Max"] = vMax;
-
-        if (deltaMax < 1.E-10) deltaMax = 1.;
-        j["Delta_Max"] = deltaMax;
+        if (vMax < 1.E-10)
+          throw std::runtime_error("Need V_Max parameter for contact force.");
+        j["V_Max"] = vMax;
+        j["Delta_Max"] = deltaMax < 1.E-10 ? 1. : deltaMax;
       } else {
         j["Kn"] = Kn;
       }
 
-      if (dampingOn and betanFactor < 1.E-10) dampingOn = false;
-      if (!dampingOn) betanFactor = 0.;
-
-      if (frictionOn and mu < 1.E-10) {
-        throw std::runtime_error("Friction coefficient can not be zero.");
-      }
-
-      if (K > 1.E-10) 
-        j["K"] = K;
-
-      j["Damping_On"] = dampingOn;
-      j["Epsilon"] = eps;
-
-      j["Friction_On"] = frictionOn;
-      j["Friction_Coeff"] = mu;
-
-      j["Kn_Factor"] = KnFactor;
-      j["Beta_n_Factor"] = betanFactor;
-
+      checkGroups(j, groups());
       return j;
     }
 
@@ -152,41 +198,31 @@ namespace inp {
       if (j.empty())
         return;
 
-      if (j.find("Contact_Radius_Factor") != j.end()) {
-        d_computeContactR = true;
-        d_contactR = j.at("Contact_Radius_Factor");
-      } else {
-        if (j.find("Contact_Radius") == j.end())
-          throw std::runtime_error("Need Contact_Radius or Contact_Radius_Factor.");
+      checkGroups(j, groups());
+      readFields(*this, j, fields());
 
-        d_computeContactR = false;
-        d_contactR = j.at("Contact_Radius");
-      }
+      // A factor is applied to the mesh size, an absolute radius is not.
+      d_computeContactR = j.find("Contact_Radius_Factor") != j.end();
+      d_contactR = d_computeContactR ? j.at("Contact_Radius_Factor").get<double>()
+                                     : j.at("Contact_Radius").get<double>();
 
+      // Given a stiffness, the speed that produces the reference overlap
+      // follows from it. Given that speed instead, the stiffness follows in
+      // the contact force.
       if (j.find("Kn") != j.end()) {
         d_Kn = j.at("Kn");
         d_deltaMax = 1.;
         d_vMax = std::sqrt(d_Kn);
       } else {
-        if (j.find("V_Max") == j.end()) throw std::runtime_error("V_Max is needed for contact.");
-
         d_vMax = j.at("V_Max");
         d_deltaMax = j.value("Delta_Max", 1.);
       }
-      d_KnFactor = j.value("Kn_Factor", 1.);
 
-      d_dampingOn = j.value("Damping_On", true);
-      d_eps = j.value("Epsilon", 1.);
-      d_betanFactor = j.value("Beta_n_Factor", 1.);
       if (d_betanFactor < 1.E-8)
         d_dampingOn = false;
 
       if (!d_dampingOn)
         d_betanFactor = 0.;
-
-      d_frictionOn = j.value("Friction_On", true);
-      d_mu = j.value("Friction_Coeff", 0.);
-      d_K = j.value("K", 0.);
 
       if (d_frictionOn and d_mu < 1.E-10) {
         throw std::runtime_error("Friction coefficient can not be zero.");
