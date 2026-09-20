@@ -1,5 +1,0 @@
-<map id="inp::BCBaseDeck::readFromJson" name="inp::BCBaseDeck::readFromJson">
-<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="241,5,460,31"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1BCDeck.html#a66030224f49342620aff59144fe5fa80" title="Reads from json object." alt="" coords="5,5,193,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="228,21,193,21,193,15,228,15"/>
-</map>

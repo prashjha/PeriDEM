@@ -1,7 +1,0 @@
-<map id="inp::ContactDeck::readFromJson" name="inp::ContactDeck::readFromJson">
-<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="427,13,641,38"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1ParticleDeck.html#ad9b9c061656474ca17ada369be6dc287" title=" " alt="" coords="184,5,379,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="413,28,379,28,379,23,413,23"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1ParticleDeck.html#ae9810f456ee39dbae63e4d71b96fe046" title=" " alt="" coords="5,5,136,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="170,28,136,28,136,23,170,23"/>
-</map>

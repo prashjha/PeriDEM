@@ -1,7 +1,0 @@
-<map id="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::assertCircleAnnulusValid" name="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::assertCircleAnnulusValid">
-<area shape="rect" id="Node000001" title=" " alt="" coords="248,29,456,84"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="393,18,378,11,352,8,330,10,315,15,309,21,309,29,304,29,304,19,313,10,329,5,352,3,380,6,396,14"/>
-<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a6f620a5642f390489fe6693a0e8f4d89" title=" " alt="" coords="5,29,200,84"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="234,59,200,59,200,54,234,54"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="144,18,129,11,103,8,80,10,66,15,60,21,60,29,54,29,55,19,63,10,79,5,103,3,131,6,147,14"/>
-</map>

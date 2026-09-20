@@ -1,6 +1,0 @@
-<map id="anonymous_namespace{testMeshGen::cpp}::testCircleMeshWritesFiles" name="anonymous_namespace{testMeshGen::cpp}::testCircleMeshWritesFiles">
-<area shape="rect" id="Node000001" title="Circle: write .msh and .vtk via the built&#45;in Gmsh path (file I/O check)." alt="" coords="104,29,279,84"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="217,18,208,11,191,8,177,10,169,14,165,21,165,29,159,29,159,19,165,11,176,5,191,3,210,6,220,13"/>
-<area shape="rect" id="Node000002" href="$testMeshGen_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,44,56,69"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="90,59,57,59,57,54,90,54"/>
-</map>

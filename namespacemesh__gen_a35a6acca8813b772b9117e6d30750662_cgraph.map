@@ -1,5 +1,0 @@
-<map id="mesh_gen::buildEllipsoidOcc" name="mesh_gen::buildEllipsoidOcc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,196,31"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#ad8236ad8cc776188c0e4f81536acb257" title="Row&#45;major 3×3 rotation &#160;from ellipsoid axis–angle (identity if )." alt="" coords="244,5,439,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,15,230,15,230,21,196,21"/>
-</map>

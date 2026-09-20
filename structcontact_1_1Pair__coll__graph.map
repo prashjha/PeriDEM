@@ -1,7 +1,0 @@
-<map id="contact::Pair" name="contact::Pair">
-<area shape="rect" id="Node000001" title="One node&#45;node contact pair. Assembly fills this; the law uses it." alt="" coords="112,757,200,1023"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1ContactPairDeck.html" title="Structure to read and store particle&#45;particle contact related input data." alt="" coords="5,5,152,651"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="126,651,138,741,133,741,121,651"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="176,25,291,631"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,631,183,734,182,741,176,741,177,733,192,631"/>
-</map>
