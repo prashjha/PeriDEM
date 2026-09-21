@@ -53,6 +53,26 @@ double getGlobalInfFn(const double &r) {
  * @return moment Moment
  */
 double getGlobalMoment(const size_t &i) {return influence_fn->getMoment(i);}
+
+/*!
+ * @brief Returns the bulk modulus the model works with, from table K and G
+ *
+ * 3D uses K. 2D uses the in-plane bulk modulus: \f$ K + G/3 \f$ for plane
+ * strain and \f$ 9KG/(3K + 4G) \f$ for plane stress (Yang et al. 2024,
+ * JMPS 191, eq. 10).
+ *
+ * @param dim Dimension
+ * @param plane_strain True for plane strain, false for plane stress
+ * @param K Bulk modulus
+ * @param G Shear modulus
+ * @return kappa Bulk modulus used by the model
+ */
+double getModelBulkModulus(const size_t &dim, const bool &plane_strain,
+                           const double &K, const double &G) {
+  if (dim != 2)
+    return K;
+  return plane_strain ? K + G / 3. : 9. * K * G / (3. * K + 4. * G);
+}
 }
 
 namespace material {
@@ -101,13 +121,13 @@ public:
    * @brief Returns dimension of the problem
    * @return dim Dimension
    */
-  size_t getDimension() { return dimension; }
+  size_t getDimension() const { return dimension; }
 
   /*!
    * @brief Returns plane-strain condition
    * @return bool True if plane-strain active
    */
-  bool isPlaneStrain() { return is_plane_strain; }
+  bool isPlaneStrain() const { return is_plane_strain; }
 
   /*!
    * @brief Returns true if state-based potential is active
@@ -167,6 +187,26 @@ public:
    * @return strain Critical strain
    */
   virtual double getSc(const double &r) const = 0;
+
+  /*!
+   * @brief Returns bond strain beyond which the bond is marked broken
+   *
+   * @param r Reference length of bond
+   * @return strain Breaking strain (critical strain unless a model says otherwise)
+   */
+  virtual double getBreakSc(const double &r) const { return getSc(r); }
+
+  /*!
+   * @brief Returns the dilatational part of the strain energy density
+   *
+   * Nonzero only for state-based models.
+   *
+   * @param thetax Dilatation at node
+   * @return energy Energy density
+   */
+  virtual double getDilatationEnergyDensity(const double &thetax) const {
+    return 0.;
+  }
 
   /*!
    * @brief Returns the density of the material
@@ -326,7 +366,9 @@ public:
    * \f[ f(x) = \frac{4}{|B_\epsilon(0)|} \int_{B_\epsilon(x)}
    * \frac{J^\epsilon(|y-x|)}{\epsilon} \psi'(|y-x|S^2) S \frac{y-x}{|y-x|}
    * dy, \f]
-   * where \f$ \psi(r) = C(1-\exp(-\beta r))\f$.
+   * where \f$ \psi(r) = C(1-\exp(-\beta r))\f$ (Lipton 2016; Jha 2025,
+   * eqs. 8-9). The total energy is \f$ \int e(x) dx \f$, so the pair force is
+   * twice the derivative of the bond energy.
    *
    * For given initial bond length \f$ r \f$ and bond strain \f$ s\f$, this
    * function returns pair of
@@ -339,35 +381,26 @@ public:
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
-   * @param break_bonds Flag to specify whether bonds are allowed to break or not
+   * @param break_bonds If true, also update the fracture state of the bond
    * @return value Pair of energy and force
    */
   std::pair<double, double> getBondEF(const double &r, const double &s,
                                       bool &fs,
                                       const bool &break_bonds) const override {
 
-    if (break_bonds) {
-      // check if fracture state of the bond need to be updated
-      if (d_irrevBondBreak && !fs &&
-          util::isGreater(std::abs(s), d_factorSc * getSc(r)))
-        fs = true;
+    if (break_bonds && !fs && util::isGreater(std::abs(s), getBreakSc(r)))
+      fs = true;
 
-      // if bond is not fractured, return energy and force from nonlinear
-      // potential otherwise return energy of fractured bond, and zero force
-      if (!fs)
-        return std::make_pair(
-            getInfFn(r) * d_C *
-                (1. - std::exp(-d_beta * r * s * s)) / d_invFactor,
-            getInfFn(r) * 4. * s * d_C * d_beta *
-                std::exp(-d_beta * r * s * s) / d_invFactor);
-      else
-        return std::make_pair(d_C / d_invFactor, 0.);
-    } else {
-      return std::make_pair(getInfFn(r) * d_C * d_beta *
-                                r * s * s / d_invFactor,
-                            getInfFn(r) * 4. * s * d_C *
-                                d_beta / d_invFactor);
-    }
+    // intact bonds follow the nonlinear potential; broken bonds keep the
+    // saturated energy and carry no force
+    if (!fs)
+      return std::make_pair(
+          getInfFn(r) * d_C *
+              (1. - std::exp(-d_beta * r * s * s)) / d_invFactor,
+          getInfFn(r) * 4. * s * d_C * d_beta *
+              std::exp(-d_beta * r * s * s) / d_invFactor);
+    else
+      return std::make_pair(getInfFn(r) * d_C / d_invFactor, 0.);
   };
 
   /*!
@@ -417,6 +450,21 @@ public:
    */
   double getSc(const double &r) const override {
     return d_rbar / std::sqrt(r);
+  };
+
+  /*!
+   * @brief Returns bond strain beyond which the bond is marked broken
+   *
+   * The force softens past the critical strain; the bond is marked broken
+   * only past factor_Sc times it, and never if breaking is reversible.
+   *
+   * @param r Reference length of bond
+   * @return strain Breaking strain
+   */
+  double getBreakSc(const double &r) const override {
+    if (!d_irrevBondBreak)
+      return std::numeric_limits<double>::max();
+    return d_factorSc * getSc(r);
   };
 
   /*!
@@ -471,13 +519,13 @@ public:
     // get moment of influence function
     double M = getMoment(dim);
 
-    // compute peridynamic parameters
+    // inverse of computeParameters
     if (dim == 2) {
       data.d_Gc = 4. * M * d_C / M_PI;
-      data.d_lambda = d_C * M * d_beta / 4.;
+      data.d_lambda = d_C * M * d_beta / 2.;
     } else if (dim == 3) {
       data.d_Gc = 3. * M * d_C / 2.;
-      data.d_lambda = d_C * M * d_beta / 5.;
+      data.d_lambda = 2. * d_C * M * d_beta / 5.;
     }
     data.d_mu = data.d_lambda;
     data.d_G = data.d_lambda;
@@ -546,8 +594,15 @@ private:
     // Need following elastic and fracture properties
     // 1. E or K
     // 2. Gc or KIc
-    // For bond-based, Poisson's ratio is fixed to 1/4
+    // For bond-based, Poisson's ratio is fixed to 1/4, so 2D must be plane
+    // strain (Lipton 2016; Jha 2025, sec. 7.2).
     //
+    if (dim == 2 && !is_plane_strain) {
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: RNP calibration needs nu = 1/4, which in 2D means plane "
+             "strain. Set Is_Plane_Strain = true.\n");
+    }
     if (util::isLess(deck.d_matData.d_E, 0.) &&
         util::isLess(deck.d_matData.d_K, 0.)) {
       throw std::runtime_error(
@@ -583,6 +638,10 @@ private:
     }
 
     // set Poisson's ratio to 1/4
+    if (util::isGreater(deck.d_matData.d_nu, 0.) &&
+        std::abs(deck.d_matData.d_nu - 0.25) > 1.0e-12)
+      std::cout << "Warning: RNP bond-based model fixes nu = 1/4; ignoring "
+                   "nu = " << deck.d_matData.d_nu << ".\n";
     deck.d_matData.d_nu = 0.25;
 
     // compute E if not provided or K if not provided
@@ -612,13 +671,15 @@ private:
     // get moment of influence function
     double M = getMoment(dim);
 
-    // compute peridynamic parameters
+    // Small strain gives lambda = mu = C beta M / 2 (2D) and 2 C beta M / 5
+    // (3D); Gc = 4 C M / pi (2D) and 3 C M / 2 (3D). Jha 2025 eq. 83 takes
+    // Lipton's lambda, which is half the physical one (Lipton 2014, eq. 3.10).
     if (dim == 2) {
       d_C = M_PI * deck.d_matData.d_Gc / (4. * M);
-      d_beta = 4. * deck.d_matData.d_lambda / (d_C * M);
+      d_beta = 2. * deck.d_matData.d_lambda / (d_C * M);
     } else if (dim == 3) {
       d_C = 2. * deck.d_matData.d_Gc / (3. * M);
-      d_beta = 5. * deck.d_matData.d_lambda / (d_C * M);
+      d_beta = 5. * deck.d_matData.d_lambda / (2. * d_C * M);
     }
 
     d_rbar = std::sqrt(0.5 / d_beta);
@@ -678,7 +739,7 @@ public:
    */
   PmbMaterial(inp::MaterialDeck &deck, const size_t &dim, const double &horizon)
       : Material("PMBBond"), d_horizon(horizon), d_density(deck.d_density),
-        d_c(0.), d_s0(0.) {
+        d_c(0.), d_s0(0.), d_Jscale(1.) {
 
     // set global fields
     if (dimension != dim)
@@ -729,6 +790,11 @@ public:
   /*!
    * @brief Returns energy and force between bond due to pairwise interaction
    *
+   * Micropotential \f$ w = \frac{1}{2} c s^2 r \f$ and pair force
+   * \f$ c s \f$ (Silling and Askari 2005), both times \f$ J(r/\delta) \f$.
+   * The returned energy is the bond's share of the strain energy density at
+   * x, \f$ W(x) = \frac{1}{2} \int w \, dy \f$, i.e. \f$ w/2 \f$.
+   *
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
@@ -740,7 +806,7 @@ public:
                                       const bool &break_bonds) const override {
 
     if (!break_bonds)
-      return std::make_pair(getInfFn(r) * 0.5 * d_c * s *
+      return std::make_pair(getInfFn(r) * 0.25 * d_c * s *
                                 s * r,
                             getInfFn(r) * d_c * s);
 
@@ -752,12 +818,12 @@ public:
     // if bond is not fractured, return energy and force from nonlinear
     // potential otherwise return energy of fractured bond, and zero force
     if (!fs)
-      return std::make_pair(getInfFn(r) * 0.5 * d_c * s *
+      return std::make_pair(getInfFn(r) * 0.25 * d_c * s *
                                 s * r,
                             getInfFn(r) * d_c * s);
     else
       return std::make_pair(
-          getInfFn(r) * 0.5 * d_c * d_s0 * d_s0 * r, 0.);
+          getInfFn(r) * 0.25 * d_c * d_s0 * d_s0 * r, 0.);
   };
 
   /*!
@@ -853,30 +919,22 @@ public:
   inp::MatData computeMaterialProperties(const size_t &dim) const override {
 
     auto data = inp::MatData();
-    data.d_nu = 0.25; // bond-based PMB (Trask / Emmrich)
+    data.d_nu = (dim == 2 && !is_plane_strain) ? 1. / 3. : 0.25;
 
+    // inverse of computeParameters, with c for J = 1
     const double h = d_horizon;
-    // Invert assuming J≡1 in the stored c (caller already divided by J_scale).
+    const double c = d_c * d_Jscale;
     if (dim == 2) {
-      // c = 72 κ / (5 π δ³)  ⇒  κ = 5 π δ³ c / 72
-      data.d_K = 5.0 * M_PI * std::pow(h, 3.0) * d_c / 72.0;
-      data.d_E = data.toE(data.d_K, data.d_nu);
-      data.d_G = data.toGE(data.d_E, data.d_nu);
-      const double dens =
-          (6.0 * data.d_G / M_PI +
-           16.0 * (data.d_K - 2.0 * data.d_G) / (9.0 * M_PI * M_PI)) *
-          h;
-      data.d_Gc = d_s0 * d_s0 * dens;
+      data.d_E = is_plane_strain ? 5. * M_PI * std::pow(h, 3) * c / 48.
+                                 : M_PI * std::pow(h, 3) * c / 9.;
+      data.d_K = data.toK(data.d_E, data.d_nu);
+      data.d_Gc = c * d_s0 * d_s0 * std::pow(h, 4) / 4.;
     } else if (dim == 3) {
-      data.d_K = d_c * (M_PI * std::pow(h, 4.0)) / 18.0;
+      data.d_K = M_PI * std::pow(h, 4) * c / 18.;
       data.d_E = data.toE(data.d_K, data.d_nu);
-      data.d_G = data.toGE(data.d_E, data.d_nu);
-      const double dens =
-          (3.0 * data.d_G +
-           std::pow(3.0 / 4.0, 4) * (data.d_K - 5.0 * data.d_G / 3.0)) *
-          h;
-      data.d_Gc = d_s0 * d_s0 * dens;
+      data.d_Gc = M_PI * c * d_s0 * d_s0 * std::pow(h, 5) / 10.;
     }
+    data.d_G = data.toGE(data.d_E, data.d_nu);
     data.d_lambda = data.toLambdaE(data.d_E, data.d_nu);
     data.d_mu = data.d_G;
     data.d_KIc = data.toKIc(data.d_Gc, data.d_nu, data.d_E);
@@ -963,10 +1021,16 @@ private:
       std::cout << "Warning: Both Gc and KIc provided; selecting Gc.\n";
     }
 
-    // Bond-based PMB locks ν=1/4 (Silling–Askari / Emmrich / Trask).
-    deck.d_matData.d_nu = 0.25;
+    // Bond-based PMB fixes nu: 1/4 in 3D and plane strain, 1/3 in plane
+    // stress. E is matched.
+    const double nu_pmb = (dim == 2 && !is_plane_strain) ? 1. / 3. : 0.25;
+    if (util::isGreater(deck.d_matData.d_nu, 0.) &&
+        std::abs(deck.d_matData.d_nu - nu_pmb) > 1.0e-12)
+      std::cout << "Warning: PMB bond-based model fixes nu = " << nu_pmb
+                << "; ignoring nu = " << deck.d_matData.d_nu << ".\n";
+    deck.d_matData.d_nu = nu_pmb;
 
-    // Prefer E; else recover E from K with locked ν.
+    // Prefer E; else recover E from K with the fixed nu.
     if (deck.d_matData.d_E < 0. && deck.d_matData.d_K > 0.)
       deck.d_matData.d_E =
           deck.d_matData.toE(deck.d_matData.d_K, deck.d_matData.d_nu);
@@ -988,52 +1052,41 @@ private:
         deck.d_matData.toGE(deck.d_matData.d_E, deck.d_matData.d_nu);
     deck.d_matData.d_mu = deck.d_matData.d_G;
 
-    // Micromodulus c and critical stretch s0.
-    // Force: f = J(r/δ) * c * s. Literature c assumes J≡1 (Trask/Emmrich).
-    // ConstInfluenceFn default a0=dim+1 → scale c /= a0 (or set Parameters=[1]).
-    const double Gc = deck.d_matData.d_Gc;
-    const double h = d_horizon;
-    const double kappa = deck.d_matData.d_K;
-    const double mu = deck.d_matData.d_G;
-
-    double J_scale = 1.0;
-    if (deck.d_influenceFnType == 0) {
-      J_scale = deck.d_influenceFnParams.empty() ? double(dim + 1)
-                                                 : deck.d_influenceFnParams[0];
-    } else if (deck.d_influenceFnType == 1 || deck.d_influenceFnType == 2) {
-      J_scale = getMoment(0);
-      std::cout << "Warning: PMB non-constant influence: scaling c by M0="
-                << J_scale
-                << ". For Trask/Silling match use Influence Type 0, "
-                   "Parameters=[1].\n";
+    // The closed forms for c and s0 hold for a constant influence function.
+    if (deck.d_influenceFnType != 0) {
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: PMB parameters from E and Gc need a constant influence "
+             "function. Set Influence_Function Type = 0.\n");
     }
-    if (!(J_scale > 0.)) {
+    d_Jscale = deck.d_influenceFnParams.empty() ? double(dim + 1)
+                                                : deck.d_influenceFnParams[0];
+    if (!(d_Jscale > 0.)) {
       throw std::runtime_error(
           util::io::Msg()
           << "Error: PMB influence scale must be > 0.\n");
     }
 
+    // c and s0 for J = 1: Silling and Askari 2005 (3D), Ha and Bobaru 2010
+    // (2D plane stress); plane strain uses the same energy match with
+    // nu = 1/4. Then J = a0 is absorbed into c.
+    const double Gc = deck.d_matData.d_Gc;
+    const double E = deck.d_matData.d_E;
+    const double h = d_horizon;
     if (dim == 2) {
-      // Trask 2019 / Emmrich: c = 72κ/(5πδ³), s0 = Madenci 2D density
-      d_c = 72.0 * kappa / (5.0 * M_PI * std::pow(h, 3.0));
-      const double dens =
-          (6.0 * mu / M_PI +
-           16.0 * (kappa - 2.0 * mu) / (9.0 * M_PI * M_PI)) *
-          h;
-      d_s0 = std::sqrt(Gc / dens);
+      d_c = is_plane_strain ? 48. * E / (5. * M_PI * std::pow(h, 3))
+                            : 9. * E / (M_PI * std::pow(h, 3));
+      d_s0 = std::sqrt(4. * Gc / (d_c * std::pow(h, 4)));
     } else if (dim == 3) {
-      // Trask / Silling–Askari: c = 18κ/(πδ⁴), s0 = Madenci 3D density
-      d_c = 18.0 * kappa / (M_PI * std::pow(h, 4.0));
-      const double dens =
-          (3.0 * mu + std::pow(3.0 / 4.0, 4) * (kappa - 5.0 * mu / 3.0)) * h;
-      d_s0 = std::sqrt(Gc / dens);
+      d_c = 18. * deck.d_matData.d_K / (M_PI * std::pow(h, 4));
+      d_s0 = std::sqrt(10. * Gc / (M_PI * d_c * std::pow(h, 5)));
     } else {
       throw std::runtime_error(
           util::io::Msg()
           << "Error: PMB computeParameters: unsupported dim=" << dim
           << "\n");
     }
-    d_c /= J_scale;
+    d_c /= d_Jscale;
   };
 
 private:
@@ -1048,11 +1101,14 @@ private:
    */
   /**@{*/
 
-  /*! @brief Parameter C */
+  /*! @brief Micromodulus c (divided by the constant influence value) */
   double d_c;
 
-  /*! @brief Parameter \f$ \beta \f$ */
+  /*! @brief Critical stretch */
   double d_s0;
+
+  /*! @brief Constant influence value a0 that c was divided by */
+  double d_Jscale;
 
   /** @}*/
 };
@@ -1381,7 +1437,8 @@ public:
    */
   PdState(inp::MaterialDeck &deck, const size_t &dim, const double &horizon)
       : Material("PDState"), d_horizon(horizon), d_density(deck.d_density),
-        d_K(0.), d_G(0.), d_s0(0.) {
+        d_K(0.), d_G(0.), d_kappa(0.), d_s0(0.), d_dim(double(dim)),
+        d_alphaFactor(dim == 2 ? 8. : 15.) {
 
     // set global fields
     if (dimension != dim)
@@ -1421,6 +1478,7 @@ public:
       d_K = deck.d_bondPotentialParams[0];
       d_G = deck.d_bondPotentialParams[1];
       d_s0 = deck.d_bondPotentialParams[2];
+      d_kappa = getModelBulkModulus(dim, is_plane_strain, d_K, d_G);
     }
   };
 
@@ -1449,6 +1507,14 @@ public:
   /*!
    * @brief Returns energy and force between bond due to state-based model
    *
+   * Linear peridynamic solid in dimension d (Silling 2010 for 3D; Yang et
+   * al. 2024, JMPS 191, eqs. 5-11 for 2D):
+   * \f$ t = J [ r \theta (d \kappa / m - \alpha / d) + \alpha e ] \f$ with
+   * \f$ \alpha = d(d+2) G / m \f$ and \f$ e^d = e - \theta r / d \f$.
+   * The returned energy is the deviatoric part at x,
+   * \f$ \frac{\alpha}{2} J (e^d)^2 \f$; the dilatational part is
+   * getDilatationEnergyDensity().
+   *
    * @param r Reference (initial) bond length
    * @param s Bond strain
    * @param fs Bond fracture state
@@ -1466,10 +1532,22 @@ public:
     double J = getInfFn(r);
     double change_length = s * r;
 
-    double alpha = 15. * d_G / mx;
-    double factor = (3. * d_K / mx) - alpha / 3.;
+    double alpha = d_alphaFactor * d_G / mx;
+    double factor = (d_dim * d_kappa / mx) - alpha / d_dim;
+    double e_dev = change_length - thetax * r / d_dim;
 
-    return {0., J * (r * thetax * factor + change_length * alpha)};
+    return {0.5 * alpha * J * e_dev * e_dev,
+            J * (r * thetax * factor + change_length * alpha)};
+  };
+
+  /*!
+   * @brief Returns the dilatational part of the strain energy density
+   *
+   * @param thetax Dilatation at node
+   * @return energy \f$ \frac{1}{2} \kappa \theta^2 \f$
+   */
+  double getDilatationEnergyDensity(const double &thetax) const override {
+    return 0.5 * d_kappa * thetax * thetax;
   };
 
   /*!
@@ -1562,17 +1640,7 @@ public:
     data.d_mu = d_G;
 
     // get Gc from s0 (inverse of computeParameters)
-    double dens = 0.;
-    if (dim == 2) {
-      // Madenci & Oterkus OSB 2D (plane stress form used as default)
-      dens = (6.0 * d_G / M_PI +
-              16.0 * (d_K - 2.0 * d_G) / (9.0 * M_PI * M_PI)) *
-             d_horizon;
-    } else {
-      dens = (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) *
-             d_horizon;
-    }
-    data.d_Gc = d_s0 * d_s0 * dens;
+    data.d_Gc = d_s0 * d_s0 * getCriticalStretchDensity(dim);
 
     // KIc
     data.d_KIc = data.toKIc(
@@ -1747,24 +1815,40 @@ private:
     // compute peridynamic parameters
     d_K = deck.d_matData.d_K;
     d_G = deck.d_matData.d_G;
+    d_kappa = getModelBulkModulus(dim, is_plane_strain, d_K, d_G);
 
-    // Critical stretch: OSB energy release (Madenci & Oterkus).
-    // Density factor scales as δ¹ in both 2D and 3D, but coefficients differ.
-    double dens = 0.;
-    if (dim == 2) {
-      dens = (6.0 * d_G / M_PI +
-              16.0 * (d_K - 2.0 * d_G) / (9.0 * M_PI * M_PI)) *
-             d_horizon;
-    } else if (dim == 3) {
-      dens = (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) *
-             d_horizon;
-    } else {
+    // The closed form for s0 holds for a constant influence function.
+    if (deck.d_influenceFnType != 0) {
+      throw std::runtime_error(
+          util::io::Msg()
+          << "Error: PDState critical stretch from Gc needs a constant "
+             "influence function. Set Influence_Function Type = 0.\n");
+    }
+    if (dim != 2 && dim != 3) {
       throw std::runtime_error(
           util::io::Msg()
           << "Error: PdState computeParameters: unsupported dim=" << dim
           << "\n");
     }
-    d_s0 = std::sqrt(deck.d_matData.d_Gc / dens);
+    d_s0 = std::sqrt(deck.d_matData.d_Gc / getCriticalStretchDensity(dim));
+  };
+
+  /*!
+   * @brief Returns Gc / s0^2 for the state-based model
+   *
+   * Madenci and Oterkus 2014 (constant influence function), with the model
+   * bulk modulus in 2D.
+   *
+   * @param dim Dimension
+   * @return value Gc / s0^2
+   */
+  double getCriticalStretchDensity(const size_t &dim) const {
+    if (dim == 2)
+      return (6.0 * d_G / M_PI +
+              16.0 * (d_kappa - 2.0 * d_G) / (9.0 * M_PI * M_PI)) *
+             d_horizon;
+    return (3. * d_G + std::pow(3. / 4., 4) * (d_K - 5. * d_G / 3.)) *
+           d_horizon;
   };
 
 private:
@@ -1785,8 +1869,17 @@ private:
   /*! @brief Shear modulus */
   double d_G;
 
+  /*! @brief Bulk modulus used by the model (K in 3D, in-plane in 2D) */
+  double d_kappa;
+
   /*! @brief Critical stretch */
   double d_s0;
+
+  /*! @brief Dimension, as a double */
+  double d_dim;
+
+  /*! @brief d(d+2): 15 in 3D, 8 in 2D */
+  double d_alphaFactor;
 
   /** @}*/
 };

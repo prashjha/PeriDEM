@@ -45,7 +45,7 @@ void pd::computeForces(data::ModelData &data) {
 
     taskflow.for_each_index(
       (std::size_t) 0, data.d_fPdCompNodes.size(), (std::size_t) 1,
-      [&data, abs_stretch_break](std::size_t II) {
+      [&data, abs_stretch_break, dim](std::size_t II) {
         auto i = data.d_fPdCompNodes[II];
 
         const auto rho = data.getDensity(i);
@@ -112,7 +112,8 @@ void pd::computeForces(data::ModelData &data) {
             k += 1;
           } // loop over neighbors
 
-          data.d_thetaX[i] = 3. * theta / m;
+          // dilatation: 3/m in 3D, 2/m in 2D (Yang et al. 2024, eqs. 8-9)
+          data.d_thetaX[i] = double(dim) * theta / m;
         } // if it is state-based
       } // loop over nodes
     ); // for_each
@@ -122,6 +123,10 @@ void pd::computeForces(data::ModelData &data) {
     // Ghost nodes need owner dilatations before the force pass.
     pd::exchangeGhostTheta(data);
   }
+
+  // strain energy density per node
+  if (data.d_e.size() != data.d_x.size())
+    data.d_e.resize(data.d_x.size(), 0.f);
 
   // compute the internal forces
   tf::Executor executor(util::parallel::getNThreads());
@@ -135,6 +140,7 @@ void pd::computeForces(data::ModelData &data) {
       // local variable to hold force
       util::Point force_i = util::Point();
       double scalar_f = 0.;
+      double energy_i = 0.;
 
       // for damage
       float Zi = 0.;
@@ -194,6 +200,7 @@ void pd::computeForces(data::ModelData &data) {
 
               // compute the contribution of bond force to force at i
               scalar_f = (ef_i.second + ef_j.second) * volj;
+              energy_i += ef_i.first * volj;
 
               force_i += scalar_f * pi->d_material_p->getBondForceDirection(
                                         xj - xi, uj - ui);
@@ -203,7 +210,7 @@ void pd::computeForces(data::ModelData &data) {
               // Bond-based materials (e.g. PMB) historically broke inside
               // getBondEF using |s|>Sc. Honor Model.Bond_Break here instead:
               // tension (default, literature PMB) vs absolute_stretch.
-              const double Sc = pi->d_material_p->getSc(rji);
+              const double Sc = pi->d_material_p->getBreakSc(rji);
               const bool broke = abs_stretch_break
                                      ? util::isGreater(std::abs(Sji), Sc + 1.0e-10)
                                      : util::isGreater(Sji, Sc + 1.0e-10);
@@ -215,6 +222,7 @@ void pd::computeForces(data::ModelData &data) {
                 auto ef =
                     pi->d_material_p->getBondEF(rji, Sji, fs, /*break_bonds=*/false);
                 scalar_f = ef.second * volj;
+                energy_i += ef.first * volj;
                 force_i += scalar_f * pi->d_material_p->getBondForceDirection(
                                           xj - xi, uj - ui);
               } else {
@@ -251,6 +259,9 @@ void pd::computeForces(data::ModelData &data) {
       // update force (we remove any force from
       // previous steps and add peridynamics force)
       data.d_f[i] = force_i;
+      if (pi->d_material_p->isStateActive())
+        energy_i += pi->d_material_p->getDilatationEnergyDensity(thetai);
+      data.d_e[i] = static_cast<float>(energy_i);
 
       data.d_Z[i] = Zi;
       if (!data.d_phi.empty())
@@ -265,4 +276,9 @@ void pd::computeForces(data::ModelData &data) {
 
   executor.run(taskflow).get();
 
+  // total strain energy over the nodes computed here
+  double te = 0.;
+  for (auto i : data.d_fPdCompNodes)
+    te += double(data.d_e[i]) * data.d_vol[i];
+  data.d_te = static_cast<float>(te);
 }

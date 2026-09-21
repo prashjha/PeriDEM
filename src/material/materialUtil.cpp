@@ -126,7 +126,8 @@ double computeStateThetaxI(size_t i, const std::vector<util::Point> &nodes,
     k += 1;
   }
 
-  return 3. * theta / m;
+  // 3/m in 3D, 2/m in 2D (Yang et al. 2024, eqs. 8-9)
+  return double(material->getDimension()) * theta / m;
 }
 
 double computeHydrostaticStrainI(size_t i, const std::vector<util::Point> &nodes,
