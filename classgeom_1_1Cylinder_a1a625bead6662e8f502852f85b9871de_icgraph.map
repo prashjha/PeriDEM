@@ -1,0 +1,18 @@
+<map id="geom::Cylinder::box" name="geom::Cylinder::box">
+<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="441,145,580,171"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="549,136,539,127,511,124,488,126,475,131,473,136,479,144,475,147,468,137,472,127,486,121,511,119,541,122,553,131"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Cylinder.html#abba42a585223cfb07fd7845764ab53d4" title="Checks if box intersects this object." alt="" coords="196,5,393,31"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="490,136,448,90,421,66,392,46,363,33,365,28,395,41,425,62,452,86,494,133"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Cylinder.html#a5672bb7ed910b83d503e807d8224ead4" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="209,55,380,95"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="469,142,392,110,359,98,361,93,394,105,471,137"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Cylinder.html#a3b68e6b6f9bbe82e6452801b2cce2cdf" title="Checks if box is completely inside." alt="" coords="213,120,376,145"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="428,151,376,145,376,140,428,146"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Cylinder.html#acddbd9226293203d2535a646de6aab5b" title="Checks if box is within given distance of this object." alt="" coords="217,169,373,195"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="428,170,373,176,372,171,427,165"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Cylinder.html#ad3fef1ac1f63e253f10e44c6b0164723" title="Checks if box is outside of the object." alt="" coords="208,219,381,244"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="470,179,394,209,351,221,350,216,392,203,468,174"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Cylinder.html#a9f2eb2dde68ae9548295368e07dc86bd" title="Returns the string containing printable information about the object." alt="" coords="215,268,375,293"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="490,183,448,221,395,258,362,270,360,265,392,253,445,217,487,179"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Cylinder.html#a0296de23686b281c58e2652a451a79d5" title="Prints the information about the object." alt="" coords="5,268,148,293"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="201,283,148,283,148,278,201,278"/>
+</map>

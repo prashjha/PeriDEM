@@ -1,0 +1,17 @@
+<map id="data::setupQuadratureData" name="data::setupQuadratureData">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,81,184,107"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1methods.html#ab21bec324f7d53e91378acc142303fb3" title="Returns true if tag is found in the list of tags." alt="" coords="232,49,400,75"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,79,218,73,219,79,183,84"/>
+<area shape="rect" id="Node000006" href="$namespaceanonymous__namespace_02quadratureData_8cpp_03.html#ac25ce9a30a41e6460d85f7ead98cec94" title=" " alt="" coords="235,99,397,153"/>
+<area shape="poly" id="edge7_Node000001_Node000006" title=" " alt="" coords="183,104,221,110,221,115,183,109"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#a86460acadab9a2e99a92121c0213e444" title="Find if data is in the list." alt="" coords="448,5,595,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="375,47,447,31,448,36,377,52"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="643,31,773,56"/>
+<area shape="poly" id="edge6_Node000002_Node000004" title=" " alt="" coords="400,55,629,44,629,50,401,61"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="595,25,629,30,629,35,594,31"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="821,31,984,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="774,49,808,50,808,55,774,55"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="821,37,787,37,787,32,821,32"/>
+<area shape="rect" id="Node000007" href="$namespacefe.html#a8e0456e8e217f363ab2695f17227f843" title=" " alt="" coords="487,113,556,139"/>
+<area shape="poly" id="edge8_Node000006_Node000007" title=" " alt="" coords="397,123,472,123,472,129,397,129"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="material::GaussianInfluenceFn" name="material::GaussianInfluenceFn">
+<area shape="rect" id="Node000001" title="A class to implement Gaussian influence function." alt="" coords="5,219,196,404"/>
+<area shape="rect" id="Node000002" href="$classmaterial_1_1BaseInfluenceFn.html" title="A base class for computing influence function." alt="" coords="17,5,184,171"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="103,184,103,218,98,218,98,184"/>
+</map>

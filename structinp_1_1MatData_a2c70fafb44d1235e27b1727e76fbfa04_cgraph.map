@@ -1,0 +1,9 @@
+<map id="inp::MatData::readFromJson" name="inp::MatData::readFromJson">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,193,56"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1MatData.html#a8613a56e403feb4cfb648ab1997f4c1d" title="Reads from json object." alt="" coords="241,5,377,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="193,29,227,25,228,30,194,35"/>
+<area shape="rect" id="Node000004" href="$namespaceinp.html#a2b2414a6c0b5dfc4139f030358c8dbf0" title="Reads every field of the table from the block." alt="" coords="256,55,363,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="194,51,243,57,242,62,193,57"/>
+<area shape="rect" id="Node000003" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="425,5,496,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,15,412,15,412,21,378,21"/>
+</map>

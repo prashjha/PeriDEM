@@ -1,0 +1,16 @@
+<map id="geom::ComplexGeomObject::transform" name="geom::ComplexGeomObject::transform">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,47,192,87"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1ComplexGeomObject.html#aa4f5033d796b67d794b4c00750661451" title="Computes the center of object." alt="" coords="240,47,427,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,65,226,65,226,70,192,70"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="290,48,287,38,294,28,310,23,333,21,361,24,376,31,373,36,359,29,333,26,311,28,297,33,292,39,295,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="518,5,618,31"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="426,45,504,29,505,34,427,50"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="487,55,649,80"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="427,65,473,65,473,70,427,70"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1ComplexGeomObject.html#a684c70a9d74e7e9a4448268ba38f4dec" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="475,129,661,169"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="393,85,497,122,496,127,391,90"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="709,55,840,80"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="649,73,696,73,696,79,649,79"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="709,62,663,61,663,56,709,56"/>
+<area shape="poly" id="edge8_Node000006_Node000006" title=" " alt="" coords="529,129,527,119,533,110,547,104,568,102,592,105,605,112,603,117,590,110,568,107,548,109,537,114,532,120,534,128"/>
+</map>

@@ -1,0 +1,5 @@
+<map id="geom::Ellipsoid::Ellipsoid" name="geom::Ellipsoid::Ellipsoid">
+<area shape="rect" id="Node000001" title="General orientation: same semi&#45;axes, rotation &#160;about unit axis (normalized internally; zero axis with..." alt="" coords="5,5,173,31"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="221,5,341,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,15,207,15,207,21,174,21"/>
+</map>

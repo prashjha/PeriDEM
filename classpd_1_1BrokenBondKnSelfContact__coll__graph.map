@@ -1,0 +1,5 @@
+<map id="pd::BrokenBondKnSelfContact" name="pd::BrokenBondKnSelfContact">
+<area shape="rect" id="Node000001" title="Default: Kn * volj * capped_gap / R along yji with gap = R &#45; Rc." alt="" coords="5,139,197,204"/>
+<area shape="rect" id="Node000002" href="$classpd_1_1SelfContact.html" title="Intra&#45;body force between nodes when the PD bond is inactive." alt="" coords="46,5,157,91"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="104,104,104,138,99,138,99,104"/>
+</map>

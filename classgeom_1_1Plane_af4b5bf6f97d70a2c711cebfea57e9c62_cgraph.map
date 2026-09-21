@@ -1,0 +1,9 @@
+<map id="geom::Plane::print" name="geom::Plane::print">
+<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,31,133,56"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Plane.html#a5c00d27d10fc1a0e4aedb964175dfcbe" title="Returns the string containing printable information about the object." alt="" coords="181,31,327,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="134,41,167,41,167,46,134,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of a given size." alt="" coords="381,5,495,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="327,31,367,25,368,30,327,36"/>
+<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Returns the string containing printable information about the object." alt="" coords="375,55,501,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="327,50,361,55,360,60,327,55"/>
+</map>

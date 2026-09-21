@@ -1,0 +1,25 @@
+<map id="geom::areBoxesNear" name="geom::areBoxesNear">
+<area shape="rect" id="Node000001" title="Checks if given two boxes are within given distance from each other." alt="" coords="243,252,388,277"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Triangle.html#aba72bc654035ea0c666f7abbb156f740" title="Checks if box is within given distance of this object." alt="" coords="23,5,177,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="305,239,291,196,268,143,236,89,216,65,193,44,174,33,177,28,196,40,220,61,240,86,273,141,296,194,310,238"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Square.html#a1cf1991035f65cfa82c3f523aba78382" title="Checks if box is within given distance of this object." alt="" coords="25,55,175,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="301,241,285,207,261,167,230,127,193,94,172,82,174,78,196,89,234,123,266,164,290,204,306,238"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Rectangle.html#a65fa2dac2d31a94813553a4f517dc0b6" title="Checks if box is within given distance of this object." alt="" coords="17,104,183,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="295,242,253,192,225,165,193,143,168,132,170,127,196,138,228,161,257,188,299,239"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Hexagon.html#a2f735578d58472d217c825f7ef955adb" title="Checks if box is within given distance of this object." alt="" coords="20,153,180,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="285,246,243,218,194,192,161,181,163,176,196,188,245,214,288,241"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Drum2D.html#a8cfd9ff8b98ece0914e28704bbec9e37" title="Checks if box is within given distance of this object." alt="" coords="21,203,179,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="246,252,156,231,157,225,247,246"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Cube.html#acf8a3faa60ab0874143bf4ced00140d4" title="Checks if box is within given distance of this object." alt="" coords="31,252,169,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="229,267,170,267,170,262,229,262"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Cuboid.html#aa6d9a5d8301d55eeca37705d0e123747" title="Checks if box is within given distance of this object." alt="" coords="25,301,175,327"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="247,283,157,304,156,299,246,278"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Ellipsoid.html#a7093fbbc9327e83ee7a9890ba1f2c43a" title="Checks if box is within given distance of this object." alt="" coords="21,351,179,376"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="287,288,245,315,196,340,159,353,158,348,194,336,242,310,284,283"/>
+<area shape="rect" id="Node000010" href="$classgeom_1_1Cylinder.html#acddbd9226293203d2535a646de6aab5b" title="Checks if box is within given distance of this object." alt="" coords="22,400,178,425"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="299,290,256,341,228,367,196,390,168,402,165,397,193,385,224,363,252,337,295,287"/>
+<area shape="rect" id="Node000011" href="$classgeom_1_1OpenCuboidChannel3D.html#a23e7ef67971dd8b32ce4cf58f81d678b" title="Checks if box is within given distance of this object." alt="" coords="5,450,195,490"/>
+<area shape="poly" id="edge10_Node000001_Node000011" title=" " alt="" coords="305,291,264,364,233,404,196,439,174,452,171,448,193,435,229,400,259,361,300,289"/>
+<area shape="rect" id="Node000012" href="$classgeom_1_1OpenRectChannel2D.html#a61997e19889aa1ecc439cee9f9711557" title="Checks if box is within given distance of this object." alt="" coords="7,514,193,554"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="310,292,297,337,274,394,241,453,220,480,196,504,179,516,176,512,193,500,216,476,237,450,269,392,292,335,305,290"/>
+</map>

@@ -1,0 +1,7 @@
+<map id="util::doubleGaussian2d" name="util::doubleGaussian2d">
+<area shape="rect" id="Node000001" title="Compute sum of two gaussian function in 2&#45;d." alt="" coords="5,31,160,56"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a131469f79fbf47c5c0e8ef0e3701f036" title="Computes the distance between a given point from this point." alt="" coords="208,5,315,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,30,194,25,195,30,161,35"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a7d9f908b6b6183c833c54a85578d54a9" title="Compute gaussian function in 1&#45;d." alt="" coords="212,55,311,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="161,51,199,56,198,62,160,56"/>
+</map>

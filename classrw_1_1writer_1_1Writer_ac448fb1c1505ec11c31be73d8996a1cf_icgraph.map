@@ -1,0 +1,11 @@
+<map id="rw::writer::Writer::close" name="rw::writer::Writer::close">
+<area shape="rect" id="Node000001" title="Closes the file and store it to the hard disk." alt="" coords="889,13,1008,53"/>
+<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02particleMesh_8cpp_03.html#a7a6428c6f3f4b6b712ad738092f93196" title=" " alt="" coords="679,5,841,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="876,35,842,35,842,30,876,30"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen.html#ae60bdca385726662e396def3e46d7fa8" title="Build a reference&#45;particle mesh: file, uniform rectangle, or in&#45;process Gmsh." alt="" coords="428,20,631,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="665,35,631,35,631,30,665,30"/>
+<area shape="rect" id="Node000004" href="$namespaceparticle.html#a2bdc7a5bc215c50bd3acf8c5fa4e56bd" title="Build reference meshes from the particle deck (no placement)." alt="" coords="212,13,380,53"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="414,35,380,35,380,30,414,30"/>
+<area shape="rect" id="Node000005" href="$namespaceparticle.html#a4186fa1cb451f637da0180294b5a253f" title="Build refs then place particles according to the generation method." alt="" coords="5,20,164,45"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="198,35,164,35,164,30,198,30"/>
+</map>

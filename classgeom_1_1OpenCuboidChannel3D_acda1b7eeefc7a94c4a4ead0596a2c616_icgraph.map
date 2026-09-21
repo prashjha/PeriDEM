@@ -1,0 +1,12 @@
+<map id="geom::OpenCuboidChannel3D::box" name="geom::OpenCuboidChannel3D::box">
+<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="717,37,907,77"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="852,26,838,19,812,16,789,18,775,23,770,29,773,36,768,38,765,28,772,18,788,13,812,11,840,14,855,21"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenCuboidChannel3D.html#a23e7ef67971dd8b32ce4cf58f81d678b" title="Checks if box is within given distance of this object." alt="" coords="480,5,669,45"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="704,45,669,41,670,35,704,40"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1OpenCuboidChannel3D.html#a524cd76f1390a1ec178bb9cc7fe38fbc" title="Checks if point is within given distance of this object." alt="" coords="480,69,669,109"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="704,75,670,79,669,74,704,69"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1OpenCuboidChannel3D.html#aa479776e21ae3b493be23cc84869c700" title="Checks if point is within given distance of this object." alt="" coords="243,69,432,109"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="467,92,432,92,432,87,467,87"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1OpenCuboidChannel3D.html#ab2d665f55dfaf84c6e79f6aed20262af" title="Checks if point lies exactly on the boundary." alt="" coords="5,69,195,109"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="229,92,195,92,195,87,229,87"/>
+</map>
