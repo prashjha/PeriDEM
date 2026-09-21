@@ -138,7 +138,7 @@ def material(horizon: float, K: float, G: float, Gc: float) -> dict:
         "K": K,
         "G": G,
         "Gc": Gc,
-        "Influence_Function": {"Type": 1},
+        "Influence_Function": {"Type": 0},
     }
 
 

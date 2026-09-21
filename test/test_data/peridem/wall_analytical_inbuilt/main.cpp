@@ -122,7 +122,7 @@ json buildInputJson(const std::string &output_path,
            {"G", G},
            {"Gc", Gc},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   material["Set_2"] =
       inp::MaterialDeck::getExampleJson(
       json{{"Type", "PDState"},
@@ -133,7 +133,7 @@ json buildInputJson(const std::string &output_path,
            {"G", G},
            {"Gc", Gc},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
 
   json contact_base = inp::ContactPairDeck::getExampleJson(
           json{{"Contact_Radius_Factor", Rc_factor},

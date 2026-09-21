@@ -198,7 +198,7 @@ json getInputJson() {
            {"G", G1},
            {"Gc", Gc1},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
 
   // Material 2 (top particle)
   pMatJson["Set_2"] = inp::MaterialDeck::getExampleJson(
@@ -210,7 +210,7 @@ json getInputJson() {
            {"G", G2},
            {"Gc", Gc2},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
 
   pDeckJson["Material"] = pMatJson;
 

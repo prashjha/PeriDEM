@@ -123,7 +123,7 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
            {"G", G},
            {"Gc", Gc},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
 
   json root = {{"Model", model},
                {"Output", output},

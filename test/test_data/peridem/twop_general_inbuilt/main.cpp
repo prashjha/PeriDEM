@@ -182,7 +182,7 @@ json buildInputJson(const std::string &geomName, const std::string &output_path_
            {"G", G1},
            {"Gc", Gc1},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   pMatJson["Set_2"] = inp::MaterialDeck::getExampleJson(
       json{{"Type", "PDState"},
            {"Is_Plane_Strain", false},
@@ -192,7 +192,7 @@ json buildInputJson(const std::string &geomName, const std::string &output_path_
            {"G", G2},
            {"Gc", Gc2},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   pDeckJson["Material"] = pMatJson;
 
   auto pContactJson = inp::ParticleDeck::getParticleContactExampleJson(2);

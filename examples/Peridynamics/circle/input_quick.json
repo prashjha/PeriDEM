@@ -43,7 +43,7 @@
       "G": 129600.0,
       "Gc": 500.0,
       "Influence_Function": {
-        "Type": 1
+        "Type": 0
       }
     }
   },

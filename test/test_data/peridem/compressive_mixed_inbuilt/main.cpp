@@ -427,7 +427,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
            {"G", G_p},
            {"Gc", Gc_p},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   matRoot["Set_2"] =
       inp::MaterialDeck::getExampleJson(
       json{{"Type", "PDState"},
@@ -438,7 +438,7 @@ json buildInputJson(const std::string &output_path_for_deck, const std::filesyst
            {"G", G_wall},
            {"Gc", Gc_wall},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   pDeckJson["Material"] = matRoot;
 
   const double Kn_pp = KnFromBulk(K_p, K_p, horizon);

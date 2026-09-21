@@ -167,7 +167,7 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
            {"G", G_t},
            {"Gc", Gc_t},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   mat["Set_2"] =
       inp::MaterialDeck::getExampleJson(
       json{{"Type", "PDState"},
@@ -178,7 +178,7 @@ json buildInputJson(const std::string &output_path, const std::filesystem::path 
            {"G", G_e},
            {"Gc", Gc_e},
            {"Compute_From_Classical", true},
-           {"Influence_Function", json{{"Type", 1}}}});
+           {"Influence_Function", json{{"Type", 0}}}});
   pDeck["Material"] = mat;
 
   auto contact = inp::ParticleDeck::getParticleContactExampleJson(2);

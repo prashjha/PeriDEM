@@ -141,7 +141,7 @@
       "G": 12960000.0,
       "Gc": 50.0,
       "Influence_Function": {
-        "Type": 1
+        "Type": 0
       }
     },
     "Set_2": {
@@ -153,7 +153,7 @@
       "G": 12960000.0,
       "Gc": 50.0,
       "Influence_Function": {
-        "Type": 1
+        "Type": 0
       }
     }
   },
