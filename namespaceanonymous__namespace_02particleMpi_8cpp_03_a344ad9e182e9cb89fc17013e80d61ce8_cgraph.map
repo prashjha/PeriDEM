@@ -1,7 +1,0 @@
-<map id="anonymous_namespace{particleMpi::cpp}::packGrainKinematics" name="anonymous_namespace{particleMpi::cpp}::packGrainKinematics">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,30,168,85"/>
-<area shape="rect" id="Node000002" href="$classparticle_1_1BaseParticle.html#a8b1d753ad34aec57ca5f5eae0bb412a3" title="Get global id of node given the local id of node in this object." alt="" coords="216,5,363,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,42,202,36,202,42,169,47"/>
-<area shape="rect" id="Node000003" href="$classparticle_1_1BaseParticle.html#a40cf9f658ae9988d90acbc6dcda9bda0" title="Get the number of nodes." alt="" coords="216,69,363,109"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="169,68,202,73,202,78,168,73"/>
-</map>

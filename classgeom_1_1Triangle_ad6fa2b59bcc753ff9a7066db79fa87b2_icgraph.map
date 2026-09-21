@@ -1,5 +1,0 @@
-<map id="geom::Triangle::printStr" name="geom::Triangle::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="195,5,353,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Triangle.html#a31820f99b2c9b4cf22ddb41214044637" title="Prints the information about the object." alt="" coords="5,5,147,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="181,21,147,21,147,15,181,15"/>
-</map>

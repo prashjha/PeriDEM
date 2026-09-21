@@ -1,5 +1,0 @@
-<map id="geom::Ellipsoid::box" name="geom::Ellipsoid::box">
-<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="5,5,145,31"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#ad8236ad8cc776188c0e4f81536acb257" title="Row&#45;major 3×3 rotation &#160;from ellipsoid axis–angle (identity if )." alt="" coords="193,5,388,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="146,15,180,15,180,21,146,21"/>
-</map>

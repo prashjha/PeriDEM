@@ -1,9 +1,0 @@
-<map id="PeriDEMModel::computeForces" name="PeriDEMModel::computeForces">
-<area shape="rect" id="Node000001" title=" " alt="" coords="315,35,523,60"/>
-<area shape="rect" id="Node000002" href="$test_2test__data_2peridem_2notched__impact__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="160,5,211,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="304,36,210,24,211,18,304,30"/>
-<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a0735acceb729ccc08090a500d9351d24" title=" " alt="" coords="104,55,267,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="301,64,267,68,266,63,301,59"/>
-<area shape="rect" id="Node000004" href="$test_2test__data_2peridem_2self__contact__mode1__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,63,56,88"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="91,78,56,78,56,73,91,73"/>
-</map>

@@ -1,7 +1,0 @@
-<map id="geom::isNumberOfParamForComplexGeometryValid" name="geom::isNumberOfParamForComplexGeometryValid">
-<area shape="rect" id="Node000001" title="Ascertain if number of parameters are correct for the given geometry." alt="" coords="260,35,449,75"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#a9de1c439ef523ba2dd8d3c6e9f4f891f" title="Check parameter data for validity." alt="" coords="5,5,212,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="246,44,212,40,212,35,247,39"/>
-<area shape="rect" id="Node000003" href="$namespacegeom.html#a74e22da44b172f722d0d13107bb3c722" title="Create geometrical object from the given data." alt="" coords="13,70,204,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="247,70,205,74,204,69,246,64"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="geom::ParticleTransform::print" name="geom::ParticleTransform::print">
-<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,23,171,63"/>
-<area shape="rect" id="Node000002" href="$structgeom_1_1ParticleTransform.html#ae8c427e9b4becf60d524f279ebdbeb6b" title="Returns the string containing printable information about the object." alt="" coords="219,23,384,63"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,41,205,41,205,46,171,46"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of a given size." alt="" coords="439,5,552,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="384,30,425,24,425,30,385,35"/>
-<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Returns the string containing printable information about the object." alt="" coords="432,55,559,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="385,51,419,55,418,60,384,56"/>
-</map>

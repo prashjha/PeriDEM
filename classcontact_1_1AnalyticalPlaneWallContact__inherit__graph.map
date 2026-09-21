@@ -1,5 +1,0 @@
-<map id="contact::AnalyticalPlaneWallContact" name="contact::AnalyticalPlaneWallContact">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,159,172,259"/>
-<area shape="rect" id="Node000002" href="$classcontact_1_1WallContact.html" title="Optional analytical wall&#45;contact path (Model.Wall_Contact)." alt="" coords="5,5,172,111"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="91,124,91,159,86,159,86,124"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="inp::ModelDeck::getExampleJson" name="inp::ModelDeck::getExampleJson">
-<area shape="rect" id="Node000001" title="Returns the block with the given fields set." alt="" coords="5,31,224,56"/>
-<area shape="rect" id="Node000002" href="$namespaceinp.html#a97299f2de7a12cc2ef863130972e25ed" title="The default block with the given keys replaced." alt="" coords="292,5,404,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,29,278,23,279,28,225,34"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1ModelDeck.html#a5a90edf20bebeef96f6e6a7531dc233e" title="Returns example JSON object for ModelDeck configuration." alt="" coords="272,55,424,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="225,52,259,56,258,61,224,57"/>
-<area shape="rect" id="Node000004" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="472,55,543,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="424,65,458,65,458,70,424,70"/>
-</map>

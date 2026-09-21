@@ -1,8 +1,0 @@
-<map id="anonymous_namespace{main::cpp}::nodeDamageForFit" name="anonymous_namespace{main::cpp}::nodeDamageForFit">
-<area shape="rect" id="Node000001" title=" " alt="" coords="343,35,549,75"/>
-<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02main_8cpp_03.html#aadf0be3285ad484a9724f4a15893d095" title=" " alt="" coords="104,5,295,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="329,43,295,39,295,34,330,38"/>
-<area shape="rect" id="Node000003" href="$test_2test__data_2peridem_2notched__impact__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,42,56,67"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="329,60,104,60,57,58,57,53,104,55,329,54"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="91,47,57,53,56,48,90,42"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="geom::Hexagon::isNearBoundary" name="geom::Hexagon::isNearBoundary">
-<area shape="rect" id="Node000001" title="cons" alt="" coords="255,5,469,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#a9d73b1e82c9b4958aa3273b97a5e65e5" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,207,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="241,21,207,21,207,15,241,15"/>
-</map>
