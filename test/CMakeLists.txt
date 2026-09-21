@@ -36,6 +36,7 @@ add_subdirectory(test_data/peridem/wall_analytical_inbuilt)
 add_subdirectory(test_data/peridem/notched_impact_inbuilt)
 add_subdirectory(test_data/peridem/jha2021_comp_n50)
 add_subdirectory(test_data/peridem/mpi_identity_twop_wall)
+add_subdirectory(test_data/peridem/pd_material_calibration)
 
 # ---------------------------------------------------------------------------
 # CI / environment
@@ -412,3 +413,46 @@ add_test(NAME test_peridem_compressive_mixed
   WORKING_DIRECTORY ${Test_Data_Path}/peridem/compressive_mixed
 )
 set_tests_properties(test_peridem_compressive_mixed PROPERTIES LABELS "PeriDEM;Examples")
+
+# PD material calibration: each model must reproduce the elastic constants it
+# was built from (2D plane stress / plane strain and 3D). State-based error is
+# grid anisotropy; bond-based error is horizon quadrature, so RNP is also
+# checked against PMB, which must agree to round-off.
+set(PD_CALIB_EXE Test_PeriDEM_pd_material_calibration)
+set(PD_CALIB_CASES
+  "PDState_2d_pstress|-model PDState -dim 2 -planeStrain 0 -m 12 -h 0.0066666667 -tol 0.02"
+  "PDState_2d_pstrain|-model PDState -dim 2 -planeStrain 1 -m 12 -h 0.0066666667 -tol 0.02"
+  "PDState_3d|-model PDState -dim 3 -m 4 -h 0.05 -L 1.6 -tol 0.05"
+  "PMB_2d_pstress|-model PMBBond -dim 2 -planeStrain 0 -m 16 -h 0.005 -tol 0.05"
+  "PMB_2d_pstrain|-model PMBBond -dim 2 -planeStrain 1 -m 16 -h 0.005 -tol 0.05"
+  "RNP_vs_PMB_2d_pstrain|-model RNPBond -compareModel PMBBond -dim 2 -planeStrain 1 -m 4 -h 0.02 -tol 1e-4"
+  "RNP_vs_PMB_3d|-model RNPBond -compareModel PMBBond -dim 3 -m 4 -h 0.05 -L 1.6 -tol 1e-4")
+foreach(case ${PD_CALIB_CASES})
+  string(REPLACE "|" ";" parts "${case}")
+  list(GET parts 0 name)
+  list(GET parts 1 args)
+  separate_arguments(args)
+  add_test(NAME Test_PeriDEM_pd_calibration_${name}
+    COMMAND ${PD_CALIB_EXE} ${args} -nThreads 4
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:${PD_CALIB_EXE}>)
+  set_tests_properties(Test_PeriDEM_pd_calibration_${name} PROPERTIES
+    LABELS "PeriDEM;Material")
+endforeach()
+
+# Input checks: calibrations that do not exist must stop with a clear error.
+set(PD_INPUT_CHECK_CASES
+  "RNP_plane_stress|-model RNPBond -dim 2 -planeStrain 0|Set Is_Plane_Strain = true"
+  "PMB_linear_J|-model PMBBond -dim 2 -influence 1|Set Influence_Function Type = 0"
+  "PDState_linear_J|-model PDState -dim 2 -influence 1|Set Influence_Function Type = 0")
+foreach(case ${PD_INPUT_CHECK_CASES})
+  string(REPLACE "|" ";" parts "${case}")
+  list(GET parts 0 name)
+  list(GET parts 1 args)
+  list(GET parts 2 expect)
+  separate_arguments(args)
+  add_test(NAME Test_PeriDEM_pd_input_check_${name}
+    COMMAND ${PD_CALIB_EXE} ${args} -nThreads 1
+    WORKING_DIRECTORY $<TARGET_FILE_DIR:${PD_CALIB_EXE}>)
+  set_tests_properties(Test_PeriDEM_pd_input_check_${name} PROPERTIES
+    LABELS "PeriDEM;Material" PASS_REGULAR_EXPRESSION "${expect}")
+endforeach()
