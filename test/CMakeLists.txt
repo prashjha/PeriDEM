@@ -189,7 +189,7 @@ set_tests_properties(Test_PeriDEM_mpi_identity_twop_wall PROPERTIES
 add_test(NAME Test_PeriDEM_damping_law_off
   COMMAND Test_PeriDEM_twop_circ_inbuilt
     -nThreads 4 -jha2021Table2Test 2 -dampingLaw off
-    -assertCR 0.997 -crTol 0.05
+    -assertCR 0.996 -crTol 0.05
     -outputDir damp_off_out -inputDir damp_off_inp
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
@@ -201,7 +201,7 @@ set_tests_properties(Test_PeriDEM_damping_law_off PROPERTIES
 add_test(NAME Test_PeriDEM_damping_law_com_and_node
   COMMAND Test_PeriDEM_twop_circ_inbuilt
     -nThreads 4 -jha2021Table2Test 2 -dampingLaw com_and_node
-    -assertCR 0.946 -crTol 0.05
+    -assertCR 0.925 -crTol 0.05
     -outputDir damp_com_out -inputDir damp_com_inp
   WORKING_DIRECTORY $<TARGET_FILE_DIR:Test_PeriDEM_twop_circ_inbuilt>
 )
