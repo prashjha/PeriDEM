@@ -1,7 +1,0 @@
-<map id="geometry::breakBondsInSlots" name="geometry::breakBondsInSlots">
-<area shape="rect" id="Node000001" title="Break the bonds of one particle that enter open notch slots." alt="" coords="5,13,200,38"/>
-<area shape="rect" id="Node000002" href="$namespacegeometry.html#a613faec242c1055fd4d348ff2666c289" title="Checks whether the segment enters the open slot centred on xCenter." alt="" coords="248,13,443,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,23,234,23,234,28,200,28"/>
-<area shape="rect" id="Node000003" href="$namespacegeometry.html#a22baa6059a13ead898751f5ff1b19b1b" title="Pre&#45;notch by breaking peridynamic bonds." alt="" coords="491,5,673,45"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="443,23,477,23,477,28,443,28"/>
-</map>

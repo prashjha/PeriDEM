@@ -1,9 +1,0 @@
-<map id="geom::Cylinder::isOutside" name="geom::Cylinder::isOutside">
-<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,31,179,56"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Cylinder.html#a41aa7f1f646b1dcf8053a8a82aef6c74" title="Checks if point is inside this object." alt="" coords="227,31,389,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="179,41,213,41,213,46,179,46"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="437,5,537,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="389,29,423,24,424,30,390,34"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="445,55,530,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="390,52,431,57,431,63,389,57"/>
-</map>

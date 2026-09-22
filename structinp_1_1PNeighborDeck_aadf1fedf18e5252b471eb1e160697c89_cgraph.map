@@ -1,9 +1,0 @@
-<map id="inp::PNeighborDeck::getExampleJson" name="inp::PNeighborDeck::getExampleJson">
-<area shape="rect" id="Node000001" title="Returns the block with the given fields set." alt="" coords="5,27,144,67"/>
-<area shape="rect" id="Node000002" href="$namespaceinp.html#a97299f2de7a12cc2ef863130972e25ed" title="The default block with the given keys replaced." alt="" coords="205,5,317,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,34,191,26,192,31,145,39"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1PNeighborDeck.html#a9f22318c501005ee78aac1ac4e9df46e" title="The fields of this deck, declared once." alt="" coords="192,55,331,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="145,55,178,60,178,65,144,60"/>
-<area shape="rect" id="Node000004" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="379,63,449,88"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="331,73,365,73,365,78,331,78"/>
-</map>

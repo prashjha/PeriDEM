@@ -1,5 +1,0 @@
-<map id="util::io::Logger" name="util::io::Logger">
-<area shape="rect" id="Node000001" title="Prints log to std::cout and also write to the file." alt="" coords="21,213,117,339"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1io_1_1LoggerDeck.html" title="Deck to store log parameters." alt="" coords="5,5,132,151"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="71,151,71,197,66,197,66,151"/>
-</map>

@@ -1,5 +1,0 @@
-<map id="geom::ComplexGeomObject::printStr" name="geom::ComplexGeomObject::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="240,5,427,45"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1ComplexGeomObject.html#a97e578c63bc990940138577897c71531" title="Prints the information about the object." alt="" coords="5,5,192,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="227,28,192,28,192,23,227,23"/>
-</map>

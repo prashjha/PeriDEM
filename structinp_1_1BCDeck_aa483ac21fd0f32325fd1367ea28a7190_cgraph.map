@@ -1,7 +1,0 @@
-<map id="inp::BCDeck::getExampleJson" name="inp::BCDeck::getExampleJson">
-<area shape="rect" id="Node000001" title="Returns example JSON object for ModelDeck configuration." alt="" coords="5,5,208,31"/>
-<area shape="rect" id="Node000002" href="$namespaceinp.html#a762755bbb9bac5e865e72f344dd10443" title="Rejects a key that is not among those named." alt="" coords="256,5,380,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,15,242,15,242,21,208,21"/>
-<area shape="rect" id="Node000003" href="$namespaceinp.html#a1afa64a379e7dfdcc4f0aa3767a9d9ea" title="Number of single character edits between two strings." alt="" coords="428,5,548,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="380,15,414,15,414,21,380,21"/>
-</map>

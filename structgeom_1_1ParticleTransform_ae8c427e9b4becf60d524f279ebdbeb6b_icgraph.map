@@ -1,5 +1,0 @@
-<map id="geom::ParticleTransform::printStr" name="geom::ParticleTransform::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="219,5,384,45"/>
-<area shape="rect" id="Node000002" href="$structgeom_1_1ParticleTransform.html#a7148e92087a193c8615d8fd6d9fb36e6" title="Prints the information about the object." alt="" coords="5,5,171,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="205,28,171,28,171,23,205,23"/>
-</map>

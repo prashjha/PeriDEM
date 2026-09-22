@@ -1,5 +1,0 @@
-<map id="geom::Plane::doesIntersect" name="geom::Plane::doesIntersect">
-<area shape="rect" id="Node000001" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,188,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Plane.html#abca3a5dff8fea688ff7bc8789cbe0724" title="Checks if point is within given distance of this object." alt="" coords="236,5,377,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,15,222,15,222,21,188,21"/>
-</map>

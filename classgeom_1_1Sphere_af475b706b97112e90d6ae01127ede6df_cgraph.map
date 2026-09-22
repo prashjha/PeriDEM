@@ -1,8 +1,0 @@
-<map id="geom::Sphere::isNearBoundary" name="geom::Sphere::isNearBoundary">
-<area shape="rect" id="Node000001" title="cons" alt="" coords="5,5,209,31"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="455,5,540,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="209,15,441,15,441,21,209,21"/>
-<area shape="rect" id="Node000003" href="$classgeom_1_1Sphere.html#a917be3f8ebbdb56922134990afe447ec" title="Checks if point is within given distance of this object." alt="" coords="257,31,407,56"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="210,27,244,31,243,36,210,32"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="407,29,441,24,442,29,407,34"/>
-</map>
