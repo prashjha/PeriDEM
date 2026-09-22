@@ -1,0 +1,12 @@
+<map id="geom::Ellipsoid::isInside" name="geom::Ellipsoid::isInside">
+<area shape="rect" id="Node000001" title="Checks if box is completely inside." alt="" coords="5,79,169,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipsoid.html#a752a6789f2305c9b531dfd1943034cd6" title="Computes the bounding box of object." alt="" coords="229,29,369,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,76,230,55,231,60,143,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="221,79,377,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="170,89,208,89,208,94,170,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Ellipsoid.html#a7d5d3083be8546a46762efea6a00e31c" title="Checks if point is inside this object." alt="" coords="217,128,381,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="143,101,231,122,230,127,142,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="271,31,265,21,268,11,280,5,299,3,323,6,333,15,329,19,320,11,299,8,281,10,272,15,270,20,275,28"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="429,128,515,153"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="382,138,415,138,415,143,382,143"/>
+</map>

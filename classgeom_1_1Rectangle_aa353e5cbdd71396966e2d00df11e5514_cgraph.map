@@ -1,0 +1,16 @@
+<map id="geom::Rectangle::print" name="geom::Rectangle::print">
+<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,105,160,131"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Rectangle.html#a3442a2e4ba212556b9a1ffe39cc8925b" title="Returns the string containing printable information about the object." alt="" coords="208,105,379,131"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="160,115,194,115,194,121,160,121"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Rectangle.html#a7dbc50605017553734fb641754b273a1" title="Computes the bounding box of object." alt="" coords="427,29,577,55"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="328,103,452,57,454,62,330,108"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of a given size." alt="" coords="625,131,739,156"/>
+<area shape="poly" id="edge4_Node000002_Node000004" title=" " alt="" coords="379,110,475,109,578,115,626,125,625,130,577,121,474,114,379,115"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="437,131,567,156"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="379,126,423,131,422,136,379,131"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="449,180,555,205"/>
+<area shape="poly" id="edge7_Node000002_Node000006" title=" " alt="" coords="329,128,428,165,451,173,449,178,426,170,327,133"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="472,31,466,21,469,11,482,5,502,3,527,6,537,15,533,19,524,11,502,8,483,10,473,15,471,20,477,28"/>
+<area shape="poly" id="edge6_Node000005_Node000004" title=" " alt="" coords="567,141,611,141,611,146,567,146"/>
+<area shape="poly" id="edge8_Node000006_Node000004" title=" " alt="" coords="548,177,620,157,622,162,550,183"/>
+</map>

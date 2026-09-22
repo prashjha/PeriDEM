@@ -1,0 +1,14 @@
+<map id="geom::Cylinder::doesIntersect" name="geom::Cylinder::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if box intersects this object." alt="" coords="5,79,203,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Cylinder.html#a1a625bead6662e8f502852f85b9871de" title="Computes the bounding box of object." alt="" coords="263,29,401,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="163,76,259,55,260,60,164,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="254,79,410,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="203,89,240,89,240,94,203,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Cylinder.html#a41aa7f1f646b1dcf8053a8a82aef6c74" title="Checks if point is inside this object." alt="" coords="251,128,413,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="164,101,260,122,259,128,163,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="302,31,296,21,299,11,312,5,332,3,357,6,367,15,363,19,354,11,332,8,313,10,303,15,301,20,307,28"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="461,103,561,128"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="413,127,447,122,448,127,414,132"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="469,152,554,177"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="414,149,455,155,455,160,413,154"/>
+</map>

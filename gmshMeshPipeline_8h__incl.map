@@ -1,0 +1,7 @@
+<map id="/home/user/project/src/mesh_gen/gmshMeshPipeline.h" name="/home/user/project/src/mesh_gen/gmshMeshPipeline.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,239,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="47,93,112,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="114,47,94,83,90,80,109,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="137,93,195,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="135,44,155,80,150,83,130,47"/>
+</map>

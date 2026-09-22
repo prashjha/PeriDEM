@@ -1,0 +1,48 @@
+<map id="mesh_gen::fillMeshFromActiveGmshModel" name="mesh_gen::fillMeshFromActiveGmshModel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,295,208,335"/>
+<area shape="rect" id="Node000002" href="$classmesh_1_1Mesh.html#accc7f7a8bcefe0e9073c315d5f26d315" title="Populate mesh from 3D tetrahedron data (0&#45;based node indices in enc) without reading a file." alt="" coords="265,263,450,303"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="208,300,251,294,251,300,208,305"/>
+<area shape="rect" id="Node000023" href="$classmesh_1_1Mesh.html#acd7d96f02baf9e52eadd0ca080fda891" title="Populate mesh from 2D triangle data (0&#45;based node indices in enc) without reading a file." alt="" coords="256,327,459,367"/>
+<area shape="poly" id="edge24_Node000001_Node000023" title=" " alt="" coords="208,326,243,330,242,335,208,331"/>
+<area shape="rect" id="Node000003" href="$classmesh_1_1Mesh.html#a98f9041e741ceb27b9436eb9c71f94cd" title="After nodes, enc, nec, and dof&#45;related fields are set: 2D z clear, bbox, optional nodal volume,..." alt="" coords="507,295,720,335"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="450,292,494,298,493,303,450,298"/>
+<area shape="rect" id="Node000004" href="$classmesh_1_1Mesh.html#ad0c319c47c480abb14525fff85794f52" title="Compute the bounding box from d_nodes (after setZCoordinateZero() for 2D if applicable)." alt="" coords="785,19,969,44"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="621,294,641,250,673,193,715,132,766,77,791,60,819,47,821,51,794,65,770,81,719,135,677,196,646,253,625,296"/>
+<area shape="rect" id="Node000006" href="$classmesh_1_1Mesh.html#a63b02c0b2efec0cca7288cbb910f8a9f" title="Compute the mesh size." alt="" coords="771,92,982,117"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="633,293,692,239,766,176,842,123,845,127,770,180,695,243,637,297"/>
+<area shape="rect" id="Node000007" href="$classmesh_1_1Mesh.html#abfbd64c1c1d4bf28bc4a9e112aed2bf3" title="Compute the nodal volume." alt="" coords="791,191,962,216"/>
+<area shape="poly" id="edge7_Node000003_Node000007" title=" " alt="" coords="660,293,832,219,834,224,662,298"/>
+<area shape="rect" id="Node000012" href="$classmesh_1_1Mesh.html#a29b0525a15f6b1bd8df8a52f79f371c2" title="Returns the string containing printable information about the object." alt="" coords="1323,241,1467,267"/>
+<area shape="poly" id="edge17_Node000003_Node000012" title=" " alt="" coords="720,316,835,317,974,314,1124,305,1274,286,1345,268,1346,274,1275,291,1125,310,974,319,835,322,720,322"/>
+<area shape="rect" id="Node000016" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="1113,353,1195,379"/>
+<area shape="poly" id="edge14_Node000003_Node000016" title=" " alt="" coords="720,326,768,331,1099,359,1098,365,768,337,720,331"/>
+<area shape="rect" id="Node000018" href="$classmesh_1_1Mesh.html#a5c466bbf40b8bb552e28956b5a7ee0fe" title="Reads element&#45;node connectivity data from file. This function is meant for cases when mesh was create..." alt="" coords="775,404,978,429"/>
+<area shape="poly" id="edge18_Node000003_Node000018" title=" " alt="" coords="656,333,769,382,815,397,813,403,767,387,654,338"/>
+<area shape="rect" id="Node000022" href="$classmesh_1_1Mesh.html#aa1aefeb3ab278dadb348b425def0fdd9" title="For , set &#160;on all reference nodes (x–y plane). Call before computeBBox() when nodes may carry numeric..." alt="" coords="768,453,985,479"/>
+<area shape="poly" id="edge23_Node000003_Node000022" title=" " alt="" coords="635,334,691,387,729,416,769,440,786,447,784,452,767,444,726,420,688,391,631,337"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="1111,5,1197,31"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="969,24,1098,18,1098,23,969,30"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="904,89,963,64,1033,39,1097,24,1098,30,1034,45,965,69,907,94"/>
+<area shape="rect" id="Node000008" href="$namespacefe.html#a8e0456e8e217f363ab2695f17227f843" title=" " alt="" coords="1119,55,1189,80"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="896,188,984,127,1007,106,1032,89,1069,76,1105,69,1106,74,1070,81,1035,94,1010,110,987,131,899,193"/>
+<area shape="rect" id="Node000009" href="$classmesh_1_1Mesh.html#a07c09fbdd7822bcda58be65bc40c4a0c" title="Get the connectivity of element." alt="" coords="1033,104,1275,129"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="904,188,963,163,1033,138,1065,130,1066,135,1034,143,965,168,907,193"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="1069,153,1239,179"/>
+<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="962,189,1055,177,1056,182,963,195"/>
+<area shape="rect" id="Node000011" href="$classmesh_1_1Mesh.html#aec589746d628e3d70213ed7147c604c6" title="Prints the information about the object." alt="" coords="1091,203,1217,228"/>
+<area shape="poly" id="edge11_Node000007_Node000011" title=" " alt="" coords="962,204,1077,209,1077,215,962,210"/>
+<area shape="rect" id="Node000015" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="1101,252,1207,277"/>
+<area shape="poly" id="edge13_Node000007_Node000015" title=" " alt="" coords="932,213,1034,237,1088,248,1087,254,1033,242,931,219"/>
+<area shape="poly" id="edge12_Node000011_Node000012" title=" " alt="" coords="1218,223,1309,238,1308,243,1217,228"/>
+<area shape="rect" id="Node000017" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="1330,353,1459,379"/>
+<area shape="poly" id="edge15_Node000016_Node000017" title=" " alt="" coords="1196,363,1316,363,1316,369,1196,369"/>
+<area shape="poly" id="edge16_Node000017_Node000017" title=" " alt="" coords="1356,355,1347,345,1352,335,1368,329,1395,327,1428,331,1441,340,1438,344,1426,335,1395,332,1369,334,1355,339,1353,344,1360,351"/>
+<area shape="poly" id="edge20_Node000018_Node000016" title=" " alt="" coords="946,401,1099,373,1100,378,947,407"/>
+<area shape="rect" id="Node000019" href="$namespaceutil_1_1io.html#a6588c46813adf0cb86b795880f1a2ec7" title="Get extension from the filename." alt="" coords="1058,403,1250,428"/>
+<area shape="poly" id="edge19_Node000018_Node000019" title=" " alt="" coords="978,414,1044,413,1044,419,978,419"/>
+<area shape="rect" id="Node000020" href="$namespacerw_1_1reader.html#ae08925195e3f3d7ebaa3be3f83f59f4e" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="1059,452,1249,477"/>
+<area shape="poly" id="edge21_Node000018_Node000020" title=" " alt="" coords="951,427,1067,447,1066,452,950,432"/>
+<area shape="rect" id="Node000021" href="$namespacerw_1_1reader.html#a4a9d06e652af7d12f937f5ade0542a8d" title="Reads cell data, i.e. element&#45;node connectivity and node&#45;element connectivity." alt="" coords="1062,501,1246,527"/>
+<area shape="poly" id="edge22_Node000018_Node000021" title=" " alt="" coords="956,427,987,440,1002,452,1011,465,1020,477,1035,488,1050,495,1048,500,1032,492,1016,480,1007,468,998,456,984,444,954,432"/>
+<area shape="poly" id="edge25_Node000023_Node000003" title=" " alt="" coords="458,332,493,328,493,333,459,337"/>
+</map>

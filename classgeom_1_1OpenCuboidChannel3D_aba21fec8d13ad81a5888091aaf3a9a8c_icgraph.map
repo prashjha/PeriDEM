@@ -1,0 +1,9 @@
+<map id="geom::OpenCuboidChannel3D::computeCenter" name="geom::OpenCuboidChannel3D::computeCenter">
+<area shape="rect" id="Node000001" title=" " alt="" coords="484,37,673,77"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenCuboidChannel3D.html#a4147096ebf3dea967be543692cee871b" title="Similarity about pivot &#160;(default: old center d_x), then rigid displacement &#160;= translation: ...." alt="" coords="245,5,434,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="470,46,434,41,435,35,471,40"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1OpenCuboidChannel3D.html#aef3fe30d6fa8e9ffc0dbf717944d2335" title=" " alt="" coords="243,69,436,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="471,74,437,79,436,74,470,69"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1OpenCuboidChannel3D.html#a7a4a72c6819e9949a175216793ed1552" title=" " alt="" coords="5,69,195,109"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="229,92,195,92,195,87,229,87"/>
+</map>

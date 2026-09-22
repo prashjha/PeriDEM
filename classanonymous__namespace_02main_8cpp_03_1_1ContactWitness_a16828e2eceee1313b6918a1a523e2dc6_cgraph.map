@@ -1,0 +1,29 @@
+<map id="anonymous_namespace{main::cpp}::ContactWitness::checkStop" name="anonymous_namespace{main::cpp}::ContactWitness::checkStop">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,115,195,169"/>
+<area shape="rect" id="Node000002" href="$classpostprocess_1_1Postprocess.html#a71850e154cac991fcf5cf8be5ed325fe" title=" " alt="" coords="243,61,417,101"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,114,240,102,242,107,196,119"/>
+<area shape="rect" id="Node000009" href="$namespaceutil_1_1parallel.html#af2fa5cf1aed1855e05ae530704c37763" title="Get MPI comm." alt="" coords="252,129,408,155"/>
+<area shape="poly" id="edge11_Node000001_Node000009" title=" " alt="" coords="195,139,238,139,238,145,195,145"/>
+<area shape="rect" id="Node000012" href="$namespaceutil_1_1parallel.html#ad67dcfb56bf70d082e443e849c832c00" title="Get size (number) of processors." alt="" coords="259,179,401,204"/>
+<area shape="poly" id="edge14_Node000001_Node000012" title=" " alt="" coords="196,160,258,173,256,178,195,165"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="500,5,600,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="400,58,465,39,490,32,492,37,466,45,402,63"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="509,55,591,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="418,73,494,68,495,73,418,78"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1methods.html#a15ca8392b2b1b5f4888d4bda9cdb4473" title="Returns the maximum length of point and index from list of points." alt="" coords="465,105,635,145"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="418,96,453,102,451,108,417,101"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="704,45,833,71"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="591,63,690,59,690,64,592,68"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="734,47,726,37,730,27,745,21,769,19,798,22,810,31,807,36,796,27,769,24,746,26,734,31,731,36,738,44"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="703,95,834,120"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="635,115,690,111,690,116,635,121"/>
+<area shape="rect" id="Node000008" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="903,95,1065,120"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="635,129,740,133,854,129,913,120,914,125,855,134,740,138,635,134"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="834,113,889,114,888,119,834,118"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="902,101,848,101,848,96,902,96"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="483,179,617,204"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="388,152,480,173,479,178,387,157"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="683,196,855,221"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="618,194,669,198,669,203,618,199"/>
+<area shape="poly" id="edge15_Node000012_Node000010" title=" " alt="" coords="402,189,469,189,469,194,402,194"/>
+</map>

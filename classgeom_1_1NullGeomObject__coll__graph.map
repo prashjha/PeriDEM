@@ -1,0 +1,5 @@
+<map id="geom::NullGeomObject" name="geom::NullGeomObject">
+<area shape="rect" id="Node000001" title="Defines null (empty) geom object." alt="" coords="5,739,156,924"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="11,5,150,691"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="83,705,83,739,78,739,78,705"/>
+</map>

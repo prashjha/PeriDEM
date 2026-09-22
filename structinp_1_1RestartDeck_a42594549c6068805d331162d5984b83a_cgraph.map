@@ -1,0 +1,9 @@
+<map id="inp::RestartDeck::writeToJson" name="inp::RestartDeck::writeToJson">
+<area shape="rect" id="Node000001" title="Returns this deck as a JSON object." alt="" coords="5,31,204,56"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1RestartDeck.html#a581dbc6e463ed8462028675b37cad68f" title="Returns example JSON object for ModelDeck configuration." alt="" coords="252,5,412,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="204,30,238,26,239,31,205,35"/>
+<area shape="rect" id="Node000004" href="$namespaceinp.html#a68e40cc0546b5be63c02f9c15bcb3e61" title="Writes every field of the table into the block." alt="" coords="277,55,387,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="205,51,263,57,263,63,204,57"/>
+<area shape="rect" id="Node000003" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="460,5,531,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="412,15,446,15,446,21,412,21"/>
+</map>

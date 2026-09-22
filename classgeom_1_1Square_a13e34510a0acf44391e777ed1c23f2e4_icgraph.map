@@ -1,0 +1,5 @@
+<map id="geom::Square::isNearBoundary" name="geom::Square::isNearBoundary">
+<area shape="rect" id="Node000001" title="cons" alt="" coords="244,5,448,31"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Square.html#aa4e15684de1b9391e2ad593a1e1d07ef" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,196,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="230,21,196,21,196,15,230,15"/>
+</map>

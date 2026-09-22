@@ -1,0 +1,23 @@
+<map id="geom::isPointInsideRectangle" name="geom::isPointInsideRectangle">
+<area shape="rect" id="Node000001" title="Checks if point is inside a rectangle." alt="" coords="484,179,680,204"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Square.html#a46f5095a46855b640203c5aa6491bd7b" title="Checks if point is inside this object." alt="" coords="271,104,427,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="527,177,388,132,390,127,529,172"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Rectangle.html#aab3d25267c5fd7decc2a6a04a5eccd87" title="Checks if point is inside this object." alt="" coords="261,252,436,277"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="528,211,391,254,389,249,527,206"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Square.html#a6feb9bd77cb5eaa54a448d5c149e5df0" title="Checks if box intersects this object." alt="" coords="14,5,205,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="315,99,268,71,212,44,176,33,178,28,214,40,270,66,318,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Square.html#a27cbccf16086b1d616e8ff04efc909f8" title="Checks if box is completely inside." alt="" coords="31,55,187,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="273,104,171,83,172,77,274,99"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Square.html#a7966f7b5c4cd60a395cfcca12dc96889" title="Checks if box is outside of the object." alt="" coords="26,104,193,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="257,119,193,119,193,114,257,114"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Square.html#a81f95a65ee5a912b074eca585f77443c" title="Checks if point is outside of this object." alt="" coords="26,153,193,179"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="274,135,172,156,171,151,273,130"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Rectangle.html#aa14d6fc90fe5dae5c4c8889eeb28de49" title="Checks if box intersects this object." alt="" coords="5,203,213,228"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="273,252,171,231,172,225,274,247"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Rectangle.html#a0a386b236138b52ae775b4a90585240c" title="Checks if box is completely inside." alt="" coords="22,252,197,277"/>
+<area shape="poly" id="edge8_Node000007_Node000009" title=" " alt="" coords="248,267,197,267,197,262,248,262"/>
+<area shape="rect" id="Node000010" href="$classgeom_1_1Rectangle.html#aedecddc2d99421d9467168aef0d0e237" title="Checks if box is outside of the object." alt="" coords="17,301,201,327"/>
+<area shape="poly" id="edge9_Node000007_Node000010" title=" " alt="" coords="274,283,172,304,171,299,273,278"/>
+<area shape="rect" id="Node000011" href="$classgeom_1_1Rectangle.html#abcbd2463dd58a06897013048849914c2" title="Checks if point is outside of this object." alt="" coords="17,351,201,376"/>
+<area shape="poly" id="edge10_Node000007_Node000011" title=" " alt="" coords="317,287,270,314,214,340,174,353,173,348,212,336,267,310,315,282"/>
+</map>

@@ -1,0 +1,12 @@
+<map id="geom::Plane::transform" name="geom::Plane::transform">
+<area shape="rect" id="Node000001" title="Similarity about pivot &#160;(default: old center d_x), then rigid displacement &#160;= translation: ...." alt="" coords="5,55,164,80"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="223,5,343,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,52,217,31,218,37,137,57"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#a433ab4b6276ab56393f1c55a4e37566e" title=" " alt="" coords="212,55,353,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="164,65,198,65,198,70,164,70"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="401,80,481,105"/>
+<area shape="poly" id="edge5_Node000001_Node000004" title=" " alt="" coords="141,77,212,89,305,93,388,92,388,98,305,99,212,94,140,83"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="354,76,388,82,387,87,353,81"/>
+<area shape="rect" id="Node000005" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="529,80,647,105"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="482,90,516,90,516,95,482,95"/>
+</map>

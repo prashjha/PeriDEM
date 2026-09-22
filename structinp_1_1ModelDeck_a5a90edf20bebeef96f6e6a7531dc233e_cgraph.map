@@ -1,0 +1,5 @@
+<map id="inp::ModelDeck::fields" name="inp::ModelDeck::fields">
+<area shape="rect" id="Node000001" title="Returns example JSON object for ModelDeck configuration." alt="" coords="5,5,157,31"/>
+<area shape="rect" id="Node000002" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="205,5,276,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="158,15,192,15,192,21,158,21"/>
+</map>

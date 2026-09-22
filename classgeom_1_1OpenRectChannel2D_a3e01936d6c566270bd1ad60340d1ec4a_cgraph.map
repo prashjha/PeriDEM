@@ -1,0 +1,5 @@
+<map id="geom::OpenRectChannel2D::isInside" name="geom::OpenRectChannel2D::isInside">
+<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,5,192,45"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenRectChannel2D.html#a3b629c680b18067021c5a4253a0a8f7d" title=" " alt="" coords="240,5,427,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,23,226,23,226,28,192,28"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="geom::Ellipsoid::transform" name="geom::Ellipsoid::transform">
+<area shape="rect" id="Node000001" title="Similarity about pivot &#160;(default: old center d_x), then rigid displacement &#160;= translation: ...." alt="" coords="5,5,180,31"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#a433ab4b6276ab56393f1c55a4e37566e" title=" " alt="" coords="228,5,369,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="180,15,214,15,214,21,180,21"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="417,5,497,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="370,15,403,15,403,21,370,21"/>
+<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="545,5,663,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="498,15,532,15,532,21,498,21"/>
+</map>
