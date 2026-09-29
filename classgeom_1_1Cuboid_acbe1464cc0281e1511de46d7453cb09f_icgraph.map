@@ -1,5 +1,0 @@
-<map id="geom::Cuboid::printStr" name="geom::Cuboid::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="189,5,343,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Cuboid.html#a9c8425e89f65ca9abee88a2dfd284020" title="Prints the information about the object." alt="" coords="5,5,141,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,21,141,21,141,15,176,15"/>
-</map>

@@ -1,9 +1,0 @@
-<map id="inp::PNeighborDeck::writeToJson" name="inp::PNeighborDeck::writeToJson">
-<area shape="rect" id="Node000001" title="Returns this deck as a JSON object." alt="" coords="5,35,144,75"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1PNeighborDeck.html#a9f22318c501005ee78aac1ac4e9df46e" title="The fields of this deck, declared once." alt="" coords="192,5,331,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,41,178,36,178,41,145,46"/>
-<area shape="rect" id="Node000004" href="$namespaceinp.html#a68e40cc0546b5be63c02f9c15bcb3e61" title="Writes every field of the table into the block." alt="" coords="206,70,317,95"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="145,62,193,70,192,75,144,68"/>
-<area shape="rect" id="Node000003" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="379,13,449,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="331,23,365,23,365,28,331,28"/>
-</map>

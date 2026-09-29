@@ -1,9 +1,0 @@
-<map id="anonymous_namespace{testMeshGen::cpp}::meshDimForBuiltin" name="anonymous_namespace{testMeshGen::cpp}::meshDimForBuiltin">
-<area shape="rect" id="Node000001" title="Model dimension for mesh deck (annulus deck names map to annulus_object with d_dim set)." alt="" coords="355,29,517,84"/>
-<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="474,18,460,11,436,8,416,10,402,15,396,21,397,29,391,29,391,19,399,10,414,5,436,3,462,6,477,14"/>
-<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a603ec9e04d1d44de0e68a5d80d63e08b" title="For one acceptable geometry name: exampleGeomParams → mesh in memory → non&#45;empty nodes,..." alt="" coords="104,29,307,84"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="341,59,307,59,307,54,341,54"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="233,18,223,11,205,8,190,10,181,15,176,21,176,29,171,29,171,19,177,10,189,5,205,3,225,6,236,13"/>
-<area shape="rect" id="Node000003" href="$testMeshGen_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,44,56,69"/>
-<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="90,59,56,59,56,54,90,54"/>
-</map>

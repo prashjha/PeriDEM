@@ -1,7 +1,0 @@
-<map id="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::meshPolygon2DGeoFromVertices" name="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::meshPolygon2DGeoFromVertices">
-<area shape="rect" id="Node000001" title=" " alt="" coords="292,29,552,84"/>
-<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="472,19,454,11,422,8,395,10,378,15,370,21,370,29,365,29,365,19,375,10,394,5,422,3,455,6,474,14"/>
-<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02builtinGmshGeometry_8cpp_03.html#a6adc16b91cc6f054a1328611a56bd8d4" title=" " alt="" coords="5,29,244,84"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="278,59,244,59,244,54,278,54"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="175,19,157,11,125,8,98,10,81,15,73,21,73,29,68,29,68,19,78,10,97,5,125,3,158,6,177,14"/>
-</map>

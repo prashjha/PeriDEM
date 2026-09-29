@@ -1,5 +1,0 @@
-<map id="geom::GeomObject::boundingRadius" name="geom::GeomObject::boundingRadius">
-<area shape="rect" id="Node000001" title="Computes the radius of smallest circle/sphere such that object can be fit into it." alt="" coords="236,5,431,45"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1AnnulusGeomObject.html#ab822be1c42217eb0c43d4c1d70e72e7c" title="Computes the radius of smallest circle/sphere such that object can be fit into it." alt="" coords="5,5,188,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="222,28,188,28,188,23,222,23"/>
-</map>

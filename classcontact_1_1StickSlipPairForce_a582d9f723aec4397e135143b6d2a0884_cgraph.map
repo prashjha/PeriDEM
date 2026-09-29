@@ -1,9 +1,0 @@
-<map id="contact::StickSlipPairForce::springForce" name="contact::StickSlipPairForce::springForce">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,47,187,87"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="245,5,345,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,45,231,31,232,36,178,50"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="252,55,337,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="187,65,238,65,238,70,187,70"/>
-<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="235,104,355,129"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="178,85,230,98,229,103,176,90"/>
-</map>

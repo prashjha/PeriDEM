@@ -1,7 +1,0 @@
-<map id="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::firstVolumeTagFromCut" name="mesh_gen::anonymous_namespace{builtinGmshGeometry::cpp}::firstVolumeTagFromCut">
-<area shape="rect" id="Node000001" title=" " alt="" coords="304,29,531,84"/>
-<area shape="poly" id="edge3_Node000001_Node000001" title=" " alt="" coords="465,18,448,11,417,8,392,10,375,15,367,21,368,29,362,29,363,19,372,10,391,5,417,3,449,6,467,14"/>
-<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02builtinGmshGeometry_8cpp_03.html#a1d477ea44609f81a783da183c3d0417c" title=" " alt="" coords="5,29,256,84"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="290,59,256,59,256,54,290,54"/>
-<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="179,18,161,11,131,8,105,10,88,15,81,21,81,29,76,29,76,19,86,10,104,5,131,3,163,6,181,14"/>
-</map>

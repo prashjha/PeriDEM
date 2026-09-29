@@ -1,5 +1,0 @@
-<map id="loading::ParticleFLoading" name="loading::ParticleFLoading">
-<area shape="rect" id="Node000001" title="A class to apply force boundary condition." alt="" coords="5,119,165,204"/>
-<area shape="rect" id="Node000002" href="$classloading_1_1ParticleLoading.html" title="A base class to apply displacement and force boundary condition." alt="" coords="9,5,161,71"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,85,88,119,83,119,83,85"/>
-</map>

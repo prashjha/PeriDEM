@@ -1,5 +1,0 @@
-<map id="inp::RestartDeck::printStr" name="inp::RestartDeck::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="208,5,379,31"/>
-<area shape="rect" id="Node000002" href="$structinp_1_1RestartDeck.html#abf63ebe30a7f9c370c2773610ec807e9" title="Prints the information about the object." alt="" coords="5,5,160,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,21,160,21,160,15,195,15"/>
-</map>

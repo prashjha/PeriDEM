@@ -1,7 +1,0 @@
-<map id="geom::OpenCuboidChannel3D" name="geom::OpenCuboidChannel3D">
-<area shape="rect" id="Node000001" title="Hollow axis&#45;aligned cuboid shell with uniform wall thickness and one outer face open." alt="" coords="54,783,245,1148"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html" title="Defines abstract geometrical domain." alt="" coords="5,5,144,691"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,704,130,782,125,783,115,704"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="168,45,283,651"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="191,651,176,767,171,766,185,650"/>
-</map>

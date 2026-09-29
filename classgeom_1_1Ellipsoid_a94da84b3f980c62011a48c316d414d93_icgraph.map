@@ -1,5 +1,0 @@
-<map id="geom::Ellipsoid::isNearBoundary" name="geom::Ellipsoid::isNearBoundary">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="252,5,464,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipsoid.html#a24250468b0152acf481b1ce94a642205" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,204,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,21,204,21,204,15,238,15"/>
-</map>

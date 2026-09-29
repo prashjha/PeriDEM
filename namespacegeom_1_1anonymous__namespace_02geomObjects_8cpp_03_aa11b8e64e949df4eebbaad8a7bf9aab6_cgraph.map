@@ -1,6 +1,0 @@
-<map id="geom::anonymous_namespace{geomObjects::cpp}::ellipsoidBodyCoords" name="geom::anonymous_namespace{geomObjects::cpp}::ellipsoidBodyCoords">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,227,84"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="66,29,67,19,75,10,92,5,116,3,145,6,161,14,159,18,143,11,116,8,93,10,78,15,71,21,72,29"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#ad8236ad8cc776188c0e4f81536acb257" title="Row&#45;major 3×3 rotation &#160;from ellipsoid axis–angle (identity if )." alt="" coords="275,44,469,69"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="227,54,261,54,261,59,227,59"/>
-</map>

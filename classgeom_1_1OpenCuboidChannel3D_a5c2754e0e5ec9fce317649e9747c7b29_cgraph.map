@@ -1,8 +1,0 @@
-<map id="geom::OpenCuboidChannel3D::isInside" name="geom::OpenCuboidChannel3D::isInside">
-<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,5,195,45"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1OpenCuboidChannel3D.html#a1cf8a145c1ef2969b05fb87e4dcf75d7" title=" " alt="" coords="480,5,669,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="195,20,243,19,432,19,466,19,466,25,432,24,243,24,195,25"/>
-<area shape="rect" id="Node000003" href="$classgeom_1_1OpenCuboidChannel3D.html#a2bd943774f313082399dcea206dba46c" title=" " alt="" coords="243,33,432,73"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,34,229,38,229,43,194,39"/>
-<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="432,40,466,35,467,41,432,45"/>
-</map>

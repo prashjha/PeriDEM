@@ -1,5 +1,0 @@
-<map id="geom::AnnulusGeomObject::inscribedRadius" name="geom::AnnulusGeomObject::inscribedRadius">
-<area shape="rect" id="Node000001" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="5,5,188,45"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1GeomObject.html#abfe34753bc37fab7d8c0ff10cd036c9a" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="236,5,431,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,23,222,23,222,28,188,28"/>
-</map>

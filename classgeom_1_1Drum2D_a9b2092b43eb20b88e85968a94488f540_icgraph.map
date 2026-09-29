@@ -1,5 +1,0 @@
-<map id="geom::Drum2D::isNearBoundary" name="geom::Drum2D::isNearBoundary">
-<area shape="rect" id="Node000001" title="cons" alt="" coords="252,5,464,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Drum2D.html#a40c9ba43538b3effba1f5ae22b049189" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,204,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="238,21,204,21,204,15,238,15"/>
-</map>

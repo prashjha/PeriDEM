@@ -1,5 +1,0 @@
-<map id="geom::Hexagon::volume" name="geom::Hexagon::volume">
-<area shape="rect" id="Node000001" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="5,13,169,38"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#ae21b00427b9d56e491cabf75622befac" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="217,5,392,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="170,23,203,23,203,28,170,28"/>
-</map>

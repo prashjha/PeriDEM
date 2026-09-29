@@ -1,7 +1,0 @@
-<map id="problem.build_deck" name="problem.build_deck">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,35,140,60"/>
-<area shape="rect" id="Node000002" href="$namespaceproblem.html#a2fb19fd97d8196406b6181736c441392" title=" " alt="" coords="209,5,302,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="140,34,194,25,195,30,140,39"/>
-<area shape="rect" id="Node000003" href="$namespaceproblem.html#aaa2ed019baa8787a7abfd1d18c4d21b4" title=" " alt="" coords="188,55,323,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="140,55,175,60,174,66,140,60"/>
-</map>

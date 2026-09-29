@@ -1,5 +1,0 @@
-<map id="geom::Ellipse::isNear" name="geom::Ellipse::isNear">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="200,5,347,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipse.html#afcac137f21fc3d0ddf54caab82c555b0" title="Checks if box is within given distance of this object." alt="" coords="5,5,152,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,21,152,21,152,15,186,15"/>
-</map>

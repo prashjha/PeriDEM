@@ -1,7 +1,0 @@
-<map id="geom::Square::isNear" name="geom::Square::isNear">
-<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="496,5,645,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Square.html#a13e34510a0acf44391e777ed1c23f2e4" title="cons" alt="" coords="244,5,448,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="482,21,448,21,448,15,482,15"/>
-<area shape="rect" id="Node000003" href="$classgeom_1_1Square.html#aa4e15684de1b9391e2ad593a1e1d07ef" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,196,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="230,21,196,21,196,15,230,15"/>
-</map>

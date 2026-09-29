@@ -1,5 +1,0 @@
-<map id="particle::BaseParticle::printStr" name="particle::BaseParticle::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="200,5,347,45"/>
-<area shape="rect" id="Node000002" href="$classparticle_1_1BaseParticle.html#a58a28eda59d5bd0a85f88147a06380e8" title="Prints the information about the object." alt="" coords="5,5,152,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,28,152,28,152,23,186,23"/>
-</map>

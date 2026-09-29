@@ -1,7 +1,0 @@
-<map id="inp::BCBaseDeck" name="inp::BCBaseDeck">
-<area shape="rect" id="Node000001" title="User&#45;input data for particle neighbor search." alt="" coords="93,673,250,1159"/>
-<area shape="rect" id="Node000002" href="$structgeom_1_1GeomData.html" title="Input data for geometrical objects." alt="" coords="5,185,172,431"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,431,91,537,102,649,103,657,98,658,97,650,86,538,83,431"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html" title="A structure to represent 3d vectors." alt="" coords="197,5,311,611"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="232,611,227,650,226,657,221,657,222,649,227,610"/>
-</map>

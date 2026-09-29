@@ -1,9 +1,0 @@
-<map id="inp::PGenDeck::getExampleJson" name="inp::PGenDeck::getExampleJson">
-<area shape="rect" id="Node000001" title="Returns the block with the given fields set." alt="" coords="5,31,221,56"/>
-<area shape="rect" id="Node000002" href="$namespaceinp.html#a97299f2de7a12cc2ef863130972e25ed" title="The default block with the given keys replaced." alt="" coords="289,5,401,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="221,29,274,23,275,28,222,34"/>
-<area shape="rect" id="Node000003" href="$structinp_1_1PGenDeck.html#a424abde6ac55b278138c76a99821c4bf" title="Returns example JSON object for ModelDeck configuration." alt="" coords="269,55,420,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="222,52,256,55,255,61,221,57"/>
-<area shape="rect" id="Node000004" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="468,55,539,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="420,65,454,65,454,70,420,70"/>
-</map>

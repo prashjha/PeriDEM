@@ -1,6 +1,0 @@
-<map id="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::addEllipseDiskOcc" name="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::addEllipseDiskOcc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,200,84"/>
-<area shape="poly" id="edge2_Node000001_Node000001" title=" " alt="" coords="58,29,59,19,67,10,81,5,103,3,128,6,143,14,140,18,127,11,103,8,82,10,70,15,64,21,64,29"/>
-<area shape="rect" id="Node000002" href="$namespacemesh__gen.html#a9166bc40415d5f035ea3f71d376fb41b" title="OCC disk compatible with older Gmsh (no zAxis/xAxis) and newer APIs." alt="" coords="248,44,411,69"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,54,234,54,234,59,200,59"/>
-</map>

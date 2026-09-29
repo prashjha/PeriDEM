@@ -1,9 +1,0 @@
-<map id="geom::Cube::isInside" name="geom::Cube::isInside">
-<area shape="rect" id="Node000001" title="Checks if point is inside this object." alt="" coords="5,31,152,56"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#aff8738a0bb2d8d9c28c3d7aeb34bc273" title="Checks if point is inside a cuboid." alt="" coords="200,31,379,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="152,41,186,41,186,46,152,46"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="427,5,527,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="378,29,412,24,413,29,379,34"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="434,55,519,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="379,52,420,57,420,63,378,57"/>
-</map>

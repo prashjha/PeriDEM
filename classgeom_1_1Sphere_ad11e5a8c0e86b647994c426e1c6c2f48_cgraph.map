@@ -1,9 +1,0 @@
-<map id="geom::Sphere::isOutside" name="geom::Sphere::isOutside">
-<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,31,172,56"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Sphere.html#a3b15c462fd4ca457f9bcfb574b29d665" title="Checks if point is inside this object." alt="" coords="220,31,376,56"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="172,41,206,41,206,46,172,46"/>
-<area shape="rect" id="Node000003" href="$structutil_1_1Point.html#a131469f79fbf47c5c0e8ef0e3701f036" title="Computes the distance between a given point from this point." alt="" coords="424,5,531,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="376,30,410,25,411,30,377,35"/>
-<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="435,55,520,80"/>
-<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="377,51,421,57,420,62,376,56"/>
-</map>

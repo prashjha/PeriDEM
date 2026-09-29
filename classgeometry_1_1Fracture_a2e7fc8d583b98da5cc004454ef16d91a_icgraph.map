@@ -1,9 +1,0 @@
-<map id="geometry::Fracture::setBondState" name="geometry::Fracture::setBondState">
-<area shape="rect" id="Node000001" title="Sets the bond state." alt="" coords="517,41,649,81"/>
-<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02prenotch_8cpp_03.html#aa5a3c09755f2e1d38b3e5718c310193c" title=" " alt="" coords="275,5,469,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="503,50,469,45,470,39,504,45"/>
-<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02materialUtil_8cpp_03.html#a59ac44a3a0da22d7275f01464ccca923" title=" " alt="" coords="283,70,461,125"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="504,77,462,85,461,79,503,72"/>
-<area shape="rect" id="Node000004" href="$namespacematerial.html#a94712e15acbd021fa30542f5a1b4b4ad" title=" " alt="" coords="5,85,227,110"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="269,100,227,100,227,95,269,95"/>
-</map>

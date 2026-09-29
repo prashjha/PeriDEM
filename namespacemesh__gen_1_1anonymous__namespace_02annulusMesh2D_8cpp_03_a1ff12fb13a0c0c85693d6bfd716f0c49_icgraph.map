@@ -1,7 +1,0 @@
-<map id="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::addEllipseDiskOcc" name="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::addEllipseDiskOcc">
-<area shape="rect" id="Node000001" title=" " alt="" coords="248,29,443,84"/>
-<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="386,18,371,11,345,8,324,10,310,15,303,21,303,29,298,29,298,19,307,10,323,5,345,3,373,6,388,14"/>
-<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a7bf2a31575d648841e10a2adb975f48f" title=" " alt="" coords="5,29,200,84"/>
-<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="234,59,200,59,200,54,234,54"/>
-<area shape="poly" id="edge3_Node000002_Node000002" title=" " alt="" coords="143,18,129,11,103,8,81,10,67,15,61,21,61,29,55,29,56,19,64,10,80,5,103,3,130,6,146,14"/>
-</map>

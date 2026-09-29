@@ -1,5 +1,0 @@
-<map id="geom::Cylinder::box" name="geom::Cylinder::box">
-<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="5,5,144,31"/>
-<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="192,5,312,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="144,15,178,15,178,21,144,21"/>
-</map>

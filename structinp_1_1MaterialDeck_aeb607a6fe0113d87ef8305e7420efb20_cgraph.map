@@ -1,5 +1,0 @@
-<map id="inp::MaterialDeck::influenceFields" name="inp::MaterialDeck::influenceFields">
-<area shape="rect" id="Node000001" title="The fields of the Influence_Function sub&#45;block." alt="" coords="5,5,137,45"/>
-<area shape="rect" id="Node000002" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="185,13,256,38"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,23,171,23,171,28,137,28"/>
-</map>

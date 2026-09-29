@@ -1,9 +1,0 @@
-<map id="geom::OpenRectChannel2D::isOutside" name="geom::OpenRectChannel2D::isOutside">
-<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,27,192,67"/>
-<area shape="rect" id="Node000002" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="255,5,411,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,33,241,27,242,32,192,38"/>
-<area shape="rect" id="Node000003" href="$classgeom_1_1OpenRectChannel2D.html#a3e01936d6c566270bd1ad60340d1ec4a" title="Checks if point is inside this object." alt="" coords="240,55,427,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,56,227,60,226,65,192,61"/>
-<area shape="rect" id="Node000004" href="$classgeom_1_1OpenRectChannel2D.html#a3b629c680b18067021c5a4253a0a8f7d" title=" " alt="" coords="475,55,661,95"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="427,73,461,73,461,78,427,78"/>
-</map>

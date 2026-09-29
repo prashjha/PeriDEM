@@ -1,7 +1,0 @@
-<map id="geom::isPointInsideBox" name="geom::isPointInsideBox">
-<area shape="rect" id="Node000001" title="Returns true if point is inside box." alt="" coords="5,31,165,56"/>
-<area shape="rect" id="Node000002" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="213,5,313,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="165,29,199,24,200,30,166,35"/>
-<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="221,55,306,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="166,51,208,57,207,62,165,57"/>
-</map>

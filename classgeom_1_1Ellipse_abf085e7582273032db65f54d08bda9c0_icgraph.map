@@ -1,5 +1,0 @@
-<map id="geom::Ellipse::printStr" name="geom::Ellipse::printStr">
-<area shape="rect" id="Node000001" title="Returns the string containing printable information about the object." alt="" coords="188,5,339,31"/>
-<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipse.html#a64209d62867072f783d188d67c2d3d00" title="Prints the information about the object." alt="" coords="5,5,140,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,21,140,21,140,15,174,15"/>
-</map>

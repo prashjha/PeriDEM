@@ -1,8 +1,0 @@
-<map id="problem.validate_sites" name="problem.validate_sites">
-<area shape="rect" id="Node000001" title=" " alt="" coords="5,31,157,56"/>
-<area shape="rect" id="Node000002" href="$namespaceproblem.html#acf14e9802f6feef7b6c19d9b0445e5f3" title=" " alt="" coords="205,5,340,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="157,31,191,26,192,31,158,36"/>
-<area shape="rect" id="Node000003" href="$namespaceproblem.html#a0d619aa1c69c818d1d1d94c204a54f4f" title=" " alt="" coords="388,31,520,56"/>
-<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="158,41,374,41,374,46,158,46"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="340,25,375,30,374,35,340,30"/>
-</map>

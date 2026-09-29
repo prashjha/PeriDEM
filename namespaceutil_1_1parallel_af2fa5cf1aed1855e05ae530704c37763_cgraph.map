@@ -1,7 +1,0 @@
-<map id="util::parallel::mpiComm" name="util::parallel::mpiComm">
-<area shape="rect" id="Node000001" title="Get MPI comm." alt="" coords="5,5,161,31"/>
-<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="209,5,344,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,15,196,15,196,21,162,21"/>
-<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="392,5,564,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="344,15,378,15,378,21,344,21"/>
-</map>

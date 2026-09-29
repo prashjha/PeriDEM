@@ -1,7 +1,0 @@
-<map id="geometry::breakBondsInSlots" name="geometry::breakBondsInSlots">
-<area shape="rect" id="Node000001" title="Break the bonds of one particle that enter open notch slots." alt="" coords="343,13,537,38"/>
-<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a47b65f0e2ac18eb0d1ea7d5a551bfc41" title=" " alt="" coords="104,5,295,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="329,28,295,28,295,23,329,23"/>
-<area shape="rect" id="Node000003" href="$test_2test__data_2peridem_2notched__impact__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,13,56,38"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="90,28,56,28,56,23,90,23"/>
-</map>
