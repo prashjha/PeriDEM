@@ -1,0 +1,30 @@
+<map id="geom::getAcceptableGeometries" name="geom::getAcceptableGeometries">
+<area shape="rect" id="Node000001" title="Returns list of acceptable geometries for PeriDEM simulation." alt="" coords="989,353,1201,378"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen.html#a4589036e29bbbbc112bbd785ac32eca2" title="In&#45;process Gmsh mesh from geom::GeomObject (after createGeomObject on deck / Particle data)." alt="" coords="722,148,898,188"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1063,347,839,190,842,186,1066,343"/>
+<area shape="rect" id="Node000004" href="$testMeshGen_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="271,258,321,283"/>
+<area shape="poly" id="edge15_Node000001_Node000004" title=" " alt="" coords="976,365,723,350,574,335,427,312,370,298,321,282,322,277,371,293,429,307,575,329,723,345,976,360"/>
+<area shape="rect" id="Node000017" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a901ea88f429ebe5d2e8a278aed9b57c1" title=" " alt="" coords="679,373,941,413"/>
+<area shape="poly" id="edge13_Node000001_Node000017" title=" " alt="" coords="976,380,942,383,941,378,975,374"/>
+<area shape="rect" id="Node000018" href="$test_2test__data_2peridem_2twop__general__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="504,409,555,434"/>
+<area shape="poly" id="edge16_Node000001_Node000018" title=" " alt="" coords="1059,386,1005,410,942,428,886,436,829,441,718,441,622,435,555,428,555,422,622,430,718,436,829,435,886,431,941,423,1003,405,1057,381"/>
+<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a603ec9e04d1d44de0e68a5d80d63e08b" title="For one acceptable geometry name: exampleGeomParams → mesh in memory → non&#45;empty nodes,..." alt="" coords="428,141,631,195"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="708,171,631,171,631,165,708,165"/>
+<area shape="rect" id="Node000005" href="$namespacemesh__gen.html#ae60bdca385726662e396def3e46d7fa8" title="Build a reference&#45;particle mesh: file, uniform rectangle, or in&#45;process Gmsh." alt="" coords="428,14,631,39"/>
+<area shape="poly" id="edge5_Node000002_Node000005" title=" " alt="" coords="770,142,706,99,630,57,586,42,588,37,632,52,709,94,773,137"/>
+<area shape="rect" id="Node000014" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a9a4a42e64ff97d6e21c77a8b767b9e90" title=" " alt="" coords="481,67,578,93"/>
+<area shape="poly" id="edge8_Node000002_Node000014" title=" " alt="" coords="744,146,630,107,578,93,579,88,631,101,745,140"/>
+<area shape="rect" id="Node000016" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a2634249539a2327762dbf9e5b347ea59" title="Circle: write .msh and .vtk via the built&#45;in Gmsh path (file I/O check)." alt="" coords="442,243,617,298"/>
+<area shape="poly" id="edge10_Node000002_Node000016" title=" " alt="" coords="742,195,606,246,604,241,741,190"/>
+<area shape="poly" id="edge3_Node000003_Node000003" title=" " alt="" coords="568,130,554,122,529,119,509,121,495,126,489,132,489,141,484,141,484,130,492,122,507,116,529,114,556,117,571,125"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="444,203,429,209,323,260,320,256,427,204,442,198"/>
+<area shape="rect" id="Node000006" href="$namespaceparticle.html#a2bdc7a5bc215c50bd3acf8c5fa4e56bd" title="Build reference meshes from the particle deck (no placement)." alt="" coords="212,5,380,45"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="414,29,380,28,380,23,414,23"/>
+<area shape="rect" id="Node000007" href="$namespaceparticle.html#a4186fa1cb451f637da0180294b5a253f" title="Build refs then place particles according to the generation method." alt="" coords="5,13,164,38"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="198,28,164,28,164,23,198,23"/>
+<area shape="rect" id="Node000015" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="271,70,321,95"/>
+<area shape="poly" id="edge9_Node000014_Node000015" title=" " alt="" coords="467,83,322,85,322,80,467,78"/>
+<area shape="poly" id="edge11_Node000016_Node000004" title=" " alt="" coords="428,273,321,273,321,268,428,268"/>
+<area shape="poly" id="edge12_Node000016_Node000016" title=" " alt="" coords="568,232,554,225,529,222,509,224,495,229,489,235,489,243,484,243,484,233,492,224,507,219,529,217,556,220,571,228"/>
+<area shape="poly" id="edge14_Node000017_Node000018" title=" " alt="" coords="666,410,555,422,554,416,665,405"/>
+</map>

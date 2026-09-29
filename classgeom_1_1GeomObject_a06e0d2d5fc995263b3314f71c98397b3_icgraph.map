@@ -1,0 +1,22 @@
+<map id="geom::GeomObject::box" name="geom::GeomObject::box">
+<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="741,190,905,215"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1AnnulusGeomObject.html#ade55b02dd54bc3ffa08b2d3c38b83435" title="Computes the bounding box of object." alt="" coords="475,141,685,166"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="746,190,643,169,644,163,747,185"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1AnnulusGeomObject.html#accd165dd4f524c19ee283f0fd471118d" title="Computes the bounding box of object." alt="" coords="475,190,685,215"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="728,205,685,205,685,200,728,200"/>
+<area shape="rect" id="Node000010" href="$namespacemesh__gen_1_1anonymous__namespace_02builtinGmshGeometry_8cpp_03.html#af1850a344c253fa03374fc383aedad4a" title=" " alt="" coords="467,263,693,318"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="775,223,657,266,655,261,773,218"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1AnnulusGeomObject.html#aa0eba7d1366e2fd8e61b27738546022e" title="Checks if box intersects this object." alt="" coords="236,5,419,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="547,135,488,98,418,60,389,48,391,43,420,55,491,93,550,131"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1AnnulusGeomObject.html#af8bee432774201b4df930a0bcc51e1ae" title="Checks if box is completely inside." alt="" coords="236,69,419,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="515,140,406,112,408,107,516,135"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1AnnulusGeomObject.html#ac7252b96eb49522e110ad96c5772bc59" title="Checks if box is within given distance of this object." alt="" coords="236,133,419,173"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="461,156,419,156,419,151,461,151"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1AnnulusGeomObject.html#a831f6f86137417c1b8f32dd724d9de8b" title="Checks if box is outside of the object." alt="" coords="236,197,419,237"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="503,172,467,180,395,200,394,195,466,175,502,166"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1AnnulusGeomObject.html#a33f56bd7030f19ac1b48690b8568f801" title="Returns the string containing printable information about the object." alt="" coords="236,261,419,301"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="477,174,468,179,452,196,445,214,437,233,420,251,401,264,398,259,417,247,432,230,440,212,448,193,465,175,474,170"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1AnnulusGeomObject.html#abf7fe5059670b16d9bff9182e689d77e" title="Prints the information about the object." alt="" coords="5,261,188,301"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="223,284,188,284,188,279,223,279"/>
+<area shape="poly" id="edge10_Node000010_Node000010" title=" " alt="" coords="621,252,606,245,580,242,558,244,544,249,538,255,538,263,533,263,533,253,541,244,557,239,580,237,607,240,623,248"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="geom::anonymous_namespace{geomObjects::cpp}::ellipsoidMetric" name="geom::anonymous_namespace{geomObjects::cpp}::ellipsoidMetric">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,37,232,77"/>
+<area shape="poly" id="edge4_Node000001_Node000001" title=" " alt="" coords="68,37,65,27,73,18,91,12,119,10,150,13,167,20,165,25,149,18,119,15,92,17,76,22,70,28,73,35"/>
+<area shape="rect" id="Node000002" href="$namespacegeom_1_1anonymous__namespace_02geomObjects_8cpp_03.html#aa11b8e64e949df4eebbaad8a7bf9aab6" title=" " alt="" coords="280,29,501,84"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="232,54,266,54,266,59,232,59"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="341,29,341,19,350,10,367,5,391,3,420,6,436,14,434,18,418,11,391,8,368,10,353,15,346,21,346,29"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad8236ad8cc776188c0e4f81536acb257" title="Row&#45;major 3×3 rotation &#160;from ellipsoid axis–angle (identity if )." alt="" coords="549,44,744,69"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="502,54,535,54,535,59,502,59"/>
+</map>

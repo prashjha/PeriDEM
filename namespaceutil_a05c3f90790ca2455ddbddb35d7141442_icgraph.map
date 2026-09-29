@@ -1,0 +1,39 @@
+<map id="util::normalContactStiffness" name="util::normalContactStiffness">
+<area shape="rect" id="Node000001" title="Silling normal contact stiffness from two bulk moduli and the horizon." alt="" coords="557,269,740,294"/>
+<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a8f784dc85fc6509373923e548c58e2d9" title=" " alt="" coords="331,5,509,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="636,257,617,214,590,161,553,107,508,59,490,48,492,43,511,55,557,103,595,158,622,212,641,255"/>
+<area shape="rect" id="Node000004" href="$namespaceanonymous__namespace_02main_8cpp_03.html#ad057267c4562977805fd461a2748b960" title=" " alt="" coords="331,69,509,109"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="630,259,581,192,546,155,508,124,487,112,489,107,511,119,550,152,585,189,635,256"/>
+<area shape="rect" id="Node000006" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a81037a21fcb61890491e0a81920ba732" title=" " alt="" coords="331,133,509,173"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="619,262,569,225,508,188,482,176,484,171,511,183,572,220,622,258"/>
+<area shape="rect" id="Node000008" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a17e552ab5ba4d97d07914a24d2eab2f5" title=" " alt="" coords="331,197,509,237"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="588,267,492,240,493,235,590,262"/>
+<area shape="rect" id="Node000010" href="$namespaceanonymous__namespace_02main_8cpp_03.html#ade6c5aa68e6046b464bf3275f69418d7" title=" " alt="" coords="331,261,509,301"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="543,284,509,284,509,279,543,279"/>
+<area shape="rect" id="Node000012" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a9a4a42e64ff97d6e21c77a8b767b9e90" title=" " alt="" coords="371,326,469,351"/>
+<area shape="poly" id="edge11_Node000001_Node000012" title=" " alt="" coords="585,300,470,329,468,324,584,295"/>
+<area shape="rect" id="Node000014" href="$namespaceanonymous__namespace_02main_8cpp_03.html#abcb3631b38a9176056f5e3c68e77dd2a" title=" " alt="" coords="337,376,503,416"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="618,304,568,334,510,365,480,378,478,373,508,360,565,330,615,299"/>
+<area shape="rect" id="Node000017" href="$test_2test__data_2peridem_2notched__impact__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="395,441,445,466"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="633,307,583,368,549,402,511,430,478,445,446,453,445,447,476,440,508,426,546,398,579,365,629,304"/>
+<area shape="rect" id="Node000018" href="$namespacetest.html#a35526375aaac5972bb7bb89a53c595b5" title="Checks the contact&#45;stiffness helpers are bit&#45;for&#45;bit what the expressions they replaced produced." alt="" coords="335,490,505,515"/>
+<area shape="poly" id="edge17_Node000001_Node000018" title=" " alt="" coords="639,308,620,347,592,393,555,441,511,481,489,492,487,488,508,476,552,437,588,390,615,344,634,306"/>
+<area shape="rect" id="Node000003" href="$test_2test__data_2peridem_2twop__general__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,13,219,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="316,28,219,28,219,23,316,23"/>
+<area shape="rect" id="Node000005" href="$test_2test__data_2peridem_2mpi__identity__twop__wall_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,77,219,102"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="316,92,219,92,219,87,316,87"/>
+<area shape="rect" id="Node000007" href="$examples_2PeriDEM_2ellipse__triangle_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,141,219,166"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="316,156,219,156,219,151,316,151"/>
+<area shape="rect" id="Node000009" href="$test_2test__data_2peridem_2jha2021__comp__n50_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,205,219,230"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="316,220,219,220,219,215,316,215"/>
+<area shape="rect" id="Node000011" href="$test_2test__data_2peridem_2twop__circ__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,269,219,294"/>
+<area shape="poly" id="edge10_Node000010_Node000011" title=" " alt="" coords="316,284,219,284,219,279,316,279"/>
+<area shape="rect" id="Node000013" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,326,219,351"/>
+<area shape="poly" id="edge12_Node000012_Node000013" title=" " alt="" coords="358,341,219,341,219,336,358,336"/>
+<area shape="rect" id="Node000015" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a0031a33fbe22bbb66c64d0aa1195b37b" title=" " alt="" coords="104,376,283,416"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="323,399,283,399,283,393,323,393"/>
+<area shape="rect" id="Node000016" href="$test_2test__data_2peridem_2compressive__mixed__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="5,383,56,409"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="90,399,56,399,56,393,90,393"/>
+<area shape="rect" id="Node000019" href="$testUtil_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="168,490,219,515"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="321,505,219,505,219,500,321,500"/>
+</map>

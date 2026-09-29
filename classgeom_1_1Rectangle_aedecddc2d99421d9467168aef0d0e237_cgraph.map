@@ -1,0 +1,16 @@
+<map id="geom::Rectangle::isOutside" name="geom::Rectangle::isOutside">
+<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,79,189,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Rectangle.html#a7dbc50605017553734fb641754b273a1" title="Computes the bounding box of object." alt="" coords="249,29,400,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="156,76,251,55,253,60,157,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="247,79,403,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="189,89,233,89,233,94,189,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Rectangle.html#aab3d25267c5fd7decc2a6a04a5eccd87" title="Checks if point is inside this object." alt="" coords="237,128,412,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="157,101,253,122,251,128,156,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="288,31,280,21,284,11,299,5,325,3,357,7,369,16,365,20,355,11,325,8,300,10,288,15,285,20,292,27"/>
+<area shape="rect" id="Node000005" href="$namespacegeom.html#a39308af64e5f46fb740c14cee14cd5e2" title="Checks if point is inside a rectangle." alt="" coords="460,128,656,153"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="413,138,447,138,447,143,413,143"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="704,103,804,128"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="656,125,690,121,691,126,657,131"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="711,152,797,177"/>
+<area shape="poly" id="edge7_Node000005_Node000007" title=" " alt="" coords="657,150,698,155,697,160,656,155"/>
+</map>

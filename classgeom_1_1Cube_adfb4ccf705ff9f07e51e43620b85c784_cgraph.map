@@ -1,0 +1,15 @@
+<map id="geom::Cube::isNearBoundary" name="geom::Cube::isNearBoundary">
+<area shape="rect" id="Node000001" title="cons" alt="" coords="5,9,200,34"/>
+<area shape="rect" id="Node000002" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="650,9,735,34"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="200,12,383,4,489,3,595,7,636,11,636,16,594,12,489,8,383,9,201,17"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Cube.html#ab44d098e19d595459b4e54fd181effae" title="Checks if point is within given distance of this object." alt="" coords="248,46,387,71"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="177,32,235,42,234,47,176,37"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Cube.html#a3d88b2f032ba4391a0f9e14015ac16ef" title="Computes the bounding box of object." alt="" coords="453,46,576,71"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="387,56,439,56,439,61,387,61"/>
+<area shape="rect" id="Node000005" href="$namespacegeom.html#a5629d4efa093fda6590987a646ea1bba" title="Returns true if point is inside box." alt="" coords="435,95,595,121"/>
+<area shape="poly" id="edge5_Node000003_Node000005" title=" " alt="" coords="369,69,451,90,449,95,368,74"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="485,48,479,38,482,28,495,22,515,19,539,23,549,32,546,36,537,28,515,25,496,27,486,32,484,37,490,45"/>
+<area shape="poly" id="edge7_Node000005_Node000002" title=" " alt="" coords="565,93,594,82,630,62,662,40,665,45,633,66,596,87,566,98"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="643,95,743,121"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="595,105,629,105,629,111,595,111"/>
+</map>

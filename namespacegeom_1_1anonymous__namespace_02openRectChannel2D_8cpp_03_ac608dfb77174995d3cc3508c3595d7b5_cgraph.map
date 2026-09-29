@@ -1,0 +1,6 @@
+<map id="geom::anonymous_namespace{openRectChannel2D::cpp}::distPointToSegment2D" name="geom::anonymous_namespace{openRectChannel2D::cpp}::distPointToSegment2D">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,29,208,84"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="66,29,66,19,73,10,87,5,107,3,130,6,144,14,141,18,129,11,107,8,88,10,76,15,71,21,71,29"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="256,44,376,69"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="208,54,242,54,242,59,208,59"/>
+</map>

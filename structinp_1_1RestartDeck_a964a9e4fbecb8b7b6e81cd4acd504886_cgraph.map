@@ -1,0 +1,9 @@
+<map id="inp::RestartDeck::readFromJson" name="inp::RestartDeck::readFromJson">
+<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="5,31,217,56"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1RestartDeck.html#a581dbc6e463ed8462028675b37cad68f" title="Returns example JSON object for ModelDeck configuration." alt="" coords="265,5,425,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,29,251,25,252,31,218,35"/>
+<area shape="rect" id="Node000004" href="$namespaceinp.html#a2b2414a6c0b5dfc4139f030358c8dbf0" title="Reads every field of the table from the block." alt="" coords="292,55,399,80"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="218,52,279,58,278,63,217,57"/>
+<area shape="rect" id="Node000003" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="473,5,544,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="426,15,460,15,460,21,426,21"/>
+</map>

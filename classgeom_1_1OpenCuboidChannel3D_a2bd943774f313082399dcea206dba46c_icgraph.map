@@ -1,0 +1,18 @@
+<map id="geom::OpenCuboidChannel3D::inRemovedFaceSlab" name="geom::OpenCuboidChannel3D::inRemovedFaceSlab">
+<area shape="rect" id="Node000001" title=" " alt="" coords="955,127,1144,167"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenCuboidChannel3D.html#a5c2754e0e5ec9fce317649e9747c7b29" title="Checks if point is inside this object." alt="" coords="717,127,907,167"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="941,149,907,149,907,144,941,144"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1OpenCuboidChannel3D.html#a4c8f7a9764be714600e869b258eef8d4" title="Checks if box intersects this object." alt="" coords="480,5,669,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="771,121,723,90,668,60,640,48,642,43,670,55,725,85,773,116"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1OpenCuboidChannel3D.html#a9186a9d4d95b4eef90769dbdddd19441" title="Checks if box is completely inside." alt="" coords="480,69,669,109"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="715,126,657,112,659,107,716,121"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1OpenCuboidChannel3D.html#aa479776e21ae3b493be23cc84869c700" title="Checks if point is within given distance of this object." alt="" coords="243,188,432,228"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="704,153,595,160,480,175,408,191,407,185,480,169,595,155,703,148"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1OpenCuboidChannel3D.html#af4d047d74e4d5d6dd0a8b3a8c621359e" title="Checks if box is outside of the object." alt="" coords="480,184,669,224"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="716,172,659,187,657,181,715,167"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1OpenCuboidChannel3D.html#a982861d35aa36479701f327a13b7cd5e" title="Checks if point is outside of this object." alt="" coords="480,248,669,288"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="773,177,725,208,670,238,642,250,640,245,668,234,723,204,771,172"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1OpenCuboidChannel3D.html#ab2d665f55dfaf84c6e79f6aed20262af" title="Checks if point lies exactly on the boundary." alt="" coords="5,188,195,228"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="229,211,195,211,195,205,229,205"/>
+<area shape="poly" id="edge8_Node000008_Node000005" title=" " alt="" coords="481,247,417,231,418,226,482,242"/>
+</map>

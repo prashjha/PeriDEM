@@ -1,0 +1,9 @@
+<map id="/home/user/project/src/mesh_gen/gmshOccCompat.h" name="/home/user/project/src/mesh_gen/gmshOccCompat.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="9,5,234,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,64,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="102,48,60,86,56,82,99,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="89,93,154,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="124,46,124,79,119,79,119,46"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="179,93,237,119"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="144,44,187,82,183,86,141,48"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="geom::OpenRectChannel2D::transform" name="geom::OpenRectChannel2D::transform">
+<area shape="rect" id="Node000001" title="Similarity about pivot &#160;(default: old center d_x), then rigid displacement &#160;= translation: ...." alt="" coords="5,35,192,75"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenRectChannel2D.html#a6ac26e6ad687653a0007329b0a8dd036" title=" " alt="" coords="240,5,427,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="192,40,226,36,227,41,192,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="293,70,373,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,63,280,74,279,79,192,68"/>
+<area shape="rect" id="Node000004" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="475,70,592,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="374,80,461,80,461,85,374,85"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="geom::Sphere::doesIntersect" name="geom::Sphere::doesIntersect">
+<area shape="rect" id="Node000001" title="Checks if point lies exactly on the boundary." alt="" coords="5,5,196,31"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Sphere.html#af475b706b97112e90d6ae01127ede6df" title="cons" alt="" coords="244,5,448,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,15,230,15,230,21,196,21"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="693,5,779,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="448,15,680,15,680,21,448,21"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Sphere.html#a917be3f8ebbdb56922134990afe447ec" title="Checks if point is within given distance of this object." alt="" coords="496,31,645,56"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="449,27,482,31,482,36,448,32"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="645,29,679,24,680,29,646,34"/>
+</map>

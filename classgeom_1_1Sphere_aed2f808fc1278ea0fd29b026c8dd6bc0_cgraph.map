@@ -1,0 +1,14 @@
+<map id="geom::Sphere::isOutside" name="geom::Sphere::isOutside">
+<area shape="rect" id="Node000001" title="Checks if box is outside of the object." alt="" coords="5,79,172,104"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Sphere.html#a7c224f18b0d185eb38dff36dbcb30dd4" title="Computes the bounding box of object." alt="" coords="232,29,364,55"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,76,230,55,231,60,144,81"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="220,79,376,104"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="172,89,206,89,206,94,172,94"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Sphere.html#a3b15c462fd4ca457f9bcfb574b29d665" title="Checks if point is inside this object." alt="" coords="220,128,376,153"/>
+<area shape="poly" id="edge4_Node000001_Node000004" title=" " alt="" coords="144,101,231,122,230,127,143,107"/>
+<area shape="poly" id="edge2_Node000002_Node000002" title=" " alt="" coords="268,31,262,21,265,11,278,5,298,3,323,6,333,15,329,19,320,11,298,8,279,10,269,15,267,20,273,28"/>
+<area shape="rect" id="Node000005" href="$structutil_1_1Point.html#a131469f79fbf47c5c0e8ef0e3701f036" title="Computes the distance between a given point from this point." alt="" coords="424,103,531,128"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="376,127,410,122,411,127,377,132"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="435,152,520,177"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="377,148,421,155,420,160,376,154"/>
+</map>

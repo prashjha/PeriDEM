@@ -1,0 +1,15 @@
+<map id="loading::ParticleULoading::setFixity" name="loading::ParticleULoading::setFixity">
+<area shape="rect" id="Node000001" title="Sets fixity mask." alt="" coords="5,23,176,63"/>
+<area shape="rect" id="Node000002" href="$namespaceloading.html#a20479e8e6dee940040681eb2ee9d0c48" title="Function that checks if we need to do computation at a given point x within a particle with id = id." alt="" coords="233,5,420,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,32,220,27,220,32,177,37"/>
+<area shape="rect" id="Node000006" href="$namespaceloading.html#a05ee08365f0423fc7eb71bc897f77e06" title="Function that checks if given particle with id = id needs to be processed within boundary condition d..." alt="" coords="224,55,429,80"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="177,49,211,53,210,58,176,55"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#a86460acadab9a2e99a92121c0213e444" title="Find if data is in the list." alt="" coords="477,31,624,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="421,26,464,31,464,36,420,31"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="672,31,803,56"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="624,41,658,41,658,46,624,46"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="851,31,1013,56"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="803,49,837,50,837,55,803,55"/>
+<area shape="poly" id="edge5_Node000005_Node000004" title=" " alt="" coords="850,37,817,37,817,32,850,32"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="429,54,463,50,464,55,430,59"/>
+</map>

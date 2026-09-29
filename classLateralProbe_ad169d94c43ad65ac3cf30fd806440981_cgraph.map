@@ -1,0 +1,20 @@
+<map id="LateralProbe::checkStop" name="LateralProbe::checkStop">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,55,171,80"/>
+<area shape="rect" id="Node000002" href="$classpostprocess_1_1Postprocess.html#a71850e154cac991fcf5cf8be5ed325fe" title=" " alt="" coords="219,47,393,87"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="171,65,205,65,205,70,171,70"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="476,5,576,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="393,45,462,30,463,35,394,50"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="485,55,567,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="394,65,471,65,471,70,394,70"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1methods.html#a15ca8392b2b1b5f4888d4bda9cdb4473" title="Returns the maximum length of point and index from list of points." alt="" coords="441,105,611,145"/>
+<area shape="poly" id="edge6_Node000002_Node000006" title=" " alt="" coords="384,85,436,99,435,104,383,90"/>
+<area shape="rect" id="Node000005" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="659,55,789,80"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="568,65,646,65,646,70,568,70"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="692,56,685,46,689,36,702,30,724,28,751,32,762,40,759,45,749,36,724,33,703,35,692,40,690,46,696,53"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="659,108,789,133"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="611,120,645,120,645,125,611,126"/>
+<area shape="rect" id="Node000008" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="837,108,1000,133"/>
+<area shape="poly" id="edge10_Node000006_Node000008" title=" " alt="" coords="611,138,659,143,724,147,789,143,852,134,852,139,790,149,724,153,658,149,610,143"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="790,127,824,127,824,132,790,132"/>
+<area shape="poly" id="edge9_Node000008_Node000007" title=" " alt="" coords="837,114,803,114,803,109,837,109"/>
+</map>

@@ -1,0 +1,22 @@
+<map id="inp::MaterialDeck::readFromJson" name="inp::MaterialDeck::readFromJson">
+<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="5,135,137,175"/>
+<area shape="rect" id="Node000002" href="$namespaceinp.html#abd2073de7b9c44f197c8d7811cab9169" title="Checks that each group has exactly one of its keys." alt="" coords="217,5,341,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="88,133,129,91,155,68,184,48,215,33,217,38,187,52,159,72,132,95,91,137"/>
+<area shape="rect" id="Node000003" href="$structinp_1_1MaterialDeck.html#a924f370558b1598178ab4f3203f0efed" title="The fields of the block itself." alt="" coords="423,71,555,111"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="99,133,138,110,185,91,243,81,302,76,410,79,409,84,302,81,243,86,186,97,140,115,102,138"/>
+<area shape="rect" id="Node000005" href="$structinp_1_1MaterialDeck.html#a16956094c67627f7a721a7e75b591e61" title="Quantities this deck accepts in more than one form." alt="" coords="213,106,345,146"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="137,143,199,135,200,140,138,149"/>
+<area shape="rect" id="Node000006" href="$structinp_1_1MaterialDeck.html#aeb607a6fe0113d87ef8305e7420efb20" title="The fields of the Influence_Function sub&#45;block." alt="" coords="423,158,555,198"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="138,156,410,171,409,176,137,162"/>
+<area shape="rect" id="Node000007" href="$namespaceinp.html#a2b2414a6c0b5dfc4139f030358c8dbf0" title="Reads every field of the table from the block." alt="" coords="436,223,543,248"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="138,165,422,220,421,225,137,170"/>
+<area shape="rect" id="Node000008" href="$structinp_1_1MatData.html#a2c70fafb44d1235e27b1727e76fbfa04" title=" " alt="" coords="185,272,373,297"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="93,173,134,212,187,250,218,265,216,270,184,255,131,216,89,177"/>
+<area shape="rect" id="Node000004" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="605,165,676,191"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="526,109,607,156,604,161,524,114"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="555,175,592,175,592,181,555,181"/>
+<area shape="poly" id="edge11_Node000008_Node000007" title=" " alt="" coords="333,269,422,248,423,253,335,275"/>
+<area shape="rect" id="Node000009" href="$structinp_1_1MatData.html#a8613a56e403feb4cfb648ab1997f4c1d" title="Reads from json object." alt="" coords="421,272,557,297"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="373,282,407,282,407,287,373,287"/>
+<area shape="poly" id="edge10_Node000009_Node000004" title=" " alt="" coords="531,270,556,257,591,229,619,200,622,203,594,233,559,262,533,274"/>
+</map>

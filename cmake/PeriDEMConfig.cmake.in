@@ -1,0 +1,21 @@
+# -------------------------------------------
+# Copyright (c) 2021 - 2026 Prashant K. Jha
+# -------------------------------------------
+# PeriDEM https://github.com/prashjha/PeriDEM
+#
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
+# file LICENSE)
+
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+find_dependency(MPI REQUIRED)
+find_dependency(Threads REQUIRED)
+find_dependency(VTK COMPONENTS CommonCore CommonDataModel IOXML)
+find_dependency(BLAS REQUIRED)
+find_dependency(LAPACK REQUIRED)
+find_dependency(Metis REQUIRED)
+find_dependency(Gmsh REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/PeriDEMTargets.cmake")

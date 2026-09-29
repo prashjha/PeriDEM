@@ -1,0 +1,13 @@
+<map id="mesh_gen::anonymous_namespace{annulusMesh3D::cpp}::embedPointInAnnulus3D" name="mesh_gen::anonymous_namespace{annulusMesh3D::cpp}::embedPointInAnnulus3D">
+<area shape="rect" id="Node000001" title=" " alt="" coords="512,81,719,136"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="659,70,643,63,615,60,592,62,577,67,570,73,570,81,565,81,565,71,574,62,591,57,615,55,644,58,661,66"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#a9d66e4718fcf15bcbee64b8f54bc64be" title=" " alt="" coords="248,81,464,136"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="498,111,464,111,464,106,498,106"/>
+<area shape="poly" id="edge7_Node000002_Node000002" title=" " alt="" coords="398,70,383,63,356,60,333,62,319,67,312,73,312,81,307,81,307,71,316,62,332,57,356,55,385,58,401,66"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#a136b3d3f6629b1eaa45ba5fec6eb9cde" title=" " alt="" coords="5,29,200,84"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="234,86,200,79,201,74,235,81"/>
+<area shape="rect" id="Node000004" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh3D_8cpp_03.html#abd7ba9249ce297d9134ffdd5e0e1dfb6" title=" " alt="" coords="5,132,200,187"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="235,135,201,142,200,137,234,130"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="145,18,130,11,103,8,80,10,65,15,59,21,59,29,53,29,54,19,63,10,79,5,103,3,131,6,147,14"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="145,121,130,114,103,111,80,113,65,117,59,124,59,132,53,132,54,122,63,113,79,107,103,105,131,108,147,116"/>
+</map>

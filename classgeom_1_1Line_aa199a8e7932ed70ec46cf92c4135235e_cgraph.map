@@ -1,0 +1,9 @@
+<map id="geom::Line::isOutside" name="geom::Line::isOutside">
+<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,31,155,56"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Line.html#ae0829af26bf9d9d905f73fa71155370b" title="Checks if point is inside this object." alt="" coords="203,31,341,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="155,41,189,41,189,46,155,46"/>
+<area shape="rect" id="Node000003" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="389,5,489,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="341,30,375,25,376,30,342,35"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="397,55,482,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="342,51,383,57,383,62,341,56"/>
+</map>

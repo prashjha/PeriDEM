@@ -1,0 +1,11 @@
+<map id="geom::Rectangle::isOutside" name="geom::Rectangle::isOutside">
+<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,31,189,56"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Rectangle.html#aab3d25267c5fd7decc2a6a04a5eccd87" title="Checks if point is inside this object." alt="" coords="237,31,412,56"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="189,41,223,41,223,46,189,46"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#a39308af64e5f46fb740c14cee14cd5e2" title="Checks if point is inside a rectangle." alt="" coords="460,31,656,56"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="413,41,447,41,447,46,413,46"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="704,5,804,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="656,28,690,24,691,29,657,33"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="711,55,797,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="657,53,698,58,697,63,656,58"/>
+</map>

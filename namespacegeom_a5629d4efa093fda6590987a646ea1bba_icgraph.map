@@ -1,0 +1,73 @@
+<map id="geom::isPointInsideBox" name="geom::isPointInsideBox">
+<area shape="rect" id="Node000001" title="Returns true if point is inside box." alt="" coords="769,752,929,777"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#ac7a84b886a7a9258f52582991c83f84c" title="Checks if given two boxes are within given distance from each other." alt="" coords="554,277,699,303"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="834,740,632,304,636,302,839,738"/>
+<area shape="rect" id="Node000014" href="$classgeom_1_1Triangle.html#a4a2aeef990139015455aa231e9876537" title="Checks if point is within given distance of this object." alt="" coords="549,579,704,604"/>
+<area shape="poly" id="edge13_Node000001_Node000014" title=" " alt="" coords="832,742,787,679,756,646,720,618,697,607,699,602,723,613,759,642,791,676,836,739"/>
+<area shape="rect" id="Node000017" href="$classgeom_1_1Square.html#a3be9fecd29c6a233582f62c331f46d60" title="Checks if point is within given distance of this object." alt="" coords="552,628,701,653"/>
+<area shape="poly" id="edge16_Node000001_Node000017" title=" " alt="" coords="824,744,778,705,720,667,691,656,693,651,723,662,782,700,828,740"/>
+<area shape="rect" id="Node000020" href="$classgeom_1_1Rectangle.html#ae1842fed9e9ee69e2a13d91a61712787" title="Checks if point is within given distance of this object." alt="" coords="543,677,710,703"/>
+<area shape="poly" id="edge19_Node000001_Node000020" title=" " alt="" coords="806,749,720,717,682,705,683,700,722,711,808,744"/>
+<area shape="rect" id="Node000023" href="$classgeom_1_1Hexagon.html#a9feeb410ee2a86c2b14e0cd2e3aadb02" title="Checks if point is within given distance of this object." alt="" coords="547,727,707,752"/>
+<area shape="poly" id="edge22_Node000001_Node000023" title=" " alt="" coords="755,757,707,751,707,746,756,751"/>
+<area shape="rect" id="Node000024" href="$classgeom_1_1Drum2D.html#ac212ee13b0f7cd6610c9054fcb3754be" title="Checks if point is within given distance of this object." alt="" coords="548,776,705,801"/>
+<area shape="poly" id="edge23_Node000001_Node000024" title=" " alt="" coords="756,777,706,783,705,778,756,772"/>
+<area shape="rect" id="Node000025" href="$classgeom_1_1Cube.html#ab44d098e19d595459b4e54fd181effae" title="Checks if point is within given distance of this object." alt="" coords="557,825,696,851"/>
+<area shape="poly" id="edge24_Node000001_Node000025" title=" " alt="" coords="806,785,722,815,679,828,678,823,721,810,804,780"/>
+<area shape="rect" id="Node000028" href="$classgeom_1_1Cuboid.html#a329805090b17917dfabbe637aaa8209c" title="Checks if point is within given distance of this object." alt="" coords="552,875,701,900"/>
+<area shape="poly" id="edge27_Node000001_Node000028" title=" " alt="" coords="827,789,781,827,723,864,689,877,688,872,720,860,778,823,824,785"/>
+<area shape="rect" id="Node000031" href="$classgeom_1_1OpenCuboidChannel3D.html#a524cd76f1390a1ec178bb9cc7fe38fbc" title="Checks if point is within given distance of this object." alt="" coords="532,925,721,965"/>
+<area shape="poly" id="edge30_Node000001_Node000031" title=" " alt="" coords="835,791,789,851,758,885,723,914,699,927,696,922,720,909,755,881,785,848,831,787"/>
+<area shape="rect" id="Node000034" href="$classgeom_1_1OpenRectChannel2D.html#afc31a9ad12d132f0b7076966b1e94cd6" title="Checks if point is within given distance of this object." alt="" coords="533,989,720,1029"/>
+<area shape="poly" id="edge33_Node000001_Node000034" title=" " alt="" coords="842,791,825,832,800,882,766,934,723,979,704,991,701,986,720,975,762,931,796,880,820,830,837,789"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Triangle.html#aba72bc654035ea0c666f7abbb156f740" title="Checks if box is within given distance of this object." alt="" coords="295,5,450,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="616,265,599,217,572,157,534,95,510,68,483,44,449,28,452,24,485,40,513,64,538,92,577,154,604,215,621,263"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Square.html#a1cf1991035f65cfa82c3f523aba78382" title="Checks if box is within given distance of this object." alt="" coords="298,55,447,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="612,266,593,227,565,180,528,133,483,94,446,78,449,73,485,89,532,129,569,177,598,224,617,263"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Rectangle.html#a65fa2dac2d31a94813553a4f517dc0b6" title="Checks if box is within given distance of this object." alt="" coords="289,104,456,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="607,267,557,204,522,171,483,143,455,131,458,126,485,138,525,167,561,200,612,264"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Hexagon.html#a2f735578d58472d217c825f7ef955adb" title="Checks if box is within given distance of this object." alt="" coords="293,153,453,179"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="599,270,548,230,516,210,483,192,451,181,452,176,485,188,519,205,551,226,603,266"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Drum2D.html#a8cfd9ff8b98ece0914e28704bbec9e37" title="Checks if box is within given distance of this object." alt="" coords="294,203,451,228"/>
+<area shape="poly" id="edge6_Node000002_Node000007" title=" " alt="" coords="580,275,483,242,438,231,440,225,485,237,581,270"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Cube.html#acf8a3faa60ab0874143bf4ced00140d4" title="Checks if box is within given distance of this object." alt="" coords="303,252,442,277"/>
+<area shape="poly" id="edge7_Node000002_Node000008" title=" " alt="" coords="540,284,442,274,442,269,541,279"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Cuboid.html#aa6d9a5d8301d55eeca37705d0e123747" title="Checks if box is within given distance of this object." alt="" coords="298,301,447,327"/>
+<area shape="poly" id="edge8_Node000002_Node000009" title=" " alt="" coords="541,301,448,310,447,304,540,295"/>
+<area shape="rect" id="Node000010" href="$classgeom_1_1Ellipsoid.html#a7093fbbc9327e83ee7a9890ba1f2c43a" title="Checks if box is within given distance of this object." alt="" coords="294,351,451,376"/>
+<area shape="poly" id="edge9_Node000002_Node000010" title=" " alt="" coords="579,310,485,341,435,353,434,348,483,335,577,305"/>
+<area shape="rect" id="Node000011" href="$classgeom_1_1Cylinder.html#acddbd9226293203d2535a646de6aab5b" title="Checks if box is within given distance of this object." alt="" coords="295,400,451,425"/>
+<area shape="poly" id="edge10_Node000002_Node000011" title=" " alt="" coords="602,314,550,353,485,390,448,402,446,397,483,385,547,348,599,309"/>
+<area shape="rect" id="Node000012" href="$classgeom_1_1OpenCuboidChannel3D.html#a23e7ef67971dd8b32ce4cf58f81d678b" title="Checks if box is within given distance of this object." alt="" coords="278,450,467,490"/>
+<area shape="poly" id="edge11_Node000002_Node000012" title=" " alt="" coords="611,315,559,377,524,410,485,439,458,452,456,447,483,434,521,406,555,373,607,312"/>
+<area shape="rect" id="Node000013" href="$classgeom_1_1OpenRectChannel2D.html#a61997e19889aa1ecc439cee9f9711557" title="Checks if box is within given distance of this object." alt="" coords="279,514,466,554"/>
+<area shape="poly" id="edge12_Node000002_Node000013" title=" " alt="" coords="618,317,599,358,570,408,532,460,486,504,465,516,462,512,482,500,528,456,566,405,594,355,613,314"/>
+<area shape="rect" id="Node000015" href="$classgeom_1_1Triangle.html#ab057ec1a0ba562fec0eb996f61aaf47a" title="cons" alt="" coords="268,579,477,604"/>
+<area shape="poly" id="edge14_Node000014_Node000015" title=" " alt="" coords="536,594,478,594,478,589,536,589"/>
+<area shape="rect" id="Node000016" href="$classgeom_1_1Triangle.html#a88b0b4a91e572c2dc79019944394d745" title="Checks if point lies exactly on the boundary." alt="" coords="12,579,207,604"/>
+<area shape="poly" id="edge15_Node000015_Node000016" title=" " alt="" coords="255,594,207,594,207,589,255,589"/>
+<area shape="rect" id="Node000018" href="$classgeom_1_1Square.html#a13e34510a0acf44391e777ed1c23f2e4" title="cons" alt="" coords="271,628,475,653"/>
+<area shape="poly" id="edge17_Node000017_Node000018" title=" " alt="" coords="538,643,475,643,475,638,538,638"/>
+<area shape="rect" id="Node000019" href="$classgeom_1_1Square.html#aa4e15684de1b9391e2ad593a1e1d07ef" title="Checks if point lies exactly on the boundary." alt="" coords="14,628,205,653"/>
+<area shape="poly" id="edge18_Node000018_Node000019" title=" " alt="" coords="257,643,205,643,205,638,257,638"/>
+<area shape="rect" id="Node000021" href="$classgeom_1_1Rectangle.html#a72e34265e3f48325a386da0b3a8940ee" title="cons" alt="" coords="261,677,484,703"/>
+<area shape="poly" id="edge20_Node000020_Node000021" title=" " alt="" coords="530,693,484,693,484,687,530,687"/>
+<area shape="rect" id="Node000022" href="$classgeom_1_1Rectangle.html#a5d9782230533ecc4352a0843a9e1f47e" title="Checks if point lies exactly on the boundary." alt="" coords="5,677,213,703"/>
+<area shape="poly" id="edge21_Node000021_Node000022" title=" " alt="" coords="248,693,213,693,213,687,248,687"/>
+<area shape="rect" id="Node000026" href="$classgeom_1_1Cube.html#adfb4ccf705ff9f07e51e43620b85c784" title="cons" alt="" coords="275,825,470,851"/>
+<area shape="poly" id="edge25_Node000025_Node000026" title=" " alt="" coords="544,841,470,841,470,835,544,835"/>
+<area shape="rect" id="Node000027" href="$classgeom_1_1Cube.html#a84b90467b4dc31486fb88d450e6c5ded" title="Checks if point lies exactly on the boundary." alt="" coords="19,825,199,851"/>
+<area shape="poly" id="edge26_Node000026_Node000027" title=" " alt="" coords="262,841,200,841,200,835,262,835"/>
+<area shape="rect" id="Node000029" href="$classgeom_1_1Cuboid.html#a3bee1a625c20a0178a31810a98dd9baa" title="cons" alt="" coords="271,875,475,900"/>
+<area shape="poly" id="edge28_Node000028_Node000029" title=" " alt="" coords="538,890,475,890,475,885,538,885"/>
+<area shape="rect" id="Node000030" href="$classgeom_1_1Cuboid.html#af16d6c84ecd7ee834bf9535f2cc51b56" title="Checks if point lies exactly on the boundary." alt="" coords="14,875,205,900"/>
+<area shape="poly" id="edge29_Node000029_Node000030" title=" " alt="" coords="257,890,205,890,205,885,257,885"/>
+<area shape="rect" id="Node000032" href="$classgeom_1_1OpenCuboidChannel3D.html#aa479776e21ae3b493be23cc84869c700" title="Checks if point is within given distance of this object." alt="" coords="278,925,467,965"/>
+<area shape="poly" id="edge31_Node000031_Node000032" title=" " alt="" coords="518,947,468,947,468,942,518,942"/>
+<area shape="rect" id="Node000033" href="$classgeom_1_1OpenCuboidChannel3D.html#ab2d665f55dfaf84c6e79f6aed20262af" title="Checks if point lies exactly on the boundary." alt="" coords="15,925,204,965"/>
+<area shape="poly" id="edge32_Node000032_Node000033" title=" " alt="" coords="264,947,204,947,204,942,264,942"/>
+<area shape="rect" id="Node000035" href="$classgeom_1_1OpenRectChannel2D.html#ac60b2bfeb2d27433ea540b80659427ca" title="Checks if point is within given distance of this object." alt="" coords="279,989,466,1029"/>
+<area shape="poly" id="edge34_Node000034_Node000035" title=" " alt="" coords="520,1011,466,1011,466,1006,520,1006"/>
+<area shape="rect" id="Node000036" href="$classgeom_1_1OpenRectChannel2D.html#abbf67a18776f3bde3b71b2176da80e75" title="Checks if point lies exactly on the boundary." alt="" coords="16,989,203,1029"/>
+<area shape="poly" id="edge35_Node000035_Node000036" title=" " alt="" coords="266,1011,203,1011,203,1006,266,1006"/>
+</map>

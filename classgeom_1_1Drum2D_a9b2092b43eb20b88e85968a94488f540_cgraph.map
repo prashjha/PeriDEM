@@ -1,0 +1,5 @@
+<map id="geom::Drum2D::isNearBoundary" name="geom::Drum2D::isNearBoundary">
+<area shape="rect" id="Node000001" title="cons" alt="" coords="5,5,217,31"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Drum2D.html#a23298bb08caf432072f01e7ef6829537" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="265,5,477,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="217,15,252,15,252,21,217,21"/>
+</map>

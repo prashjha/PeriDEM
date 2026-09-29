@@ -1,0 +1,16 @@
+<map id="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::embedPointInAnnulus2D" name="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::embedPointInAnnulus2D">
+<area shape="rect" id="Node000001" title=" " alt="" coords="533,132,740,187"/>
+<area shape="poly" id="edge1_Node000001_Node000001" title=" " alt="" coords="680,121,664,114,637,111,613,113,598,117,592,124,592,132,586,132,587,122,596,113,612,107,637,105,666,108,682,116"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a2ee118fde749c4f23f4dca82e3393442" title=" " alt="" coords="267,132,485,187"/>
+<area shape="poly" id="edge2_Node000001_Node000002" title=" " alt="" coords="519,162,485,162,485,157,519,157"/>
+<area shape="poly" id="edge9_Node000002_Node000002" title=" " alt="" coords="419,121,404,114,376,111,353,113,338,117,331,124,331,132,326,132,326,122,335,113,352,107,376,105,405,108,422,116"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a6f620a5642f390489fe6693a0e8f4d89" title=" " alt="" coords="15,29,209,84"/>
+<area shape="poly" id="edge3_Node000002_Node000003" title=" " alt="" coords="296,129,218,98,188,87,190,82,220,93,298,124"/>
+<area shape="rect" id="Node000004" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a7bf2a31575d648841e10a2adb975f48f" title=" " alt="" coords="15,132,209,187"/>
+<area shape="poly" id="edge5_Node000002_Node000004" title=" " alt="" coords="253,162,210,162,210,157,253,157"/>
+<area shape="rect" id="Node000005" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#ae48bfa5b526931e0a743106ff962deaf" title=" " alt="" coords="5,235,219,289"/>
+<area shape="poly" id="edge7_Node000002_Node000005" title=" " alt="" coords="293,194,184,237,182,232,291,189"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="156,18,140,11,112,8,88,10,73,15,66,21,66,29,61,29,61,19,70,10,87,5,112,3,142,6,159,14"/>
+<area shape="poly" id="edge6_Node000004_Node000004" title=" " alt="" coords="156,121,140,114,112,111,88,113,73,117,66,124,66,132,61,132,61,122,70,113,87,107,112,105,142,108,159,116"/>
+<area shape="poly" id="edge8_Node000005_Node000005" title=" " alt="" coords="156,224,140,216,112,213,88,215,73,220,66,226,66,235,61,235,61,224,70,216,87,210,112,208,142,211,159,219"/>
+</map>

@@ -1,0 +1,9 @@
+<map id="geom::circumscribedRadiusInBox" name="geom::circumscribedRadiusInBox">
+<area shape="rect" id="Node000001" title="Computes the radius of smallest circle/sphere which can have the box inside." alt="" coords="5,47,189,87"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#a1616334a8e8c7e3b1175eb29de9a41a4" title="Returns center point." alt="" coords="256,5,375,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="186,45,245,31,246,36,187,50"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#ad04eba131d1a40c4fe9129d2dd27f401" title="Returns all corner points in the box." alt="" coords="237,55,393,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="189,65,223,65,223,70,189,70"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="265,104,365,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="187,85,252,100,251,105,186,90"/>
+</map>

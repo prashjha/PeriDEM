@@ -1,0 +1,24 @@
+<map id="mesh_gen::buildAnnulus3DInCurrentModel" name="mesh_gen::buildAnnulus3DInCurrentModel">
+<area shape="rect" id="Node000001" title=" " alt="" coords="953,171,1145,211"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen.html#a4006992a671a5441fafebd73766a3eac" title=" " alt="" coords="696,171,905,211"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="940,194,906,194,906,189,940,189"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen.html#a4589036e29bbbbc112bbd785ac32eca2" title="In&#45;process Gmsh mesh from geom::GeomObject (after createGeomObject on deck / Particle data)." alt="" coords="472,171,648,211"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="682,194,648,194,648,189,682,189"/>
+<area shape="rect" id="Node000004" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a603ec9e04d1d44de0e68a5d80d63e08b" title="For one acceptable geometry name: exampleGeomParams → mesh in memory → non&#45;empty nodes,..." alt="" coords="221,29,424,84"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="522,165,476,131,423,98,400,86,402,82,425,93,479,126,526,161"/>
+<area shape="rect" id="Node000006" href="$namespacemesh__gen.html#ae60bdca385726662e396def3e46d7fa8" title="Build a reference&#45;particle mesh: file, uniform rectangle, or in&#45;process Gmsh." alt="" coords="221,211,424,236"/>
+<area shape="poly" id="edge6_Node000003_Node000006" title=" " alt="" coords="459,208,417,213,417,208,458,202"/>
+<area shape="rect" id="Node000015" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a9a4a42e64ff97d6e21c77a8b767b9e90" title=" " alt="" coords="274,260,371,285"/>
+<area shape="poly" id="edge8_Node000003_Node000015" title=" " alt="" coords="505,219,425,251,372,265,371,260,423,246,503,215"/>
+<area shape="rect" id="Node000017" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a2634249539a2327762dbf9e5b347ea59" title="Circle: write .msh and .vtk via the built&#45;in Gmsh path (file I/O check)." alt="" coords="235,132,410,187"/>
+<area shape="poly" id="edge10_Node000003_Node000017" title=" " alt="" coords="458,180,410,174,411,168,459,175"/>
+<area shape="poly" id="edge4_Node000004_Node000004" title=" " alt="" coords="361,18,347,11,323,8,302,10,289,15,283,21,283,29,277,29,278,19,286,10,301,5,323,3,349,6,364,14"/>
+<area shape="rect" id="Node000005" href="$testMeshGen_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="64,95,115,120"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="208,84,116,105,114,99,207,79"/>
+<area shape="rect" id="Node000007" href="$namespaceparticle.html#a2bdc7a5bc215c50bd3acf8c5fa4e56bd" title="Build reference meshes from the particle deck (no placement)." alt="" coords="5,195,173,235"/>
+<area shape="poly" id="edge7_Node000006_Node000007" title=" " alt="" coords="208,222,173,221,174,216,208,217"/>
+<area shape="rect" id="Node000016" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="64,260,115,285"/>
+<area shape="poly" id="edge9_Node000015_Node000016" title=" " alt="" coords="260,275,115,275,115,270,260,270"/>
+<area shape="poly" id="edge11_Node000017_Node000005" title=" " alt="" coords="221,139,114,115,115,110,222,134"/>
+<area shape="poly" id="edge12_Node000017_Node000017" title=" " alt="" coords="361,121,347,114,323,111,302,113,289,117,283,124,283,132,277,132,278,122,286,113,301,107,323,105,349,108,364,116"/>
+</map>

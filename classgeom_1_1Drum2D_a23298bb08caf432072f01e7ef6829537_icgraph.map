@@ -1,0 +1,17 @@
+<map id="geom::Drum2D::inscribedRadius" name="geom::Drum2D::inscribedRadius">
+<area shape="rect" id="Node000001" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="512,153,724,179"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Drum2D.html#af0292cc6ba3e987417296f39f7a5b320" title="Checks if point is inside this object." alt="" coords="276,104,440,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="537,153,425,132,426,127,538,148"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Drum2D.html#a9b2092b43eb20b88e85968a94488f540" title="cons" alt="" coords="252,177,464,203"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="499,180,465,183,464,178,498,174"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Drum2D.html#ae277ac3a517fd860b85a2cf3a4830e5f" title="Checks if box intersects this object." alt="" coords="5,5,204,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="321,100,267,72,203,45,166,33,167,28,205,39,269,67,324,95"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Drum2D.html#abd699b058611a84aff375682acf03e68" title="Checks if box is completely inside." alt="" coords="23,55,187,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="278,104,170,83,171,77,279,99"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Drum2D.html#a27c542065b9c4896e07e8f2885e56822" title="Checks if box is outside of the object." alt="" coords="17,104,192,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="263,119,192,119,192,114,263,114"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Drum2D.html#ab60cfc9b69bf5965f9d1780ba36d9b32" title="Checks if point is outside of this object." alt="" coords="17,153,192,179"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="279,135,171,156,170,151,278,129"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Drum2D.html#a40c9ba43538b3effba1f5ae22b049189" title="Checks if point lies exactly on the boundary." alt="" coords="5,203,204,228"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="239,205,204,208,204,203,238,199"/>
+</map>

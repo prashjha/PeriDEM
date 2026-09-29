@@ -1,0 +1,12 @@
+test:
+  - tests/*
+code:
+  - src/*
+documentation:
+  - docs/*
+examples:
+  - examples/*
+build:
+  - CMakeLists.txt
+cmake:
+  - cmake/*

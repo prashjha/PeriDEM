@@ -1,0 +1,27 @@
+<map id="geom::ellipsoidRotationMatrix" name="geom::ellipsoidRotationMatrix">
+<area shape="rect" id="Node000001" title="Row&#45;major 3×3 rotation &#160;from ellipsoid axis–angle (identity if )." alt="" coords="1024,133,1219,159"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Ellipsoid.html#a018dcb3a7efca1720c101a27a0406b5b" title="Computes the bounding box of object." alt="" coords="795,84,935,109"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="1041,133,932,112,933,107,1042,128"/>
+<area shape="rect" id="Node000003" href="$namespacemesh__gen.html#a35a6acca8813b772b9117e6d30750662" title=" " alt="" coords="770,133,961,159"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="1010,149,961,149,961,143,1010,143"/>
+<area shape="rect" id="Node000020" href="$namespacegeom_1_1anonymous__namespace_02geomObjects_8cpp_03.html#aa11b8e64e949df4eebbaad8a7bf9aab6" title=" " alt="" coords="755,207,976,261"/>
+<area shape="poly" id="edge11_Node000001_Node000020" title=" " alt="" coords="1071,166,946,209,945,204,1069,161"/>
+<area shape="rect" id="Node000004" href="$namespacemesh__gen.html#a4006992a671a5441fafebd73766a3eac" title=" " alt="" coords="489,126,698,166"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="756,149,698,149,698,143,756,143"/>
+<area shape="rect" id="Node000005" href="$namespacemesh__gen.html#a4589036e29bbbbc112bbd785ac32eca2" title="In&#45;process Gmsh mesh from geom::GeomObject (after createGeomObject on deck / Particle data)." alt="" coords="256,126,432,166"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="475,149,432,149,432,143,475,143"/>
+<area shape="rect" id="Node000006" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a603ec9e04d1d44de0e68a5d80d63e08b" title="For one acceptable geometry name: exampleGeomParams → mesh in memory → non&#45;empty nodes,..." alt="" coords="5,29,208,84"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="276,124,179,87,181,82,278,119"/>
+<area shape="rect" id="Node000008" href="$namespacemesh__gen.html#ae60bdca385726662e396def3e46d7fa8" title="Build a reference&#45;particle mesh: file, uniform rectangle, or in&#45;process Gmsh." alt="" coords="5,108,208,133"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="242,138,208,134,209,129,243,133"/>
+<area shape="rect" id="Node000017" href="$test_2test__data_2peridem_2twop__circ_2main_8cpp.html#a9a4a42e64ff97d6e21c77a8b767b9e90" title=" " alt="" coords="58,157,155,183"/>
+<area shape="poly" id="edge8_Node000005_Node000017" title=" " alt="" coords="243,159,156,168,155,162,242,154"/>
+<area shape="rect" id="Node000019" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a2634249539a2327762dbf9e5b347ea59" title="Circle: write .msh and .vtk via the built&#45;in Gmsh path (file I/O check)." alt="" coords="19,231,194,285"/>
+<area shape="poly" id="edge9_Node000005_Node000019" title=" " alt="" coords="289,174,167,233,164,228,287,170"/>
+<area shape="poly" id="edge6_Node000006_Node000006" title=" " alt="" coords="146,18,132,11,107,8,85,10,72,15,66,21,66,29,60,29,61,19,69,10,84,5,107,3,134,6,149,14"/>
+<area shape="poly" id="edge10_Node000019_Node000019" title=" " alt="" coords="146,220,132,212,107,209,85,211,72,216,66,222,66,231,60,231,61,220,69,212,84,206,107,204,134,207,149,215"/>
+<area shape="poly" id="edge12_Node000020_Node000020" title=" " alt="" coords="908,196,893,188,865,185,842,187,828,192,821,198,821,207,816,207,816,196,825,188,841,182,865,180,894,183,911,191"/>
+<area shape="rect" id="Node000021" href="$namespacegeom_1_1anonymous__namespace_02geomObjects_8cpp_03.html#af7077dd0c471a4b497ec0fa2580f3606" title=" " alt="" coords="480,214,707,254"/>
+<area shape="poly" id="edge13_Node000020_Node000021" title=" " alt="" coords="741,237,707,237,707,231,741,231"/>
+<area shape="poly" id="edge14_Node000021_Node000021" title=" " alt="" coords="636,202,621,195,593,193,569,195,555,199,550,205,552,213,547,214,544,204,552,195,568,189,593,187,622,190,638,197"/>
+</map>

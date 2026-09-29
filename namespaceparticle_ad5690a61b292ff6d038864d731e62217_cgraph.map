@@ -1,0 +1,14 @@
+<map id="particle::isLocallyOwned" name="particle::isLocallyOwned">
+<area shape="rect" id="Node000001" title="True if this rank updates / assembles forces for the particle. Walls are replicated on every rank...." alt="" coords="5,63,169,88"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1parallel.html#a4377dccc92c8b2a1896685fc54fd1a0b" title="Function to check if MPI is enabled." alt="" coords="217,5,392,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="136,60,242,32,244,37,137,65"/>
+<area shape="rect" id="Node000005" href="$classparticle_1_1BaseParticle.html#aa0bc6b6f16f1901c939fd5248d63c8cd" title="Is this particle a wall?" alt="" coords="231,55,378,95"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="170,73,218,73,218,78,170,78"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="231,120,379,145"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="137,85,244,114,242,119,136,91"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="440,63,575,88"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="351,28,450,56,448,62,350,33"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="623,63,795,88"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="575,73,609,73,609,78,575,78"/>
+<area shape="poly" id="edge6_Node000006_Node000003" title=" " alt="" coords="350,117,448,89,450,94,351,123"/>
+</map>

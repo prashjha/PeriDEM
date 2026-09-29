@@ -1,0 +1,14 @@
+<map id="geom::exampleGeomParams" name="geom::exampleGeomParams">
+<area shape="rect" id="Node000001" title="Canonical parameter vector for examples, mesh generation tests, and demos." alt="" coords="621,51,812,76"/>
+<area shape="rect" id="Node000002" href="$namespaceanonymous__namespace_02main_8cpp_03.html#a8f784dc85fc6509373923e548c58e2d9" title=" " alt="" coords="375,6,553,46"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="616,51,553,42,554,37,617,46"/>
+<area shape="rect" id="Node000004" href="$namespacegeom.html#a684adfe55dec11ec62a75a0381f91f79" title="One&#45;liner: createGeomObject(exampleGeomParams(...)). Prefer this over per&#45;class static factories so a..." alt="" coords="355,79,573,104"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="608,78,574,82,573,77,607,73"/>
+<area shape="rect" id="Node000003" href="$test_2test__data_2peridem_2twop__general__inbuilt_2main_8cpp.html#a0ddf1224851353fc92bfbff6f499fa97" title=" " alt="" coords="180,5,231,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="361,25,231,21,231,16,361,20"/>
+<area shape="rect" id="Node000005" href="$namespaceanonymous__namespace_02testMeshGen_8cpp_03.html#a603ec9e04d1d44de0e68a5d80d63e08b" title="For one acceptable geometry name: exampleGeomParams → mesh in memory → non&#45;empty nodes,..." alt="" coords="104,79,307,133"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="341,101,307,103,307,98,341,96"/>
+<area shape="poly" id="edge5_Node000005_Node000005" title=" " alt="" coords="233,67,223,60,205,57,190,59,181,64,176,70,176,79,171,79,171,69,177,60,189,54,205,52,225,55,236,63"/>
+<area shape="rect" id="Node000006" href="$testMeshGen_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,93,56,119"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="90,109,56,109,56,103,90,103"/>
+</map>

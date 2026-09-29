@@ -1,0 +1,19 @@
+<map id="geom::Hexagon::inscribedRadius" name="geom::Hexagon::inscribedRadius">
+<area shape="rect" id="Node000001" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="517,170,692,210"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#a23cb90ec4eecd0784efae79494cacde0" title="Checks if point is inside this object." alt="" coords="279,104,445,129"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="524,168,404,132,406,127,525,163"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1Hexagon.html#a319f277ec634c0e42fde16764b690bd9" title="cons" alt="" coords="255,177,469,203"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="503,193,469,193,469,187,503,187"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1Hexagon.html#a595f1b5d5d8fc56389804cbd16557088" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="280,227,444,252"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="504,213,426,229,425,224,503,208"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Hexagon.html#ac1b6d952bee8a16f068efff389d05dfb" title="Checks if box intersects this object." alt="" coords="5,5,207,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="325,100,270,72,206,45,168,33,170,28,208,39,272,67,327,95"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1Hexagon.html#ace9ff74b53bbf9125df1a01142f58fec" title="Checks if box is completely inside." alt="" coords="23,55,189,80"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="282,104,172,83,173,77,283,99"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1Hexagon.html#a4c72725294d7d6486c7170775c51d613" title="Checks if box is outside of the object." alt="" coords="17,104,195,129"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="265,119,195,119,195,114,265,114"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1Hexagon.html#af99e3148f66c96dae3f37a4a90d7216b" title="Checks if point is outside of this object." alt="" coords="17,153,195,179"/>
+<area shape="poly" id="edge5_Node000002_Node000006" title=" " alt="" coords="283,135,173,156,172,151,282,129"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1Hexagon.html#a9d73b1e82c9b4958aa3273b97a5e65e5" title="Checks if point lies exactly on the boundary." alt="" coords="5,203,207,228"/>
+<area shape="poly" id="edge7_Node000007_Node000008" title=" " alt="" coords="241,205,207,208,207,203,241,199"/>
+</map>

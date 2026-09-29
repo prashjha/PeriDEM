@@ -1,0 +1,9 @@
+<map id="inp::BCBaseDeck::readFromJson" name="inp::BCBaseDeck::readFromJson">
+<area shape="rect" id="Node000001" title="Reads from json object." alt="" coords="340,37,559,63"/>
+<area shape="rect" id="Node000002" href="$structinp_1_1BCDeck.html#a66030224f49342620aff59144fe5fa80" title="Reads from json object." alt="" coords="104,5,292,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="336,38,292,33,293,27,336,33"/>
+<area shape="rect" id="Node000003" href="$namespaceanonymous__namespace_02testDeckRoundTrip_8cpp_03.html#a272709425c02da918a3dd29868a56090" title=" " alt="" coords="117,55,279,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="336,67,280,74,279,69,335,62"/>
+<area shape="rect" id="Node000004" href="$testDeckRoundTrip_8cpp.html#ae66f6b31b5ad750f1fe042a706a4e3d4" title=" " alt="" coords="5,69,56,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="102,85,56,85,56,79,102,79"/>
+</map>

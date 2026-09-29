@@ -1,0 +1,15 @@
+<map id="geom::AnnulusGeomObject::box" name="geom::AnnulusGeomObject::box">
+<area shape="rect" id="Node000001" title="Computes the bounding box of object." alt="" coords="467,141,677,166"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1AnnulusGeomObject.html#aa0eba7d1366e2fd8e61b27738546022e" title="Checks if box intersects this object." alt="" coords="236,5,419,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="541,135,485,98,417,60,390,48,392,43,420,55,487,93,543,130"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1AnnulusGeomObject.html#af8bee432774201b4df930a0bcc51e1ae" title="Checks if box is completely inside." alt="" coords="236,69,419,109"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="508,140,404,112,405,107,510,134"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1AnnulusGeomObject.html#ac7252b96eb49522e110ad96c5772bc59" title="Checks if box is within given distance of this object." alt="" coords="236,133,419,173"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="453,156,419,156,419,151,453,151"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1AnnulusGeomObject.html#a831f6f86137417c1b8f32dd724d9de8b" title="Checks if box is outside of the object." alt="" coords="236,197,419,237"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="510,172,405,200,404,195,508,167"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1AnnulusGeomObject.html#a33f56bd7030f19ac1b48690b8568f801" title="Returns the string containing printable information about the object." alt="" coords="236,261,419,301"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="543,176,487,214,420,252,392,264,390,259,417,247,485,209,541,172"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1AnnulusGeomObject.html#abf7fe5059670b16d9bff9182e689d77e" title="Prints the information about the object." alt="" coords="5,261,188,301"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="223,284,188,284,188,279,223,279"/>
+</map>

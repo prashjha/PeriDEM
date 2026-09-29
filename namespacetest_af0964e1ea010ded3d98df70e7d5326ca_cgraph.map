@@ -1,0 +1,37 @@
+<map id="test::testMPI" name="test::testMPI">
+<area shape="rect" id="Node000001" title="Perform parallelization test using MPI on mesh partition based on metis." alt="" coords="5,235,104,260"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#adc88afec327dde4116669b9fd848dfa7" title="Partitions the nodes based on node neighborlist supplied. Function first creates a graph with nodes a..." alt="" coords="152,5,395,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="55,234,64,195,81,142,109,87,128,62,150,40,157,35,160,39,154,44,132,65,113,90,86,144,69,197,61,235"/>
+<area shape="rect" id="Node000003" href="$namespacemesh.html#a82e71035ab6e7a6910e7bafb7a027aeb" title="Creates uniform mesh for rectangle/cuboid domain." alt="" coords="185,55,361,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="57,233,69,203,88,164,115,123,150,89,171,78,173,83,154,93,119,127,92,167,74,205,62,235"/>
+<area shape="rect" id="Node000004" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#a4d39e968562ef414dc37d135b277b056" title=" " alt="" coords="186,104,361,159"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="70,232,106,204,151,176,179,162,181,167,153,180,109,209,73,236"/>
+<area shape="rect" id="Node000005" href="$namespaceutil_1_1io.html#a578a578ce41389fb01e56de7316b7054" title="Prints formatted information." alt="" coords="473,152,563,177"/>
+<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="100,232,151,219,319,189,459,169,460,174,320,195,153,225,101,237"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1io.html#af88549ade477a5034a8f720753d9f2f9" title="Get filename removing path from the string Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="177,235,370,260"/>
+<area shape="poly" id="edge9_Node000001_Node000011" title=" " alt="" coords="104,245,163,245,163,250,104,250"/>
+<area shape="rect" id="Node000012" href="$namespacemesh.html#a0331fe90c16fd05013250afdc9d58855" title="Partitions the nodes based on node neighborlist supplied. Function first creates a graph with nodes a..." alt="" coords="185,284,362,309"/>
+<area shape="poly" id="edge10_Node000001_Node000012" title=" " alt="" coords="102,257,153,270,192,279,191,284,151,275,101,263"/>
+<area shape="rect" id="Node000016" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#a203213df0b872311cc21e15789f7a924" title=" " alt="" coords="192,333,355,388"/>
+<area shape="poly" id="edge16_Node000001_Node000016" title=" " alt="" coords="71,258,107,289,153,320,180,332,178,337,151,324,103,293,68,262"/>
+<area shape="rect" id="Node000017" href="$namespaceutil_1_1io.html#ab41cbd366c1550587cc6d0bf1a088c5a" title="Remove extension from the filename Source &#45; https://stackoverflow.com/a/24386991." alt="" coords="190,413,357,453"/>
+<area shape="poly" id="edge17_Node000001_Node000017" title=" " alt="" coords="63,259,74,288,93,326,120,365,154,399,178,412,175,417,150,403,116,369,89,329,70,291,58,261"/>
+<area shape="rect" id="Node000018" href="$namespaceanonymous__namespace_02testParallelCompLib_8cpp_03.html#aac5392db88c3cc94a19e5eb4ab013d18" title=" " alt="" coords="178,477,369,532"/>
+<area shape="poly" id="edge18_Node000001_Node000018" title=" " alt="" coords="61,260,69,299,86,354,113,412,132,439,154,463,168,473,164,477,150,467,128,442,109,415,81,356,64,300,55,261"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="361,141,459,154,459,159,360,146"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="641,128,789,153"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="563,157,627,149,628,154,564,162"/>
+<area shape="rect" id="Node000009" href="$namespaceutil_1_1io.html#a3e537e3bd778616255015cde6e60a30a" title="Returns formatted string for output." alt="" coords="662,177,769,203"/>
+<area shape="poly" id="edge7_Node000005_Node000009" title=" " alt="" coords="564,168,649,179,648,184,563,173"/>
+<area shape="rect" id="Node000007" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="851,128,986,153"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="790,138,837,138,837,143,790,143"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of a given size." alt="" coords="862,177,975,203"/>
+<area shape="poly" id="edge8_Node000009_Node000010" title=" " alt="" coords="769,187,848,187,848,193,769,193"/>
+<area shape="rect" id="Node000013" href="$namespaceutil_1_1methods.html#aaf9cfac99073d034d41e10d4d17e59a2" title="Returns difference between two times." alt="" coords="443,284,593,309"/>
+<area shape="poly" id="edge11_Node000012_Node000013" title=" " alt="" coords="362,294,429,294,429,299,362,299"/>
+<area shape="rect" id="Node000014" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="650,284,781,309"/>
+<area shape="poly" id="edge12_Node000013_Node000014" title=" " alt="" coords="593,294,636,294,636,299,593,299"/>
+<area shape="rect" id="Node000015" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="837,284,1000,309"/>
+<area shape="poly" id="edge13_Node000014_Node000015" title=" " alt="" coords="781,302,823,303,823,308,781,308"/>
+<area shape="poly" id="edge14_Node000015_Node000014" title=" " alt="" coords="837,290,794,291,794,285,837,285"/>
+</map>

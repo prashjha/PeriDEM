@@ -1,0 +1,7 @@
+<map id="geom::Plane::isNear" name="geom::Plane::isNear">
+<area shape="rect" id="Node000001" title="Checks if point is within given distance of this object." alt="" coords="249,31,391,56"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Plane.html#aa5f805d83538e5b878daef40f5dcc769" title="Checks if point lies exactly on the boundary." alt="" coords="12,5,195,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="236,36,195,31,195,26,236,31"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Plane.html#a09d9c76666348e04098caf756cc2f11c" title="Checks if point is within given distance of this object." alt="" coords="5,55,201,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="236,55,202,59,201,54,235,50"/>
+</map>

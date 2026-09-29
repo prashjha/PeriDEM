@@ -1,0 +1,11 @@
+<map id="geom::OpenCuboidChannel3D::transform" name="geom::OpenCuboidChannel3D::transform">
+<area shape="rect" id="Node000001" title="Similarity about pivot &#160;(default: old center d_x), then rigid displacement &#160;= translation: ...." alt="" coords="5,35,195,75"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1OpenCuboidChannel3D.html#aba21fec8d13ad81a5888091aaf3a9a8c" title=" " alt="" coords="243,5,432,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="194,40,229,36,229,41,195,46"/>
+<area shape="rect" id="Node000003" href="$namespacegeom.html#a433ab4b6276ab56393f1c55a4e37566e" title=" " alt="" coords="267,70,408,95"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="195,63,253,70,253,75,194,68"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#afc570d133c5159571a48456e2440753a" title="Returns the vector after rotating by desired angle." alt="" coords="480,70,560,95"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="408,80,467,80,467,85,408,85"/>
+<area shape="rect" id="Node000005" href="$structutil_1_1Point.html#a8c5530ee2dac6fa26f88be0de91543f7" title="Computes the cross product between this vector and given vector." alt="" coords="608,70,725,95"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="560,80,594,80,594,85,560,85"/>
+</map>

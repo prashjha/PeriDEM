@@ -1,0 +1,22 @@
+<map id="test::testPatchQuad" name="test::testPatchQuad">
+<area shape="rect" id="Node000001" title="Perform test on quadrature points on line elements (NOT IMPLEMENTED)" alt="" coords="5,71,144,97"/>
+<area shape="rect" id="Node000002" href="$classfe_1_1BaseElem.html#a49eb9b75ceb17c539e1c9a81847f76c9" title="Get quadrature data mapped to the physical element (N, dN/dx, x, w, J). Shared isoparametric map; typ..." alt="" coords="192,31,385,57"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="143,68,206,57,207,62,144,74"/>
+<area shape="rect" id="Node000007" href="$namespaceanonymous__namespace_02testFeLib_8cpp_03.html#ad89c147048b9ef8e55c261b263f5d37a" title=" " alt="" coords="193,92,385,132"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="144,90,179,95,179,100,144,96"/>
+<area shape="rect" id="Node000003" href="$namespacefe.html#a50f89354fe7844df70c795cffb6b0a4a" title=" " alt="" coords="433,21,564,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="386,36,419,35,419,40,386,42"/>
+<area shape="rect" id="Node000004" href="$namespaceutil.html#a36edfc51cf94041fb395bde721d02bd1" title="Computes the determinant of matrix." alt="" coords="725,21,791,46"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="540,18,605,5,641,3,678,5,713,14,712,19,677,11,641,8,605,10,541,23"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a9ccabde99187d658896793ba141c6d51" title="Computes the dot product between matrix and vector." alt="" coords="612,21,677,46"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="564,31,598,31,598,36,564,36"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a76bf29236b7065c3718ff181343c84f8" title="Computes the determinant of matrix." alt="" coords="613,70,677,95"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="538,43,601,65,599,70,536,48"/>
+<area shape="poly" id="edge6_Node000006_Node000004" title=" " alt="" coords="673,67,714,49,716,54,676,72"/>
+<area shape="rect" id="Node000008" href="$classfe_1_1B.html#a2be88bfb047032940441a8a52e6fd82f" title=" " alt="" coords="459,70,538,95"/>
+<area shape="poly" id="edge8_Node000007_Node000008" title=" " alt="" coords="385,96,445,87,446,92,386,101"/>
+<area shape="rect" id="Node000009" href="$classfe_1_1B.html#a984f2109eea6d85e3568cb85051ea3c2" title=" " alt="" coords="455,119,542,145"/>
+<area shape="poly" id="edge9_Node000007_Node000009" title=" " alt="" coords="385,118,442,124,441,129,385,124"/>
+<area shape="rect" id="Node000010" href="$classfe_1_1B.html#af33ec2f7aab9cbb602b52780633c7775" title=" " alt="" coords="449,169,548,194"/>
+<area shape="poly" id="edge10_Node000007_Node000010" title=" " alt="" coords="351,129,447,162,445,167,349,134"/>
+</map>

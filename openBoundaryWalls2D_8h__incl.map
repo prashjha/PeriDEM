@@ -1,0 +1,5 @@
+<map id="/home/user/project/src/mesh_gen/openBoundaryWalls2D.h" name="/home/user/project/src/mesh_gen/openBoundaryWalls2D.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,200,60"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="75,108,130,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="105,60,105,94,100,94,100,60"/>
+</map>

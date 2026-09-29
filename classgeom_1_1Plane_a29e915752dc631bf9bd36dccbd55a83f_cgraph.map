@@ -1,0 +1,5 @@
+<map id="geom::Plane::Plane" name="geom::Plane::Plane">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,141,31"/>
+<area shape="rect" id="Node000002" href="$structutil_1_1Point.html#a7e6ec50072f4ff4d6461412cdc531b65" title="Computes the Euclidean length of the vector." alt="" coords="189,5,309,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="142,15,176,15,176,21,142,21"/>
+</map>

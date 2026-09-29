@@ -1,0 +1,9 @@
+<map id="gen_input.build" name="gen_input.build">
+<area shape="rect" id="Node000001" title=" " alt="" coords="321,7,431,32"/>
+<area shape="rect" id="Node000002" href="$namespacegen__input.html#ad59869bef6ed45c0170b371a86be14d3" title=" " alt="" coords="5,7,115,32"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,13,273,10,218,8,163,10,115,15,115,9,162,5,218,3,273,5,308,8"/>
+<area shape="rect" id="Node000003" href="$namespacegen__input.html#a702caeba5ab71eba75abc3c0dc455544" title=" " alt="" coords="163,44,273,70"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="309,38,273,47,271,42,308,33"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="150,44,113,35,115,30,151,38"/>
+<area shape="poly" id="edge4_Node000003_Node000003" title=" " alt="" coords="245,33,237,26,218,23,202,25,193,29,191,35,196,43,191,45,186,36,189,26,200,20,218,18,240,21,249,29"/>
+</map>

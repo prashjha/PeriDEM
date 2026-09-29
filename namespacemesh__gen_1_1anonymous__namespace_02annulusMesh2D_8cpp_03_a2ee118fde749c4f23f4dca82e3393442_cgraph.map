@@ -1,0 +1,21 @@
+<map id="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::finish2DCutEmbedSurface" name="mesh_gen::anonymous_namespace{annulusMesh2D::cpp}::finish2DCutEmbedSurface">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,117,224,172"/>
+<area shape="poly" id="edge9_Node000001_Node000001" title=" " alt="" coords="64,117,65,107,74,98,90,93,115,91,144,94,160,102,158,106,142,99,115,96,91,98,76,103,70,109,70,117"/>
+<area shape="rect" id="Node000002" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#a78141be66c7dd6acd95f2811e1740eec" title=" " alt="" coords="272,65,479,120"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,120,258,113,259,119,225,125"/>
+<area shape="rect" id="Node000008" href="$namespacemesh__gen_1_1anonymous__namespace_02annulusMesh2D_8cpp_03.html#ad19051e34ba26a5115596e497066c7d3" title=" " alt="" coords="278,168,473,223"/>
+<area shape="poly" id="edge10_Node000001_Node000008" title=" " alt="" coords="225,163,265,171,264,176,224,169"/>
+<area shape="poly" id="edge8_Node000002_Node000002" title=" " alt="" coords="328,65,328,55,337,46,353,41,375,39,403,42,418,50,416,54,401,47,375,44,354,46,340,51,333,57,333,65"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1AnnulusGeomObject.html#aa74ad5c8916557a83880924e85e84417" title="Computes the center of object." alt="" coords="527,73,709,113"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="479,90,513,90,513,95,479,95"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1GeomObject.html#a8ca2d7dbfccce611dee2bd6611b6e7cf" title="Computes the center of object." alt="" coords="759,5,938,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="670,70,757,39,782,32,784,37,758,45,672,75"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="799,55,899,80"/>
+<area shape="poly" id="edge4_Node000003_Node000005" title=" " alt="" coords="709,80,785,72,786,77,710,85"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1GeomObject.html#a8acdd66a0d214ed18aafcb995a9ad02d" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="988,135,1173,160"/>
+<area shape="poly" id="edge5_Node000003_Node000006" title=" " alt="" coords="710,101,974,132,974,137,709,106"/>
+<area shape="rect" id="Node000007" href="$classgeom_1_1AnnulusGeomObject.html#ac0a8814857e37565947a78d71b2533cc" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="757,155,940,195"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="675,110,780,148,778,153,674,115"/>
+<area shape="poly" id="edge7_Node000007_Node000006" title=" " alt="" coords="940,162,974,158,975,163,941,167"/>
+<area shape="poly" id="edge11_Node000008_Node000008" title=" " alt="" coords="328,168,328,158,337,149,353,143,375,141,403,144,418,152,416,157,401,150,375,147,354,149,340,153,333,160,333,168"/>
+</map>

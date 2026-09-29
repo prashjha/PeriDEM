@@ -1,0 +1,19 @@
+<map id="inp::BCBaseDeck::getExampleJson" name="inp::BCBaseDeck::getExampleJson">
+<area shape="rect" id="Node000001" title="Returns example JSON object for ModelDeck configuration." alt="" coords="5,133,237,159"/>
+<area shape="rect" id="Node000002" href="$namespaceinp.html#a97299f2de7a12cc2ef863130972e25ed" title="The default block with the given keys replaced." alt="" coords="335,5,447,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="137,131,199,86,241,61,284,40,320,28,322,33,286,44,243,66,202,91,140,135"/>
+<area shape="rect" id="Node000003" href="$namespaceinp.html#a9de0fbd568a52ebe940aede89eb79dc0" title="Rejects a key that no field declares." alt="" coords="335,55,447,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="156,131,285,89,321,79,322,85,286,94,158,136"/>
+<area shape="rect" id="Node000004" href="$structinp_1_1BCBaseDeck.html#a8b578333847c7a86ee378d097f366814" title="The fields of the block itself." alt="" coords="307,104,474,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="237,131,293,125,294,130,238,136"/>
+<area shape="rect" id="Node000006" href="$structinp_1_1BCBaseDeck.html#a1f1e9a5043593359161d2d0b412b34b3" title="The fields of the Spatial_Function sub&#45;block." alt="" coords="304,154,477,194"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="238,155,290,161,290,166,237,161"/>
+<area shape="rect" id="Node000007" href="$structinp_1_1BCBaseDeck.html#a878d65625a6b402715bc3da9906ad114" title="The fields of the Time_Function sub&#45;block." alt="" coords="285,218,496,258"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="156,156,286,203,310,211,308,216,284,209,155,161"/>
+<area shape="rect" id="Node000008" href="$namespacegeom.html#ac9d2dafc0e764ccfd12d867964a700cf" title=" " alt="" coords="317,283,464,308"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="137,157,198,211,241,241,286,268,307,276,305,281,284,272,238,246,195,215,134,161"/>
+<area shape="rect" id="Node000005" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="544,161,615,187"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="451,127,497,139,537,154,535,159,495,145,449,132"/>
+<area shape="poly" id="edge6_Node000006_Node000005" title=" " alt="" coords="477,171,530,171,530,177,477,177"/>
+<area shape="poly" id="edge8_Node000007_Node000005" title=" " alt="" coords="459,215,495,203,534,189,536,194,497,209,461,220"/>
+</map>

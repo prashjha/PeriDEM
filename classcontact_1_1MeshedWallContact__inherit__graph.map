@@ -1,0 +1,5 @@
+<map id="contact::MeshedWallContact" name="contact::MeshedWallContact">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,159,188,224"/>
+<area shape="rect" id="Node000002" href="$classcontact_1_1WallContact.html" title="Optional analytical wall&#45;contact path (Model.Wall_Contact)." alt="" coords="13,5,180,111"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="99,124,99,159,94,159,94,124"/>
+</map>

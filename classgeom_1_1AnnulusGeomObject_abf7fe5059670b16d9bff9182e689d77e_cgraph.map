@@ -1,0 +1,30 @@
+<map id="geom::AnnulusGeomObject::print" name="geom::AnnulusGeomObject::print">
+<area shape="rect" id="Node000001" title="Prints the information about the object." alt="" coords="5,209,188,249"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1AnnulusGeomObject.html#a33f56bd7030f19ac1b48690b8568f801" title="Returns the string containing printable information about the object." alt="" coords="236,209,419,249"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,226,222,226,222,231,188,231"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1AnnulusGeomObject.html#ade55b02dd54bc3ffa08b2d3c38b83435" title="Computes the bounding box of object." alt="" coords="467,41,677,67"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="349,206,401,161,465,112,533,71,535,75,468,116,404,166,352,210"/>
+<area shape="rect" id="Node000005" href="$classgeom_1_1AnnulusGeomObject.html#aa74ad5c8916557a83880924e85e84417" title="Computes the center of object." alt="" coords="481,126,663,166"/>
+<area shape="poly" id="edge4_Node000002_Node000005" title=" " alt="" coords="386,206,498,168,500,173,388,211"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1io.html#a38afb09a152cca4061850f4123bd3aeb" title="Returns tab spaces of a given size." alt="" coords="760,269,873,295"/>
+<area shape="poly" id="edge10_Node000002_Node000010" title=" " alt="" coords="419,213,477,209,543,208,611,213,678,226,693,232,703,239,727,254,749,263,748,268,724,259,700,244,690,237,677,231,611,219,543,214,477,214,419,219"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1io.html#a2b2ea15e35fb349760ca1f0b521e7269" title="Returns formatted string for output." alt="" coords="507,241,637,267"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="419,235,493,243,493,249,419,241"/>
+<area shape="rect" id="Node000012" href="$classgeom_1_1GeomObject.html#a790ecb1da8913bb5f30e0848327eb112" title="Returns the string containing printable information about the object." alt="" coords="479,291,665,316"/>
+<area shape="poly" id="edge13_Node000002_Node000012" title=" " alt="" coords="380,246,467,277,497,285,496,290,466,282,378,251"/>
+<area shape="rect" id="Node000013" href="$structutil_1_1Point.html#a0b71aa71d8f84fa5b1d4b0a873a838fb" title="Returns the string containing printable information about the object." alt="" coords="509,340,635,365"/>
+<area shape="poly" id="edge15_Node000002_Node000013" title=" " alt="" coords="352,247,403,287,434,308,468,326,496,336,494,341,466,331,432,313,400,292,349,251"/>
+<area shape="rect" id="Node000004" href="$classgeom_1_1GeomObject.html#a06e0d2d5fc995263b3314f71c98397b3" title="Computes the bounding box of object." alt="" coords="735,5,899,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="658,39,721,29,721,35,659,44"/>
+<area shape="rect" id="Node000006" href="$classgeom_1_1GeomObject.html#a8ca2d7dbfccce611dee2bd6611b6e7cf" title="Computes the center of object." alt="" coords="727,55,906,80"/>
+<area shape="poly" id="edge5_Node000005_Node000006" title=" " alt="" coords="625,123,725,89,751,81,753,86,726,94,627,128"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="767,104,867,129"/>
+<area shape="poly" id="edge6_Node000005_Node000007" title=" " alt="" coords="663,132,753,122,754,127,664,138"/>
+<area shape="rect" id="Node000008" href="$classgeom_1_1GeomObject.html#a8acdd66a0d214ed18aafcb995a9ad02d" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="956,184,1141,209"/>
+<area shape="poly" id="edge7_Node000005_Node000008" title=" " alt="" coords="664,153,942,183,942,188,663,158"/>
+<area shape="rect" id="Node000009" href="$classgeom_1_1AnnulusGeomObject.html#ac0a8814857e37565947a78d71b2533cc" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="725,205,908,245"/>
+<area shape="poly" id="edge8_Node000005_Node000009" title=" " alt="" coords="636,164,742,198,740,203,634,169"/>
+<area shape="poly" id="edge9_Node000009_Node000008" title=" " alt="" coords="908,211,942,207,943,212,909,216"/>
+<area shape="poly" id="edge12_Node000011_Node000010" title=" " alt="" coords="638,259,746,271,746,277,637,264"/>
+<area shape="poly" id="edge14_Node000012_Node000010" title=" " alt="" coords="665,293,746,285,747,291,665,298"/>
+</map>

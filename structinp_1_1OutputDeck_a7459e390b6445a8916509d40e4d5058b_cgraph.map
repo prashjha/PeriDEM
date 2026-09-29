@@ -1,0 +1,5 @@
+<map id="inp::OutputDeck::fields" name="inp::OutputDeck::fields">
+<area shape="rect" id="Node000001" title="The fields of this deck, declared once." alt="" coords="5,5,161,31"/>
+<area shape="rect" id="Node000002" href="$namespaceinp.html#a2aa8d4f654c0b8f6cef4e4d80f34eaef" title="Declares a field that maps one key to one member." alt="" coords="209,5,280,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="162,15,196,15,196,21,162,21"/>
+</map>

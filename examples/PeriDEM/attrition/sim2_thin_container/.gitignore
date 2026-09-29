@@ -1,0 +1,7 @@
+# Local / generated — do not commit
+runs/
+input.json
+input_short.json
+input_medium.json
+input_ic.json
+*.log

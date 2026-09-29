@@ -1,0 +1,27 @@
+<map id="PeriDEMModel::integrate" name="PeriDEMModel::integrate">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,113,173,138"/>
+<area shape="rect" id="Node000002" href="$classtime__int_1_1Integrator.html#a8ad3270231465326b502a6d5dae593f0" title=" " alt="" coords="221,105,352,145"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="174,123,208,123,208,128,174,128"/>
+<area shape="rect" id="Node000003" href="$namespacetime__int.html#af85b1789463ecac639d0d92d872d0d49" title=" " alt="" coords="625,5,791,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="352,104,399,91,610,42,612,48,401,96,353,109"/>
+<area shape="rect" id="Node000004" href="$classtime__int_1_1Integrator.html#a2367468163347098fb677c5cc0eedb60" title=" " alt="" coords="410,105,541,145"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="352,123,396,123,396,128,352,128"/>
+<area shape="rect" id="Node000009" href="$namespaceutil_1_1methods.html#aaf9cfac99073d034d41e10d4d17e59a2" title="Returns difference between two times." alt="" coords="400,194,551,219"/>
+<area shape="poly" id="edge11_Node000002_Node000009" title=" " alt="" coords="335,143,434,186,431,191,333,148"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="507,103,549,78,598,55,617,47,619,52,600,60,552,83,510,107"/>
+<area shape="rect" id="Node000005" href="$namespacetime__int.html#a5e72ea85864c45402734642b54b75149" title=" " alt="" coords="600,70,816,95"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="540,111,624,95,625,100,541,116"/>
+<area shape="rect" id="Node000007" href="$namespacetime__int.html#a37230d244234f7c661ba01e50de961b0" title=" " alt="" coords="622,120,794,160"/>
+<area shape="poly" id="edge7_Node000004_Node000007" title=" " alt="" coords="541,127,609,131,608,136,541,132"/>
+<area shape="rect" id="Node000008" href="$namespacetime__int.html#ad574655e888040e87598979ac6a6fa57" title=" " alt="" coords="599,185,817,210"/>
+<area shape="poly" id="edge9_Node000004_Node000008" title=" " alt="" coords="526,143,599,169,633,179,632,184,598,175,524,148"/>
+<area shape="rect" id="Node000006" href="$namespaceutil_1_1parallel.html#a4ad550a438091fb9cd924783e690764d" title="Get number of threads to be used by taskflow." alt="" coords="865,127,1036,153"/>
+<area shape="poly" id="edge6_Node000005_Node000006" title=" " alt="" coords="764,93,818,105,884,121,883,127,817,111,763,98"/>
+<area shape="poly" id="edge8_Node000007_Node000006" title=" " alt="" coords="794,137,852,137,852,143,794,143"/>
+<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="763,182,817,169,883,153,884,159,818,175,764,187"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="643,234,773,259"/>
+<area shape="poly" id="edge12_Node000009_Node000010" title=" " alt="" coords="551,217,629,231,629,236,550,222"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="869,234,1032,259"/>
+<area shape="poly" id="edge13_Node000010_Node000011" title=" " alt="" coords="774,252,855,253,855,258,774,257"/>
+<area shape="poly" id="edge14_Node000011_Node000010" title=" " alt="" coords="869,241,787,241,787,236,869,235"/>
+</map>

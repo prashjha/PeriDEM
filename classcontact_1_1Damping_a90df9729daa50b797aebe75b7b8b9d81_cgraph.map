@@ -1,0 +1,35 @@
+<map id="contact::Damping::apply" name="contact::Damping::apply">
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,153,169,179"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1methods.html#ad08461b20fe20ffa421967afffd8fbe7" title="Add element to the list." alt="" coords="219,5,380,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="97,151,144,98,178,67,216,40,229,33,231,38,219,44,181,71,148,101,101,155"/>
+<area shape="rect" id="Node000005" href="$namespaceutil.html#a61b8040019c885bc15525802079bd9e1" title="Compute harmonic mean of m1 and m2." alt="" coords="230,55,369,80"/>
+<area shape="poly" id="edge5_Node000001_Node000005" title=" " alt="" coords="106,151,155,120,216,89,235,82,236,87,218,94,158,125,109,155"/>
+<area shape="rect" id="Node000006" href="$namespaceutil.html#a227b5f8acbd7a403a033663c8893d631" title="Returns true if a &gt; b." alt="" coords="249,104,349,129"/>
+<area shape="poly" id="edge6_Node000001_Node000006" title=" " alt="" coords="142,151,235,129,237,134,143,156"/>
+<area shape="rect" id="Node000007" href="$namespaceutil.html#a868a26599b6b844d08d30063ac898319" title="Returns true if a &lt; b." alt="" coords="257,153,342,179"/>
+<area shape="poly" id="edge7_Node000001_Node000007" title=" " alt="" coords="170,163,243,163,243,169,170,169"/>
+<area shape="rect" id="Node000008" href="$namespaceparticle.html#ad5690a61b292ff6d038864d731e62217" title="True if this rank updates / assembles forces for the particle. Walls are replicated on every rank...." alt="" coords="217,203,381,228"/>
+<area shape="poly" id="edge8_Node000001_Node000008" title=" " alt="" coords="143,176,231,197,230,202,142,181"/>
+<area shape="rect" id="Node000013" href="$namespaceutil_1_1parallel.html#adb80f14125b7556bb478cc3725508fa8" title="get rank (id) of this processor" alt="" coords="443,253,591,279"/>
+<area shape="poly" id="edge18_Node000001_Node000013" title=" " alt="" coords="107,177,155,208,186,224,218,237,272,250,327,259,429,265,429,271,326,264,271,255,217,242,184,229,153,213,104,181"/>
+<area shape="rect" id="Node000014" href="$namespaceutil_1_1io.html#acc310b3994931fe61f43d5a5152aebc1" title="Global method to log the message." alt="" coords="258,315,341,340"/>
+<area shape="poly" id="edge15_Node000001_Node000014" title=" " alt="" coords="102,177,151,226,219,282,259,306,256,311,216,287,148,230,99,181"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="451,5,582,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="381,15,437,15,437,21,381,21"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="652,5,815,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="582,24,638,24,638,30,582,29"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="652,12,596,12,596,7,652,7"/>
+<area shape="rect" id="Node000009" href="$namespaceutil_1_1parallel.html#a4377dccc92c8b2a1896685fc54fd1a0b" title="Function to check if MPI is enabled." alt="" coords="429,139,604,164"/>
+<area shape="poly" id="edge9_Node000008_Node000009" title=" " alt="" coords="342,200,429,174,458,165,460,170,430,179,344,205"/>
+<area shape="rect" id="Node000012" href="$classparticle_1_1BaseParticle.html#aa0bc6b6f16f1901c939fd5248d63c8cd" title="Is this particle a wall?" alt="" coords="443,189,590,229"/>
+<area shape="poly" id="edge12_Node000008_Node000012" title=" " alt="" coords="382,210,430,209,430,214,382,215"/>
+<area shape="poly" id="edge13_Node000008_Node000013" title=" " alt="" coords="355,226,449,248,448,253,354,231"/>
+<area shape="rect" id="Node000010" href="$namespaceutil_1_1parallel.html#aa0c65ae0f7fb6e0c4f3104c5bf3b1ff6" title="Initializes MPI and also creates MpiStatus struct." alt="" coords="666,196,801,221"/>
+<area shape="poly" id="edge10_Node000009_Node000010" title=" " alt="" coords="566,161,672,190,671,195,565,167"/>
+<area shape="rect" id="Node000011" href="$namespaceutil_1_1parallel.html#a47cb50d2db6de7cf2a786994f274cc9a" title="Initializes MpiStatus struct." alt="" coords="863,196,1035,221"/>
+<area shape="poly" id="edge11_Node000010_Node000011" title=" " alt="" coords="801,206,849,206,849,211,801,211"/>
+<area shape="poly" id="edge14_Node000013_Node000010" title=" " alt="" coords="565,251,671,222,672,227,566,256"/>
+<area shape="rect" id="Node000015" href="$classutil_1_1io_1_1Logger.html#a5d4600ff2841534892839c72a7f04547" title="Log the message." alt="" coords="452,327,581,352"/>
+<area shape="poly" id="edge16_Node000014_Node000015" title=" " alt="" coords="341,327,439,332,438,338,341,332"/>
+<area shape="poly" id="edge17_Node000015_Node000015" title=" " alt="" coords="481,328,474,318,478,308,492,302,517,300,547,304,559,313,555,317,545,309,517,305,494,307,481,312,479,318,485,325"/>
+</map>

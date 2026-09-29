@@ -1,0 +1,5 @@
+<map id="geom::Triangle::volume" name="geom::Triangle::volume">
+<area shape="rect" id="Node000001" title="Computes the volume (area in 2d, length in 1d) of object." alt="" coords="5,5,164,31"/>
+<area shape="rect" id="Node000002" href="$namespacegeom.html#ad0c44866910d6391d8d3d193ef1d5676" title="Compute area of triangle." alt="" coords="212,5,343,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="164,15,198,15,198,21,164,21"/>
+</map>

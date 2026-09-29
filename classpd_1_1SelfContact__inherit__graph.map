@@ -1,0 +1,9 @@
+<map id="pd::SelfContact" name="pd::SelfContact">
+<area shape="rect" id="Node000001" title="Intra&#45;body force between nodes when the PD bond is inactive." alt="" coords="234,5,345,91"/>
+<area shape="rect" id="Node000002" href="$classpd_1_1BrokenBondKnSelfContact.html" title="Default: Kn * volj * capped_gap / R along yji with gap = R &#45; Rc." alt="" coords="5,139,197,204"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="224,94,152,141,149,136,221,90"/>
+<area shape="rect" id="Node000003" href="$classpd_1_1NoneSelfContact.html" title="No force on broken bonds (Trask: broken → weight 0)." alt="" coords="221,139,357,204"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="292,104,292,138,287,138,287,104"/>
+<area shape="rect" id="Node000004" href="$classpd_1_1ReferenceGapSelfContact.html" title=" " alt="" coords="381,139,571,204"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="358,90,429,136,426,141,355,95"/>
+</map>

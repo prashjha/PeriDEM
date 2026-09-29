@@ -1,0 +1,10 @@
+<map id="util::methods::minAndMinIndex" name="util::methods::minAndMinIndex">
+<area shape="rect" id="Node000001" title="Returns the minimum and index of minimum from list of data." alt="" coords="5,5,176,45"/>
+<area shape="rect" id="Node000002" href="$namespaceutil_1_1methods.html#a7fd2991e85f113b04b05191b0bf6bfe0" title="Returns the index corresponding to minimum from list of data." alt="" coords="224,13,383,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="176,23,210,23,210,28,176,28"/>
+<area shape="rect" id="Node000003" href="$namespaceutil_1_1methods.html#a7ad94e441da65fc0f1cafe183fa252fe" title="Returns the maximum from list of data." alt="" coords="431,13,561,38"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="383,23,417,23,417,28,383,28"/>
+<area shape="rect" id="Node000004" href="$namespaceutil_1_1methods.html#afcbb8d0d56cac1187ad2945bd187f6cf" title="Returns the index corresponding to maximum from list of data." alt="" coords="609,13,772,38"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="562,31,596,32,596,37,562,37"/>
+<area shape="poly" id="edge4_Node000004_Node000003" title=" " alt="" coords="609,19,575,19,575,14,609,14"/>
+</map>

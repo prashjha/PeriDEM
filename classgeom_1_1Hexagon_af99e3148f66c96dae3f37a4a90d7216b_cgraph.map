@@ -1,0 +1,7 @@
+<map id="geom::Hexagon::isOutside" name="geom::Hexagon::isOutside">
+<area shape="rect" id="Node000001" title="Checks if point is outside of this object." alt="" coords="5,13,183,38"/>
+<area shape="rect" id="Node000002" href="$classgeom_1_1Hexagon.html#a23cb90ec4eecd0784efae79494cacde0" title="Checks if point is inside this object." alt="" coords="231,13,397,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="183,23,217,23,217,28,183,28"/>
+<area shape="rect" id="Node000003" href="$classgeom_1_1Hexagon.html#ae21b00427b9d56e491cabf75622befac" title="Computes the radius of biggest circle/sphere completely within the object." alt="" coords="445,5,620,45"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="398,23,431,23,431,28,398,28"/>
+</map>

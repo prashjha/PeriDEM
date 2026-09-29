@@ -1,0 +1,5 @@
+<map id="geometry::breakBondsCrossingVerticalLines" name="geometry::breakBondsCrossingVerticalLines">
+<area shape="rect" id="Node000001" title="Break the bonds of one particle that cross vertical cut lines." alt="" coords="5,5,211,45"/>
+<area shape="rect" id="Node000002" href="$namespacegeometry.html#a22baa6059a13ead898751f5ff1b19b1b" title="Pre&#45;notch by breaking peridynamic bonds." alt="" coords="259,5,441,45"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,23,245,23,245,28,211,28"/>
+</map>
