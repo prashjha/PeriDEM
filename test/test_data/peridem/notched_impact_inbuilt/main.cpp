@@ -854,6 +854,15 @@ int main(int argc, char *argv[]) {
     input_json["Model"]["Bond_Break"] = bb;
     std::cout << std::format("notched_impact: Bond_Break override -> {}\n", bb);
   }
+  // The deck fixes Output_Interval at num_steps/10, which is right for a
+  // check run and far too coarse for a frame sequence. Overriding it costs
+  // nothing and leaves the physics untouched.
+  if (input.cmdOptionExists("-outInterval")) {
+    const size_t oi =
+        static_cast<size_t>(std::stoull(input.getCmdOption("-outInterval")));
+    input_json["Output"]["Output_Interval"] = std::max<size_t>(1, oi);
+    std::cout << std::format("notched_impact: Output_Interval override -> {}\n", oi);
+  }
   if (input.cmdOptionExists("-knScale")) {
     const double s = std::stod(input.getCmdOption("-knScale"));
     for (auto &kv : input_json["Contact"].items()) {
